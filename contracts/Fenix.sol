@@ -8,7 +8,7 @@ import "./interfaces/IFenix.sol";
 
 /**
  * @title Fenix ERC20 Token, Which is the main protocol token
- * @author Aegas team
+ * @author The Fenix Protocol team
  * @dev This contract extends the ERC20, ERC20Burnable, and Ownable contracts from OpenZeppelin, 
  * providing a comprehensive implementation of a standard ERC20 token with burnable and minting features.
  * The Fenix token allows for minting of new tokens, which can only be initiated by the {EmmisionManager}
