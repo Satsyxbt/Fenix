@@ -18,24 +18,14 @@ interface IEmissionManagerUpgradeable {
     function setEmission(uint256 emissionRate_) external;
     function setRebase(uint256 rebaseRate_) external;
 
+    function initialize(IVoter voter_, IVotingEscrow votingEscrow_, IRewardsDistributor rewardsDistributor_) external;
+    function initialize(address[] calldata claimants_, uint256[] calldata amounts_, uint256 max) external;
+
     function circulatingEmission() external view returns (uint256);
     function calculateReabase(uint256 weeklyMint_) external view returns (uint256);
     function circulatingSupply() external view returns (uint256);
     function calculateEmission() external view returns (uint256);
     function weeklyEmmision() external view returns (uint256);
-    function check() external view returns(bool);
-    function period() external view returns(uint256);
-    
-    function initialize(    
-        IVoter voter_,
-        IVotingEscrow votingEscrow_,
-        IRewardsDistributor rewardsDistributor_
-    ) external;
-
-    function initialize(
-        address[] calldata claimants_,
-        uint256[] calldata amounts_,
-        uint256 max 
-    ) external;
-
+    function check() external view returns (bool);
+    function period() external view returns (uint256);
 }
