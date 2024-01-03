@@ -8,6 +8,8 @@ import {
   ProxyAdmin,
   ProxyAdmin__factory,
   TransparentUpgradeableProxy__factory,
+  VeArtProxyUpgradeable,
+  VeArtProxyUpgradeable__factory,
 } from '../../typechain-types/index';
 
 async function completeFixture(): Promise<{
@@ -20,6 +22,8 @@ async function completeFixture(): Promise<{
   fenix: Fenix;
   emissionManagerProxy: EmissionManagerUpgradeable;
   emissionManagerImplementation: EmissionManagerUpgradeable;
+  veArtProxy: VeArtProxyUpgradeable;
+  veArtProxyImplementation: VeArtProxyUpgradeable;
 }> {
   const [deployer, otherUser, ...others] = await ethers.getSigners();
 
@@ -27,16 +31,18 @@ async function completeFixture(): Promise<{
 
   const fenix = await fenixFactory.connect(deployer).deploy(deployer.address);
 
-  const emFactory = (await ethers.getContractFactory('EmissionManagerUpgradeable')) as EmissionManagerUpgradeable__factory;
-
-  const emFactoryImplementation = await emFactory.deploy();
-
-  const proxyFactory = (await ethers.getContractFactory('TransparentUpgradeableProxy')) as TransparentUpgradeableProxy__factory;
   const proxyAdminFacotry = (await ethers.getContractFactory('ProxyAdmin')) as ProxyAdmin__factory;
-
   const proxyAdmin = await proxyAdminFacotry.deploy();
 
+  const proxyFactory = (await ethers.getContractFactory('TransparentUpgradeableProxy')) as TransparentUpgradeableProxy__factory;
+
+  const emFactory = (await ethers.getContractFactory('EmissionManagerUpgradeable')) as EmissionManagerUpgradeable__factory;
+  const emFactoryImplementation = await emFactory.deploy();
   const emissionManagerProxy = await proxyFactory.deploy(await emFactoryImplementation.getAddress(), await proxyAdmin.getAddress(), '0x');
+
+  const veArtProxyUpgradeableFactory = (await ethers.getContractFactory('VeArtProxyUpgradeable')) as VeArtProxyUpgradeable__factory;
+  const veArtProxyImplementation = await veArtProxyUpgradeableFactory.deploy();
+  const veArtProxy = await proxyFactory.deploy(await veArtProxyImplementation.getAddress(), await proxyAdmin.getAddress(), '0x');
 
   return {
     wallets: {
@@ -48,6 +54,8 @@ async function completeFixture(): Promise<{
     fenix: fenix,
     emissionManagerProxy: emFactory.attach(await emissionManagerProxy.getAddress()) as EmissionManagerUpgradeable,
     emissionManagerImplementation: emFactoryImplementation,
+    veArtProxyImplementation: veArtProxyImplementation,
+    veArtProxy: veArtProxyUpgradeableFactory.attach(await veArtProxy.getAddress()) as VeArtProxyUpgradeable,
   };
 }
 
