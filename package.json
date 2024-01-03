@@ -31,13 +31,15 @@
   "license": "MIT",
   "devDependencies": {
     "@openzeppelin/contracts": "4.9.3",
+    "@openzeppelin/hardhat-upgrades": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
