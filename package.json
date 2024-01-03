@@ -5,6 +5,7 @@
   "main": "hardhat.config.ts",
   "private": "true",
   "scripts": {
+    "compile": "hardhat clean && npx hardhat compile",
     "test": "npx hardhat test",
     "test:coverage": "npx hardhat coverage",
     "clean": "hardhat clean",
