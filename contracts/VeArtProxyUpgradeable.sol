@@ -60,7 +60,7 @@ contract VeArtProxyUpgradeable is IVeArtProxyUpgradeable {
                     string.concat(
                         '{"name": "lock #',
                         tokenId_.toString(),
-                        '", "description": "Thena locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,',
+                        '", "description": "Fenix locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,',
                         Base64.encode(bytes(output)),
                         '"}'
                     )
