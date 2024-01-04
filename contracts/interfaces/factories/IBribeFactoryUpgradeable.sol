@@ -10,7 +10,8 @@ interface IBribeFactoryUpgradeable is IBeacon {
     error MismatchLen();
 
     event Upgraded(address indexed implementation);
-
+    event BribeCreated(address indexed bribe);
+    
     function lastBribe() external returns (address);
     function voter() external returns (address);
     function isDefaultRewardToken(address) external returns (bool);
@@ -21,7 +22,7 @@ interface IBribeFactoryUpgradeable is IBeacon {
         address[] calldata defaultRewardTokens_
     ) external;
     function upgradeTo(address newImplementation_) external;
-    function createBribe(address owner_, address token0_, address token1_, string memory type_) external returns (address);
+    function createBribe(address token0_, address token1_, string memory type_) external returns (address);
     function addRewardToBribe(address token_, address bribe_) external;
     function addRewardsToBribe(address[] calldata token_, address bribe_) external;
     function addRewardToBribes(address token_, address[] calldata bribes_) external;
