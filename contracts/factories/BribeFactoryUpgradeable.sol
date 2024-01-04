@@ -8,28 +8,72 @@ import "../interfaces/factories/IBribeFactoryUpgradeable.sol";
 import "../interfaces/IBribeUpgradeable.sol";
 import "../Bribe.sol";
 
+/**
+ * @title BribeFactoryUpgradeable Contract
+ * @author The Fenix Protocol team
+ * @dev @todo
+ */
 contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, AccessControlUpgradeable {
     bytes32 public constant BRIBE_ADMIN_ROLE = keccak256("BRIBE_ADMIN");
 
+    /**
+     * @dev Address of the most recently created bribe.
+     */
     address public override lastBribe;
+    
+    /**
+     * @dev Address of the most recently created bribe.
+     */
     address public override voter;
 
+    /**
+     * @dev A mapping that tracks whether an address is a default reward token.
+     */
     mapping(address => bool) public override isDefaultRewardToken;
 
-    address[] internal _defaultRewardTokens;
-    address[] internal _bribes;
+    /**
+     * @dev Address of the current implementation of the bribe contract.
+     * This address is used as the implementation reference for the beacon proxies.
+     */
     address internal _bribeImplementation;
 
+    /**
+     * @dev An array of addresses representing the default reward tokens.
+     * These tokens are automatically added to each newly created bribe.
+     */
+    address[] internal _defaultRewardTokens;
+
+    /**
+     * @dev An array storing addresses of all created bribe contracts.
+     * This array is used to keep track of all bribes deployed by this factory.
+     */
+    address[] internal _bribes; // @risk never used
+
+    /**
+     * @dev Initializes the contract by disabling initializers to prevent the implementation contract
+     * from being misused.
+     */
     constructor() {
         _disableInitializers();
     }
 
+    /**
+     * @dev Initializes the contract with the provided parameters.
+     * Sets up the initial configuration for the bribe factory, including the voter address,
+     * the bribe implementation, and the default reward tokens.
+     *
+     * @param voter_ Address to be set as the voter.
+     * @param bribeImplementation_ Address of the bribe implementation contract.
+     * @param defaultRewardTokens_ Array of addresses for the default reward tokens.
+     */
     function initialize(
         address voter_,
         address bribeImplementation_,
         address[] calldata defaultRewardTokens_
     ) external virtual override initializer {
         __AccessControl_init();
+
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         voter = voter_;
 
@@ -44,14 +88,17 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, AccessControlUpgra
         _setImplementation(bribeImplementation_);
     }
 
+    /**
+     * @dev See {IBeacon}
+     */
     function implementation() external view virtual override returns (address) {
         return _bribeImplementation;
     }
 
     /**
-     * @dev Upgrades the bribes to a new implementation.
+     * @dev Upgrades the `Bribes` to a new implementation.
      *
-     * Emits an {Upgraded} event.
+     * Emits an {Upgraded} event. With address of new implementation
      *
      * Requirements:
      *
@@ -66,7 +113,6 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, AccessControlUpgra
     /// @notice create a bribe contract
     /// @dev _owner must be teamMultisig
     function createBribe(
-        address owner_,
         address token0_,
         address token1_,
         string memory type_
@@ -89,6 +135,8 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, AccessControlUpgra
         lastBribe = newBribeProxy;
 
         _bribes.push(newBribeProxy);
+
+        emit BribeCreated(newBribeProxy);
 
         return newBribeProxy;
     }
@@ -241,7 +289,7 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, AccessControlUpgra
     }
 
     /**
-     * @dev Sets the implementation contract address for this beacon
+     * @dev Sets the implementation contract address for all `bribes`
      *
      * Requirements:
      *
