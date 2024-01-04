@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import {HardhatEthersSigner} from "@nomicfoundation/hardhat-ethers/signers"
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import {
   BribeFactoryUpgradeable,
   BribeFactoryUpgradeable__factory,
@@ -15,19 +15,19 @@ import {
   TransparentUpgradeableProxy__factory,
   VeArtProxyUpgradeable,
   VeArtProxyUpgradeable__factory,
-  EmissionManagerUpgradeable
+  EmissionManagerUpgradeable,
 } from '../../typechain-types/index';
 import { BaseContract } from 'ethers';
 
-async function getImplAndProxyFor(proxyAdmin: ProxyAdmin, contractName:string): Promise<{implementation, proxy}> {
+async function getImplAndProxyFor(proxyAdmin: ProxyAdmin, contractName: string): Promise<{ implementation; proxy }> {
   const proxyFactory = (await ethers.getContractFactory('TransparentUpgradeableProxy')) as TransparentUpgradeableProxy__factory;
-  const factory = (await ethers.getContractFactory(contractName));
+  const factory = await ethers.getContractFactory(contractName);
   const impl = await factory.deploy();
   const proxy = await proxyFactory.deploy(await impl.getAddress(), await proxyAdmin.getAddress(), '0x');
   return {
     implementaions: impl,
-    proxy: factory.attach(await proxy.getAddress())
-  }
+    proxy: factory.attach(await proxy.getAddress()),
+  };
 }
 
 async function completeFixture(): Promise<{
@@ -41,7 +41,7 @@ async function completeFixture(): Promise<{
     token9: ERC20Mock;
     token6: ERC20Mock;
     token21: ERC20Mock;
-  }
+  };
 
   proxyAdmin: ProxyAdmin;
 
@@ -63,11 +63,11 @@ async function completeFixture(): Promise<{
   const erc20Factory = (await ethers.getContractFactory('ERC20Mock')) as ERC20Mock__factory;
 
   const tokens = {
-    token18: await erc20Factory.deploy("Token18", "T18", 18),
-    token9: await erc20Factory.deploy("Token9", "T9", 9),
-    token6: await erc20Factory.deploy("Token6", "T6", 6),
-    token21: await erc20Factory.deploy("Token21", "T21", 21),
-  }
+    token18: await erc20Factory.deploy('Token18', 'T18', 18),
+    token9: await erc20Factory.deploy('Token9', 'T9', 9),
+    token6: await erc20Factory.deploy('Token6', 'T6', 6),
+    token21: await erc20Factory.deploy('Token21', 'T21', 21),
+  };
 
   const fenixFactory = (await ethers.getContractFactory('Fenix')) as Fenix__factory;
 
@@ -89,7 +89,7 @@ async function completeFixture(): Promise<{
   const bribeFactoryUpgradeableFactory = (await ethers.getContractFactory('BribeFactoryUpgradeable')) as BribeFactoryUpgradeable__factory;
   const bribeFactoryImplementation = await bribeFactoryUpgradeableFactory.deploy();
   const bribeFactoryProxy = await proxyFactory.deploy(await bribeFactoryImplementation.getAddress(), await proxyAdmin.getAddress(), '0x');
-  
+
   const bribeUpgradeableFactory = (await ethers.getContractFactory('BribeUpgradeable')) as BribeUpgradeable__factory;
   const bribeUpgradeableImplementation = await bribeUpgradeableFactory.deploy();
 

@@ -9,7 +9,6 @@ pragma solidity =0.8.19;
  *      providing a unique visual representation for each token.
  */
 interface IVeArtProxyUpgradeable {
-
     /**
      * @dev Generates a {ERC721.tokenURI} with on-chain generated art.
      *
