@@ -37,7 +37,7 @@ contract VeArtProxyUpgradeable is IVeArtProxyUpgradeable {
         uint256 balanceOf_,
         uint256 lockedEnd_,
         uint256 value_
-    ) external pure returns (string memory output) {
+    ) external pure virtual override returns (string memory output) {
         output = string.concat(
             '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">',
             "token ",
