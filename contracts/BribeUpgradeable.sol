@@ -27,9 +27,9 @@ contract BribeUpgradeable is ReentrancyGuard {
     mapping(address => bool) public isRewardToken;
     address[] public rewardTokens;
     address public voter;
-    address public immutable bribeFactory;
+    address public bribeFactory;
     address public minter;
-    address public immutable ve;
+    address public ve;
     address public owner;
 
     string public TYPE;
@@ -44,7 +44,7 @@ contract BribeUpgradeable is ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(address _owner, address _voter, address _bribeFactory, string memory _type) {
+    function initialize(address _owner, address _voter, address _bribeFactory, string memory _type) external {
         require(_bribeFactory != address(0) && _voter != address(0) && _owner != address(0));
         voter = _voter;
         bribeFactory = _bribeFactory;

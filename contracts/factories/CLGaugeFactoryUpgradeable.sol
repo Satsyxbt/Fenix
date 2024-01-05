@@ -49,11 +49,11 @@ contract CLGaugeFactoryUpgradeable is ICLGaugeFactoryUpgradeable, BaseFactoryUpg
             )
         );
 
-        emit CreateGauge(_msgSender(), newGaugeProxy);
+        emit CreateGauge(msg.sender, newGaugeProxy);
         return newGaugeProxy;
     }
 
-    function setDistribution(address gauge_, address newDistribution_) external virtual override onlyOwner {
+    function setDistribution(address gauge_, address newDistribution_) external virtual override {
         IGaugeUpgradeable(gauge_).setDistribution(newDistribution_);
         emit UpdateDistributionForGauge(gauge_, newDistribution_);
     }
