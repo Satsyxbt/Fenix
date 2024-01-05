@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./interfaces/IEmissionManagerUpgradeable.sol";
 import "./interfaces/IVoter.sol";
 import "./interfaces/IVotingEscrow.sol";
+import {IBribeUpgradeable} from "./interfaces/IBribeUpgradeable.sol";
 
-contract BribeUpgradeable is ReentrancyGuard {
+contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     uint256 public constant WEEK = 7 days; // rewards are released over 7 days

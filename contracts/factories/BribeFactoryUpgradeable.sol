@@ -167,11 +167,13 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     /// @notice set the bribe factory voter
     function setVoter(address voter_) external virtual override onlyOwner notZero(voter_) {
         voter = voter_;
+        emit SetVoter(voter_);
     }
 
     /// @notice set the bribe factory permission registry
     function setPermissionsRegistry(address permissionsRegistry_) external virtual override onlyOwner notZero(permissionsRegistry_) {
         permissionsRegistry = IPermissionsRegistry(permissionsRegistry_);
+        emit SetPermissionRegistry(permissionsRegistry_);
     }
 
     /// @notice set the bribe factory permission registry
@@ -188,7 +190,7 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     }
 
     /// @notice set a new voter in given bribes
-    function setBribesVoter(address[] memory bribes_, address voter_) external virtual override onlyOwner {
+    function setBribesVoter(address[] calldata bribes_, address voter_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setVoter(voter_);
             unchecked {
@@ -198,7 +200,7 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     }
 
     /// @notice set a new minter in given bribes
-    function setBribesMinter(address[] memory bribes_, address minter_) external virtual override onlyOwner {
+    function setBribesMinter(address[] calldata bribes_, address minter_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setMinter(minter_);
             unchecked {
@@ -208,7 +210,7 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     }
 
     /// @notice set a new owner in given bribes
-    function setBribesOwner(address[] memory bribes_, address owner_) external virtual override onlyOwner {
+    function setBribesOwner(address[] calldata bribes_, address owner_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setOwner(owner_);
             unchecked {
@@ -218,12 +220,12 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     }
 
     /// @notice recover an ERC20 from bribe contracts.
-    function recoverERC20From(
-        address[] memory bribes_,
-        address[] memory tokens_,
-        uint256[] memory amounts_
+    function emergencyRecoverERC20(
+        address[] calldata bribes_,
+        address[] calldata tokens_,
+        uint256[] calldata amounts_
     ) external virtual override onlyOwner {
-        if (bribes_.length == tokens_.length && bribes_.length == amounts_.length) {
+        if (bribes_.length != tokens_.length || bribes_.length != amounts_.length) {
             revert MismatchArrayLen();
         }
         for (uint256 i; i < bribes_.length; ) {
@@ -236,15 +238,15 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
 
     /// @notice recover an ERC20 from bribe contracts and update.
     function recoverERC20AndUpdateData(
-        address[] memory bribes_,
-        address[] memory tokens_,
-        uint256[] memory amounts_
+        address[] calldata bribes_,
+        address[] calldata tokens_,
+        uint256[] calldata amounts_
     ) external virtual override onlyOwner {
-        if (bribes_.length == tokens_.length && bribes_.length == amounts_.length) {
+        if (bribes_.length != tokens_.length || bribes_.length != amounts_.length) {
             revert MismatchArrayLen();
         }
         for (uint256 i; i < bribes_.length; ) {
-            if (amounts_[i] > 0) IBribeUpgradeable(bribes_[i]).emergencyRecoverERC20(tokens_[i], amounts_[i]);
+            if (amounts_[i] > 0) IBribeUpgradeable(bribes_[i]).recoverERC20AndUpdateData(tokens_[i], amounts_[i]);
             unchecked {
                 i++;
             }
@@ -261,23 +263,18 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
 
     /// @notice Add a reward token to a given bribe
     function addRewardTokenToBribe(address token_, address bribe_) external virtual override onlyAllowed {
-        IBribeUpgradeable(bribe_).addReward(token_);
+        IBribeUpgradeable(bribe_).addRewardToken(token_);
     }
 
     /// @notice Add multiple reward token to a given bribe
-    function addRewardTokensToBribe(address[] memory token_, address bribe_) external virtual override onlyAllowed {
-        for (uint256 i; i < token_.length; ) {
-            IBribeUpgradeable(bribe_).addReward(token_[i]);
-            unchecked {
-                i++;
-            }
-        }
+    function addRewardTokensToBribe(address[] calldata token_, address bribe_) external virtual override onlyAllowed {
+        IBribeUpgradeable(bribe_).addRewardTokens(token_);
     }
 
     /// @notice Add a reward token to given bribes
-    function addRewardTokenToBribes(address token_, address[] memory bribes_) external virtual override onlyAllowed {
+    function addRewardTokenToBribes(address token_, address[] calldata bribes_) external virtual override onlyAllowed {
         for (uint256 i; i < bribes_.length; ) {
-            IBribeUpgradeable(bribes_[i]).addReward(token_);
+            IBribeUpgradeable(bribes_[i]).addRewardToken(token_);
             unchecked {
                 i++;
             }
@@ -285,15 +282,13 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
     }
 
     /// @notice Add multiple reward tokens to given bribes
-    function addRewardTokensToBribes(address[][] memory tokens_, address[] memory bribes_) external virtual override onlyAllowed {
+    function addRewardTokensToBribes(address[][] calldata tokens_, address[] calldata bribes_) external virtual override onlyAllowed {
+        if (bribes_.length != tokens_.length) {
+            revert MismatchArrayLen();
+        }
         for (uint256 i; i < bribes_.length; ) {
             address bribe = bribes_[i];
-            for (uint256 k; k < tokens_.length; ) {
-                IBribeUpgradeable(bribe).addReward(tokens_[i][k]);
-                unchecked {
-                    k++;
-                }
-            }
+            IBribeUpgradeable(bribe).addRewardTokens(tokens_[i]);
             unchecked {
                 i++;
             }
