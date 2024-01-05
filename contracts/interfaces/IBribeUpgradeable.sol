@@ -2,17 +2,34 @@
 pragma solidity =0.8.19;
 
 interface IBribeUpgradeable {
+    function initialize(address _owner, address _voter, address _bribeFactory, string memory _type) external;
+
     function deposit(uint256 amount_, uint256 tokenId_) external;
+
     function withdraw(uint256 amount_, uint256 tokenId_) external;
+
     function getRewardForOwner(uint256 tokenId_, address[] calldata tokens_) external;
+
     function getRewardForAddress(address owner_, address[] calldata tokens_) external;
+
     function notifyRewardAmount(address token_, uint256 amount_) external;
+
     function addReward(address token_) external;
+
     function addRewards(address[] calldata tokens_) external;
+
     function setVoter(address voter_) external;
+
     function setMinter(address minter_) external;
+
     function setOwner(address owner_) external;
+
+    function addRewardToken(address) external;
+
+    function addRewardTokens(address[] calldata) external;
+
     function emergencyRecoverERC20(address token_, uint256 amount_) external;
+
     function recoverERC20AndUpdateData(address token_, uint256 amount_) external;
 
     function left(address token_) external view returns (uint256);

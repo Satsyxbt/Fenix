@@ -2,15 +2,15 @@
 pragma solidity =0.8.19;
 
 /*
-    This contract handles the accesses to the various Thena contracts.
+    This contract handles the accesses to the various Fenix contracts.
 */
 
 contract PermissionsRegistry {
     /// @notice Control this contract. This is the main multisig 4/6
-    address public thenaMultisig;
+    address public fenixMultisig;
 
-    /// @notice This is the thena team multisig 2/2
-    address public thenaTeamMultisig;
+    /// @notice This is the fenix team multisig 2/2
+    address public fenixTeamMultisig;
 
     /// @notice Control emergency functions (set to multisig)
     address public emergencyCouncil;
@@ -30,12 +30,12 @@ contract PermissionsRegistry {
     event RoleSetFor(address indexed user, bytes indexed role);
     event RoleRemovedFor(address indexed user, bytes indexed role);
     event SetEmergencyCouncil(address indexed council);
-    event SetThenaTeamMultisig(address indexed multisig);
-    event SetThenaMultisig(address indexed multisig);
+    event SetfenixTeamMultisig(address indexed multisig);
+    event SetfenixMultisig(address indexed multisig);
 
     constructor() {
-        thenaTeamMultisig = msg.sender;
-        thenaMultisig = msg.sender;
+        fenixTeamMultisig = msg.sender;
+        fenixMultisig = msg.sender;
         emergencyCouncil = msg.sender;
 
         _roles.push(bytes("GOVERNANCE"));
@@ -57,8 +57,8 @@ contract PermissionsRegistry {
         _checkRole[(bytes("CL_FEES_VAULT_ADMIN"))] = true;
     }
 
-    modifier onlyThenaMultisig() {
-        require(msg.sender == thenaMultisig, "!thenaMultisig");
+    modifier onlyfenixMultisig() {
+        require(msg.sender == fenixMultisig, "!fenixMultisig");
         _;
     }
 
@@ -70,7 +70,7 @@ contract PermissionsRegistry {
 
     /// @notice add a new role
     /// @param  role    new role's string (eg role = "GAUGE_ADMIN")
-    function addRole(string memory role) external onlyThenaMultisig {
+    function addRole(string memory role) external onlyfenixMultisig {
         bytes memory _role = bytes(role);
         require(!_checkRole[_role], "is a role");
         _checkRole[_role] = true;
@@ -80,7 +80,7 @@ contract PermissionsRegistry {
 
     /// @notice Remove a role
     /// @dev    set last one to i_th position then .pop()
-    function removeRole(string memory role) external onlyThenaMultisig {
+    function removeRole(string memory role) external onlyfenixMultisig {
         bytes memory _role = bytes(role);
         require(_checkRole[_role], "not a role");
 
@@ -108,7 +108,7 @@ contract PermissionsRegistry {
     }
 
     /// @notice Set a role for an address
-    function setRoleFor(address c, string memory role) external onlyThenaMultisig {
+    function setRoleFor(address c, string memory role) external onlyfenixMultisig {
         bytes memory _role = bytes(role);
         require(_checkRole[_role], "not a role");
         require(!hasRole[_role][c], "assigned");
@@ -122,7 +122,7 @@ contract PermissionsRegistry {
     }
 
     /// @notice remove a role from an address
-    function removeRoleFrom(address c, string memory role) external onlyThenaMultisig {
+    function removeRoleFrom(address c, string memory role) external onlyfenixMultisig {
         bytes memory _role = bytes(role);
         require(_checkRole[_role], "not a role");
         require(hasRole[_role][c], "not assigned");
@@ -208,7 +208,7 @@ contract PermissionsRegistry {
     /// @notice set emergency counsil
     /// @param _new new address
     function setEmergencyCouncil(address _new) external {
-        require(msg.sender == emergencyCouncil || msg.sender == thenaMultisig, "not allowed");
+        require(msg.sender == emergencyCouncil || msg.sender == fenixMultisig, "not allowed");
         require(_new != address(0), "addr0");
         require(_new != emergencyCouncil, "same emergencyCouncil");
         emergencyCouncil = _new;
@@ -216,25 +216,25 @@ contract PermissionsRegistry {
         emit SetEmergencyCouncil(_new);
     }
 
-    /// @notice set thena team multisig
+    /// @notice set fenix team multisig
     /// @param _new new address
-    function setThenaTeamMultisig(address _new) external {
-        require(msg.sender == thenaTeamMultisig, "not allowed");
+    function setfenixTeamMultisig(address _new) external {
+        require(msg.sender == fenixTeamMultisig, "not allowed");
         require(_new != address(0), "addr 0");
-        require(_new != thenaTeamMultisig, "same multisig");
-        thenaTeamMultisig = _new;
+        require(_new != fenixTeamMultisig, "same multisig");
+        fenixTeamMultisig = _new;
 
-        emit SetThenaTeamMultisig(_new);
+        emit SetfenixTeamMultisig(_new);
     }
 
-    /// @notice set thena multisig
+    /// @notice set fenix multisig
     /// @param _new new address
-    function setThenaMultisig(address _new) external {
-        require(msg.sender == thenaMultisig, "not allowed");
+    function setfenixMultisig(address _new) external {
+        require(msg.sender == fenixMultisig, "not allowed");
         require(_new != address(0), "addr0");
-        require(_new != thenaMultisig, "same multisig");
-        thenaMultisig = _new;
+        require(_new != fenixMultisig, "same multisig");
+        fenixMultisig = _new;
 
-        emit SetThenaMultisig(_new);
+        emit SetfenixMultisig(_new);
     }
 }

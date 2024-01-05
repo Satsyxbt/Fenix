@@ -3,6 +3,7 @@ pragma solidity =0.8.19;
 
 /**
  * @title IVeArtProxyUpgradeable Interface
+ * @author Fenix Protocol team
  * @dev Interface for the VeArtProxyUpgradeable contract.
  *      This interface outlines the tokenURI function which is responsible
  *      for generating on-chain art in the form of SVG images, encoded in base64 format,

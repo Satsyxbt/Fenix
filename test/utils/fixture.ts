@@ -19,15 +19,9 @@ import {
 } from '../../typechain-types/index';
 import { BaseContract } from 'ethers';
 
-async function getImplAndProxyFor(proxyAdmin: ProxyAdmin, contractName: string): Promise<{ implementation; proxy }> {
-  const proxyFactory = (await ethers.getContractFactory('TransparentUpgradeableProxy')) as TransparentUpgradeableProxy__factory;
-  const factory = await ethers.getContractFactory(contractName);
-  const impl = await factory.deploy();
-  const proxy = await proxyFactory.deploy(await impl.getAddress(), await proxyAdmin.getAddress(), '0x');
-  return {
-    implementaions: impl,
-    proxy: factory.attach(await proxy.getAddress()),
-  };
+async function deployToken(name: string, symbol: string, decimals: number) {
+  const erc20Factory = (await ethers.getContractFactory('ERC20Mock')) as ERC20Mock__factory;
+  return await erc20Factory.deploy(name, symbol, decimals);
 }
 
 async function completeFixture(): Promise<{
@@ -112,4 +106,5 @@ async function completeFixture(): Promise<{
   };
 }
 
+export { deployToken };
 export default completeFixture;

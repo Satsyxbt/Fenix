@@ -2,11 +2,17 @@
 pragma solidity =0.8.19;
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {IBaseFactoryUpgradeable} from "../interfaces/factories/IBaseFactoryUpgradeable.sol";
 
-abstract contract BaseFactoryUpgradeable is IBaseFactoryUpgradeable, OwnableUpgradeable {
+/**
+ * @title BaseFactoryUpgradeable
+ * @author Fenix Protocol team
+ * @dev Abstract contract serving as a base for upgradeable factories.
+ *      Includes functionality to set the address of the implementation contract for further reading by BeaconProxies.
+ *      See: {https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/beacon/UpgradeableBeacon.sol}
+ */
+abstract contract BaseFactoryUpgradeable is IBaseFactoryUpgradeable, Initializable {
     /**
      * @dev Address of the current implementation of the bribe contract.
      * This address is used as the implementation reference for the beacon proxies.
@@ -14,40 +20,31 @@ abstract contract BaseFactoryUpgradeable is IBaseFactoryUpgradeable, OwnableUpgr
     address internal _implementation;
 
     /**
-     * @dev Initializes the contract setting the deployer as the initial owner
+     * @dev Initializes the contract by setting the implementation address.
+     * @param implementation_ The address of the implementation contract to be used.
      */
     function __Base_Factory_init(address implementation_) internal onlyInitializing {
-        __Ownable_init();
         _setImplementation(implementation_);
     }
 
     /**
-     * @dev Upgrades the beacon to a new implementation.
-     *
-     * Requirements:
-     *
-     * - msg.sender must be the owner of the contract.
-     * - `newImplementation` must be a contract.
-     */
-    function upgradeProxiesTo(address newImplementation_) external virtual override onlyOwner {
-        _setImplementation(newImplementation_);
-    }
-
-    /**
-     * @dev Returns the current implementation address.
+     * @dev Returns the current implementation address of the contract.
+     * @return The address of the implementation contract.
      */
     function implementation() external view virtual override returns (address) {
         return _implementation;
     }
 
     /**
-     * @dev Sets the implementation contract address for this beacon proxies
+     * @dev Sets the implementation contract address for use by beacon proxies.
      *
      * Emits an {Upgraded} event.
      *
      * Requirements:
      *
      * - `newImplementation` must be a contract.
+     *
+     * @param newImplementation_ The new implementation contract address.
      */
     function _setImplementation(address newImplementation_) internal virtual {
         if (!Address.isContract(newImplementation_)) {
