@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat';
 
 export const ONE_ETHER = ethers.parseEther('1');
+export const ONE_GWEI = ethers.parseUnits('1', 'gwei');
 export const ZERO_ADDRESS = ethers.ZeroAddress;
 export const ZERO = BigInt(0);
 export const ONE = BigInt(1);

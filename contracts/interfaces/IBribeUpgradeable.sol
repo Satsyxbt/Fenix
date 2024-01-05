@@ -14,10 +14,6 @@ interface IBribeUpgradeable {
 
     function notifyRewardAmount(address token_, uint256 amount_) external;
 
-    function addReward(address token_) external;
-
-    function addRewards(address[] calldata tokens_) external;
-
     function setVoter(address voter_) external;
 
     function setMinter(address minter_) external;
@@ -31,6 +27,4 @@ interface IBribeUpgradeable {
     function emergencyRecoverERC20(address token_, uint256 amount_) external;
 
     function recoverERC20AndUpdateData(address token_, uint256 amount_) external;
-
-    function left(address token_) external view returns (uint256);
 }

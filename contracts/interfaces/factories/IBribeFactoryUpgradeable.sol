@@ -7,6 +7,8 @@ interface IBribeFactoryUpgradeable is IBaseFactoryUpgradeable {
     event BribeCreated(address indexed bribe);
     event AddedDefaultRewardToken(address indexed token);
     event RemoveDefaultRewardToken(address indexed token);
+    event SetVoter(address indexed voter);
+    event SetPermissionRegistry(address indexed permissionRegistry);
 
     error ZeroAddress();
     error TokenIsMissing();
@@ -43,7 +45,7 @@ interface IBribeFactoryUpgradeable is IBaseFactoryUpgradeable {
 
     function setVoter(address voter_) external;
 
-    function recoverERC20From(address[] memory bribes_, address[] memory tokens_, uint256[] memory amounts_) external;
+    function emergencyRecoverERC20(address[] memory bribes_, address[] memory tokens_, uint256[] memory amounts_) external;
 
     function recoverERC20AndUpdateData(address[] calldata bribes_, address[] calldata tokens_, uint256[] calldata amounts_) external;
 
