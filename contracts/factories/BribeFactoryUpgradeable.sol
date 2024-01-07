@@ -122,8 +122,21 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         _setImplementation(newImplementation_);
     }
 
-    /// @notice create a bribe contract
-    /// @dev    _owner must be fenixTeamMultisign
+    /**
+     * @dev Creates a new bribe contract
+     *
+     * Emits an {BribeCreated} event with new bribe address
+     *
+     * Requirements:
+     * - msg.sender must be the voter or the owner of this contract.
+     * - Parameters must meet the requirements of the initializer {IBribeUpgradeable-initializer}
+     *
+     * @param owner_ The owner of the new bribe contract, must be multisign
+     * @param token0_ First reward token address
+     * @param token1_ Second reward token address
+     * @param type_ The type of bribe
+     * @return Address of the newly created bribe contract
+     */
     function createBribe(
         address owner_,
         address token0_,
@@ -156,32 +169,62 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         return address(newBribe);
     }
 
-    /* -----------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-                                    ONLY OWNER
-    --------------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-    ----------------------------------------------------------------------------- */
-
-    /// @notice set the bribe factory voter
+    /**
+     * @dev Sets the voter address for the bribe factory.
+     *
+     * Emits an {SetVoter} event with new voter address
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     * - `voter_` cannot be the zero address.
+     *
+     * @param voter_ The new voter address.
+     */
     function setVoter(address voter_) external virtual override onlyOwner notZero(voter_) {
         voter = voter_;
         emit SetVoter(voter_);
     }
 
-    /// @notice set the bribe factory permission registry
+    /**
+     * @dev Sets the permissions registry address for the bribe factory.
+     *
+     * Emits an {SetPermissionRegistry} event with new permission registry address
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     * - `permissionsRegistry_` cannot be the zero address.
+     *
+     * @param permissionsRegistry_ The new permissions registry address.
+     */
     function setPermissionsRegistry(address permissionsRegistry_) external virtual override onlyOwner notZero(permissionsRegistry_) {
         permissionsRegistry = IPermissionsRegistry(permissionsRegistry_);
         emit SetPermissionRegistry(permissionsRegistry_);
     }
 
-    /// @notice set the bribe factory permission registry
+    /**
+     * @dev Adds a default reward token to the bribe factory.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     *
+     * @param token_ The token address to add as a default reward token.
+     */
     function pushDefaultRewardToken(address token_) external virtual override onlyOwner {
         _pushDefaultRewardToken(token_);
     }
 
-    /// @notice set the bribe factory permission registry
+    /**
+     * @dev Removes a default reward token from the bribe factory.
+     *
+     * Emits an {RemoveDefaultRewardToken} event with removed reward token
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     * - `token_` cannot be the zero address.
+     * - The token must exist in the default reward tokens set.
+     *
+     * @param token_ The token address to remove from the default reward tokens.
+     */
     function removeDefaultRewardToken(address token_) external virtual override onlyOwner notZero(token_) {
         if (!_defaultRewardTokens.remove(token_)) {
             revert RewardTokenNotExist();
@@ -189,7 +232,15 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         emit RemoveDefaultRewardToken(token_);
     }
 
-    /// @notice set a new voter in given bribes
+    /**
+     * @dev Sets a new voter for a batch of bribe contracts.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     *
+     * @param bribes_ Array of bribe contract addresses.
+     * @param voter_ The new voter address to be set in the given bribe contracts.
+     */
     function setBribesVoter(address[] calldata bribes_, address voter_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setVoter(voter_);
@@ -199,7 +250,15 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /// @notice set a new minter in given bribes
+    /**
+     * @dev Sets a new minter for a batch of bribe contracts.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     *
+     * @param bribes_ Array of bribe contract addresses.
+     * @param minter_ The new minter address to be set in the given bribe contracts.
+     */
     function setBribesMinter(address[] calldata bribes_, address minter_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setMinter(minter_);
@@ -209,7 +268,15 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /// @notice set a new owner in given bribes
+    /**
+     * @dev Sets a new owner for a batch of bribe contracts.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     *
+     * @param bribes_ Array of bribe contract addresses.
+     * @param owner_ The new owner address to be set in the given bribe contracts.
+     */
     function setBribesOwner(address[] calldata bribes_, address owner_) external virtual override onlyOwner {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).setOwner(owner_);
@@ -219,7 +286,17 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /// @notice recover an ERC20 from bribe contracts.
+    /**
+     * @dev Recovers ERC20 tokens from a batch of bribe contracts to owner of bribe in case of emergency.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     * - The lengths of `bribes_`, `tokens_`, and `amounts_` arrays must match.
+     *
+     * @param bribes_ Array of bribe contract addresses.
+     * @param tokens_ Array of token addresses for recovery.
+     * @param amounts_ Array of amounts of tokens to recover.
+     */
     function emergencyRecoverERC20(
         address[] calldata bribes_,
         address[] calldata tokens_,
@@ -236,7 +313,17 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /// @notice recover an ERC20 from bribe contracts and update.
+    /**
+     * @dev Recovers ERC20 tokens from a batch of bribe contracts and updates internal data.
+     *
+     * Requirements:
+     * - Can only be called by the contract owner.
+     * - The lengths of `bribes_`, `tokens_`, and `amounts_` arrays must match.
+     *
+     * @param bribes_ Array of bribe contract addresses.
+     * @param tokens_ Array of token addresses for recovery.
+     * @param amounts_ Array of amounts of tokens to recover.
+     */
     function recoverERC20AndUpdateData(
         address[] calldata bribes_,
         address[] calldata tokens_,
@@ -253,25 +340,43 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /* -----------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-                                    ONLY OWNER or BRIBE ADMIN
-    --------------------------------------------------------------------------------
-    --------------------------------------------------------------------------------
-    ----------------------------------------------------------------------------- */
-
-    /// @notice Add a reward token to a given bribe
+    /**
+     * @dev Adds a reward token to a specific bribe contract.
+     *
+     * Requirements:
+     * - Can only be called by an authorized user (owner or user with 'BRIBE_ADMIN' role).
+     * - `bribe_` cannot be the zero address.
+     *
+     * @param token_ The reward token address to add.
+     * @param bribe_ The bribe contract address to which the reward token will be added.
+     */
     function addRewardTokenToBribe(address token_, address bribe_) external virtual override onlyAllowed {
         IBribeUpgradeable(bribe_).addRewardToken(token_);
     }
 
-    /// @notice Add multiple reward token to a given bribe
+    /**
+     * @dev Adds multiple reward tokens to a specific bribe contract.
+     *
+     * Requirements:
+     * - Can only be called by an authorized user (owner or user with 'BRIBE_ADMIN' role).
+     * - `bribe_` cannot be the zero address.
+     *
+     * @param token_ Array of reward token addresses to add.
+     * @param bribe_ The bribe contract address to which the reward tokens will be added.
+     */
     function addRewardTokensToBribe(address[] calldata token_, address bribe_) external virtual override onlyAllowed {
         IBribeUpgradeable(bribe_).addRewardTokens(token_);
     }
 
-    /// @notice Add a reward token to given bribes
+    /**
+     * @dev Adds a reward token to multiple bribe contracts.
+     *
+     * Requirements:
+     * - Can only be called by an authorized user (owner or user with 'BRIBE_ADMIN' role).
+     *
+     * @param token_ The reward token address to add to each bribe contract.
+     * @param bribes_ Array of bribe contract addresses.
+     */
     function addRewardTokenToBribes(address token_, address[] calldata bribes_) external virtual override onlyAllowed {
         for (uint256 i; i < bribes_.length; ) {
             IBribeUpgradeable(bribes_[i]).addRewardToken(token_);
@@ -281,7 +386,16 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
-    /// @notice Add multiple reward tokens to given bribes
+    /**
+     * @dev Adds multiple reward tokens to multiple bribe contracts.
+     *
+     * Requirements:
+     * - Can only be called by an authorized user (owner or user with 'BRIBE_ADMIN' role).
+     * - Lengths of `bribes_` and `tokens_` arrays must match.
+     *
+     * @param tokens_ Array of arrays of reward token addresses.
+     * @param bribes_ Array of bribe contract addresses.
+     */
     function addRewardTokensToBribes(address[][] calldata tokens_, address[] calldata bribes_) external virtual override onlyAllowed {
         if (bribes_.length != tokens_.length) {
             revert MismatchArrayLen();
@@ -295,10 +409,22 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         }
     }
 
+    /**
+     * @dev Returns the total number of bribes created.
+     *
+     * @return uint256 The total number of bribes.
+     */
     function length() external view virtual override returns (uint256) {
         return _bribes.length;
     }
 
+    /**
+     * @dev Lists a subset of all bribes, defined by an offset and a limit.
+     *
+     * @param offset_ The starting index for the subset.
+     * @param limit_ The maximum number of items to return.
+     * @return address[] Array of bribe contract addresses in the specified range.
+     */
     function list(uint256 offset_, uint256 limit_) external view virtual override returns (address[] memory) {
         uint256 totalBribes = _bribes.length;
         if (offset_ >= totalBribes) {
@@ -318,22 +444,56 @@ contract BribeFactoryUpgradeable is IBribeFactoryUpgradeable, BaseFactoryUpgrade
         return gaugeSubset;
     }
 
+    /**
+     * @dev Returns the addresses of the default reward tokens.
+     *
+     * @return address[] An array of addresses of the default reward tokens.
+     */
     function getDefaultRewardTokens() external view virtual override returns (address[] memory) {
         return _getDefaultRewardTokens();
     }
 
+    /**
+     * @dev Checks if a given address is a default reward token.
+     *
+     * @param token_ The address to check.
+     * @return bool True if `token_` is a default reward token, false otherwise.
+     */
     function isDefaultRewardToken(address token_) external view virtual override returns (bool) {
         return _defaultRewardTokens.contains(token_);
     }
 
-    function _getDefaultRewardTokens() internal view returns (address[] memory) {
+    /**
+     * @dev Internal function to get default reward tokens.
+     *
+     * @return address[] An array of addresses of the default reward tokens.
+     */
+    function _getDefaultRewardTokens() internal view virtual returns (address[] memory) {
         return _defaultRewardTokens.values();
     }
 
-    function _pushDefaultRewardToken(address token_) internal notZero(token_) {
+    /**
+     * @dev Internal function to add a default reward token.
+     *
+     * Emits an {AddedDefaultRewardToken} event with added default reward token
+     *
+     * Requirements:
+     * - `token_` cannot be the zero address.
+     * - `token_` must not already exist as a default reward token.
+     *
+     * @param token_ The reward token address to add as default.
+     */
+    function _pushDefaultRewardToken(address token_) internal virtual notZero(token_) {
         if (!_defaultRewardTokens.add(token_)) {
             revert RewardTokenExist();
         }
         emit AddedDefaultRewardToken(token_);
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

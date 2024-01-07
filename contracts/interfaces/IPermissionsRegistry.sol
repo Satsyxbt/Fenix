@@ -5,4 +5,6 @@ interface IPermissionsRegistry {
     function fenixTeamMultisign() external view returns (address);
 
     function hasRole(bytes memory role, address caller) external view returns (bool);
+
+    function emergencyCouncil() external view returns (address);
 }

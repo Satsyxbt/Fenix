@@ -9,4 +9,8 @@ contract ImplementationMock {
     function bribeVersion() external pure returns (string memory) {
         return "Bribe Mock";
     }
+
+    function gaugeVersion() external pure returns (string memory) {
+        return "Gauge Mock";
+    }
 }

@@ -10,12 +10,9 @@ import {
   BribeUpgradeable,
   BribeUpgradeable__factory,
   ERC20Mock,
-  ImplementationMock__factory,
-  ImplementationV2Mock__factory,
   PermissionsRegistry,
   PermissionsRegistry__factory,
   TransparentUpgradeableProxy__factory,
-  VotingEscrowMock__factory,
   VoteMock,
   VoteMock__factory,
   ImplementationMock,
@@ -132,6 +129,7 @@ describe('BaseFactoryUpgradeable Contract', function () {
       expect(await bribeFactoryUpgradeableProxy.voter()).to.be.equal(await voteMock.getAddress());
       expect(await bribeFactoryUpgradeableProxy.lastBribe()).to.be.equal(ZERO_ADDRESS);
       expect(await bribeFactoryUpgradeableProxy.permissionsRegistry()).to.be.equal(await permissionRegistry.getAddress());
+      expect(await bribeFactoryUpgradeableProxy.implementation()).to.be.equal(await bribeUpgradeableImpementation.getAddress());
     });
     it('Should correct set default reward tokens', async function () {
       expect(await bribeFactoryUpgradeableProxy.isDefaultRewardToken(await token18.getAddress())).to.be.true;
@@ -496,7 +494,7 @@ describe('BaseFactoryUpgradeable Contract', function () {
       });
     });
     describe('#addRewardTokenToBribe', async function () {
-      it('Should corectly add reward tokens to bribe', async function () {
+      it('Should corectly add reward token to bribe', async function () {
         await bribeFactoryUpgradeableProxy.removeDefaultRewardToken(await token18.getAddress());
         await bribeFactoryUpgradeableProxy.removeDefaultRewardToken(await token9.getAddress());
         let bribe1 = await createBribe(fenixMultisig.address, ZERO_ADDRESS, ZERO_ADDRESS, 'type 1');

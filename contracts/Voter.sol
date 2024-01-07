@@ -8,7 +8,7 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 
 import {IBribeUpgradeable} from "./interfaces/IBribeUpgradeable.sol";
 import {IBribeFactoryUpgradeable} from "./interfaces/factories/IBribeFactoryUpgradeable.sol";
-import {IGaugeUpgradeable} from "./interfaces/IGaugeUpgradeable.sol";
+import {ICLGaugeUpgradeable} from "./interfaces/ICLGaugeUpgradeable.sol";
 import {ICLGaugeFactoryUpgradeable} from "./interfaces/factories/ICLGaugeFactoryUpgradeable.sol";
 import {IEmissionManagerUpgradeable} from "./interfaces/IEmissionManagerUpgradeable.sol";
 import {IPair} from "./interfaces/external/IPair.sol";
@@ -439,7 +439,7 @@ contract Voter is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     /// @notice claim LP gauge rewards
     function claimRewards(address[] memory _gauges) external {
         for (uint256 i = 0; i < _gauges.length; i++) {
-            IGaugeUpgradeable(_gauges[i]).getReward(msg.sender);
+            ICLGaugeUpgradeable(_gauges[i]).getReward(msg.sender);
         }
     }
 
@@ -683,7 +683,7 @@ contract Voter is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     function distributeFees(address[] memory _gauges) external {
         for (uint256 i = 0; i < _gauges.length; i++) {
             if (isGauge[_gauges[i]] && isAlive[_gauges[i]]) {
-                IGaugeUpgradeable(_gauges[i]).claimFees();
+                ICLGaugeUpgradeable(_gauges[i]).claimFees();
             }
         }
     }
@@ -732,7 +732,7 @@ contract Voter is OwnableUpgradeable, ReentrancyGuardUpgradeable {
             if (_claimable > 0 && isAlive[_gauge]) {
                 claimable[_gauge] = 0;
                 gaugesDistributionTimestmap[_gauge] = currentTimestamp;
-                IGaugeUpgradeable(_gauge).notifyRewardAmount(base, _claimable);
+                ICLGaugeUpgradeable(_gauge).notifyRewardAmount(base, _claimable);
                 emit DistributeReward(msg.sender, _gauge, _claimable);
             }
         }
