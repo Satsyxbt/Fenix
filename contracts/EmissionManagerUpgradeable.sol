@@ -36,7 +36,7 @@ contract EmissionManagerUpgradeable is
     uint256 public teamRate;
 
     uint256 public weekly;
-    uint256 public activePeriod;
+    uint256 public override activePeriod;
 
     IFenix public fenix;
     IVoter public voter;
