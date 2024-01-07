@@ -38,7 +38,7 @@ abstract contract BaseFactoryUpgradeable is IBaseFactoryUpgradeable, Initializab
     /**
      * @dev Sets the implementation contract address for use by beacon proxies.
      *
-     * Emits an {Upgraded} event.
+     * Emits an {Upgraded} event with new implementation address.
      *
      * Requirements:
      *

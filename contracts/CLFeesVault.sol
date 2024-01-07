@@ -78,13 +78,13 @@ contract CLFeesVault {
     /* -----------------------------------------------------------------------------
                                     CONSTRUCTOR AND INIT
     ----------------------------------------------------------------------------- */
-    constructor(address _pool, address _permissionRegistry, address _voter, address _gammaFeeRecipient) {
+    constructor(address _pool, address _permissionRegistry, address _voter) {
         permissionsRegsitry = IPermissionsRegistry(_permissionRegistry);
         pool = _pool;
         voter = IVoter(_voter);
-        theNftStakingConverter = IPairFactory(pairFactoryClassic).stakingFeeHandler();
-        gammaRecipient = _gammaFeeRecipient;
-        dibs = IPairFactory(pairFactoryClassic).dibs();
+        //theNftStakingConverter = IPairFactory(pairFactoryClassic).stakingFeeHandler(); @TODO: commented for test, but will fix in future
+        gammaRecipient = address(0); // @TODO it's just mock, will change in future
+        //dibs = IPairFactory(pairFactoryClassic).dibs();
     }
 
     /* -----------------------------------------------------------------------------

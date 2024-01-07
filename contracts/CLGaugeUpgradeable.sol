@@ -3,55 +3,61 @@ pragma solidity =0.8.19;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./interfaces/external/IPair.sol";
+import "./interfaces/ICLGaugeUpgradeable.sol";
 import "./interfaces/IBribeUpgradeable.sol";
 
 interface IRewarder {
-    function onReward(address user, address recipient, uint256 userBalance) external;
+    function onReward(uint256 pid, address user, address recipient, uint256 lqdrAmount, uint256 newLpAmount) external;
 }
 
 interface IFeeVault {
     function claimFees() external returns (uint256 claimed0, uint256 claimed1);
 }
 
-contract GaugeV2_CL is ReentrancyGuard, Ownable {
+contract CLGaugeUpgradeable is ICLGaugeUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
+    using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     bool public emergency;
 
-    IERC20 public immutable rewardToken;
-    IERC20 public immutable TOKEN;
+    IERC20 public rewardToken;
+    IERC20 public _VE;
+    IERC20 public TOKEN;
 
-    address public VE;
     address public DISTRIBUTION;
     address public gaugeRewarder;
     address public internal_bribe;
     address public external_bribe;
     address public feeVault;
 
-    uint256 public immutable DURATION;
-    uint256 internal _periodFinish;
+    uint256 public rewarderPid = 0; //default to 0
+    uint256 public DURATION;
+    uint256 public periodFinish;
     uint256 public rewardRate;
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
 
+    uint public fees0;
+    uint public fees1;
+
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
-    uint256 internal _totalSupply;
-    mapping(address => uint256) internal _balances;
+    uint256 public _totalSupply;
+    mapping(address => uint256) public _balances;
 
     event RewardAdded(uint256 reward);
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     event Harvest(address indexed user, uint256 reward);
-    event ClaimFees(address indexed from, uint256 claimed0, uint256 claimed1);
-    event EmergencyActivated(address indexed gauge, uint256 timestamp);
-    event EmergencyDeactivated(address indexed gauge, uint256 timestamp);
+    event ClaimFees(address indexed from, uint claimed0, uint claimed1);
 
     modifier updateReward(address account) {
         rewardPerTokenStored = rewardPerToken();
@@ -73,7 +79,7 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         _;
     }
 
-    constructor(
+    function initialize(
         address _rewardToken,
         address _ve,
         address _token,
@@ -81,12 +87,15 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         address _internal_bribe,
         address _external_bribe,
         address _feeVault
-    ) {
+    ) external initializer {
+        __Ownable_init();
+        __ReentrancyGuard_init();
+
         rewardToken = IERC20(_rewardToken); // main reward
-        VE = _ve; // vested
+        _VE = IERC20(_ve); // vested
         TOKEN = IERC20(_token); // underlying (LP)
         DISTRIBUTION = _distribution; // distro address (voter)
-        DURATION = 7 days; // distro time
+        DURATION = 7 * 86400; // distro time
 
         internal_bribe = _internal_bribe; // lp fees goes here
         external_bribe = _external_bribe; // bribe fees goes here
@@ -113,6 +122,7 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
 
     ///@notice set gauge rewarder address
     function setGaugeRewarder(address _gaugeRewarder) external onlyOwner {
+        require(_gaugeRewarder != address(0), "zero addr");
         require(_gaugeRewarder != gaugeRewarder, "same addr");
         gaugeRewarder = _gaugeRewarder;
     }
@@ -124,6 +134,13 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         feeVault = _feeVault;
     }
 
+    ///@notice set extra rewarder pid
+    function setRewarderPid(uint256 _pid) external onlyOwner {
+        require(_pid >= 0, "zero");
+        require(_pid != rewarderPid, "same pid");
+        rewarderPid = _pid;
+    }
+
     ///@notice set new internal bribe contract (where to send fees)
     function setInternalBribe(address _int) external onlyOwner {
         require(_int >= address(0), "zero");
@@ -131,15 +148,13 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     }
 
     function activateEmergencyMode() external onlyOwner {
-        require(emergency == false, "emergency");
+        require(emergency == false);
         emergency = true;
-        emit EmergencyActivated(address(this), block.timestamp);
     }
 
     function stopEmergencyMode() external onlyOwner {
-        require(emergency == true, "emergency");
+        require(emergency == true);
         emergency = false;
-        emit EmergencyDeactivated(address(this), block.timestamp);
     }
 
     /* -----------------------------------------------------------------------------
@@ -162,31 +177,31 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
 
     ///@notice last time reward
     function lastTimeRewardApplicable() public view returns (uint256) {
-        uint256 periodFinishTemp = _periodFinish;
-        return block.timestamp < periodFinishTemp ? block.timestamp : periodFinishTemp;
+        uint256 periodFinishTemp = periodFinish;
+        return block.timestamp > periodFinishTemp ? periodFinishTemp : block.timestamp;
     }
 
-    ///@notice  reward for a single token
+    ///@notice  reward for a sinle token
     function rewardPerToken() public view returns (uint256) {
         if (_totalSupply == 0) {
             return rewardPerTokenStored;
         } else {
-            return rewardPerTokenStored + ((lastTimeRewardApplicable() - lastUpdateTime) * rewardRate * 1e18) / _totalSupply;
+            return rewardPerTokenStored.add(lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply));
         }
     }
 
     ///@notice see earned rewards for user
     function earned(address account) public view returns (uint256) {
-        return rewards[account] + (_balances[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18;
+        return _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
 
     ///@notice get total reward for the duration
     function rewardForDuration() external view returns (uint256) {
-        return rewardRate * DURATION;
+        return rewardRate.mul(DURATION);
     }
 
-    function periodFinish() external view returns (uint256) {
-        return _periodFinish;
+    function _periodFinish() external view returns (uint256) {
+        return periodFinish;
     }
 
     /* -----------------------------------------------------------------------------
@@ -211,13 +226,13 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     function _deposit(uint256 amount, address account) internal nonReentrant isNotEmergency updateReward(account) {
         require(amount > 0, "deposit(Gauge): cannot stake 0");
 
-        _balances[account] = _balances[account] + (amount);
-        _totalSupply = _totalSupply + (amount);
+        _balances[account] = _balances[account].add(amount);
+        _totalSupply = _totalSupply.add(amount);
 
         TOKEN.safeTransferFrom(account, address(this), amount);
 
         if (address(gaugeRewarder) != address(0)) {
-            IRewarder(gaugeRewarder).onReward(account, account, _balances[account]);
+            IRewarder(gaugeRewarder).onReward(rewarderPid, account, account, 0, _balances[account]);
         }
 
         emit Deposit(account, amount);
@@ -236,13 +251,14 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     ///@notice withdraw internal
     function _withdraw(uint256 amount) internal nonReentrant isNotEmergency updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
+        require(_totalSupply.sub(amount) >= 0, "supply < 0");
         require(_balances[msg.sender] > 0, "no balances");
 
-        _totalSupply = _totalSupply - (amount);
-        _balances[msg.sender] = _balances[msg.sender] - (amount);
+        _totalSupply = _totalSupply.sub(amount);
+        _balances[msg.sender] = _balances[msg.sender].sub(amount);
 
         if (address(gaugeRewarder) != address(0)) {
-            IRewarder(gaugeRewarder).onReward(msg.sender, msg.sender, _balances[msg.sender]);
+            IRewarder(gaugeRewarder).onReward(rewarderPid, msg.sender, msg.sender, 0, _balances[msg.sender]);
         }
 
         TOKEN.safeTransfer(msg.sender, amount);
@@ -251,11 +267,11 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     }
 
     function emergencyWithdraw() external nonReentrant {
-        require(emergency, "emergency");
+        require(emergency);
         require(_balances[msg.sender] > 0, "no balances");
 
         uint256 _amount = _balances[msg.sender];
-        _totalSupply = _totalSupply - (_amount);
+        _totalSupply = _totalSupply.sub(_amount);
         _balances[msg.sender] = 0;
 
         TOKEN.safeTransfer(msg.sender, _amount);
@@ -263,10 +279,10 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     }
 
     function emergencyWithdrawAmount(uint256 _amount) external nonReentrant {
-        require(emergency, "emergency");
+        require(emergency);
         require(_balances[msg.sender] >= _amount, "no balances");
 
-        _totalSupply = _totalSupply - (_amount);
+        _totalSupply = _totalSupply.sub(_amount);
         _balances[msg.sender] -= _amount;
         TOKEN.safeTransfer(msg.sender, _amount);
         emit Withdraw(msg.sender, _amount);
@@ -288,7 +304,7 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         }
 
         if (gaugeRewarder != address(0)) {
-            IRewarder(gaugeRewarder).onReward(_user, _user, _balances[_user]);
+            IRewarder(gaugeRewarder).onReward(rewarderPid, _user, _user, reward, _balances[_user]);
         }
     }
 
@@ -302,7 +318,7 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         }
 
         if (gaugeRewarder != address(0)) {
-            IRewarder(gaugeRewarder).onReward(msg.sender, msg.sender, _balances[msg.sender]);
+            IRewarder(gaugeRewarder).onReward(rewarderPid, msg.sender, msg.sender, reward, _balances[msg.sender]);
         }
     }
 
@@ -315,20 +331,16 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
     ----------------------------------------------------------------------------- */
 
     /// @dev Receive rewards from distribution
-
-    function notifyRewardAmount(
-        address token,
-        uint256 reward
-    ) external nonReentrant isNotEmergency onlyDistribution updateReward(address(0)) {
-        require(token == address(rewardToken), "not rew token");
+    function notifyRewardAmount(address token, uint reward) external nonReentrant isNotEmergency onlyDistribution updateReward(address(0)) {
+        require(token == address(rewardToken));
         rewardToken.safeTransferFrom(DISTRIBUTION, address(this), reward);
 
-        if (block.timestamp >= _periodFinish) {
-            rewardRate = reward / (DURATION);
+        if (block.timestamp >= periodFinish) {
+            rewardRate = reward.div(DURATION);
         } else {
-            uint256 remaining = _periodFinish - (block.timestamp);
-            uint256 leftover = remaining * (rewardRate);
-            rewardRate = (reward + leftover) / DURATION;
+            uint256 remaining = periodFinish.sub(block.timestamp);
+            uint256 leftover = remaining.mul(rewardRate);
+            rewardRate = reward.add(leftover).div(DURATION);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
@@ -336,37 +348,42 @@ contract GaugeV2_CL is ReentrancyGuard, Ownable {
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint256 balance = rewardToken.balanceOf(address(this));
-        require(rewardRate <= balance / (DURATION), "Provided reward too high");
+        require(rewardRate <= balance.div(DURATION), "Provided reward too high");
 
         lastUpdateTime = block.timestamp;
-        _periodFinish = block.timestamp + (DURATION);
+        periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);
     }
 
-    function claimFees() external nonReentrant returns (uint256 claimed0, uint256 claimed1) {
+    function claimFees() external nonReentrant returns (uint claimed0, uint claimed1) {
         return _claimFees();
     }
 
-    function _claimFees() internal returns (uint256 claimed0, uint256 claimed1) {
+    function _claimFees() internal returns (uint claimed0, uint claimed1) {
         address _token = address(TOKEN);
         (claimed0, claimed1) = IFeeVault(feeVault).claimFees();
 
         if (claimed0 > 0 || claimed1 > 0) {
-            uint256 _fees0 = claimed0;
-            uint256 _fees1 = claimed1;
-
+            uint _fees0 = fees0 + claimed0;
+            uint _fees1 = fees1 + claimed1;
             address _token0 = IPair(_token).token0();
             address _token1 = IPair(_token).token1();
             if (_fees0 > 0) {
+                fees0 = 0;
                 IERC20(_token0).approve(internal_bribe, 0);
                 IERC20(_token0).approve(internal_bribe, _fees0);
                 IBribeUpgradeable(internal_bribe).notifyRewardAmount(_token0, _fees0);
+            } else {
+                fees0 = _fees0;
             }
 
             if (_fees1 > 0) {
+                fees1 = 0;
                 IERC20(_token1).approve(internal_bribe, 0);
                 IERC20(_token1).approve(internal_bribe, _fees1);
                 IBribeUpgradeable(internal_bribe).notifyRewardAmount(_token1, _fees1);
+            } else {
+                fees1 = _fees1;
             }
             emit ClaimFees(msg.sender, claimed0, claimed1);
         }
