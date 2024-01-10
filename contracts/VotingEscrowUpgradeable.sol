@@ -9,7 +9,6 @@ import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Recei
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
-import {IVeEarlyExitManagerUpgradeable} from "./interfaces/IVeEarlyExitManagerUpgradeable.sol";
 
 /// @title Voting Escrow
 /// @notice veNFT implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
@@ -31,7 +30,6 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
     struct LockedBalance {
         int128 amount;
         uint256 end;
-        uint256 start;
     }
 
     struct Point {
@@ -696,7 +694,6 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
         _locked.amount += int128(int256(_value));
         if (unlock_time != 0) {
             _locked.end = unlock_time;
-            _locked.start = block.timestamp;
         }
         locked[_tokenId] = _locked;
 
@@ -721,7 +718,7 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
 
     /// @notice Record global data to checkpoint
     function checkpoint() external {
-        _checkpoint(0, LockedBalance(0, 0, 0), LockedBalance(0, 0, 0));
+        _checkpoint(0, LockedBalance(0, 0), LockedBalance(0, 0));
     }
 
     /// @notice Deposit `_value` tokens for `_tokenId` and add to the lock
@@ -812,14 +809,14 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
         require(block.timestamp >= _locked.end, "The lock didn't expire");
         uint256 value = uint(int256(_locked.amount));
 
-        locked[_tokenId] = LockedBalance(0, 0, 0);
+        locked[_tokenId] = LockedBalance(0, 0);
         uint256 supply_before = supply;
         supply = supply_before - value;
 
         // old_locked can have either expired <= timestamp or zero end
         // _locked has only 0 end
         // Both can have >= 0 amount
-        _checkpoint(_tokenId, _locked, LockedBalance(0, 0, 0));
+        _checkpoint(_tokenId, _locked, LockedBalance(0, 0));
 
         assert(IERC20(token).transfer(msg.sender, value));
 
@@ -1056,8 +1053,8 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
         uint256 value0 = uint(int256(_locked0.amount));
         uint256 end = _locked0.end >= _locked1.end ? _locked0.end : _locked1.end;
 
-        locked[_from] = LockedBalance(0, 0, 0);
-        _checkpoint(_from, _locked0, LockedBalance(0, 0, 0));
+        locked[_from] = LockedBalance(0, 0);
+        _checkpoint(_from, _locked0, LockedBalance(0, 0));
         _burn(_from);
         _deposit_for(_to, value0, end, _locked1, DepositType.MERGE_TYPE);
     }
@@ -1089,8 +1086,8 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
         }
 
         // remove old data
-        locked[_tokenId] = LockedBalance(0, 0, 0);
-        _checkpoint(_tokenId, _locked, LockedBalance(0, 0, 0));
+        locked[_tokenId] = LockedBalance(0, 0);
+        _checkpoint(_tokenId, _locked, LockedBalance(0, 0));
         _burn(_tokenId);
 
         // save end
@@ -1358,97 +1355,10 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
         return _ra;
     }
 
-    /*//////////////////////////////////////////////////////////////
-                   EALRY EXIT STORAGE
-    //////////////////////////////////////////////////////////////*/
     /**
-     * @dev Emitted when the treasury address is set.
-     * @param tresuary The address of the treasury.
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    event SetTresuary(address indexed tresuary);
-    /**
-     * @dev Emitted when the early exit manager address is set.
-     * @param earlyExitManager The address of the early exit manager.
-     */
-    event SetEarlyExitManager(address indexed earlyExitManager);
-    event EarlyWithdraw(
-        address indexed provider,
-        uint256 indexed tokenId,
-        uint256 indexed value,
-        address feePaymentToken,
-        uint256 feeAmount
-    );
-
-    address public tresuary;
-    address public earlyExitManager;
-
-    /*//////////////////////////////////////////////////////////////
-                   EALRY EXIT LOGIC
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-     * @dev Sets the treasury address.
-     * @param tresuary_ The address of the treasury.
-     */
-    function setTresuary(address tresuary_) external {
-        require(msg.sender == team);
-        tresuary = tresuary_;
-        emit SetTresuary(tresuary_);
-    }
-
-    /**
-     * @dev Sets the early exit manager address.
-     * @param earlyExitManager_ The address of the early exit manager.
-     */
-    function setEarlyExitManager(address earlyExitManager_) external {
-        require(msg.sender == team);
-        earlyExitManager = earlyExitManager_;
-        emit SetEarlyExitManager(earlyExitManager_);
-    }
-
-    /**
-     * @dev Allows an early withdrawal of locked tokens.
-     * @param tokenId_ The ID of the NFT.
-     * @param feePaymentToken_ The address of the fee payment token.
-     */
-    function earlyWithdraw(uint256 tokenId_, address feePaymentToken_) external {
-        require(_isApprovedOrOwner(msg.sender, tokenId_), "Not token owner");
-        require(attachments[tokenId_] == 0 && !voted[tokenId_], "Attached");
-
-        LockedBalance memory lockedTemp = locked[tokenId_];
-
-        // Validate inputs
-        require(lockedTemp.amount > 0, "No lock");
-        require(lockedTemp.end > block.timestamp, "Lock expired");
-
-        require(earlyExitManager != address(0) && tresuary != address(0), "Early exit is disabled");
-
-        // Update lock
-        uint256 fnxValue = uint256(uint128(lockedTemp.amount));
-
-        uint256 feeAmount = IVeEarlyExitManagerUpgradeable(earlyExitManager).getFeeTokenAmountForEarlyUnlock(
-            feePaymentToken_,
-            fnxValue,
-            lockedTemp.start,
-            lockedTemp.end
-        );
-
-        assert(IERC20(feePaymentToken_).transferFrom(msg.sender, tresuary, feeAmount));
-
-        locked[tokenId_] = LockedBalance(0, 0, 0);
-        uint256 supply_before = supply;
-        supply = supply_before - fnxValue;
-
-        _checkpoint(tokenId_, lockedTemp, LockedBalance(0, 0, 0));
-
-        assert(IERC20(token).approve(earlyExitManager, fnxValue));
-        IVeEarlyExitManagerUpgradeable(earlyExitManager).vestedFor(msg.sender, fnxValue);
-
-        // Burn the NFT
-        _burn(tokenId_);
-
-        emit EarlyWithdraw(msg.sender, tokenId_, fnxValue, feePaymentToken_, feeAmount);
-        emit Withdraw(msg.sender, tokenId_, fnxValue, block.timestamp);
-        emit Supply(supply_before, supply_before - fnxValue);
-    }
+    uint256[50] private __gap;
 }
