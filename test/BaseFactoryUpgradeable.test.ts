@@ -10,6 +10,7 @@ import {
   ImplementationV2Mock__factory,
   TransparentUpgradeableProxy__factory,
 } from '../typechain-types';
+import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('BaseFactoryUpgradeable Contract', function () {
   let deployer: HardhatEthersSigner;
@@ -28,6 +29,8 @@ describe('BaseFactoryUpgradeable Contract', function () {
 
   let implementaionMockInstance: ImplementationMock;
   let implementaionV2MockInstance: ImplementationV2Mock;
+
+  let snapshot: SnapshotRestorer;
 
   async function getNewBaseFactoryProxy() {
     let newProxy = await factoryProxy.deploy(await baseFactoryImplementation.getAddress(), proxyAdmin.address, '0x');
@@ -49,6 +52,12 @@ describe('BaseFactoryUpgradeable Contract', function () {
 
     baseFactoryProxy = await getNewBaseFactoryProxy();
     await baseFactoryProxy.initialize(await implementaionMockInstance.getAddress());
+
+    snapshot = await takeSnapshot();
+  });
+
+  afterEach(async function () {
+    await snapshot.restore();
   });
 
   describe('Deployment', function () {

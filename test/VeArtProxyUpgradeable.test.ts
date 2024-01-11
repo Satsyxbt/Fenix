@@ -17,7 +17,7 @@ describe('VeArtProxyUpgradeable Contract', function () {
     return (
       'data:application/json;base64,' +
       btoa(
-        `{"name": "lock #${tokenId}", "description": "Thena locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,${imgBase64}"}`,
+        `{"name": "lock #${tokenId}", "description": "Fenix locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,${imgBase64}"}`,
       )
     );
   }
@@ -53,7 +53,7 @@ describe('VeArtProxyUpgradeable Contract', function () {
       let exp =
         'data:application/json;base64,' +
         btoa(
-          `{"name": "lock #${ethers.MaxUint256}", "description": "Thena locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,${imgBase64}"}`,
+          `{"name": "lock #${ethers.MaxUint256}", "description": "Fenix locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,${imgBase64}"}`,
         );
       expect(await veArtProxy.tokenURI(ethers.MaxUint256, ONE_ETHER, 12345678, ethers.MaxInt256)).to.be.equal(exp);
     });
