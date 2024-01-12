@@ -1,9 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-contract UniswapV3PoolMock {
+contract UniswapV2PoolMock {
     address internal _token0;
     address internal _token1;
+    string internal _symbol;
+
+    function setSymbol(string memory symbol_) external {
+        _symbol = symbol_;
+    }
+
+    function symbol() external returns (string memory) {
+        return _symbol;
+    }
 
     function setToken0(address token0_) external {
         _token0 = token0_;

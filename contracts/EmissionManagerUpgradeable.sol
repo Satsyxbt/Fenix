@@ -5,8 +5,8 @@ import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/acces
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import {IFenix} from "./interfaces/IFenix.sol";
-import {IVoter} from "./interfaces/IVoter.sol";
-import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
+import {IVoterUpgradeable} from "./interfaces/IVoterUpgradeable.sol";
+import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
 import {IRewardsDistributor} from "./interfaces/IRewardsDistributor.sol";
 import {IEmissionManagerUpgradeable} from "./interfaces/IEmissionManagerUpgradeable.sol";
 
@@ -39,8 +39,8 @@ contract EmissionManagerUpgradeable is
     uint256 public override activePeriod;
 
     IFenix public fenix;
-    IVoter public voter;
-    IVotingEscrow public votingEscrow;
+    IVoterUpgradeable public voter;
+    IVotingEscrowUpgradeable public votingEscrow;
     IRewardsDistributor public rewardsDistributor;
 
     /**
@@ -63,16 +63,16 @@ contract EmissionManagerUpgradeable is
      */
     function initialize(
         // @risk front running
-        IVoter voter_,
-        IVotingEscrow votingEscrow_,
-        IRewardsDistributor rewardsDistributor_
+        address voter_,
+        address votingEscrow_,
+        address rewardsDistributor_
     ) external virtual override initializer {
         __Ownable2Step_init();
 
-        fenix = IFenix(votingEscrow_.token());
-        voter = voter_;
-        votingEscrow = votingEscrow_;
-        rewardsDistributor = rewardsDistributor_;
+        fenix = IFenix(IVotingEscrowUpgradeable(votingEscrow_).token());
+        voter = IVoterUpgradeable(voter_);
+        votingEscrow = IVotingEscrowUpgradeable(votingEscrow_);
+        rewardsDistributor = IRewardsDistributor(rewardsDistributor_);
 
         teamRate = 40; // 300 bps = 3%
 
@@ -83,25 +83,6 @@ contract EmissionManagerUpgradeable is
 
         activePeriod = ((block.timestamp + (2 * PERIOD_DURATION)) / PERIOD_DURATION) * PERIOD_DURATION;
         isFirstMint = true;
-    }
-
-    function initialize(
-        address[] memory claimants_,
-        uint256[] memory amounts_,
-        uint256 max
-    ) external virtual override reinitializer(2) onlyOwner {
-        if (max > 0) {
-            fenix.mint(address(this), max);
-            fenix.approve(address(votingEscrow), type(uint256).max);
-            for (uint256 i; i < claimants_.length; ) {
-                votingEscrow.create_lock_for(amounts_[i], MAX_VOTING_ESCROW_LOCK, claimants_[i]);
-                unchecked {
-                    i++;
-                }
-            }
-        }
-
-        // allow minter.update_period() to mint new emissions THIS Thursday
         activePeriod = _period();
     }
 
@@ -109,7 +90,7 @@ contract EmissionManagerUpgradeable is
         if (voter_ == address(0)) {
             revert ZeroAddress();
         }
-        voter = IVoter(voter_);
+        voter = IVoterUpgradeable(voter_);
     }
 
     // Issue: can be front running

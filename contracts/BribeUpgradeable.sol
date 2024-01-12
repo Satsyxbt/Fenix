@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "./interfaces/IEmissionManagerUpgradeable.sol";
-import "./interfaces/IVoter.sol";
-import "./interfaces/IVotingEscrow.sol";
+import "./interfaces/IVoterUpgradeable.sol";
+import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
 import {IBribeUpgradeable} from "./interfaces/IBribeUpgradeable.sol";
 
 contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
@@ -50,8 +50,8 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
         voter = _voter;
         bribeFactory = _bribeFactory;
         firstBribeTimestamp = 0;
-        ve = IVoter(_voter).ve();
-        minter = IVoter(_voter).minter();
+        ve = IVoterUpgradeable(_voter).votingEscrow();
+        minter = IVoterUpgradeable(_voter).emissionManager();
         require(minter != address(0));
         owner = _owner;
         TYPE = _type;
@@ -87,14 +87,14 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
 
     /// @notice read the balanceOf the tokenId at a given timestamp
     function balanceOfAt(uint256 tokenId, uint256 _timestamp) public view returns (uint256) {
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
         return _balances[_owner][_timestamp];
     }
 
     /// @notice get last deposit available given a tokenID
     function balanceOf(uint256 tokenId) public view returns (uint256) {
         uint256 _timestamp = getNextEpochStart();
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
         return _balances[_owner][_timestamp];
     }
 
@@ -114,7 +114,7 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
         uint256 k = 0;
         uint256 reward = 0;
         uint256 _endTimestamp = IEmissionManagerUpgradeable(minter).activePeriod(); // claim until current epoch
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
         uint256 _userLastTime = userTimestamp[_owner][_rewardToken];
 
         if (_endTimestamp == _userLastTime) {
@@ -218,7 +218,7 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
         require(msg.sender == voter);
         uint256 _startTimestamp = IEmissionManagerUpgradeable(minter).activePeriod() + WEEK;
         uint256 _oldSupply = _totalSupply[_startTimestamp];
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
         uint256 _lastBalance = _balances[_owner][_startTimestamp];
 
         _totalSupply[_startTimestamp] = _oldSupply + amount;
@@ -233,7 +233,7 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
         require(amount > 0, "Cannot withdraw 0");
         require(msg.sender == voter);
         uint256 _startTimestamp = IEmissionManagerUpgradeable(minter).activePeriod() + WEEK;
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
 
         // incase of bribe contract reset in gauge proxy
         if (amount <= _balances[_owner][_startTimestamp]) {
@@ -247,10 +247,10 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
 
     /// @notice Claim the TOKENID rewards
     function getReward(uint256 tokenId, address[] memory tokens) external nonReentrant {
-        require(IVotingEscrow(ve).isApprovedOrOwner(msg.sender, tokenId));
+        require(IVotingEscrowUpgradeable(ve).isApprovedOrOwner(msg.sender, tokenId));
         uint256 _userLastTime;
         uint256 reward = 0;
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
 
         for (uint256 i = 0; i < tokens.length; i++) {
             address _rewardToken = tokens[i];
@@ -285,7 +285,7 @@ contract BribeUpgradeable is IBribeUpgradeable, ReentrancyGuard {
         require(msg.sender == voter);
         uint256 _userLastTime;
         uint256 reward = 0;
-        address _owner = IVotingEscrow(ve).ownerOf(tokenId);
+        address _owner = IVotingEscrowUpgradeable(ve).ownerOf(tokenId);
 
         for (uint256 i = 0; i < tokens.length; i++) {
             address _rewardToken = tokens[i];

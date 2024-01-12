@@ -22,11 +22,11 @@ contract VoteMock {
         factory_.createBribe(owner_, token1_, token2_, type_);
     }
 
-    function ve() external view returns (address) {
+    function votingEscrow() external view returns (address) {
         return v;
     }
 
-    function minter() external view returns (address) {
+    function emissionManager() external view returns (address) {
         return m;
     }
 }

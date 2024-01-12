@@ -8,7 +8,7 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
-import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
+import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
 
 /// @title Voting Escrow
 /// @notice veNFT implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
@@ -83,12 +83,12 @@ contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeab
     uint256 public tokenId;
 
     /// @notice Contract constructor
-    /// @param token_addr `THENA` token address
-    function initialize(address token_addr, address art_proxy) external initializer {
-        token = token_addr;
+    /// @param tokenAddr_ `Fenix` token address
+    function initialize(address tokenAddr_, address artProxy_) external initializer {
+        token = tokenAddr_;
         voter = msg.sender;
         team = msg.sender;
-        artProxy = art_proxy;
+        artProxy = artProxy_;
 
         point_history[0].blk = block.number;
         point_history[0].ts = block.timestamp;

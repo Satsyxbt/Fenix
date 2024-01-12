@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./interfaces/external/IPair.sol";
 import "./interfaces/IBribeUpgradeable.sol";
-import "./interfaces/IVoter.sol";
+import "./interfaces/IVoterUpgradeable.sol";
 import "./interfaces/IPermissionsRegistry.sol";
 
 interface IPairFactory {
@@ -34,7 +34,7 @@ contract CLFeesVault {
 
     bool public activereferral = false;
 
-    IVoter public voter;
+    IVoterUpgradeable public voter;
 
     uint256 public PRECISION = 10000;
     uint256 public gammaShare = 0; // usually 7%
@@ -81,7 +81,7 @@ contract CLFeesVault {
     constructor(address _pool, address _permissionRegistry, address _voter) {
         permissionsRegsitry = IPermissionsRegistry(_permissionRegistry);
         pool = _pool;
-        voter = IVoter(_voter);
+        voter = IVoterUpgradeable(_voter);
         //theNftStakingConverter = IPairFactory(pairFactoryClassic).stakingFeeHandler(); @TODO: commented for test, but will fix in future
         gammaRecipient = address(0); // @TODO it's just mock, will change in future
         //dibs = IPairFactory(pairFactoryClassic).dibs();
@@ -189,7 +189,7 @@ contract CLFeesVault {
 
     function setVoter(address vt) external onlyAdmin {
         require(vt != address(0));
-        voter = IVoter(vt);
+        voter = IVoterUpgradeable(vt);
     }
 
     function setPermissionRegistry(address _pr) external onlyAdmin {
@@ -205,6 +205,6 @@ contract CLFeesVault {
     /// @notice Recover ERC20 from the contract.
     function emergencyRecoverERC20(address tokenAddress, uint256 tokenAmount) external onlyAdmin {
         require(tokenAmount <= IERC20(tokenAddress).balanceOf(address(this)));
-        IERC20(tokenAddress).safeTransfer(permissionsRegsitry.fenixTeamMultisign(), tokenAmount);
+        IERC20(tokenAddress).safeTransfer(permissionsRegsitry.fenixTeamMultisig(), tokenAmount);
     }
 }

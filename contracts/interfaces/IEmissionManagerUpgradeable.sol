@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-import {IVoter} from "./IVoter.sol";
-import {IVotingEscrow} from "./IVotingEscrow.sol";
+import {IVoterUpgradeable} from "./IVoterUpgradeable.sol";
+import {IVotingEscrowUpgradeable} from "./IVotingEscrowUpgradeable.sol";
 import {IRewardsDistributor} from "./IRewardsDistributor.sol";
 
 interface IEmissionManagerUpgradeable {
@@ -21,9 +21,7 @@ interface IEmissionManagerUpgradeable {
 
     function setRebase(uint256 rebaseRate_) external;
 
-    function initialize(IVoter voter_, IVotingEscrow votingEscrow_, IRewardsDistributor rewardsDistributor_) external;
-
-    function initialize(address[] calldata claimants_, uint256[] calldata amounts_, uint256 max) external;
+    function initialize(address voter_, address votingEscrow_, address rewardsDistributor_) external;
 
     function circulatingEmission() external view returns (uint256);
 
