@@ -22,10 +22,6 @@ import {IVoterUpgradeable} from "./interfaces/IVoterUpgradeable.sol";
 import {IVault} from "./interfaces/external/IVault.sol";
 import {IUniV3Factory} from "./interfaces/external/IUniV3Factory.sol";
 
-interface IHypervisor {
-    function pool() external view returns (address);
-}
-
 contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
