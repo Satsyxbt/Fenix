@@ -20,7 +20,7 @@ import {
 import { deployToken } from './utils/fixture';
 import { token } from '../../typechain-types/@openzeppelin/contracts';
 
-describe('BaseFactoryUpgradeable Contract', function () {
+describe('BribeFactoryUpgradeable Contract', function () {
   let deployer: HardhatEthersSigner;
   let fenixMultisig: HardhatEthersSigner;
   let proxyAdmin: HardhatEthersSigner;

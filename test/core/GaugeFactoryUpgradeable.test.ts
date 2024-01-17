@@ -14,14 +14,14 @@ import {
   ImplementationMock,
   CLGaugeFactoryUpgradeable,
   CLGaugeFactoryUpgradeable__factory,
-  CLGaugeUpgradeable,
-  CLGaugeUpgradeable__factory,
+  GaugeUpgradeable,
+  GaugeUpgradeable__factory,
   CLFeesVault__factory,
   CLFeesVault,
 } from '../../typechain-types';
 import { deployToken } from './utils/fixture';
 
-describe('CLGaugeFactoryUpgradeable Contract', function () {
+describe('GaugeFactoryUpgradeable Contract', function () {
   let deployer: HardhatEthersSigner;
   let gaugeAdmin: HardhatEthersSigner;
   let emergencyCouncil: HardhatEthersSigner;
@@ -47,8 +47,8 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
   let voteMockFactory: VoteMock__factory;
   let voteMock: VoteMock;
 
-  let clGaugeUpgradeableFactory: CLGaugeUpgradeable__factory;
-  let clGaugeUpgradeableImplementation: CLGaugeUpgradeable;
+  let clGaugeUpgradeableFactory: GaugeUpgradeable__factory;
+  let clGaugeUpgradeableImplementation: GaugeUpgradeable;
 
   let implementaionMockInstance: ImplementationMock;
 
@@ -71,7 +71,7 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
     externalBribe: string,
   ) {
     await clGaugeFactoryUpgradeableProxy.createGauge(rewardToken, votingEscrow, token, distribution, internalBribe, externalBribe, false);
-    return clGaugeUpgradeableFactory.attach(await clGaugeFactoryUpgradeableProxy.lastGauge()) as CLGaugeUpgradeable;
+    return clGaugeUpgradeableFactory.attach(await clGaugeFactoryUpgradeableProxy.lastGauge()) as GaugeUpgradeable;
   }
   before(async function () {
     [deployer, gaugeAdmin, emergencyCouncil, proxyAdmin, otherUser, votingEscrow, internalBribe, extenralBribe, minter, ...others] =
@@ -79,7 +79,7 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
 
     factoryProxy = (await ethers.getContractFactory('TransparentUpgradeableProxy')) as TransparentUpgradeableProxy__factory;
 
-    clGaugeFactoryUpgradeableFactory = (await ethers.getContractFactory('CLGaugeFactoryUpgradeable')) as CLGaugeFactoryUpgradeable__factory;
+    clGaugeFactoryUpgradeableFactory = (await ethers.getContractFactory('GaugeFactoryUpgradeable')) as CLGaugeFactoryUpgradeable__factory;
     clGaugeFactoryUpgradeableImplementation = (await clGaugeFactoryUpgradeableFactory.deploy()) as CLGaugeFactoryUpgradeable;
 
     permissionRegistryFactory = await ethers.getContractFactory('PermissionsRegistry');
@@ -87,8 +87,8 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
     await permissionRegistry.connect(deployer).setRoleFor(gaugeAdmin.address, 'GAUGE_ADMIN');
     await permissionRegistry.connect(deployer).setEmergencyCouncil(emergencyCouncil.address);
 
-    clGaugeUpgradeableFactory = (await ethers.getContractFactory('CLGaugeUpgradeable')) as CLGaugeUpgradeable__factory;
-    clGaugeUpgradeableImplementation = (await clGaugeUpgradeableFactory.deploy()) as CLGaugeUpgradeable;
+    clGaugeUpgradeableFactory = (await ethers.getContractFactory('GaugeUpgradeable')) as GaugeUpgradeable__factory;
+    clGaugeUpgradeableImplementation = (await clGaugeUpgradeableFactory.deploy()) as GaugeUpgradeable;
 
     voteMockFactory = await ethers.getContractFactory('VoteMock');
     voteMock = (await voteMockFactory.deploy(votingEscrow.address, minter.address)) as VoteMock;
@@ -129,7 +129,6 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should correct set initial settings', async function () {
-      expect(await clGaugeFactoryUpgradeableProxy.lastFeeVault()).to.be.equal(ZERO_ADDRESS);
       expect(await clGaugeFactoryUpgradeableProxy.lastGauge()).to.be.equal(ZERO_ADDRESS);
       expect(await clGaugeFactoryUpgradeableProxy.implementation()).to.be.equal(await clGaugeUpgradeableImplementation.getAddress());
       expect(await clGaugeFactoryUpgradeableProxy.permissionsRegistry()).to.be.equal(await permissionRegistry.getAddress());
@@ -433,48 +432,6 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
         expect(await g3.internalBribe()).to.be.equal(extenralBribe.address);
       });
     });
-    describe('#setGaugeFeeVault', async function () {
-      it('Should corectly update fauge fee vault for gauges', async function () {
-        let g1 = await createGauge(
-          await token18.getAddress(),
-          votingEscrow.address,
-          await token9.getAddress(),
-          await voteMock.getAddress(),
-          internalBribe.address,
-          extenralBribe.address,
-        );
-        let f1 = await clGaugeFactoryUpgradeableProxy.lastFeeVault();
-        let g2 = await createGauge(
-          await token18.getAddress(),
-          votingEscrow.address,
-          await token9.getAddress(),
-          await voteMock.getAddress(),
-          internalBribe.address,
-          extenralBribe.address,
-        );
-        let f2 = await clGaugeFactoryUpgradeableProxy.lastFeeVault();
-
-        let g3 = await createGauge(
-          await token18.getAddress(),
-          votingEscrow.address,
-          await token9.getAddress(),
-          await voteMock.getAddress(),
-          internalBribe.address,
-          extenralBribe.address,
-        );
-        let f3 = await clGaugeFactoryUpgradeableProxy.lastFeeVault();
-
-        expect(await g1.feeVault()).to.be.equal(f1);
-        expect(await g2.feeVault()).to.be.equal(f2);
-        expect(await g3.feeVault()).to.be.equal(f3);
-
-        await clGaugeFactoryUpgradeableProxy.connect(gaugeAdmin).setGaugeFeeVault([await g2.getAddress()], f3);
-
-        expect(await g1.feeVault()).to.be.equal(f1);
-        expect(await g2.feeVault()).to.be.equal(f3);
-        expect(await g3.feeVault()).to.be.equal(f3);
-      });
-    });
 
     describe('#setDistribution', async function () {
       it('Should corectly update distribution on gauges', async function () {
@@ -520,13 +477,8 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
     describe('Should corectly create new gauge and CLFeesVault', async function () {
       let deployedTx: any;
       let deployedGaugeAddress: string;
-      let gaugeFeeVault: string;
-      let gaugeFeeVaultBeforeDeployed: string;
 
       beforeEach(async function () {
-        gaugeFeeVaultBeforeDeployed = await clGaugeFactoryUpgradeableProxy.lastFeeVault();
-        expect(gaugeFeeVaultBeforeDeployed).to.be.equal(ZERO_ADDRESS);
-
         deployedGaugeAddress = await clGaugeFactoryUpgradeableProxy.createGauge.staticCall(
           await token18.getAddress(),
           votingEscrow.address,
@@ -545,37 +497,22 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
           extenralBribe.address,
           false,
         );
-        gaugeFeeVault = await clGaugeFactoryUpgradeableProxy.lastFeeVault();
       });
       it('Should corect emit event after deploy new gauge', async function () {
-        await expect(deployedTx)
-          .to.emit(clGaugeFactoryUpgradeableProxy, 'GaugeCreated(address,address)')
-          .withArgs(deployedGaugeAddress, gaugeFeeVault);
+        await expect(deployedTx).to.emit(clGaugeFactoryUpgradeableProxy, 'GaugeCreated').withArgs(deployedGaugeAddress);
       });
       it('Should corect return lastGauge address', async function () {
         expect(await clGaugeFactoryUpgradeableProxy.lastGauge()).to.be.equal(deployedGaugeAddress);
       });
-      it('Should corect return lastFeeVault address', async function () {
-        expect(gaugeFeeVaultBeforeDeployed).to.be.not.equal(gaugeFeeVault);
-        expect(await clGaugeFactoryUpgradeableProxy.lastFeeVault()).to.be.equal(gaugeFeeVault);
-      });
-      it('Should corect initialize deployed CLFeesVault for gauge', async function () {
-        let f = (await ethers.getContractFactory('CLFeesVault')) as CLFeesVault__factory;
-        let feeVault = f.attach(gaugeFeeVault) as CLFeesVault;
-        expect(await feeVault.pool()).to.be.equal(await token9.getAddress());
-        expect(await feeVault.voter()).to.be.equal(await voteMock.getAddress());
-        expect(await feeVault.permissionsRegsitry()).to.be.equal(await permissionRegistry.getAddress());
-      });
 
       it('Should corect initialize deployead gauge', async function () {
-        let gauge = clGaugeUpgradeableFactory.attach(deployedGaugeAddress) as CLGaugeUpgradeable;
+        let gauge = clGaugeUpgradeableFactory.attach(deployedGaugeAddress) as GaugeUpgradeable;
         expect(await gauge.votingEscrow()).to.be.equal(votingEscrow.address);
         expect(await gauge.rewardToken()).to.be.equal(await token18.getAddress());
         expect(await gauge.depositToken()).to.be.equal(await token9.getAddress());
         expect(await gauge.distribution()).to.be.equal(await voteMock.getAddress());
         expect(await gauge.internalBribe()).to.be.equal(internalBribe.address);
         expect(await gauge.externalBribe()).to.be.equal(extenralBribe.address);
-        expect(await gauge.feeVault()).to.be.equal(gaugeFeeVault);
       });
       it('Deployed gauge should get implementation from factory implementation slot', async function () {
         expect('0x' + (await ethers.provider.getStorage(deployedGaugeAddress, BEACON_IMPLEMENTATION_SLOT)).substring(26)).to.be.equal(
@@ -692,17 +629,6 @@ describe('CLGaugeFactoryUpgradeable Contract', function () {
       });
       it('#setDistribution - Should success called from GAUGE_ADMIN', async () => {
         await expect(clGaugeFactoryUpgradeableProxy.connect(gaugeAdmin).setInternalBribe([], [])).to.be.not.reverted;
-      });
-      it('#setGaugeFeeVault - Should fail if call from not GAUGE_ADMIN', async () => {
-        await expect(
-          clGaugeFactoryUpgradeableProxy.connect(otherUser).setGaugeFeeVault([], otherUser.address),
-        ).to.be.revertedWithCustomError(clGaugeFactoryUpgradeableProxy, 'AccessDenied');
-        await expect(
-          clGaugeFactoryUpgradeableProxy.connect(emergencyCouncil).setGaugeFeeVault([], emergencyCouncil.address),
-        ).to.be.revertedWithCustomError(clGaugeFactoryUpgradeableProxy, 'AccessDenied');
-      });
-      it('#setGaugeFeeVault - Should success called from GAUGE_ADMIN', async () => {
-        await expect(clGaugeFactoryUpgradeableProxy.connect(gaugeAdmin).setGaugeFeeVault([], gaugeAdmin.address)).to.be.not.reverted;
       });
     });
   });

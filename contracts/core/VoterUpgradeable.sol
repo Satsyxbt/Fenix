@@ -9,10 +9,10 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import {IPair} from "./interfaces/external/IPair.sol";
 import {IPairFactory} from "./interfaces/external/IPairFactory.sol";
 
-import {ICLGaugeFactoryUpgradeable} from "./interfaces/factories/ICLGaugeFactoryUpgradeable.sol";
+import {IGaugeFactoryUpgradeable} from "./interfaces/factories/IGaugeFactoryUpgradeable.sol";
 import {IBribeFactoryUpgradeable} from "./interfaces/factories/IBribeFactoryUpgradeable.sol";
 import {IBribeUpgradeable} from "./interfaces/IBribeUpgradeable.sol";
-import {ICLGaugeUpgradeable} from "./interfaces/ICLGaugeUpgradeable.sol";
+import {IBaseGaugeUpgradeable} from "./interfaces/gauges/IBaseGaugeUpgradeable.sol";
 
 import {IEmissionManagerUpgradeable} from "./interfaces/IEmissionManagerUpgradeable.sol";
 import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
@@ -350,7 +350,7 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
     /// @notice claim LP gauge rewards
     function claimRewards(address[] calldata gauges_) external virtual override {
         for (uint256 i; i < gauges_.length; ) {
-            ICLGaugeUpgradeable(gauges_[i]).getReward(msg.sender);
+            IBaseGaugeUpgradeable(gauges_[i]).getReward(msg.sender);
             unchecked {
                 i++;
             }
@@ -453,7 +453,7 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
     function distributeFees(address[] calldata gauges_) external virtual override {
         for (uint256 i; i < gauges_.length; ) {
             if (gaugesState[gauges_[i]].isGauge && gaugesState[gauges_[i]].isAlive) {
-                ICLGaugeUpgradeable(gauges_[i]).claimFees();
+                IBaseGaugeUpgradeable(gauges_[i]).claimFees();
             }
             unchecked {
                 i++;
@@ -593,7 +593,7 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
         );
 
         // create gauge
-        deployedGauge = ICLGaugeFactoryUpgradeable(gaugeType.gaugeFactory).createGauge(
+        deployedGauge = IGaugeFactoryUpgradeable(gaugeType.gaugeFactory).createGauge(
             emissionToken,
             votingEscrow,
             pool_,
@@ -681,7 +681,7 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
             if (claimable > 0 && gaugesState[gauge_].isAlive) {
                 delete gaugesState[gauge_].claimable;
                 gaugesState[gauge_].lastDistributiontime = currentTimestamp;
-                ICLGaugeUpgradeable(gauge_).notifyRewardAmount(emissionToken, claimable);
+                IBaseGaugeUpgradeable(gauge_).notifyRewardAmount(emissionToken, claimable);
                 emit DistributeReward(msg.sender, gauge_, claimable);
             }
         }

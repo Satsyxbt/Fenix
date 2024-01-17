@@ -432,8 +432,8 @@ describe('VoterUpgradeable Contract', function () {
         let newIntBribe = await BribeUpgradeable.deploy();
         let newExtBribe = await BribeUpgradeable.deploy();
 
-        let oldIntBribe = await gauge.internal_bribe();
-        let oldExtBribe = await gauge.external_bribe();
+        let oldIntBribe = await gauge.internalBribe();
+        let oldExtBribe = await gauge.externalBribe();
 
         expect(oldIntBribe).to.be.not.equal(await newIntBribe.getAddress());
         expect(oldExtBribe).to.be.not.equal(await newExtBribe.getAddress());
@@ -476,7 +476,7 @@ describe('VoterUpgradeable Contract', function () {
 
         let newIntBribe = await BribeUpgradeable.deploy();
 
-        let oldIntBribe = await gauge.internal_bribe();
+        let oldIntBribe = await gauge.internalBribe();
 
         expect(oldIntBribe).to.be.not.equal(await newIntBribe.getAddress());
 
@@ -511,7 +511,7 @@ describe('VoterUpgradeable Contract', function () {
 
         let newExtBribe = await BribeUpgradeable.deploy();
 
-        let oldExtBribe = await gauge.external_bribe();
+        let oldExtBribe = await gauge.externalBribe();
 
         expect(oldExtBribe).to.be.not.equal(await newExtBribe.getAddress());
 
