@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity 0.8.13;
+pragma solidity 0.8.19;
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
-import {IUniswapV3Twap} from "./interfaces/IUniswapV3Twap.sol";
+import {IUniswapV3Twap} from "./interfaces/external/IUniswapV3Twap.sol";
 import {IOptionFeeDistributor} from "./interfaces/IOptionFeeDistributor.sol";
 
 /// @title Option Token
@@ -355,7 +355,7 @@ contract OptionToken is ERC20, AccessControl {
 
         // lock underlying tokens to veFNX
         underlyingToken.approve(votingEscrow, _amount);
-        nftId = IVotingEscrow(votingEscrow).create_lock_for(_amount, FULL_LOCK, _recipient);
+        nftId = IVotingEscrowUpgradeable(votingEscrow).create_lock_for(_amount, FULL_LOCK, _recipient);
 
         emit ExerciseVe(msg.sender, _recipient, _amount, paymentAmount, nftId);
     }

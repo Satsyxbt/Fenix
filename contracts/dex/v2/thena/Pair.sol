@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
+import {IERC20, IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
 import "./libraries/Math.sol";
-import "./interfaces/IERC20.sol";
 import "./interfaces/IPair.sol";
 import "./interfaces/IDibs.sol";
 import "./interfaces/IPairCallee.sol";
-import "./factories/PairFactory.sol";
-import "./PairFees.sol";
+import {PairFactoryUpgradeable} from "./PairFactoryUpgradeable.sol";
+import {PairFees} from "./PairFees.sol";
 
 // The base pair of pools, either stable or volatile
 contract Pair is IPair {
@@ -82,19 +83,19 @@ contract Pair is IPair {
 
     constructor() {
         factory = msg.sender;
-        (address _token0, address _token1, bool _stable) = PairFactory(msg.sender).getInitializable();
+        (address _token0, address _token1, bool _stable) = PairFactoryUpgradeable(msg.sender).getInitializable();
         (token0, token1, stable) = (_token0, _token1, _stable);
         fees = address(new PairFees(_token0, _token1));
         if (_stable) {
-            name = string(abi.encodePacked("StableV1 AMM - ", IERC20(_token0).symbol(), "/", IERC20(_token1).symbol()));
-            symbol = string(abi.encodePacked("sAMM-", IERC20(_token0).symbol(), "/", IERC20(_token1).symbol()));
+            name = string(abi.encodePacked("StableV1 AMM - ", IERC20Metadata(_token0).symbol(), "/", IERC20Metadata(_token1).symbol()));
+            symbol = string(abi.encodePacked("sAMM-", IERC20Metadata(_token0).symbol(), "/", IERC20Metadata(_token1).symbol()));
         } else {
-            name = string(abi.encodePacked("VolatileV1 AMM - ", IERC20(_token0).symbol(), "/", IERC20(_token1).symbol()));
-            symbol = string(abi.encodePacked("vAMM-", IERC20(_token0).symbol(), "/", IERC20(_token1).symbol()));
+            name = string(abi.encodePacked("VolatileV1 AMM - ", IERC20Metadata(_token0).symbol(), "/", IERC20Metadata(_token1).symbol()));
+            symbol = string(abi.encodePacked("vAMM-", IERC20Metadata(_token0).symbol(), "/", IERC20Metadata(_token1).symbol()));
         }
 
-        decimals0 = 10 ** IERC20(_token0).decimals();
-        decimals1 = 10 ** IERC20(_token1).decimals();
+        decimals0 = 10 ** IERC20Metadata(_token0).decimals();
+        decimals1 = 10 ** IERC20Metadata(_token1).decimals();
 
         observations.push(Observation(block.timestamp, 0, 0));
     }
@@ -146,21 +147,21 @@ contract Pair is IPair {
     }
 
     function claimStakingFees() external {
-        address _feehandler = PairFactory(factory).stakingFeeHandler();
+        address _feehandler = PairFactoryUpgradeable(factory).stakingFeeHandler();
         PairFees(fees).withdrawStakingFees(_feehandler);
     }
 
     // Accrue fees on token0
     function _update0(uint amount) internal {
         // get referral fee
-        address _dibs = PairFactory(factory).dibs();
-        uint256 _maxRef = PairFactory(factory).MAX_REFERRAL_FEE();
+        address _dibs = PairFactoryUpgradeable(factory).dibs();
+        uint256 _maxRef = PairFactoryUpgradeable(factory).MAX_REFERRAL_FEE();
         uint256 _referralFee = (amount * _maxRef) / 10000;
         _safeTransfer(token0, _dibs, _referralFee); // transfer the fees out to PairFees
         amount -= _referralFee;
 
         // get lp and staking fee
-        uint256 _stakingNftFee = (amount * PairFactory(factory).stakingNFTFee()) / 10000;
+        uint256 _stakingNftFee = (amount * PairFactoryUpgradeable(factory).stakingNFTFee()) / 10000;
         PairFees(fees).processStakingFees(_stakingNftFee, true);
         _safeTransfer(token0, fees, amount); // transfer the fees out to PairFees
 
@@ -176,14 +177,14 @@ contract Pair is IPair {
     // Accrue fees on token1
     function _update1(uint amount) internal {
         // get referral fee
-        address _dibs = PairFactory(factory).dibs();
-        uint256 _maxRef = PairFactory(factory).MAX_REFERRAL_FEE();
+        address _dibs = PairFactoryUpgradeable(factory).dibs();
+        uint256 _maxRef = PairFactoryUpgradeable(factory).MAX_REFERRAL_FEE();
         uint256 _referralFee = (amount * _maxRef) / 10000;
         _safeTransfer(token1, _dibs, _referralFee); // transfer the fees out to PairFees
         amount -= _referralFee;
 
         // get lp and staking fee
-        uint256 _stakingNftFee = (amount * PairFactory(factory).stakingNFTFee()) / 10000;
+        uint256 _stakingNftFee = (amount * PairFactoryUpgradeable(factory).stakingNFTFee()) / 10000;
         PairFees(fees).processStakingFees(_stakingNftFee, false);
         _safeTransfer(token1, fees, amount); // transfer the fees out to PairFees
 
@@ -367,7 +368,7 @@ contract Pair is IPair {
 
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
-        require(!PairFactory(factory).isPaused());
+        require(!PairFactoryUpgradeable(factory).isPaused());
         require(amount0Out > 0 || amount1Out > 0, "IOA"); // Pair: INSUFFICIENT_OUTPUT_AMOUNT
         (uint _reserve0, uint _reserve1) = (reserve0, reserve1);
         require(amount0Out < _reserve0 && amount1Out < _reserve1, "IL"); // Pair: INSUFFICIENT_LIQUIDITY
@@ -392,8 +393,8 @@ contract Pair is IPair {
         {
             // scope for reserve{0,1}Adjusted, avoids stack too deep errors
             (address _token0, address _token1) = (token0, token1);
-            if (amount0In > 0) _update0((amount0In * PairFactory(factory).getFee(stable)) / 10000); // accrue fees for token0 and move them out of pool
-            if (amount1In > 0) _update1((amount1In * PairFactory(factory).getFee(stable)) / 10000); // accrue fees for token1 and move them out of pool
+            if (amount0In > 0) _update0((amount0In * PairFactoryUpgradeable(factory).getFee(stable)) / 10000); // accrue fees for token0 and move them out of pool
+            if (amount1In > 0) _update1((amount1In * PairFactoryUpgradeable(factory).getFee(stable)) / 10000); // accrue fees for token1 and move them out of pool
             _balance0 = IERC20(_token0).balanceOf(address(this)); // since we removed tokens, we need to reconfirm balances, can also simply use previous balance - amountIn/ 10000, but doing balanceOf again as safety check
             _balance1 = IERC20(_token1).balanceOf(address(this));
             // The curve, either x3y+y3x for stable pools, or x*y for volatile pools
@@ -450,7 +451,7 @@ contract Pair is IPair {
 
     function getAmountOut(uint amountIn, address tokenIn) external view returns (uint) {
         (uint _reserve0, uint _reserve1) = (reserve0, reserve1);
-        amountIn -= (amountIn * PairFactory(factory).getFee(stable)) / 10000; // remove fee from amount received
+        amountIn -= (amountIn * PairFactoryUpgradeable(factory).getFee(stable)) / 10000; // remove fee from amount received
         return _getAmountOut(amountIn, tokenIn, _reserve0, _reserve1);
     }
 
