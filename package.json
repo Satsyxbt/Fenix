@@ -31,6 +31,7 @@
   "author": "Aegas",
   "license": "MIT",
   "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "4.9.3",
     "@openzeppelin/hardhat-upgrades": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
@@ -47,6 +48,7 @@
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "ethereum-waffle": "^4.0.10",
     "hardhat": "^2.19.4",
     "hardhat-contract-sizer": "^2.10.0",
     "prettier": "^2.8.1",
