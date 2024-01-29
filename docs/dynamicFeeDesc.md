@@ -1,4 +1,4 @@
-## Dynamic Fee Mechanism
+## Dynamic Fee Management
 
 ### On-Chain Process:
 1. **User's Swap Request:**
