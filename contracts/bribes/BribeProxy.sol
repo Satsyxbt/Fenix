@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
 import {StorageSlot} from "@openzeppelin/contracts/utils/StorageSlot.sol";
+
+import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
 
 contract BribeProxy {
     address private immutable bribeFactory;

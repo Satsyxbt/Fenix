@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity =0.8.19;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import "./interfaces/IMinter.sol";
-import "./interfaces/IFenix.sol";
-import "./interfaces/IVoter.sol";
-import "./interfaces/IVotingEscrow.sol";
-
+import {IMinter} from "./interfaces/IMinter.sol";
+import {IFenix} from "./interfaces/IFenix.sol";
+import {IVoter} from "./interfaces/IVoter.sol";
+import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
 // codifies the minting rules as per ve(3,3), abstracted from the token to support any token that allows minting

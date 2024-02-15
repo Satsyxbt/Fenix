@@ -2,6 +2,7 @@
 pragma solidity =0.8.19;
 
 import {StorageSlot} from "@openzeppelin/contracts/utils/StorageSlot.sol";
+
 import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 
 contract GaugeProxy {

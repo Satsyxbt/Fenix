@@ -9,9 +9,6 @@ contract PairFees {
     address internal immutable token0; // token0 of pair, saved localy and statically for gas optimization
     address internal immutable token1; // Token1 of pair, saved localy and statically for gas optimization
 
-    uint256 public toStake0;
-    uint256 public toStake1;
-
     constructor(address _token0, address _token1) {
         pair = msg.sender;
         token0 = _token0;

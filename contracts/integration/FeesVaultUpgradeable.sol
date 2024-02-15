@@ -127,5 +127,14 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
         toGaugeAmount = (amount_ * toGaugeRate) / PRECISION;
         toProtocolAmount = (amount_ * toProtocolRate) / PRECISION;
         toPartnerAmount = amount_ - toGaugeAmount - toProtocolAmount;
+
+        if (amount_ < toGaugeAmount + toProtocolAmount + toPartnerAmount) {
+            if (toGaugeAmount > 0) {
+                toGaugeAmount -= 1;
+            } else if (toProtocolAmount > 0) {
+                toProtocolAmount -= 1;
+            }
+            assert(amount_ == toGaugeAmount + toProtocolAmount + toPartnerAmount);
+        }
     }
 }
