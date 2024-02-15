@@ -1,649 +1,417 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import {IERC20Upgradeable, SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {IAlgebraFactory} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraFactory.sol";
 
-import {IPair} from "./interfaces/external/IPair.sol";
-import {IPairFactory} from "./interfaces/external/IPairFactory.sol";
+import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import "../bribes/interfaces/IBribe.sol";
+import "../bribes/interfaces/IBribeFactory.sol";
+import "../gauges/interfaces/IGauge.sol";
+import "../gauges/interfaces/IGaugeFactory.sol";
+import "./interfaces/IMinter.sol";
+import "../dexV2/interfaces/IPairInfo.sol";
+import "../dexV2/interfaces/IPairFactory.sol";
+import "./interfaces/IVotingEscrow.sol";
+import "./interfaces/IVault.sol";
+import "./interfaces/IVoter.sol";
 
-import {IGaugeFactoryUpgradeable} from "./interfaces/factories/IGaugeFactoryUpgradeable.sol";
-import {IBribeFactoryUpgradeable} from "./interfaces/factories/IBribeFactoryUpgradeable.sol";
-import {IBribeUpgradeable} from "./interfaces/IBribeUpgradeable.sol";
-import {IBaseGaugeUpgradeable} from "./interfaces/gauges/IBaseGaugeUpgradeable.sol";
+import "../integration/interfaces/IPairIntegrationInfo.sol";
 
-import {IEmissionManagerUpgradeable} from "./interfaces/IEmissionManagerUpgradeable.sol";
-import {IVotingEscrowUpgradeable} from "./interfaces/IVotingEscrowUpgradeable.sol";
-import {IPermissionsRegistry} from "./interfaces/IPermissionsRegistry.sol";
-import {IVoterUpgradeable} from "./interfaces/IVoterUpgradeable.sol";
-
-import {IVault} from "./interfaces/external/IVault.sol";
-import {IUniV3Factory} from "./interfaces/external/IUniV3Factory.sol";
-
-contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
+contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    uint256 public constant MAX_VOTE_DELAY = 7 days;
+    bool internal initflag;
 
-    address public override votingEscrow;
-    address public override emissionManager;
-    address public override bribeFactory;
-    address public override permissionRegistry;
-    address public override emissionToken;
+    address public _ve; // the ve token that governs these contracts
+    address[] internal _factories; // Array with all the pair factories
+    address internal base; // $chr token
+    address[] internal _gaugeFactories; // array with all the gauge factories
+    address public bribefactory; // bribe factory (internal and external)
+    address public minter; // minter mints $chr each epoch
+    address[] public pools; // all pools viable for incentives
+    address public admin;
+    address public governance;
 
-    mapping(address => GaugeState) public gaugesState;
-    mapping(uint256 => uint256) public override totalWeightsPerEpoch; // epoch timestamp => total weights
-    mapping(address => address) public override gaugeByPool; // pool     => gauge
-    mapping(address => bool) public override isWhitelisted; // token    => boolean [is an allowed token?]
-    mapping(address => bool) public override factoryForGaugeTypeIsAdded;
+    uint256 internal index; // gauge index
+    uint256 internal constant DURATION = 7 days; // rewards are released over 7 days
+    uint256 public VOTE_DELAY; // delay between votes in seconds
+    uint256 public constant MAX_VOTE_DELAY = 7 days; // Max vote delay allowed
 
-    uint256 public voteDelay; // delay between votes in seconds
-    mapping(uint256 => uint256) public lastVoted; // nft      => timestamp of last vote
-
-    uint256 public index; // gauge index
+    mapping(address => uint256) internal supplyIndex; // gauge    => index
+    mapping(address => uint256) public claimable; // gauge    => claimable $chr
+    mapping(address => address) public gauges; // pool     => gauge
+    mapping(address => uint256) public gaugesDistributionTimestmap; // gauge    => last Distribution Time
+    mapping(address => address) public poolForGauge; // gauge    => pool
+    mapping(address => address) public internal_bribes; // gauge    => internal bribe (only fees)
+    mapping(address => address) public external_bribes; // gauge    => external bribe (real bribes)
     mapping(uint256 => mapping(address => uint256)) public votes; // nft      => pool     => votes
-    mapping(uint256 => mapping(address => uint256)) public override weightsPerEpoch; // timestamp => pool => weights
     mapping(uint256 => address[]) public poolVote; // nft      => pools
+    mapping(uint256 => mapping(address => uint256)) public weightsPerEpoch; // timestamp => pool => weights
+    mapping(uint256 => uint256) internal totalWeightsPerEpoch; // timestamp => total weights
+    mapping(uint256 => uint256) public lastVoted; // nft      => timestamp of last vote
+    mapping(address => bool) public isGauge; // gauge    => boolean [is a gauge?]
+    mapping(address => bool) public isWhitelisted; // token    => boolean [is an allowed token?]
+    mapping(address => bool) public isAlive; // gauge    => boolean [is the gauge alive?]
+    mapping(address => bool) public isFactory; // factory  => boolean [the pair factory exists?]
+    mapping(address => bool) public isGaugeFactory; // g.factory=> boolean [the gauge factory exists?]
 
-    address[] public pools;
-    GaugeType[] public gaugeTypes;
+    event GaugeCreated(
+        address indexed gauge,
+        address creator,
+        address internal_bribe,
+        address indexed external_bribe,
+        address indexed pool
+    );
+    event GaugeKilled(address indexed gauge);
+    event GaugeRevived(address indexed gauge);
+    event Voted(address indexed voter, uint256 tokenId, uint256 weight);
+    event Abstained(uint256 tokenId, uint256 weight);
+    event NotifyReward(address indexed sender, address indexed reward, uint256 amount);
+    event DistributeReward(address indexed sender, address indexed gauge, uint256 amount);
+    event Whitelisted(address indexed whitelister, address indexed token);
+    event Blacklisted(address indexed blacklister, address indexed token);
 
-    modifier onlyVoterAdmin() {
-        if (!IPermissionsRegistry(permissionRegistry).hasRole("VOTER_ADMIN", msg.sender)) {
-            revert AccessDenied();
-        }
-        _;
-    }
-
-    modifier onlyEmissionManager() {
-        if (msg.sender != emissionManager) {
-            revert AccessDenied();
-        }
-        _;
-    }
-
-    modifier onlyGovernance() {
-        if (!IPermissionsRegistry(permissionRegistry).hasRole("GOVERNANCE", msg.sender)) {
-            revert AccessDenied();
-        }
-        _;
-    }
-
-    modifier onlyContract(address addr_) {
-        if (addr_.code.length == 0) {
-            revert NotContract();
-        }
-        _;
-    }
-    modifier onlyRealGauge(address addr_) {
-        if (!gaugesState[addr_].isGauge) {
-            revert NotGauge();
-        }
-        _;
-    }
-    modifier notZero(address addr_) {
-        if (addr_ == address(0)) {
-            revert ZeroAdress();
-        }
-        _;
-    }
-
-    modifier onlyTokenApprovedOrOwner(uint256 tokenId_) {
-        if (!IVotingEscrowUpgradeable(votingEscrow).isApprovedOrOwner(msg.sender, tokenId_)) {
-            revert NotTokenOwnerOrApproved();
-        }
-        _;
-    }
-
-    modifier onlyVoteDelay(uint256 tokenId_) {
-        require(block.timestamp > lastVoted[tokenId_] + voteDelay, "ERR: VOTE_DELAY");
-        _;
-    }
+    event SetMinter(address indexed old, address indexed latest);
+    event SetBribeFactory(address indexed old, address indexed latest);
+    event SetPairFactory(address indexed old, address indexed latest);
+    event SetGaugeFactory(address indexed old, address indexed latest);
+    event SetBribeFor(bool isInternal, address indexed old, address indexed latest, address indexed gauge);
+    event SetVoteDelay(uint256 old, uint256 latest);
+    event AddFactories(address indexed pairfactory, address indexed gaugefactory);
 
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(
-        address votingEscrow_,
-        address bribeFactory_,
-        address permissionsRegistry_,
-        address emissionManager_,
-        address[] calldata tokens_,
-        GaugeType calldata gaugeType_
-    ) external virtual override initializer {
+    address[] public clPools; // all pools viable for incentives
+
+    function initialize(address governor_, address __ve, address _pairFactory, address _gaugeFactory, address _bribes) public initializer {
+        __BlastGovernorSetup_init(governor_);
         __ReentrancyGuard_init();
 
-        votingEscrow = votingEscrow_;
-        emissionToken = IVotingEscrowUpgradeable(votingEscrow_).token();
+        admin = msg.sender;
+        governance = msg.sender;
+        _ve = __ve;
+        base = IVotingEscrow(__ve).token();
 
-        gaugeTypes.push(GaugeType({pairFactory: gaugeType_.pairFactory, gaugeFactory: gaugeType_.gaugeFactory}));
+        _factories.push(_pairFactory);
+        isFactory[_pairFactory] = true;
 
-        factoryForGaugeTypeIsAdded[gaugeType_.pairFactory] = true;
-        factoryForGaugeTypeIsAdded[gaugeType_.gaugeFactory] = true;
+        _gaugeFactories.push(_gaugeFactory);
+        isGaugeFactory[_gaugeFactory] = true;
 
-        bribeFactory = bribeFactory_;
+        bribefactory = _bribes;
 
-        emissionManager = emissionManager_;
-        permissionRegistry = permissionsRegistry_;
+        minter = msg.sender;
 
-        voteDelay = 0;
+        VOTE_DELAY = 0;
+        initflag = false;
+    }
 
-        for (uint256 i; i < tokens_.length; ) {
-            _whitelist(tokens_[i]);
-            unchecked {
-                i++;
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    MODIFIERS
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    modifier VoterAdmin() {
+        require(msg.sender == admin, "VOTER_ADMIN");
+        _;
+    }
+
+    modifier Governance() {
+        require(msg.sender == governance, "GOVERNANCE");
+        _;
+    }
+
+    /// @notice initialize the voter contract
+    /// @param  _tokens array of tokens to whitelist
+    /// @param  _minter the minter of $chr
+    function _init(address[] memory _tokens, address _minter) external {
+        require(msg.sender == admin);
+        require(!initflag);
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            _whitelist(_tokens[i]);
+        }
+        minter = _minter;
+        initflag = true;
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    VoterAdmin
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    /// @notice set vote delay in seconds
+    function setVoteDelay(uint256 _delay) external VoterAdmin {
+        require(_delay != VOTE_DELAY, "already set");
+        require(_delay <= MAX_VOTE_DELAY, "max delay");
+        emit SetVoteDelay(VOTE_DELAY, _delay);
+        VOTE_DELAY = _delay;
+    }
+
+    /// @notice Set a new Minter
+    function setMinter(address _minter) external VoterAdmin {
+        require(_minter != address(0), "addr0");
+        require(_minter.code.length > 0, "!contract");
+        emit SetMinter(minter, _minter);
+        minter = _minter;
+    }
+
+    /// @notice Set a new Bribe Factory
+    function setBribeFactory(address _bribeFactory) external VoterAdmin {
+        require(_bribeFactory.code.length > 0, "!contract");
+        require(_bribeFactory != address(0), "addr0");
+        emit SetBribeFactory(bribefactory, _bribeFactory);
+        bribefactory = _bribeFactory;
+    }
+
+    /// @notice Set a new bribes for a given gauge
+    function setNewBribes(address _gauge, address _internal, address _external) external VoterAdmin {
+        require(isGauge[_gauge], "!gauge");
+        require(_gauge.code.length > 0, "!contract");
+        _setInternalBribe(_gauge, _internal);
+        _setExternalBribe(_gauge, _external);
+    }
+
+    /// @notice Set a new internal bribe for a given gauge
+    function setInternalBribeFor(address _gauge, address _internal) external VoterAdmin {
+        require(isGauge[_gauge], "!gauge");
+        _setInternalBribe(_gauge, _internal);
+    }
+
+    /// @notice Set a new External bribe for a given gauge
+    function setExternalBribeFor(address _gauge, address _external) external VoterAdmin {
+        require(isGauge[_gauge], "!gauge");
+        _setExternalBribe(_gauge, _external);
+    }
+
+    function _setInternalBribe(address _gauge, address _internal) private {
+        require(_internal.code.length > 0, "!contract");
+        emit SetBribeFor(true, internal_bribes[_gauge], _internal, _gauge);
+        internal_bribes[_gauge] = _internal;
+    }
+
+    function _setExternalBribe(address _gauge, address _external) private {
+        require(_external.code.length > 0, "!contract");
+        emit SetBribeFor(false, internal_bribes[_gauge], _external, _gauge);
+        external_bribes[_gauge] = _external;
+    }
+
+    function addFactory(address _pairFactory, address _gaugeFactory) external VoterAdmin {
+        require(_pairFactory != address(0), "addr0");
+        require(_gaugeFactory != address(0), "addr0");
+        require(!isFactory[_pairFactory], "fact");
+        //require(!isGaugeFactory[_gaugeFactory], 'gFact');
+        require(_pairFactory.code.length > 0, "!contract");
+        require(_gaugeFactory.code.length > 0, "!contract");
+
+        _factories.push(_pairFactory);
+        _gaugeFactories.push(_gaugeFactory);
+        isFactory[_pairFactory] = true;
+        isGaugeFactory[_gaugeFactory] = true;
+        emit AddFactories(_pairFactory, _gaugeFactory);
+    }
+
+    function replaceFactory(address _pairFactory, address _gaugeFactory, uint256 _pos) external VoterAdmin {
+        require(_pairFactory != address(0), "addr0");
+        require(_gaugeFactory != address(0), "addr0");
+        require(isFactory[_pairFactory], "!fact");
+        require(isGaugeFactory[_gaugeFactory], "!gFact");
+        address oldPF = _factories[_pos];
+        address oldGF = _gaugeFactories[_pos];
+        isFactory[oldPF] = false;
+        isGaugeFactory[oldGF] = false;
+
+        _factories[_pos] = (_pairFactory);
+        _gaugeFactories[_pos] = (_gaugeFactory);
+        isFactory[_pairFactory] = true;
+        isGaugeFactory[_gaugeFactory] = true;
+
+        emit SetGaugeFactory(oldGF, _gaugeFactory);
+        emit SetPairFactory(oldPF, _pairFactory);
+    }
+
+    function removeFactory(uint256 _pos) external VoterAdmin {
+        address oldPF = _factories[_pos];
+        address oldGF = _gaugeFactories[_pos];
+
+        require(isFactory[oldPF], "!fact");
+        require(isGaugeFactory[oldGF], "!gFact");
+        _factories[_pos] = address(0);
+        _gaugeFactories[_pos] = address(0);
+        isFactory[oldPF] = false;
+        isGaugeFactory[oldGF] = false;
+        emit SetGaugeFactory(oldGF, address(0));
+        emit SetPairFactory(oldPF, address(0));
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    GOVERNANCE
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    /// @notice Whitelist a token for gauge creation
+    function whitelist(address[] memory _token) external Governance {
+        uint256 i = 0;
+        for (i = 0; i < _token.length; i++) {
+            _whitelist(_token[i]);
+        }
+    }
+
+    function _whitelist(address _token) private {
+        require(!isWhitelisted[_token], "in");
+        require(_token.code.length > 0, "!contract");
+        isWhitelisted[_token] = true;
+        emit Whitelisted(msg.sender, _token);
+    }
+
+    /// @notice Blacklist a malicious token
+    function blacklist(address[] memory _token) external Governance {
+        uint256 i = 0;
+        for (i = 0; i < _token.length; i++) {
+            _blacklist(_token[i]);
+        }
+    }
+
+    function _blacklist(address _token) private {
+        require(isWhitelisted[_token], "out");
+        isWhitelisted[_token] = false;
+        emit Blacklisted(msg.sender, _token);
+    }
+
+    /// @notice Kill a malicious gauge
+    /// @param  _gauge gauge to kill
+    function killGauge(address _gauge) external Governance {
+        require(isAlive[_gauge], "killed");
+        isAlive[_gauge] = false;
+        claimable[_gauge] = 0;
+
+        uint _time = _epochTimestamp();
+        totalWeightsPerEpoch[_time] -= weightsPerEpoch[_time][poolForGauge[_gauge]];
+
+        emit GaugeKilled(_gauge);
+    }
+
+    /// @notice Revive a malicious gauge
+    /// @param  _gauge gauge to revive
+    function reviveGauge(address _gauge) external Governance {
+        require(!isAlive[_gauge], "alive");
+        require(isGauge[_gauge], "killed");
+        isAlive[_gauge] = true;
+        emit GaugeRevived(_gauge);
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    USER INTERACTION
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    /// @notice Reset the votes of a given TokenID
+    function reset(uint256 _tokenId) external nonReentrant {
+        _voteDelay(_tokenId);
+        require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
+        _reset(_tokenId);
+        IVotingEscrow(_ve).abstain(_tokenId);
+        lastVoted[_tokenId] = _epochTimestamp() + 1;
+    }
+
+    function _reset(uint256 _tokenId) internal {
+        address[] storage _poolVote = poolVote[_tokenId];
+        uint256 _poolVoteCnt = _poolVote.length;
+        uint256 _totalWeight = 0;
+        uint256 _time = _epochTimestamp();
+
+        for (uint256 i = 0; i < _poolVoteCnt; i++) {
+            address _pool = _poolVote[i];
+            uint256 _votes = votes[_tokenId][_pool];
+
+            if (_votes != 0) {
+                // if user last vote is < than epochTimestamp then votes are 0! IF not underflow occur
+                if (lastVoted[_tokenId] > _time) weightsPerEpoch[_time][_pool] -= _votes;
+
+                votes[_tokenId][_pool] -= _votes;
+
+                IBribe(internal_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
+                IBribe(external_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
+
+                // if is alive remove _votes, else don't because we already done it in killGauge()
+                if (isAlive[gauges[_pool]]) _totalWeight += _votes;
+
+                emit Abstained(_tokenId, _votes);
             }
         }
+
+        // if user last vote is < than epochTimestamp then _totalWeight is 0! IF not underflow occur
+        if (lastVoted[_tokenId] < _time) _totalWeight = 0;
+
+        totalWeightsPerEpoch[_time] -= _totalWeight;
+        delete poolVote[_tokenId];
     }
 
-    function setVoteDelay(uint256 delay_) external virtual override onlyVoterAdmin {
-        if (delay_ > MAX_VOTE_DELAY) {
-            revert MaxVoteDelayLimit();
-        }
-        emit SetVoteDelay(voteDelay, delay_);
-        voteDelay = delay_;
-    }
-
-    function setEmissionManager(
-        address emissionManager_
-    ) external virtual override onlyVoterAdmin notZero(emissionManager_) onlyContract(emissionManager_) {
-        emit SetEmissionManager(emissionManager, emissionManager_);
-        emissionManager = emissionManager_;
-    }
-
-    function setBribeFactory(
-        address bribeFactory_
-    ) external virtual override onlyVoterAdmin notZero(bribeFactory_) onlyContract(bribeFactory_) {
-        emit SetBribeFactory(bribeFactory, bribeFactory_);
-        bribeFactory = bribeFactory_;
-    }
-
-    function setPermissionsRegistry(
-        address permissionRegistry_
-    ) external virtual override onlyVoterAdmin notZero(permissionRegistry_) onlyContract(permissionRegistry_) {
-        emit SetPermissionRegistry(permissionRegistry, permissionRegistry_);
-        permissionRegistry = permissionRegistry_;
-    }
-
-    function setNewBribes(
-        address gauge_,
-        address internalBribe_,
-        address externalBribe_
-    ) external virtual override onlyVoterAdmin onlyRealGauge(gauge_) {
-        _setInternalBribe(gauge_, internalBribe_);
-        _setExternalBribe(gauge_, externalBribe_);
-    }
-
-    function setInternalBribeFor(address gauge_, address internalBribe_) external virtual override onlyVoterAdmin onlyRealGauge(gauge_) {
-        _setInternalBribe(gauge_, internalBribe_);
-    }
-
-    function setExternalBribeFor(address gauge_, address externalBribe_) external virtual override onlyVoterAdmin onlyRealGauge(gauge_) {
-        _setExternalBribe(gauge_, externalBribe_);
-    }
-
-    function addFactory(
-        GaugeType calldata gaugeType_
-    )
-        external
-        virtual
-        override
-        onlyVoterAdmin
-        notZero(gaugeType_.pairFactory)
-        notZero(gaugeType_.gaugeFactory)
-        onlyContract(gaugeType_.pairFactory)
-        onlyContract(gaugeType_.gaugeFactory)
-    {
-        if (factoryForGaugeTypeIsAdded[gaugeType_.pairFactory]) {
-            revert PairFactoryExist();
-        }
-        if (factoryForGaugeTypeIsAdded[gaugeType_.gaugeFactory]) {
-            revert GaugeFactoryExist();
-        }
-
-        gaugeTypes.push(gaugeType_);
-
-        factoryForGaugeTypeIsAdded[gaugeType_.pairFactory] = true;
-        factoryForGaugeTypeIsAdded[gaugeType_.gaugeFactory] = true;
-
-        emit AddFactories(gaugeType_.pairFactory, gaugeType_.gaugeFactory);
-    }
-
-    function replaceFactory(
-        GaugeType calldata gaugeType_,
-        uint256 pos_
-    )
-        external
-        virtual
-        override
-        onlyVoterAdmin
-        notZero(gaugeType_.pairFactory)
-        notZero(gaugeType_.gaugeFactory)
-        onlyContract(gaugeType_.pairFactory)
-        onlyContract(gaugeType_.gaugeFactory)
-    {
-        if (factoryForGaugeTypeIsAdded[gaugeType_.pairFactory]) {
-            revert PairFactoryExist();
-        }
-        if (factoryForGaugeTypeIsAdded[gaugeType_.gaugeFactory]) {
-            revert GaugeFactoryExist();
-        }
-
-        GaugeType memory oldGaugeType = gaugeTypes[pos_];
-        delete factoryForGaugeTypeIsAdded[oldGaugeType.pairFactory];
-        delete factoryForGaugeTypeIsAdded[oldGaugeType.gaugeFactory];
-
-        gaugeTypes[pos_] = gaugeType_;
-
-        factoryForGaugeTypeIsAdded[gaugeType_.pairFactory] = true;
-        factoryForGaugeTypeIsAdded[gaugeType_.gaugeFactory] = true;
-
-        emit SetGaugeFactory(oldGaugeType.gaugeFactory, gaugeType_.gaugeFactory);
-        emit SetPairFactory(oldGaugeType.pairFactory, gaugeType_.pairFactory);
-    }
-
-    function removeFactory(uint256 pos_) external virtual override onlyVoterAdmin {
-        GaugeType memory gaugeType = gaugeTypes[pos_];
-
-        if (!factoryForGaugeTypeIsAdded[gaugeType.pairFactory]) {
-            revert PairFactoryNotExist();
-        }
-        if (!factoryForGaugeTypeIsAdded[gaugeType.gaugeFactory]) {
-            revert GaugeFactoryNotExist();
-        }
-
-        uint256 size = gaugeTypes.length;
-        if (size > 1) {
-            gaugeTypes[pos_] = gaugeTypes[size - 1];
-        }
-
-        gaugeTypes.pop();
-
-        delete factoryForGaugeTypeIsAdded[gaugeType.pairFactory];
-        delete factoryForGaugeTypeIsAdded[gaugeType.gaugeFactory];
-
-        emit SetGaugeFactory(gaugeType.gaugeFactory, address(0));
-        emit SetPairFactory(gaugeType.pairFactory, address(0));
-    }
-
-    function whitelist(address[] calldata tokens_) external virtual override onlyGovernance {
-        for (uint256 i; i < tokens_.length; ) {
-            _whitelist(tokens_[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function blacklist(address[] calldata tokens_) external virtual override onlyGovernance {
-        for (uint256 i; i < tokens_.length; ) {
-            _blacklist(tokens_[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function killGauge(address gauge_) external virtual override onlyGovernance {
-        if (!gaugesState[gauge_].isAlive) {
-            revert GaugeArleadyKilled();
-        }
-
-        delete gaugesState[gauge_].isAlive;
-        delete gaugesState[gauge_].claimable;
-
-        uint256 time = _epochTimestamp();
-        totalWeightsPerEpoch[time] -= weightsPerEpoch[time][gaugesState[gauge_].pool];
-
-        emit GaugeKilled(gauge_);
-    }
-
-    function reviveGauge(address gauge_) external virtual override onlyGovernance onlyRealGauge(gauge_) {
-        if (gaugesState[gauge_].isAlive) {
-            revert GaugeNotKilled();
-        }
-        gaugesState[gauge_].isAlive = true;
-        emit GaugeRevived(gauge_);
-    }
-
-    function reset(uint256 tokenId_) external virtual override nonReentrant onlyTokenApprovedOrOwner(tokenId_) onlyVoteDelay(tokenId_) {
-        _reset(tokenId_);
-        IVotingEscrowUpgradeable(votingEscrow).abstain(tokenId_);
-        lastVoted[tokenId_] = _epochTimestamp() + 1;
-    }
-
-    function poke(uint256 tokenId_) external virtual override nonReentrant onlyTokenApprovedOrOwner(tokenId_) onlyVoteDelay(tokenId_) {
-        address[] memory _poolVote = poolVote[tokenId_];
+    /// @notice Recast the saved votes of a given TokenID
+    function poke(uint256 _tokenId) external nonReentrant {
+        _voteDelay(_tokenId);
+        require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
+        address[] memory _poolVote = poolVote[_tokenId];
         uint256 _poolCnt = _poolVote.length;
         uint256[] memory _weights = new uint256[](_poolCnt);
 
-        for (uint256 i; i < _poolCnt; i++) {
-            _weights[i] = votes[tokenId_][_poolVote[i]];
-            unchecked {
-                i++;
-            }
+        for (uint256 i = 0; i < _poolCnt; i++) {
+            _weights[i] = votes[_tokenId][_poolVote[i]];
         }
 
-        _vote(tokenId_, _poolVote, _weights);
-        lastVoted[tokenId_] = _epochTimestamp() + 1;
+        _vote(_tokenId, _poolVote, _weights);
+        lastVoted[_tokenId] = _epochTimestamp() + 1;
     }
 
     /// @notice Vote for pools
-    /// @param  tokenId_    veNFT tokenID used to vote
-    /// @param  poolVote_   array of LPs addresses to vote  (eg.: [sAMM usdc-usdt   , sAMM busd-usdt, vAMM wbnb-the ,...])
-    /// @param  weights_    array of weights for each LPs   (eg.: [10               , 90            , 45             ,...])
-    function vote(
-        uint256 tokenId_,
-        address[] calldata poolVote_,
-        uint256[] calldata weights_
-    ) external virtual override nonReentrant onlyTokenApprovedOrOwner(tokenId_) onlyVoteDelay(tokenId_) {
-        if (poolVote_.length != weights_.length) {
-            revert MismatchArrayLen();
-        }
-        _vote(tokenId_, poolVote_, weights_);
-        lastVoted[tokenId_] = _epochTimestamp() + 1;
-    }
-
-    /// @notice claim LP gauge rewards
-    function claimRewards(address[] calldata gauges_) external virtual override {
-        for (uint256 i; i < gauges_.length; ) {
-            IBaseGaugeUpgradeable(gauges_[i]).getReward(msg.sender);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    /// @notice claim bribes rewards given a TokenID
-    function claimBribes(
-        address[] calldata bribes_,
-        address[][] calldata tokens_,
-        uint256 tokenId_
-    ) external virtual override onlyTokenApprovedOrOwner(tokenId_) {
-        for (uint256 i; i < bribes_.length; ) {
-            IBribeUpgradeable(bribes_[i]).getRewardForTokenOwner(tokenId_, tokens_[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function claimFees(
-        address[] calldata fees_,
-        address[][] calldata tokens_,
-        uint256 tokenId_
-    ) external virtual override onlyTokenApprovedOrOwner(tokenId_) {
-        for (uint256 i; i < fees_.length; ) {
-            IBribeUpgradeable(fees_[i]).getRewardForTokenOwner(tokenId_, tokens_[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    /// @notice claim bribes rewards given an address
-    function claimBribes(address[] calldata _bribes, address[][] calldata _tokens) external virtual override {
-        for (uint256 i; i < _bribes.length; ) {
-            IBribeUpgradeable(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    /// @notice claim fees rewards given an address
-    function claimFees(address[] calldata _bribes, address[][] calldata _tokens) external virtual override {
-        for (uint256 i; i < _bribes.length; ) {
-            IBribeUpgradeable(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function createGauges(
-        address[] calldata pool_,
-        uint256[] calldata gaugesType_
-    ) external virtual override nonReentrant returns (address[] memory, address[] memory, address[] memory) {
-        if (pool_.length != gaugesType_.length) {
-            revert MismatchArrayLen();
-        }
-        address[] memory gauge_ = new address[](pool_.length);
-        address[] memory _int = new address[](pool_.length);
-        address[] memory _ext = new address[](pool_.length);
-
-        for (uint256 i; i < pool_.length; ) {
-            (gauge_[i], _int[i], _ext[i]) = _createGauge(pool_[i], gaugesType_[i]);
-            unchecked {
-                i++;
-            }
-        }
-        return (gauge_, _int, _ext);
-    }
-
-    /// @notice create a gauge
-    function createGauge(
-        address pool_,
-        uint256 gaugeTypeIndex_
-    ) external virtual override nonReentrant returns (address gauge, address internal_bribe, address external_bribe) {
-        return _createGauge(pool_, gaugeTypeIndex_);
-    }
-
-    /// @notice notify reward amount for gauge
-    /// @dev    the function is called by the minter each epoch. Anyway anyone can top up some extra rewards.
-    /// @param  amount  amount to distribute
-    function notifyRewardAmount(uint256 amount) external virtual override onlyEmissionManager {
-        IERC20Upgradeable(emissionToken).safeTransferFrom(msg.sender, address(this), amount);
-
-        uint256 totalWeightTemp = totalWeightsPerEpoch[_epochTimestamp() - 1 weeks]; // minter call notify after updates active_period, loads votes - 1 week
-
-        uint256 ratio;
-
-        if (totalWeightTemp > 0) ratio = (amount * 1e18) / totalWeightTemp; // 1e18 adjustment is removed during claim
-        if (ratio > 0) {
-            index += ratio;
-        }
-
-        emit NotifyReward(msg.sender, emissionToken, amount);
-    }
-
-    function distributeFees(address[] calldata gauges_) external virtual override {
-        for (uint256 i; i < gauges_.length; ) {
-            if (gaugesState[gauges_[i]].isGauge && gaugesState[gauges_[i]].isAlive) {
-                IBaseGaugeUpgradeable(gauges_[i]).claimFees();
-            }
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function distributeAll() external virtual override nonReentrant {
-        IEmissionManagerUpgradeable(emissionManager).updatePeriod();
-        for (uint256 i; i < pools.length; ) {
-            _distribute(gaugeByPool[pools[i]]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function distribute(uint256 start, uint256 finish) external virtual override nonReentrant {
-        IEmissionManagerUpgradeable(emissionManager).updatePeriod();
-        for (uint256 i = start; i < finish; ) {
-            _distribute(gaugeByPool[pools[i]]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function distribute(address[] calldata gauges_) external virtual override nonReentrant {
-        IEmissionManagerUpgradeable(emissionManager).updatePeriod();
-        for (uint256 i; i < gauges_.length; ) {
-            _distribute(gauges_[i]);
-            unchecked {
-                i++;
-            }
-        }
-    }
-
-    function isGauge(address gauge_) external view virtual override returns (bool) {
-        return gaugesState[gauge_].isGauge;
-    }
-
-    function poolForGauge(address gauge_) external view virtual override returns (address) {
-        return gaugesState[gauge_].pool;
-    }
-
-    function internalBribe(address gauge_) external view virtual override returns (address) {
-        return gaugesState[gauge_].internalBribe;
-    }
-
-    function externalBribe(address gauge_) external view virtual override returns (address) {
-        return gaugesState[gauge_].externalBribe;
-    }
-
-    /// @notice view the total length of the pools
-    function length() external view virtual override returns (uint256) {
-        return pools.length;
-    }
-
-    /// @notice view the total length of the voted pools given a tokenId
-    function poolVoteLength(uint256 tokenId) external view virtual override returns (uint256) {
-        return poolVote[tokenId].length;
-    }
-
-    function weights(address pool_) external view virtual override returns (uint256) {
-        return weightsPerEpoch[_epochTimestamp()][pool_];
-    }
-
-    function totalWeight() external view virtual override returns (uint256) {
-        return totalWeightsPerEpoch[_epochTimestamp()];
-    }
-
-    function _epochTimestamp() internal view returns (uint256) {
-        return IEmissionManagerUpgradeable(emissionManager).activePeriod();
-    }
-
-    function _createGauge(
-        address pool_,
-        uint256 gaugeTypeIndex_
-    ) internal onlyContract(pool_) returns (address deployedGauge, address deployedInternalBribe, address deployedExternalBribe) {
-        if (gaugeTypeIndex_ >= gaugeTypes.length) {
-            revert GaugeTypeNotExist();
-        }
-        if (gaugeByPool[pool_] != address(0x0)) {
-            revert GaugeAlreadyExist();
-        }
-
-        GaugeType memory gaugeType = gaugeTypes[gaugeTypeIndex_];
-        if (gaugeType.pairFactory == address(0)) {
-            revert PairFactoryNotExist();
-        }
-        if (gaugeType.gaugeFactory == address(0)) {
-            revert GaugeFactoryNotExist();
-        }
-
-        bool isPair;
-
-        address tokenA = IPair(pool_).token0();
-        address tokenB = IPair(pool_).token1();
-
-        // for future implementation add isPair() in factory
-        if (gaugeTypeIndex_ == 0) {
-            isPair = IPairFactory(gaugeType.pairFactory).isPair(pool_);
-        } else if (gaugeTypeIndex_ == 1) {
-            address _pool_factory = IUniV3Factory(gaugeType.pairFactory).poolByPair(tokenA, tokenB);
-            address _pool_hyper = IVault(pool_).pool();
-            require(_pool_hyper == _pool_factory, "wrong tokens");
-            isPair = true;
-        }
-
-        // gov can create for any pool, even non-Fenix pairs
-        if (!IPermissionsRegistry(permissionRegistry).hasRole("GOVERNANCE", msg.sender)) {
-            if (!isPair) {
-                revert IncorrectPool();
-            }
-            if (!isWhitelisted[tokenA] || !isWhitelisted[tokenB]) {
-                revert TokenNotInWhitelist();
-            }
-            if (tokenA != address(0) || tokenB != address(0)) {
-                revert ZeroAdress();
-            }
-        }
-
-        // create internal and external bribe
-        address fenixMultisig = IPermissionsRegistry(permissionRegistry).fenixTeamMultisig();
-
-        deployedInternalBribe = IBribeFactoryUpgradeable(bribeFactory).createBribe(
-            fenixMultisig,
-            tokenA,
-            tokenB,
-            string.concat("Fenix LP Fees: ", IERC20Metadata(pool_).symbol())
-        );
-        deployedExternalBribe = IBribeFactoryUpgradeable(bribeFactory).createBribe(
-            fenixMultisig,
-            tokenA,
-            tokenB,
-            string.concat("Fenix Bribes: ", IERC20Metadata(pool_).symbol())
-        );
-
-        // create gauge
-        deployedGauge = IGaugeFactoryUpgradeable(gaugeType.gaugeFactory).createGauge(
-            emissionToken,
-            votingEscrow,
-            pool_,
-            address(this),
-            deployedInternalBribe,
-            deployedExternalBribe,
-            isPair
-        );
-
-        // approve spending for $fenix
-        IERC20Upgradeable(emissionToken).approve(deployedGauge, type(uint256).max);
-
-        gaugesState[deployedGauge] = GaugeState({
-            internalBribe: deployedInternalBribe,
-            externalBribe: deployedExternalBribe,
-            pool: pool_,
-            isAlive: true,
-            isGauge: true,
-            supplyIndex: index,
-            claimable: 0,
-            lastDistributiontime: 0
-        });
-
-        gaugeByPool[pool_] = deployedGauge;
-        pools.push(pool_);
-
-        emit GaugeCreated(deployedGauge, msg.sender, deployedInternalBribe, deployedExternalBribe, pool_);
+    /// @param  _tokenId    veNFT tokenID used to vote
+    /// @param  _poolVote   array of LPs addresses to vote  (eg.: [sAMM usdc-usdt   , sAMM busd-usdt, vAMM wbnb-the ,...])
+    /// @param  _weights    array of weights for each LPs   (eg.: [10               , 90            , 45             ,...])
+    function vote(uint256 _tokenId, address[] calldata _poolVote, uint256[] calldata _weights) external nonReentrant {
+        _voteDelay(_tokenId);
+        require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
+        require(_poolVote.length == _weights.length, "Pool/Weights length !=");
+        _vote(_tokenId, _poolVote, _weights);
+        lastVoted[_tokenId] = _epochTimestamp() + 1;
     }
 
     function _vote(uint256 _tokenId, address[] memory _poolVote, uint256[] memory _weights) internal {
         _reset(_tokenId);
         uint256 _poolCnt = _poolVote.length;
-        uint256 _weight = IVotingEscrowUpgradeable(votingEscrow).balanceOfNFT(_tokenId);
+        uint256 _weight = IVotingEscrow(_ve).balanceOfNFT(_tokenId);
         uint256 _totalVoteWeight = 0;
         uint256 _totalWeight = 0;
         uint256 _usedWeight = 0;
         uint256 _time = _epochTimestamp();
 
-        for (uint256 i; i < _poolCnt; ) {
-            if (gaugesState[gaugeByPool[_poolVote[i]]].isAlive) _totalVoteWeight += _weights[i];
-            unchecked {
-                i++;
-            }
+        for (uint i = 0; i < _poolCnt; i++) {
+            if (isAlive[gauges[_poolVote[i]]]) _totalVoteWeight += _weights[i];
         }
 
-        for (uint256 i; i < _poolCnt; ) {
+        for (uint256 i = 0; i < _poolCnt; i++) {
             address _pool = _poolVote[i];
-            address gauge_ = gaugeByPool[_pool];
+            address _gauge = gauges[_pool];
 
-            if (gaugesState[gauge_].isGauge && gaugesState[gauge_].isAlive) {
+            if (isGauge[_gauge] && isAlive[_gauge]) {
                 uint256 _poolWeight = (_weights[i] * _weight) / _totalVoteWeight;
 
                 require(votes[_tokenId][_pool] == 0);
@@ -654,121 +422,380 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
 
                 votes[_tokenId][_pool] += _poolWeight;
 
-                IBribeUpgradeable(gaugesState[gauge_].internalBribe).deposit(uint256(_poolWeight), _tokenId);
-                IBribeUpgradeable(gaugesState[gauge_].externalBribe).deposit(uint256(_poolWeight), _tokenId);
+                IBribe(internal_bribes[_gauge]).deposit(uint256(_poolWeight), _tokenId);
+                IBribe(external_bribes[_gauge]).deposit(uint256(_poolWeight), _tokenId);
 
                 _usedWeight += _poolWeight;
                 _totalWeight += _poolWeight;
                 emit Voted(msg.sender, _tokenId, _poolWeight);
             }
-            unchecked {
-                i++;
-            }
         }
-        if (_usedWeight > 0) IVotingEscrowUpgradeable(votingEscrow).voting(_tokenId);
+        if (_usedWeight > 0) IVotingEscrow(_ve).voting(_tokenId);
         totalWeightsPerEpoch[_time] += _totalWeight;
     }
 
-    function _distribute(address gauge_) internal {
-        uint256 lastTimestamp = gaugesState[gauge_].lastDistributiontime;
-        uint256 currentTimestamp = _epochTimestamp();
-        if (lastTimestamp < currentTimestamp) {
-            _updateForAfterDistribution(gauge_); // should set claimable to 0 if killed
+    /// @notice claim LP gauge rewards
+    function claimRewards(address[] memory _gauges) external {
+        for (uint256 i = 0; i < _gauges.length; i++) {
+            IGauge(_gauges[i]).getReward(msg.sender);
+        }
+    }
 
-            uint256 claimable = gaugesState[gauge_].claimable;
+    /// @notice claim bribes rewards given a TokenID
+    function claimBribes(address[] memory _bribes, address[][] memory _tokens, uint256 _tokenId) external {
+        require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
+        for (uint256 i = 0; i < _bribes.length; i++) {
+            IBribe(_bribes[i]).getRewardForOwner(_tokenId, _tokens[i]);
+        }
+    }
 
-            // distribute only if claimable is > 0, currentEpoch != lastepoch and gauge is alive
-            if (claimable > 0 && gaugesState[gauge_].isAlive) {
-                delete gaugesState[gauge_].claimable;
-                gaugesState[gauge_].lastDistributiontime = currentTimestamp;
-                IBaseGaugeUpgradeable(gauge_).notifyRewardAmount(emissionToken, claimable);
-                emit DistributeReward(msg.sender, gauge_, claimable);
+    /// @notice claim fees rewards given a TokenID
+    function claimFees(address[] memory _fees, address[][] memory _tokens, uint256 _tokenId) external {
+        require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
+        for (uint256 i = 0; i < _fees.length; i++) {
+            IBribe(_fees[i]).getRewardForOwner(_tokenId, _tokens[i]);
+        }
+    }
+
+    /// @notice claim bribes rewards given an address
+    function claimBribes(address[] memory _bribes, address[][] memory _tokens) external {
+        for (uint256 i = 0; i < _bribes.length; i++) {
+            IBribe(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
+        }
+    }
+
+    /// @notice claim fees rewards given an address
+    function claimFees(address[] memory _bribes, address[][] memory _tokens) external {
+        for (uint256 i = 0; i < _bribes.length; i++) {
+            IBribe(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
+        }
+    }
+
+    /// @notice check if user can vote
+    function _voteDelay(uint256 _tokenId) internal view {
+        require(block.timestamp > lastVoted[_tokenId] + VOTE_DELAY, "ERR: VOTE_DELAY");
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    GAUGE CREATION
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+    /// @notice create multiple gauges
+    function createGauges(
+        address[] memory _pool,
+        uint256[] memory _gaugeTypes
+    ) external nonReentrant returns (address[] memory, address[] memory, address[] memory) {
+        require(_pool.length == _gaugeTypes.length, "len mismatch");
+        require(_pool.length <= 10, "max 10");
+        address[] memory _gauge = new address[](_pool.length);
+        address[] memory _int = new address[](_pool.length);
+        address[] memory _ext = new address[](_pool.length);
+
+        uint256 i = 0;
+        for (i; i < _pool.length; i++) {
+            (_gauge[i], _int[i], _ext[i]) = _createGauge(_pool[i], _gaugeTypes[i]);
+        }
+        return (_gauge, _int, _ext);
+    }
+
+    /// @notice create a gauge
+    function createGauge(
+        address _pool,
+        uint256 _gaugeType
+    ) external nonReentrant returns (address _gauge, address _internal_bribe, address _external_bribe) {
+        (_gauge, _internal_bribe, _external_bribe) = _createGauge(_pool, _gaugeType);
+    }
+
+    function _prepareBeforeCreate(
+        address _pool,
+        uint256 _gaugeType
+    ) internal returns (address gaugeFactory, address tokenA, address tokenB, address feeVault, bool isDistributeEmissionToMerkle) {
+        require(_gaugeType < _factories.length, "gaugetype");
+        require(gauges[_pool] == address(0x0), "!exists");
+        require(_pool.code.length > 0, "!contract");
+
+        bool isPair;
+        address _factory = _factories[_gaugeType];
+        gaugeFactory = _gaugeFactories[_gaugeType];
+        require(_factory != address(0), "addr0");
+        require(gaugeFactory != address(0), "addr0");
+
+        tokenA = IPairIntegrationInfo(_pool).token0();
+        tokenB = IPairIntegrationInfo(_pool).token1();
+
+        // for future implementation add isPair() in factory
+        if (_gaugeType == 0) {
+            // v2 pairs
+            isPair = IPairFactory(_factory).isPair(_pool);
+            feeVault = IPairIntegrationInfo(_pool).communityVault();
+        } else if (_gaugeType == 1) {
+            // v3 pairs
+            address poolFromFactory = IAlgebraFactory(_factory).poolByPair(tokenA, tokenB);
+            require(_pool == poolFromFactory, "wrong tokens");
+            isPair = true;
+            isDistributeEmissionToMerkle = true;
+            clPools.push(_pool);
+            feeVault = IPairIntegrationInfo(_pool).communityVault();
+        } else if (_gaugeType == 2) {
+            // v3 pairs but with ICIH Vault
+            address poolFromFactory = IAlgebraFactory(_factory).poolByPair(tokenA, tokenB);
+            address poolFromIchi = IVault(_pool).pool();
+            require(poolFromIchi == poolFromFactory, "wrong tokens");
+            isDistributeEmissionToMerkle = true;
+            clPools.push(_pool);
+            feeVault = IPairIntegrationInfo(_pool).communityVault();
+        }
+
+        // gov can create for any pool, even non-Fenix pairs
+        if (!(governance == msg.sender)) {
+            require(isPair, "!_pool");
+            require(isWhitelisted[tokenA] && isWhitelisted[tokenB], "!whitelisted");
+            require(tokenA != address(0) && tokenB != address(0), "!pair.tokens");
+        }
+    }
+
+    /// @notice create a gauge
+    /// @param  _pool       LP address
+    /// @param  _gaugeType  the type of the gauge you want to create
+    /// @dev    To create stable/Volatile pair gaugeType = 0, Concentrated liqudity = 1, ...
+    ///         Make sure to use the corrcet gaugeType or it will fail
+
+    function _createGauge(
+        address _pool,
+        uint256 _gaugeType
+    ) internal returns (address _gauge, address _internal_bribe, address _external_bribe) {
+        (address gaugeFactory, address tokenA, address tokenB, address feeVault, bool isDistributeEmissionToMerkle) = _prepareBeforeCreate(
+            _pool,
+            _gaugeType
+        );
+        // create internal and external bribe
+        string memory _type = string.concat("Fenix LP Fees: ", IERC20Metadata(_pool).symbol());
+        _internal_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
+
+        _type = string.concat("Fenix Bribes: ", IERC20Metadata(_pool).symbol());
+        _external_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
+
+        // create gauge
+        _gauge = IGaugeFactory(gaugeFactory).createGauge(
+            base,
+            _ve,
+            _pool,
+            address(this),
+            _internal_bribe,
+            _external_bribe,
+            isDistributeEmissionToMerkle,
+            feeVault
+        );
+
+        // approve spending for $fnx
+        IERC20(base).approve(_gauge, type(uint256).max);
+
+        // save data
+        internal_bribes[_gauge] = _internal_bribe;
+        external_bribes[_gauge] = _external_bribe;
+        gauges[_pool] = _gauge;
+        poolForGauge[_gauge] = _pool;
+        isGauge[_gauge] = true;
+        isAlive[_gauge] = true;
+        pools.push(_pool);
+
+        // update index
+        supplyIndex[_gauge] = index; // new gauges are set to the default global state
+
+        emit GaugeCreated(_gauge, msg.sender, _internal_bribe, _external_bribe, _pool);
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    VIEW FUNCTIONS
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    /// @notice view the total length of the pools
+    function length() external view returns (uint256) {
+        return pools.length;
+    }
+
+    /// @notice view the total length of the pools
+    function poolsList() external view returns (address[] memory) {
+        return pools;
+    }
+
+    /// @notice view the total length of the pools
+    function clLength() external view returns (uint256) {
+        return clPools.length;
+    }
+
+    /// @notice view the total length of the pools
+    function clPoolsList() external view returns (address[] memory) {
+        return clPools;
+    }
+
+    /// @notice view the total length of the voted pools given a tokenId
+    function poolVoteLength(uint256 tokenId) external view returns (uint256) {
+        return poolVote[tokenId].length;
+    }
+
+    function factories() external view returns (address[] memory) {
+        return _factories;
+    }
+
+    function factoryLength() external view returns (uint256) {
+        return _factories.length;
+    }
+
+    function gaugeFactories() external view returns (address[] memory) {
+        return _gaugeFactories;
+    }
+
+    function gaugeFactoriesLength() external view returns (uint256) {
+        return _gaugeFactories.length;
+    }
+
+    function weights(address _pool) public view returns (uint256) {
+        uint256 _time = _epochTimestamp();
+        return weightsPerEpoch[_time][_pool];
+    }
+
+    function weightsAt(address _pool, uint256 _time) public view returns (uint256) {
+        return weightsPerEpoch[_time][_pool];
+    }
+
+    function totalWeight() public view returns (uint256) {
+        uint256 _time = _epochTimestamp();
+        return totalWeightsPerEpoch[_time];
+    }
+
+    function totalWeightAt(uint256 _time) public view returns (uint256) {
+        return totalWeightsPerEpoch[_time];
+    }
+
+    function _epochTimestamp() public view returns (uint256) {
+        return IMinter(minter).active_period();
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    DISTRIBUTION
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
+
+    /// @notice notify reward amount for gauge
+    /// @dev    the function is called by the minter each epoch. Anyway anyone can top up some extra rewards.
+    /// @param  amount  amount to distribute
+    function notifyRewardAmount(uint256 amount) external {
+        require(msg.sender == minter, "!minter");
+        IERC20Upgradeable(base).safeTransferFrom(msg.sender, address(this), amount);
+
+        uint256 _totalWeight = totalWeightAt(_epochTimestamp() - 1 weeks); // minter call notify after updates active_period, loads votes - 1 week
+
+        uint256 _ratio = 0;
+
+        if (_totalWeight > 0) _ratio = (amount * 1e18) / _totalWeight; // 1e18 adjustment is removed during claim
+        if (_ratio > 0) {
+            index += _ratio;
+        }
+
+        emit NotifyReward(msg.sender, base, amount);
+    }
+
+    /// @notice distribute the LP Fees to the internal bribes
+    /// @param  _gauges  gauge address where to claim the fees
+    /// @dev    the gauge is the owner of the LPs so it has to claim
+    function distributeFees(address[] memory _gauges) external {
+        for (uint256 i = 0; i < _gauges.length; i++) {
+            if (isGauge[_gauges[i]] && isAlive[_gauges[i]]) {
+                IGauge(_gauges[i]).claimFees();
             }
         }
     }
+
+    /// @notice Distribute the emission for ALL gauges
+    function distributeAll() external nonReentrant {
+        IMinter(minter).update_period();
+
+        uint256 x = 0;
+        uint256 stop = pools.length;
+        for (x; x < stop; x++) {
+            _distribute(gauges[pools[x]]);
+        }
+    }
+
+    /// @notice distribute the emission for N gauges
+    /// @param  start   start index point of the pools array
+    /// @param  finish  finish index point of the pools array
+    /// @dev    this function is used in case we have too many pools and gasLimit is reached
+    function distribute(uint256 start, uint256 finish) public nonReentrant {
+        IMinter(minter).update_period();
+        for (uint256 x = start; x < finish; x++) {
+            _distribute(gauges[pools[x]]);
+        }
+    }
+
+    /// @notice distribute reward onyl for given gauges
+    /// @dev    this function is used in case some distribution fails
+    function distribute(address[] memory _gauges) external nonReentrant {
+        IMinter(minter).update_period();
+        for (uint256 x = 0; x < _gauges.length; x++) {
+            _distribute(_gauges[x]);
+        }
+    }
+
+    /// @notice distribute the emission
+    function _distribute(address _gauge) internal {
+        uint256 lastTimestamp = gaugesDistributionTimestmap[_gauge];
+        uint256 currentTimestamp = _epochTimestamp();
+        if (lastTimestamp < currentTimestamp) {
+            _updateForAfterDistribution(_gauge); // should set claimable to 0 if killed
+
+            uint256 _claimable = claimable[_gauge];
+
+            // distribute only if claimable is > 0, currentEpoch != lastepoch and gauge is alive
+            if (_claimable > 0 && isAlive[_gauge]) {
+                claimable[_gauge] = 0;
+                gaugesDistributionTimestmap[_gauge] = currentTimestamp;
+                IGauge(_gauge).notifyRewardAmount(base, _claimable);
+                emit DistributeReward(msg.sender, _gauge, _claimable);
+            }
+        }
+    }
+
+    /* -----------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+                                    HELPERS
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------- */
 
     /// @notice update info for gauges
     /// @dev    this function track the gauge index to emit the correct $fnx amount after the distribution
-    function _updateForAfterDistribution(address gauge_) internal {
-        address pool = gaugesState[gauge_].pool;
-        uint256 time = _epochTimestamp() - 604800;
-        uint256 supplied = weightsPerEpoch[time][pool];
+    function _updateForAfterDistribution(address _gauge) private {
+        address _pool = poolForGauge[_gauge];
+        uint256 _time = _epochTimestamp() - 604800;
+        uint256 _supplied = weightsPerEpoch[_time][_pool];
 
-        if (supplied > 0) {
-            uint256 supplyIndex = gaugesState[gauge_].supplyIndex;
-            gaugesState[gauge_].supplyIndex = index; // update gauge_ current position to global position
-            uint256 delta = index - supplyIndex; // see if there is any difference that need to be accrued
-            if (delta > 0) {
-                uint256 _share = (supplied * delta) / 1e18; // add accrued difference for each supplied token
-                if (gaugesState[gauge_].isAlive) {
-                    gaugesState[gauge_].claimable += _share;
+        if (_supplied > 0) {
+            uint256 _supplyIndex = supplyIndex[_gauge];
+            uint256 _index = index; // get global index0 for accumulated distro
+            supplyIndex[_gauge] = _index; // update _gauge current position to global position
+            uint256 _delta = _index - _supplyIndex; // see if there is any difference that need to be accrued
+            if (_delta > 0) {
+                uint256 _share = (_supplied * _delta) / 1e18; // add accrued difference for each supplied token
+                if (isAlive[_gauge]) {
+                    claimable[_gauge] += _share;
                 }
             }
         } else {
-            gaugesState[gauge_].supplyIndex = index; // new users are set to the default global state
+            supplyIndex[_gauge] = index; // new users are set to the default global state
         }
-    }
-
-    function _setInternalBribe(address gauge_, address internalBribe_) internal notZero(internalBribe_) onlyContract(internalBribe_) {
-        emit SetBribeFor(true, gaugesState[gauge_].internalBribe, internalBribe_, gauge_);
-        gaugesState[gauge_].internalBribe = internalBribe_;
-    }
-
-    function _setExternalBribe(address gauge_, address externalBribe_) internal notZero(externalBribe_) onlyContract(externalBribe_) {
-        emit SetBribeFor(false, gaugesState[gauge_].externalBribe, externalBribe_, gauge_);
-        gaugesState[gauge_].externalBribe = externalBribe_;
-    }
-
-    function _blacklist(address token_) internal {
-        if (!isWhitelisted[token_]) {
-            revert TokenNotInWhitelist();
-        }
-        delete isWhitelisted[token_];
-        emit Blacklisted(msg.sender, token_);
-    }
-
-    function _whitelist(address token_) internal onlyContract(token_) {
-        if (isWhitelisted[token_]) {
-            revert TokenInWhitelist();
-        }
-        isWhitelisted[token_] = true;
-        emit Whitelisted(msg.sender, token_);
-    }
-
-    function _reset(uint256 tokenId_) internal {
-        address[] memory _poolVote = poolVote[tokenId_];
-        uint256 _poolVoteCnt = _poolVote.length;
-        uint256 _totalWeight = 0;
-        uint256 time = _epochTimestamp();
-
-        for (uint256 i; i < _poolVoteCnt; ) {
-            address _pool = _poolVote[i];
-            uint256 _votes = votes[tokenId_][_pool];
-
-            if (_votes != 0) {
-                // if user last vote is < than epochTimestamp then votes are 0! IF not underflow occur
-                if (lastVoted[tokenId_] > time) weightsPerEpoch[time][_pool] -= _votes;
-
-                votes[tokenId_][_pool] -= _votes;
-                address gauge = gaugeByPool[_pool];
-                IBribeUpgradeable(gaugesState[gauge].internalBribe).withdraw(_votes, tokenId_);
-                IBribeUpgradeable(gaugesState[gauge].externalBribe).withdraw(_votes, tokenId_);
-
-                // if is alive remove _votes, else don't because we already done it in killGauge()
-                if (gaugesState[gauge].isAlive) _totalWeight += _votes;
-
-                emit Abstained(tokenId_, _votes);
-            }
-            unchecked {
-                i++;
-            }
-        }
-
-        // if user last vote is < than epochTimestamp then _totalWeight is 0! IF not underflow occur
-        if (lastVoted[tokenId_] < time) _totalWeight = 0;
-
-        totalWeightsPerEpoch[time] -= _totalWeight;
-        delete poolVote[tokenId_];
     }
 
     /**
@@ -776,5 +803,5 @@ contract VoterUpgradeable is IVoterUpgradeable, ReentrancyGuardUpgradeable {
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] __gap;
+    uint256[50] private __gap;
 }
