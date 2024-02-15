@@ -2,6 +2,7 @@
 pragma solidity =0.8.19;
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {GaugeProxy} from "./GaugeProxy.sol";

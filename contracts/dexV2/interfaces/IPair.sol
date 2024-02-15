@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import {YieldMode, IERC20Rebasing} from "../../integration/interfaces/IERC20Rebasing.sol";
 
 interface IPair {
     function setCommunityVault(address communityVault_) external;
+
+    function configure(address erc20Rebasing_, YieldMode mode_) external returns (uint256);
+
+    function claim(address erc20Rebasing_, address recipient_, uint256 amount_) external returns (uint256);
 
     function metadata() external view returns (uint dec0, uint dec1, uint r0, uint r1, bool st, address t0, address t1);
 

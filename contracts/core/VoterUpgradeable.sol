@@ -1,27 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
 import {IAlgebraFactory} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraFactory.sol";
 
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
-import "../bribes/interfaces/IBribe.sol";
-import "../bribes/interfaces/IBribeFactory.sol";
-import "../gauges/interfaces/IGauge.sol";
-import "../gauges/interfaces/IGaugeFactory.sol";
-import "./interfaces/IMinter.sol";
-import "../dexV2/interfaces/IPairInfo.sol";
-import "../dexV2/interfaces/IPairFactory.sol";
-import "./interfaces/IVotingEscrow.sol";
-import "./interfaces/IVault.sol";
-import "./interfaces/IVoter.sol";
-
-import "../integration/interfaces/IPairIntegrationInfo.sol";
+import {IBribe} from "../bribes/interfaces/IBribe.sol";
+import {IBribeFactory} from "../bribes/interfaces/IBribeFactory.sol";
+import {IGauge} from "../gauges/interfaces/IGauge.sol";
+import {IGaugeFactory} from "../gauges/interfaces/IGaugeFactory.sol";
+import {IMinter} from "./interfaces/IMinter.sol";
+import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
+import {IPairFactory} from "../dexV2/interfaces/IPairFactory.sol";
+import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
+import {IVault} from "./interfaces/IVault.sol";
+import {IVoter} from "./interfaces/IVoter.sol";
+import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 
 contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -591,7 +589,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         );
 
         // approve spending for $fnx
-        IERC20(base).approve(_gauge, type(uint256).max);
+        IERC20Upgradeable(base).approve(_gauge, type(uint256).max);
 
         // save data
         internal_bribes[_gauge] = _internal_bribe;

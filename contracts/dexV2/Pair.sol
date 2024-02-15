@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC20Metadata, IERC20} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-
-import "./interfaces/IPair.sol";
-import "./interfaces/IPairCallee.sol";
-import "./interfaces/IPairFactory.sol";
-import "./PairFees.sol";
+import {IPair} from "./interfaces/IPair.sol";
+import {IPairCallee} from "./interfaces/IPairCallee.sol";
+import {IPairFactory} from "./interfaces/IPairFactory.sol";
+import {PairFees} from "./PairFees.sol";
+import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
 // The base pair of pools, either stable or volatile
-contract Pair is IPair, BlastGovernorSetup {
+contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     string public name;
     string public symbol;
     uint8 public constant decimals = 18;
@@ -109,8 +108,15 @@ contract Pair is IPair, BlastGovernorSetup {
     }
 
     function setCommunityVault(address communityVault_) external virtual override {
-        require(msg.sender == factory);
+        require(msg.sender == factory, "ACCESS_DENIED");
+
+        _checkAccessForManageBlastERC20Rebasing(msg.sender);
+
         communityVault = communityVault_;
+    }
+
+    function _checkAccessForManageBlastERC20Rebasing() internal virtual override {
+        require(msg.sender == factory, "ACCESS_DENIED");
     }
 
     // simple re-entrancy check
@@ -166,7 +172,7 @@ contract Pair is IPair, BlastGovernorSetup {
 
         address communityVaultCache = communityVault;
         if (communityVaultCache != address(0)) {
-            uint256 _protocolFeeRate = IPairFactory(factory).protocolFee();
+            uint256 _protocolFeeRate = IPairFactory(factory).getProtocolFee(address(this));
             if (_protocolFeeRate > 0) {
                 _protocolFee = (amount * _protocolFeeRate) / 10000;
                 _safeTransfer(token0, communityVaultCache, _protocolFee);
@@ -190,7 +196,7 @@ contract Pair is IPair, BlastGovernorSetup {
         uint256 _protocolFee = 0;
         address communityVaultCache = communityVault;
         if (communityVaultCache != address(0)) {
-            uint256 _protocolFeeRate = IPairFactory(factory).protocolFee();
+            uint256 _protocolFeeRate = IPairFactory(factory).getProtocolFee(address(this));
             if (_protocolFeeRate > 0) {
                 _protocolFee = (amount * _protocolFeeRate) / 10000;
                 _safeTransfer(token1, address(0), _protocolFee); // transfer the fees out to PairFees
