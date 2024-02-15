@@ -3,6 +3,11 @@ import '@nomicfoundation/hardhat-toolbox';
 import 'hardhat-contract-sizer';
 
 const config: HardhatUserConfig = {
+  networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true,
+    },
+  },
   solidity: {
     compilers: [
       {
@@ -13,33 +18,6 @@ const config: HardhatUserConfig = {
             runs: 50,
           },
           evmVersion: 'paris',
-        },
-      },
-      {
-        version: '0.7.6',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50,
-          },
-        },
-      },
-      {
-        version: '0.6.6',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50,
-          },
-        },
-      },
-      {
-        version: '0.5.16',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50,
-          },
         },
       },
     ],
