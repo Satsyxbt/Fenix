@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { BEACON_IMPLEMENTATION_SLOT, ERRORS, ONE, ONE_ETHER, ONE_GWEI, ZERO, ZERO_ADDRESS } from './utils/constants';
+import { BEACON_IMPLEMENTATION_SLOT, ERRORS, ONE, ONE_ETHER, ONE_GWEI, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 
@@ -16,9 +16,9 @@ import {
   VoteMock,
   VoteMock__factory,
   ImplementationMock,
-} from '../typechain-types';
-import { deployToken } from './utils/fixture';
-import { token } from '../typechain-types/@openzeppelin/contracts';
+} from '../../typechain-types';
+import { deployToken } from '../utils/fixture';
+import { token } from '../../typechain-types/@openzeppelin/contracts';
 
 describe('BribeFactoryUpgradeable Contract', function () {
   let deployer: HardhatEthersSigner;

@@ -1,8 +1,8 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { Fenix } from '../typechain-types/index';
+import { Fenix } from '../../typechain-types/index';
 import { Signer } from 'ethers';
-import { ZERO, ONE_ETHER, ERRORS, ONE } from './utils/constants';
+import { ZERO, ONE_ETHER, ERRORS, ONE } from '../utils/constants';
 
 describe('Fenix Contract', function () {
   let fenixInstance: Fenix;

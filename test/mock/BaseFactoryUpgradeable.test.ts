@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { ERRORS, ZERO_ADDRESS } from './utils/constants';
+import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import { ImplementationMock, ImplementationV2Mock } from '../typechain-types/contracts/mocks/ImplementationV2Mock.sol';
 import {
@@ -9,7 +9,7 @@ import {
   ImplementationMock__factory,
   ImplementationV2Mock__factory,
   TransparentUpgradeableProxy__factory,
-} from '../typechain-types';
+} from '../../typechain-types';
 import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('BaseFactoryUpgradeable Contract', function () {

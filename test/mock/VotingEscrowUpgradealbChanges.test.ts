@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { ERRORS, ONE, ONE_ETHER, ZERO_ADDRESS } from './utils/constants';
+import { ERRORS, ONE, ONE_ETHER, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import {
   TransparentUpgradeableProxy__factory,
@@ -8,14 +8,14 @@ import {
   VeEarlyExitManagerUpgradeable__factory,
   VotingEscrowUpgradeable,
   VotingEscrowUpgradeable__factory,
-} from '../typechain-types';
-import { deployToken } from './utils/fixture';
+} from '../../typechain-types';
+import { deployToken } from '../utils/fixture';
 import { takeSnapshot, time, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 import { ERC20Mock } from '../typechain-types/contracts/mocks/ERC20Mock';
-import { VeEarlyExitManagerUpgradeable } from '../typechain-types';
-import { VeArtProxyUpgradeable__factory } from '../typechain-types';
-import { Fenix } from '../typechain-types';
-import { EmissionManagerUpgradeable } from '../typechain-types';
+import { VeEarlyExitManagerUpgradeable } from '../../typechain-types';
+import { VeArtProxyUpgradeable__factory } from '../../typechain-types';
+import { Fenix } from '../../typechain-types';
+import { EmissionManagerUpgradeable } from '../../typechain-types';
 
 describe('VotingEscrowUpgradeableEarlyExit', function () {
   let deployer: HardhatEthersSigner;

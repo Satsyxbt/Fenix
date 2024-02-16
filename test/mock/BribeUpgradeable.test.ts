@@ -30,8 +30,8 @@ import {
   VoterUpgradeable__factory,
   VotingEscrowUpgradeable,
   VotingEscrowUpgradeable__factory,
-} from '../typechain-types/index';
-import { ERRORS, ONE, ONE_ETHER, ONE_GWEI, ZERO, ZERO_ADDRESS } from './utils/constants';
+} from '../../typechain-types/index';
+import { ERRORS, ONE, ONE_ETHER, ONE_GWEI, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { takeSnapshot, mine, time, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('BribeUpgradeable Contract', function () {
