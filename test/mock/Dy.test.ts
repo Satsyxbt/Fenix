@@ -1,10 +1,10 @@
 import { ethers } from 'hardhat';
-import { DynamicFeeModuleTest, Pair } from '../typechain-types/index';
+import { DynamicFeeModuleTest, Pair } from '../../typechain-types/index';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { PairFactoryUpgradeable } from '../typechain-types/contracts/dex/v2/thena';
 import { ERC20Mock__factory } from '../typechain-types/factories/contracts/core/mocks';
 import { ERC20Mock } from '../typechain-types/contracts/core/mocks';
-import { factoryV2Fixture } from './utils/fixture';
+import { factoryV2Fixture } from '../utils/fixture';
 
 describe('asdasd', function () {
   let deployer: HardhatEthersSigner;

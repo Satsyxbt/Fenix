@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { UniV2ToV3MathTest } from '../typechain-types/index';
+import { UniV2ToV3MathTest } from '../../typechain-types/index';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import bn from 'bignumber.js';
 import { expect, use } from 'chai';

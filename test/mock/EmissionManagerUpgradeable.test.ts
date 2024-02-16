@@ -1,7 +1,7 @@
-import { EmissionManagerUpgradeable, Fenix, ProxyAdmin } from '../typechain-types/index';
+import { EmissionManagerUpgradeable, Fenix, ProxyAdmin } from '../../typechain-types/index';
 import { Signer } from 'ethers';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import completeFixture from './utils/fixture';
+import completeFixture from '../utils/fixture';
 
 describe('EmissionManagerUpgradeable Contract', function () {
   let wallets: {

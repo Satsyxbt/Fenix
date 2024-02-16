@@ -29,8 +29,8 @@ import {
   VoterUpgradeable__factory,
   VotingEscrowUpgradeable,
   VotingEscrowUpgradeable__factory,
-} from '../typechain-types/index';
-import { ERRORS, ONE_ETHER, ZERO, ZERO_ADDRESS } from './utils/constants';
+} from '../../typechain-types/index';
+import { ERRORS, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('VoterUpgradeable Contract', function () {
