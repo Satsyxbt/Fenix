@@ -110,8 +110,6 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     function setCommunityVault(address communityVault_) external virtual override {
         require(msg.sender == factory, "ACCESS_DENIED");
 
-        _checkAccessForManageBlastERC20Rebasing(msg.sender);
-
         communityVault = communityVault_;
     }
 
@@ -383,7 +381,15 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
-        require(!IPairFactory(factory).isPaused());
+        IPairFactory factoryCache = IPairFactory(factory);
+
+        require(!factoryCache.isPaused());
+
+        address hookTarget = factoryCache.getHookTarget(address(this));
+        if (hookTarget != address(0)) {
+            IPairCallee(hookTarget).hook(msg.sender, amount0Out, amount1Out, data);
+        }
+
         require(amount0Out > 0 || amount1Out > 0, "IOA"); // Pair: INSUFFICIENT_OUTPUT_AMOUNT
         (uint _reserve0, uint _reserve1) = (reserve0, reserve1);
         require(amount0Out < _reserve0 && amount1Out < _reserve1, "IL"); // Pair: INSUFFICIENT_LIQUIDITY
@@ -408,8 +414,8 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
         {
             // scope for reserve{0,1}Adjusted, avoids stack too deep errors
             (address _token0, address _token1) = (token0, token1);
-            if (amount0In > 0) _update0((amount0In * IPairFactory(factory).getFee(address(this), stable)) / 10000); // accrue fees for token0 and move them out of pool
-            if (amount1In > 0) _update1((amount1In * IPairFactory(factory).getFee(address(this), stable)) / 10000); // accrue fees for token1 and move them out of pool
+            if (amount0In > 0) _update0((amount0In * factoryCache.getFee(address(this), stable)) / 10000); // accrue fees for token0 and move them out of pool
+            if (amount1In > 0) _update1((amount1In * factoryCache.getFee(address(this), stable)) / 10000); // accrue fees for token1 and move them out of pool
             _balance0 = IERC20(_token0).balanceOf(address(this)); // since we removed tokens, we need to reconfirm balances, can also simply use previous balance - amountIn/ 10000, but doing balanceOf again as safety check
             _balance1 = IERC20(_token1).balanceOf(address(this));
             // The curve, either x3y+y3x for stable pools, or x*y for volatile pools

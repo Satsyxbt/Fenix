@@ -10,6 +10,9 @@ import {IBlast} from "./interfaces/IBlast.sol";
  * for the Blast protocol, utilizing the `IBlast` interface.
  */
 abstract contract BlastGovernorSetup {
+    /// @dev Error thrown when an operation involves a zero address where a valid address is required.
+    error AddressZero();
+
     /**
      * @dev Initializes the governor configuration for the Blast protocol.
      * This internal function is meant to be called in the initialization process
@@ -19,7 +22,9 @@ abstract contract BlastGovernorSetup {
      * Must be a non-zero address.
      */
     function __BlastGovernorSetup_init(address gov_) internal {
-        require(gov_ != address(0));
+        if (gov_ == address(0)) {
+            revert AddressZero();
+        }
         IBlast(0x4300000000000000000000000000000000000002).configureGovernor(gov_);
     }
 }

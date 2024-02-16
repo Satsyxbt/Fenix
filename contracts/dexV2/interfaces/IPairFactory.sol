@@ -18,6 +18,8 @@ interface IPairFactory {
 
     function getFee(address pair_, bool stable_) external view returns (uint256);
 
+    function getHookTarget(address pair_) external view returns (address);
+
     function getProtocolFee(address pair_) external view returns (uint256);
 
     function isPaused() external view returns (bool);

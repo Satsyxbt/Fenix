@@ -36,7 +36,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
     constructor(address governor_, address fenix_, address merklDistributionCreator_) {
         __BlastGovernorSetup_init(governor_);
 
-        if (fenix_ != address(0) || merklDistributionCreator_ != address(0)) {
+        if (fenix_ == address(0) || merklDistributionCreator_ == address(0)) {
             revert ZeroAddress();
         }
 

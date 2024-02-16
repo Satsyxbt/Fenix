@@ -54,7 +54,7 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
         toGaugeRate = PRECISION;
     }
 
-    function claimFees() external onlyGauge returns (uint256 gauge0, uint256 gauge1) {
+    function claimFees() external override onlyGauge returns (uint256 gauge0, uint256 gauge1) {
         address poolFromGauge = IVoter(voter).poolForGauge(msg.sender);
         require(pool == poolFromGauge);
 

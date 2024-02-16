@@ -117,6 +117,11 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
         emit PairCreated(token0, token1, stable, pair, allPairs.length);
     }
 
+    // Stub functions for future improvments
+    function getHookTarget(address /*pair_*/) external view returns (address) {
+        return address(0);
+    }
+
     function getFee(address pair_, bool stable_) external view returns (uint256) {
         uint256 fee = customFee[pair_];
         if (fee != 0) {

@@ -26,20 +26,14 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
     /**
      * @dev Initializes the factory with necessary parameters and configurations.
      *
-     * @param blastGovernor_ The initial governor address for the Blast protocol.
      * @param feesVaultImplementation_ The implementation address for the FeesVault to be used by the beacon.
      * @param voter_ The default voting address for new fee vaults.
-     * @param defaultBlastGovernor_ The default governor address for new fee vaults.
+     * @param governor_ The default governor address for new fee vaults.
      */
-    constructor(
-        address blastGovernor_,
-        address feesVaultImplementation_,
-        address voter_,
-        address defaultBlastGovernor_
-    ) UpgradeableBeacon(feesVaultImplementation_) {
-        __BlastGovernorSetup_init(blastGovernor_);
+    constructor(address governor_, address feesVaultImplementation_, address voter_) UpgradeableBeacon(feesVaultImplementation_) {
+        __BlastGovernorSetup_init(governor_);
         voter = voter_;
-        defaultBlastGovernor = defaultBlastGovernor_;
+        defaultBlastGovernor = governor_;
     }
 
     /**

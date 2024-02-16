@@ -11,6 +11,8 @@ interface IFeesVault {
     error IncorectDistributionConfig();
     error RecipientNotSetuped();
 
+    function claimFees() external returns (uint256 gauge0, uint256 gauge1);
+
     function setDistributionConfig(uint256 toGaugeRate_, uint256 toProtocolRate_, uint256 toPartnerRate_) external;
 
     function calculateFee(uint256 amount_) external view returns (uint256 toGaugeAmount, uint256 toProtocolAmount, uint256 toPartnerAmount);
