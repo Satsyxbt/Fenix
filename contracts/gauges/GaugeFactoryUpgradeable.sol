@@ -10,6 +10,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
 contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUpgradeable {
     address public last_gauge;
+    address public voter;
     address public override gaugeImplementation;
     address public override merklGaugeMiddleman;
     address public defaultBlastGovernor;
@@ -18,11 +19,16 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _gaugeImplementation, address _merklGaugeMiddleman) external initializer {
+    function initialize(
+        address governor_,
+        address _voter,
+        address _gaugeImplementation,
+        address _merklGaugeMiddleman
+    ) external initializer {
         __BlastGovernorSetup_init(governor_);
         __Ownable_init();
         defaultBlastGovernor = governor_;
-
+        voter = _voter;
         gaugeImplementation = _gaugeImplementation;
         merklGaugeMiddleman = _merklGaugeMiddleman;
     }
@@ -37,6 +43,8 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         bool _isDistributeEmissionToMerkle,
         address _feeVault
     ) external virtual override returns (address) {
+        require(msg.sender == voter || msg.sender == owner(), "only voter");
+
         address newLastGauge = address(new GaugeProxy());
         IGauge(newLastGauge).initialize(
             defaultBlastGovernor,

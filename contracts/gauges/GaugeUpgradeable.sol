@@ -7,7 +7,6 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 import {IRewarder} from "./interfaces/IRewarder.sol";
-import {IFeeVault} from "./interfaces/IFeeVault.sol";
 import {IMerklGaugeMiddleman} from "../integration/interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
@@ -15,6 +14,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
+import {IFeesVault} from "../integration/interfaces/IFeesVault.sol";
 
 contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradeable {
     using SafeERC20 for IERC20;
@@ -388,7 +388,7 @@ contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     function _claimFees() internal returns (uint256 claimed0, uint256 claimed1) {
         address _token = address(TOKEN);
-        (claimed0, claimed1) = IFeeVault(feeVault).claimFees();
+        (claimed0, claimed1) = IFeesVault(feeVault).claimFees();
 
         if (claimed0 > 0 || claimed1 > 0) {
             uint256 _fees0 = claimed0;

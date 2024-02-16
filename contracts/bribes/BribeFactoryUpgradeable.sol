@@ -7,7 +7,7 @@ import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
-contract BribeFactory is IBribeFactory, BlastGovernorSetup, OwnableUpgradeable {
+contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUpgradeable {
     address public last_bribe;
     address public voter;
     address public bribeImplementation;

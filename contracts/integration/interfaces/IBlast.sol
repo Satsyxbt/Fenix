@@ -8,13 +8,5 @@ pragma solidity >=0.8.0;
  * within the Blast ecosystem.
  */
 interface IBlast {
-    /**
-     * @dev Configures the governor for the Blast protocol.
-     * This function is intended to be used by contracts responsible for setting up
-     * or modifying the governance structure within Blast.
-     *
-     * @param governor The address of the governor to be set. This address will gain
-     * the ability to perform governance-related actions within the Blast protocol.
-     */
-    function configureGovernor(address governor) external;
+    function configureGovernor(address _governor) external;
 }
