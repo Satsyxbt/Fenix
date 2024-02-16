@@ -78,11 +78,13 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
         if (!_whitelistedCreators[msg.sender]) {
             revert AccessDenied();
         }
+
         if (_poolToVault[pool_] != address(0)) {
             revert AlreadyCreated();
         }
 
-        address newFeesVault = address(new BeaconProxy(implementation(), ""));
+        address newFeesVault = address(new BeaconProxy(address(this), ""));
+
         IFeesVault(newFeesVault).initialize(defaultBlastGovernor, address(this), pool_, voter);
         _poolToVault[pool_] = newFeesVault;
 
