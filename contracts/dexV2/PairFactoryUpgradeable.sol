@@ -20,8 +20,8 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
     address public communityVaultFactory;
     address public defaultBlastGovernor;
 
-    mapping(address => uint256) public customFee;
-    mapping(address => uint256) public customProtocolFee;
+    mapping(address => uint256) internal customFee;
+    mapping(address => uint256) internal customProtocolFee;
 
     mapping(address => mapping(address => mapping(bool => address))) public getPair;
     address[] public allPairs;

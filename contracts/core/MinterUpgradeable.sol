@@ -13,8 +13,6 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 // codifies the minting rules as per ve(3,3), abstracted from the token to support any token that allows minting
 
 contract MinterUpgradeable is IMinter, BlastGovernorSetup, OwnableUpgradeable {
-    uint256[50] __gap;
-
     bool public isFirstMint;
 
     uint public EMISSION;
@@ -169,4 +167,11 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, OwnableUpgradeable {
     function period() external view returns (uint) {
         return (block.timestamp / WEEK) * WEEK;
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

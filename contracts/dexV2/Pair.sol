@@ -382,14 +382,13 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
         IPairFactory factoryCache = IPairFactory(factory);
-
-        require(!factoryCache.isPaused());
-
-        address hookTarget = factoryCache.getHookTarget(address(this));
-        if (hookTarget != address(0)) {
-            IPairCallee(hookTarget).hook(msg.sender, amount0Out, amount1Out, data);
+        {
+            require(!factoryCache.isPaused());
+            address hookTarget = factoryCache.getHookTarget(address(this));
+            if (hookTarget != address(0)) {
+                IPairCallee(hookTarget).hook(msg.sender, amount0Out, amount1Out, data);
+            }
         }
-
         require(amount0Out > 0 || amount1Out > 0, "IOA"); // Pair: INSUFFICIENT_OUTPUT_AMOUNT
         (uint _reserve0, uint _reserve1) = (reserve0, reserve1);
         require(amount0Out < _reserve0 && amount1Out < _reserve1, "IL"); // Pair: INSUFFICIENT_LIQUIDITY
