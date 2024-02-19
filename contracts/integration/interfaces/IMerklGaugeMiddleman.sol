@@ -25,9 +25,6 @@ interface IMerklGaugeMiddleman {
     /// @dev Error thrown when the parameters provided to a function are invalid.
     error InvalidParams();
 
-    /// @dev Error thrown when an operation involves a zero address where a valid address is required.
-    error ZeroAddress();
-
     /**
      * @dev Notifies the contract about a reward for a specific gauge.
      * This function is intended to be called by the gauge contract itself or an authorized entity.
