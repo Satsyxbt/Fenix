@@ -35,7 +35,7 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     address public immutable token0;
     address public immutable token1;
     address public immutable fees;
-    address immutable factory;
+    address public immutable factory;
 
     address public communityVault;
 
