@@ -20,9 +20,40 @@ import {
   MerklGaugeMiddleman,
   MerkleDistributionCreatorMock,
   BlastMock__factory,
+  MinterUpgradeable,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS } from './constants';
+
+export type SignersList = {
+  deployer: HardhatEthersSigner;
+  blastGovernor: HardhatEthersSigner;
+  fenixTeam: HardhatEthersSigner;
+  proxyAdmin: HardhatEthersSigner;
+  otherUser1: HardhatEthersSigner;
+  otherUser2: HardhatEthersSigner;
+  otherUser3: HardhatEthersSigner;
+  otherUser4: HardhatEthersSigner;
+  otherUser5: HardhatEthersSigner;
+};
+export type CoreFixtureDeployed = {
+  signers: SignersList;
+  voter: VoterUpgradeable;
+  fenix: Fenix;
+  minter: MinterUpgradeable;
+  veArtProxy: VeArtProxyUpgradeable;
+  veArtProxyImplementation: VeArtProxyUpgradeable;
+  votingEscrow: VotingEscrowUpgradeable;
+  v2PairFactory: PairFactoryUpgradeable;
+  gaugeFactory: GaugeFactoryUpgradeable;
+  gaugeImplementation: GaugeUpgradeable;
+  bribeFactory: BribeFactoryUpgradeable;
+  bribeImplementation: BribeUpgradeable;
+  merklGaugeMiddleman: MerklGaugeMiddleman;
+  merklDistributionCreator: MerkleDistributionCreatorMock;
+  feesVaultImplementation: FeesVaultUpgradeable;
+  feesVaultFactory: FeesVaultFactory;
+};
 
 export async function deployERC20MockToken(
   deployer: HardhatEthersSigner,
@@ -46,6 +77,22 @@ export async function deployTransaperntUpgradeableProxy(
 ): Promise<TransparentUpgradeableProxy> {
   const factory = await ethers.getContractFactory('TransparentUpgradeableProxy');
   return await factory.connect(deployer).deploy(implementation, proxyAdmin, '0x');
+}
+
+export async function deployMinter(
+  deployer: HardhatEthersSigner,
+  proxyAdmin: string,
+  governor: string,
+  team: string,
+  voter: string,
+  votingEscrow: string,
+): Promise<MinterUpgradeable> {
+  const factory = await ethers.getContractFactory('MinterUpgradeable');
+  const implementation = await factory.connect(deployer).deploy();
+  const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
+  const attached = factory.attach(proxy.target) as any as MinterUpgradeable;
+  await attached.initialize(governor, team, voter, votingEscrow);
+  return attached;
 }
 
 export async function deployFenixToken(deployer: HardhatEthersSigner, governor: string, minter: string): Promise<Fenix> {
@@ -131,7 +178,7 @@ export async function deployV2PairFactory(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as PairFactoryUpgradeable;
-  await attached.initialize(governor, communityVaultFeeFactory);
+  await attached.connect(deployer).initialize(governor, communityVaultFeeFactory);
 
   return attached;
 }
@@ -203,7 +250,7 @@ export async function getSigners() {
   };
 }
 
-export async function completeFixture(isFork: boolean = false) {
+export async function completeFixture(isFork: boolean = false): Promise<CoreFixtureDeployed> {
   if (!isFork) {
     await setCode(BLAST_PREDEPLOYED_ADDRESS, BlastMock__factory.bytecode);
   }
@@ -223,6 +270,14 @@ export async function completeFixture(isFork: boolean = false) {
     await resultArtProxy.instance.getAddress(),
   );
 
+  const minter = await deployMinter(
+    signers.deployer,
+    signers.proxyAdmin.address,
+    signers.blastGovernor.address,
+    signers.fenixTeam.address,
+    await voter.getAddress(),
+    await votingEscrow.getAddress(),
+  );
   await votingEscrow.setVoter(voter.target);
 
   const communityFeeVaultImplementation = await deployCommunityVaultFeeImplementation(signers.deployer);
@@ -275,10 +330,14 @@ export async function completeFixture(isFork: boolean = false) {
     await bribeFactory.getAddress(),
   );
 
+  await fenix.transferOwnership(minter.target);
+  await feesVaultFactory.setWhitelistedCreatorStatus(v2PairFactory.target, true);
+
   return {
     signers: signers,
     voter: voter,
     fenix: fenix,
+    minter: minter,
     veArtProxy: resultArtProxy.instance,
     veArtProxyImplementation: resultArtProxy.implementation,
     votingEscrow: votingEscrow,
