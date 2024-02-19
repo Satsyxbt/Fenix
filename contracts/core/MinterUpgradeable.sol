@@ -67,7 +67,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, OwnableUpgradeable {
     }
 
     function _initialize(
-        uint amount // sum amounts / max = % ownership of top protocols, so if initial 20m is distributed, and target is 25% protocol ownership, then max - 4 x 20m = 80m
+        uint /*amount*/ // sum amounts / max = % ownership of top protocols, so if initial 20m is distributed, and target is 25% protocol ownership, then max - 4 x 20m = 80m
     ) external {
         require(_initializer == msg.sender);
 

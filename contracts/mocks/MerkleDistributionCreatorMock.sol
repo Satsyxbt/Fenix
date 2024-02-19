@@ -90,7 +90,7 @@ contract MerkleDistributionCreatorMock {
         }
     }
 
-    function createDistribution(DistributionParameters memory newDistribution) external returns (uint256 distributionAmount) {
+    function createDistribution(DistributionParameters memory newDistribution) external returns (uint256) {
         IERC20(newDistribution.rewardToken).transferFrom(msg.sender, address(this), newDistribution.amount);
     }
 }
