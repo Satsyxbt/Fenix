@@ -26,14 +26,18 @@ describe('BlastGovernorSetup Contract', function () {
   });
   it('Governor address can configure contract gas and yield config', async () => {
     let mock = await factory.connect(deployer).deploy(governor.address);
+
+    expect(await blast.connect(governor).isAuthorized(mock.target)).to.be.true;
+
     expect(await blast.governorMap(mock.target)).to.be.equal(governor.address);
+
     let result = await blast.readGasParams(mock.target);
     expect(result.etherBalance).to.be.equal(constants.ZERO);
     expect(result[3]).to.be.equal(0);
 
-    let tx = await blast.connect(governor).configureClaimableGasOnBehalf(mock.target);
-    console.log(tx);
-    await blast.connect(governor).configureClaimableYieldOnBehalf(mock.target);
+    expect(await blast.connect(governor).isAuthorized(mock.target)).to.be.true;
+
+    await blast.connect(governor).configureClaimableGasOnBehalf(mock.target);
 
     result = await blast.readGasParams(mock.target);
     expect(result.etherBalance).to.be.equal(constants.ZERO);
