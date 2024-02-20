@@ -98,6 +98,7 @@ export async function getDeployedDataFromDeploys() {
     FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
   };
 }
+
 export async function deployERC20Mock(name: string, symbol: string, decimals: number) {
   console.log(`Start deploy ${name} contract...`);
 

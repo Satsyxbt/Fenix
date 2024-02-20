@@ -6,6 +6,7 @@ import {IVotes} from "@openzeppelin/contracts/governance/utils/IVotes.sol";
 import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
@@ -18,7 +19,14 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 /// @author Modified from Curve (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy)
 /// @author Modified from Nouns DAO (https://github.com/withtally/my-nft-dao-project/blob/main/contracts/ERC721Checkpointable.sol)
 /// @dev Vote weight decays linearly over time. Lock time cannot be more than `MAXTIME` (182 days).
-contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC721MetadataUpgradeable, IVotes, Initializable {
+contract VotingEscrowUpgradeable is
+    IERC721Upgradeable,
+    IERC721MetadataUpgradeable,
+    IVotes,
+    Initializable,
+    ReentrancyGuardUpgradeable,
+    BlastGovernorSetup
+{
     enum DepositType {
         DEPOSIT_FOR_TYPE,
         CREATE_LOCK_TYPE,
@@ -90,7 +98,9 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
     /// @notice Contract constructor
     /// @param token_addr `Fenix` token address
     function initialize(address governor_, address token_addr, address art_proxy) external initializer {
+        __ReentrancyGuard_init();
         __BlastGovernorSetup_init(governor_);
+
         token = token_addr;
         voter = msg.sender;
         team = msg.sender;
@@ -107,21 +117,6 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
         emit Transfer(address(0), address(this), tokenId);
         // burn-ish
         emit Transfer(address(this), address(0), tokenId);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                                MODIFIERS
-    //////////////////////////////////////////////////////////////*/
-
-    /// @dev reentrancy guard
-    uint8 internal constant _not_entered = 1;
-    uint8 internal constant _entered = 2;
-    uint8 internal _entered_state = 1;
-    modifier nonreentrant() {
-        require(_entered_state == _not_entered);
-        _entered_state = _entered;
-        _;
-        _entered_state = _not_entered;
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -733,7 +728,7 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
     ///      cannot extend their locktime and deposit for a brand new user
     /// @param _tokenId lock NFT
     /// @param _value Amount to add to user's lock
-    function deposit_for(uint _tokenId, uint _value) external nonreentrant {
+    function deposit_for(uint _tokenId, uint _value) external nonReentrant {
         LockedBalance memory _locked = locked[_tokenId];
 
         require(_value > 0); // dev: need non-zero value
@@ -764,7 +759,7 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
     /// @notice Deposit `_value` tokens for `msg.sender` and lock for `_lock_duration`
     /// @param _value Amount to deposit
     /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
-    function create_lock(uint _value, uint _lock_duration) external nonreentrant returns (uint) {
+    function create_lock(uint _value, uint _lock_duration) external nonReentrant returns (uint) {
         return _create_lock(_value, _lock_duration, msg.sender);
     }
 
@@ -772,13 +767,13 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
     /// @param _value Amount to deposit
     /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
     /// @param _to Address to deposit
-    function create_lock_for(uint _value, uint _lock_duration, address _to) external nonreentrant returns (uint) {
+    function create_lock_for(uint _value, uint _lock_duration, address _to) external nonReentrant returns (uint) {
         return _create_lock(_value, _lock_duration, _to);
     }
 
     /// @notice Deposit `_value` additional tokens for `_tokenId` without modifying the unlock time
     /// @param _value Amount of tokens to deposit and add to the lock
-    function increase_amount(uint _tokenId, uint _value) external nonreentrant {
+    function increase_amount(uint _tokenId, uint _value) external nonReentrant {
         assert(_isApprovedOrOwner(msg.sender, _tokenId));
 
         LockedBalance memory _locked = locked[_tokenId];
@@ -792,7 +787,7 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
 
     /// @notice Extend the unlock time for `_tokenId`
     /// @param _lock_duration New number of seconds until tokens unlock
-    function increase_unlock_time(uint _tokenId, uint _lock_duration) external nonreentrant {
+    function increase_unlock_time(uint _tokenId, uint _lock_duration) external nonReentrant {
         assert(_isApprovedOrOwner(msg.sender, _tokenId));
 
         LockedBalance memory _locked = locked[_tokenId];
@@ -808,7 +803,7 @@ contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC
 
     /// @notice Withdraw all tokens for `_tokenId`
     /// @dev Only possible if the lock has expired
-    function withdraw(uint _tokenId) external nonreentrant {
+    function withdraw(uint _tokenId) external nonReentrant {
         assert(_isApprovedOrOwner(msg.sender, _tokenId));
         require(attachments[_tokenId] == 0 && !voted[_tokenId], "attached");
 

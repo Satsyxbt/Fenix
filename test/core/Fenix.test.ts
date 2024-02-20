@@ -1,14 +1,16 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { Fenix } from '../../typechain-types/index';
-import { Signer } from 'ethers';
-import { ZERO, ONE_ETHER, ERRORS, ONE } from '../utils/constants';
+import { BlastMock__factory, Fenix } from '../../typechain-types/index';
+import { ZERO, ONE_ETHER, ERRORS, ONE, BLAST_PREDEPLOYED_ADDRESS } from '../utils/constants';
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('Fenix Contract', function () {
   let fenixInstance: Fenix;
-  let emissionManager: Signer;
-  let otherUser: Signer;
-  let deployer: Signer;
+  let emissionManager: HardhatEthersSigner;
+  let blastGovernor: HardhatEthersSigner;
+  let otherUser: HardhatEthersSigner;
+  let deployer: HardhatEthersSigner;
 
   let tokenSetting = {
     name: 'Fenix',
@@ -18,9 +20,11 @@ describe('Fenix Contract', function () {
   };
 
   before(async function () {
+    await setCode(BLAST_PREDEPLOYED_ADDRESS, BlastMock__factory.bytecode);
+
     const Fenix = await ethers.getContractFactory('Fenix');
-    [deployer, emissionManager, otherUser] = await ethers.getSigners();
-    fenixInstance = (await Fenix.deploy(await emissionManager.getAddress())) as Fenix;
+    [deployer, emissionManager, blastGovernor, otherUser] = await ethers.getSigners();
+    fenixInstance = (await Fenix.deploy(blastGovernor.address, await emissionManager.getAddress())) as Fenix;
   });
 
   describe('Deployment', function () {
@@ -33,6 +37,9 @@ describe('Fenix Contract', function () {
       expect(await fenixInstance.decimals()).to.equal(tokenSetting.decimals);
       expect(await fenixInstance.totalSupply()).to.equal(tokenSetting.initialTotalSupply);
     });
+    it('Should correct mint initial supply to deployer', async function () {
+      expect(await fenixInstance.balanceOf(deployer.address)).to.be.equal(tokenSetting.initialTotalSupply);
+    });
   });
 
   describe('Minting', function () {
@@ -42,12 +49,12 @@ describe('Fenix Contract', function () {
 
       await fenixInstance.connect(emissionManager).mint(await otherUser.getAddress(), 1);
 
-      expect(await fenixInstance.balanceOf(await otherUser.getAddress())).to.equal(tokenSetting.initialTotalSupply + ONE);
+      expect(await fenixInstance.balanceOf(await otherUser.getAddress())).to.equal(ONE);
 
       expect(await fenixInstance.totalSupply()).to.equal(tokenSetting.initialTotalSupply + ONE);
 
       await fenixInstance.connect(emissionManager).mint(await deployer.getAddress(), ONE_ETHER);
-      expect(await fenixInstance.balanceOf(await deployer.getAddress())).to.equal(ONE_ETHER);
+      expect(await fenixInstance.balanceOf(await deployer.getAddress())).to.equal(tokenSetting.initialTotalSupply + ONE_ETHER);
       expect(await fenixInstance.totalSupply()).to.equal(tokenSetting.initialTotalSupply + ONE_ETHER + ONE);
     });
 
