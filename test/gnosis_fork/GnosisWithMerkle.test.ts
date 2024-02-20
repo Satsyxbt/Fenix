@@ -59,7 +59,6 @@ describe('GnosisWithMerkl Contract', function () {
     it('expect storage slot for core address, and change', async () => {
       expect(initCore).to.be.eq(ethers.zeroPadValue(GNOSIS_CORE, 32));
       let mock = await ethers.deployContract('CoreMock');
-      console.log('await mock.getAddress()', ethers.zeroPadValue(await mock.getAddress(), 32));
       await setStorageAt(await merklDistributionCreator.getAddress(), 151, await mock.getAddress());
     });
 
