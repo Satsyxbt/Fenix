@@ -37,7 +37,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
         __BlastGovernorSetup_init(governor_);
 
         if (fenix_ == address(0) || merklDistributionCreator_ == address(0)) {
-            revert ZeroAddress();
+            revert AddressZero();
         }
 
         fenix = IERC20(fenix_);
@@ -49,6 +49,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
     // ============================= EXTERNAL FUNCTIONS ============================
 
     /// @notice Restores the allowance for the FENIX token to the `DistributionCreator` contract
+    /// Depending on the token implementation, may not need to
     function setFenixAllowance() external {
         IERC20 fenixCache = fenix;
         address creator = address(merklDistributionCreator);

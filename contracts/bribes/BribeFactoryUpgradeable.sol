@@ -44,30 +44,49 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
         return owner();
     }
 
-    function setVoter(address _Voter) external onlyOwner {
-        require(_Voter != address(0));
-        voter = _Voter;
-    }
-
     function changeImplementation(address _implementation) external onlyOwner {
         require(_implementation != address(0));
         emit bribeImplementationChanged(bribeImplementation, _implementation);
         bribeImplementation = _implementation;
     }
 
+    /**
+     * @dev Sets the address used for voting in the fee vaults. Only callable by the contract owner.
+     *
+     * @param voter_ The new voter address to be set.
+     */
+    function setVoter(address voter_) external virtual onlyOwner {
+        emit SetVoter(voter, voter_);
+        voter = voter_;
+    }
+
+    /**
+     * @dev Sets the default governor address for new fee vaults. Only callable by the contract owner.
+     *
+     * @param defaultBlastGovernor_ The new default governor address to be set.
+     */
+    function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
+        defaultBlastGovernor = defaultBlastGovernor_;
+    }
+
     function addRewards(address _token, address[] memory _bribes) external onlyOwner {
-        uint i = 0;
-        for (i; i < _bribes.length; i++) {
+        for (uint256 i; i < _bribes.length; ) {
             IBribe(_bribes[i]).addRewardToken(_token);
+            unchecked {
+                i++;
+            }
         }
     }
 
     function addRewards(address[][] memory _token, address[] memory _bribes) external {
         require(msg.sender == voter || msg.sender == owner(), "only voter or owner");
 
-        uint i = 0;
-        for (i; i < _bribes.length; i++) {
+        for (uint256 i; i < _bribes.length; ) {
             IBribe(_bribes[i]).addRewardTokens(_token[i]);
+            unchecked {
+                i++;
+            }
         }
     }
 

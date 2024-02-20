@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity =0.8.19;
+pragma solidity >=0.8.0;
 
-import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "./interfaces/IBlastERC20RebasingManage.sol";
+import {YieldMode, IERC20Rebasing} from "./IERC20Rebasing.sol";
 
 /**
- * @title BlastERC20RebasingManage
- * @dev Abstract contract designed to manage ERC20 rebasing tokens within the Blast ecosystem.
- * It provides functionalities to configure and claim tokens while ensuring that only authorized
- * entities can perform these operations.
+ * @title IBlastERC20RebasingManage Interface
+ * @dev Interface for managing ERC20 rebasing tokens within the Blast ecosystem. It provides
+ * the necessary functions to configure and claim tokens, ensuring that only authorized
+ * entities can perform these operations. This interface mandates the implementation of
+ * access control checks to secure the rebasing token management.
  */
-abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage {
+interface IBlastERC20RebasingManage {
     /**
      * @dev Configures the rebasing parameters of a specified ERC20 rebasing token.
      * This function can only be called by addresses with the required access permissions.
@@ -21,11 +22,7 @@ abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage {
      * @return A uint256 value that represents the outcome of the configuration operation,
      * which could be an updated token supply or another relevant metric, depending on the ERC20 rebasing token implementation.
      */
-    function configure(address erc20Rebasing_, YieldMode mode_) external virtual returns (uint256) {
-        _checkAccessForManageBlastERC20Rebasing();
-
-        return IERC20Rebasing(erc20Rebasing_).configure(mode_);
-    }
+    function configure(address erc20Rebasing_, YieldMode mode_) external returns (uint256);
 
     /**
      * @dev Claims rebasing tokens on behalf of the caller and transfers them to a specified recipient.
@@ -36,15 +33,5 @@ abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage {
      * @param amount_ The amount of tokens to claim.
      * @return The result of the claim operation, specific to the ERC20 rebasing token implementation.
      */
-    function claim(address erc20Rebasing_, address recipient_, uint256 amount_) external virtual returns (uint256) {
-        _checkAccessForManageBlastERC20Rebasing();
-
-        return IERC20Rebasing(erc20Rebasing_).claim(recipient_, amount_);
-    }
-
-    /**
-     * @dev Internal function to check if the message sender has the required permissions to manage ERC20 rebasing tokens.
-     * Reverts the transaction if the sender is not authorized.
-     */
-    function _checkAccessForManageBlastERC20Rebasing() internal virtual;
+    function claim(address erc20Rebasing_, address recipient_, uint256 amount_) external returns (uint256);
 }
