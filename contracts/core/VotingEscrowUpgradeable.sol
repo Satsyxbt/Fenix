@@ -18,7 +18,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 /// @author Modified from Curve (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy)
 /// @author Modified from Nouns DAO (https://github.com/withtally/my-nft-dao-project/blob/main/contracts/ERC721Checkpointable.sol)
 /// @dev Vote weight decays linearly over time. Lock time cannot be more than `MAXTIME` (182 days).
-contract VotingEscrowUpgradeable is BlastGovernorSetup, IERC721Upgradeable, IERC721MetadataUpgradeable, IVotes, Initializable {
+contract VotingEscrowUpgradeable is IERC721Upgradeable, IERC721MetadataUpgradeable, IVotes, Initializable, BlastGovernorSetup {
     enum DepositType {
         DEPOSIT_FOR_TYPE,
         CREATE_LOCK_TYPE,
