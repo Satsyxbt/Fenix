@@ -3,4 +3,6 @@ pragma solidity =0.8.19;
 
 contract BlastMock {
     fallback() external {}
+
+    function configureGovernor(address governor_) external {}
 }

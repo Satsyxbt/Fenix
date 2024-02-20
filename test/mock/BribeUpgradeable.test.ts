@@ -268,7 +268,7 @@ describe('BribeUpgradeable Contract', function () {
         await fenixInstance.transfer(otheruser.address, ONE_ETHER * BigInt(10));
         await fenixInstance.connect(otheruser).approve(votingEscrowInstance.getAddress(), ONE_ETHER * BigInt(10));
 
-        await votingEscrowInstance.connect(otheruser).create_lock(ONE_ETHER, 2 * 365 * 86400);
+        await votingEscrowInstance.connect(otheruser).create_lock(ONE_ETHER, 2 * 182 * 86400);
         let tokenId = await votingEscrowInstance.tokenId();
         let votingPower = await votingEscrowInstance.balanceOfNFT(tokenId);
 
@@ -324,7 +324,7 @@ describe('BribeUpgradeable Contract', function () {
         await fenixInstance.connect(otheruser2).approve(votingEscrowInstance.getAddress(), ONE_ETHER * BigInt(20));
 
         // SECOND USER VOTE
-        await votingEscrowInstance.connect(otheruser2).create_lock(ONE_ETHER, 2 * 365 * 86400);
+        await votingEscrowInstance.connect(otheruser2).create_lock(ONE_ETHER, 2 * 182 * 86400);
         let tokenId2 = await votingEscrowInstance.tokenId();
         let votingPower2 = await votingEscrowInstance.balanceOfNFT(tokenId);
 

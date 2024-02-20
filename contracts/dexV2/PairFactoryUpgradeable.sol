@@ -10,21 +10,20 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 import {YieldMode, IERC20Rebasing} from "../integration/interfaces/IERC20Rebasing.sol";
 
 contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgradeable {
+    uint256 public constant MAX_FEE = 25; // 0.25%
+    uint256 public constant PRECISION = 10000; // 100%
+
     bool public override isPaused;
 
     uint256 public protocolFee;
     uint256 public stableFee;
     uint256 public volatileFee;
 
-    uint256 public constant MAX_FEE = 25; // 0.25%
     address public communityVaultFactory;
     address public defaultBlastGovernor;
 
-    mapping(address => uint256) internal customFee;
-    mapping(address => uint256) internal customProtocolFee;
-
-    mapping(address => mapping(address => mapping(bool => address))) public getPair;
     address[] public allPairs;
+    mapping(address => mapping(address => mapping(bool => address))) public getPair;
     mapping(address => bool) public isPair; // simplified check if its a pair, given that `stable` flag might not be available in peripherals
 
     address internal _temp0;
@@ -32,13 +31,14 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
     address internal _tempCommunityVault;
     bool internal _temp;
 
-    event PairCreated(address indexed token0, address indexed token1, bool stable, address pair, uint);
+    mapping(address => uint256) internal customFee;
+    mapping(address => uint256) internal customProtocolFee;
 
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(address governor_, address communityVaultFactory_) public initializer {
+    function initialize(address governor_, address communityVaultFactory_) external initializer {
         __BlastGovernorSetup_init(governor_);
         __Ownable_init();
 
@@ -55,28 +55,31 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
         isPaused = _state;
     }
 
+    function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        defaultBlastGovernor = defaultBlastGovernor_;
+    }
+
     function setProtocolFee(uint256 _newFee) external onlyOwner {
-        require(_newFee <= 10000);
+        if (_newFee > PRECISION) {
+            revert IncorrcectFee();
+        }
         protocolFee = _newFee;
     }
 
-    function setCustomProtocolFee(address pair_, uint256 _newFee) external onlyOwner {
-        require(_newFee <= 10000);
-        require(isPair[pair_]);
-
-        customProtocolFee[pair_] = _newFee;
+    function setCustomProtocolFee(address _pair, uint256 _newFee) external onlyOwner {
+        _checkFeeAndPair(_pair, _newFee, PRECISION);
+        customProtocolFee[_pair] = _newFee;
     }
 
-    function setCustomFee(address pair_, uint256 fee_) external onlyOwner {
-        require(fee_ <= MAX_FEE, "fee");
-        require(isPair[pair_]);
-
-        customFee[pair_] = fee_;
+    function setCustomFee(address _pair, uint256 _fee) external onlyOwner {
+        _checkFeeAndPair(_pair, _fee, MAX_FEE);
+        customFee[_pair] = _fee;
     }
 
     function setFee(bool _stable, uint256 _fee) external onlyOwner {
-        require(_fee <= MAX_FEE, "fee");
-        require(_fee != 0);
+        if (_fee == 0 || _fee > MAX_FEE) {
+            revert IncorrcectFee();
+        }
         if (_stable) {
             stableFee = _fee;
         } else {
@@ -89,23 +92,30 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
     }
 
     function configure(address pair_, address erc20Rebasing_, YieldMode mode_) external onlyOwner returns (uint256) {
-        Pair(pair_).configure(erc20Rebasing_, mode_);
+        return Pair(pair_).configure(erc20Rebasing_, mode_);
     }
 
     function claim(address pair_, address erc20Rebasing_, address recipient_, uint256 amount_) external onlyOwner returns (uint256) {
-        Pair(pair_).claim(erc20Rebasing_, recipient_, amount_);
+        return Pair(pair_).claim(erc20Rebasing_, recipient_, amount_);
     }
 
     function createPair(address tokenA, address tokenB, bool stable) external onlyOwner returns (address pair) {
-        require(tokenA != tokenB, "IA"); // Pair: IDENTICAL_ADDRESSES
+        if (tokenA == tokenB) {
+            revert IdenticalAddress();
+        }
+
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), "ZA"); // Pair: ZERO_ADDRESS
-        require(getPair[token0][token1][stable] == address(0), "PE"); // Pair: PAIR_EXISTS - single check is sufficient
-        bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable)); // notice salt includes stable as well, 3 parameters
+        if (token0 == address(0)) {
+            revert AddressZero();
+        }
+
+        if (getPair[token0][token1][stable] != address(0)) {
+            revert PairExist();
+        }
 
         (_temp0, _temp1, _temp) = (token0, token1, stable);
 
-        pair = address(new Pair{salt: salt}());
+        pair = address(new Pair{salt: keccak256(abi.encodePacked(token0, token1, stable))}());
 
         address feesVaultForPool = IFeesVaultFactory(communityVaultFactory).createVaultForPool(pair);
         Pair(pair).setCommunityVault(feesVaultForPool);
@@ -114,11 +124,12 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
         getPair[token1][token0][stable] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);
         isPair[pair] = true;
+
         emit PairCreated(token0, token1, stable, pair, allPairs.length);
     }
 
     // Stub functions for future improvments
-    function getHookTarget(address /*pair_*/) external view returns (address) {
+    function getHookTarget(address /*pair_*/) external pure returns (address) {
         return address(0);
     }
 
@@ -138,10 +149,6 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
         return protocolFee;
     }
 
-    function pairCodeHash() external pure returns (bytes32) {
-        return keccak256(type(Pair).creationCode);
-    }
-
     function getInitializable() external view returns (address, address, address, bool) {
         return (defaultBlastGovernor, _temp0, _temp1, _temp);
     }
@@ -152,6 +159,15 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, OwnableUpgr
 
     function pairs() external view returns (address[] memory) {
         return allPairs;
+    }
+
+    function _checkFeeAndPair(address pair_, uint256 fee_, uint256 upperLimit_) internal view {
+        if (fee_ > upperLimit_) {
+            revert IncorrcectFee();
+        }
+        if (!isPair[pair_]) {
+            revert IncorrectPair();
+        }
     }
 
     /**
