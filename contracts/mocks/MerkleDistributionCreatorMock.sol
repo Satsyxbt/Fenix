@@ -82,6 +82,8 @@ contract MerkleDistributionCreatorMock {
         isWhitelistedToken[token] = toggleStatus;
     }
 
+    function acceptConditions() external {}
+
     function setRewardTokenMinAmounts(address[] calldata tokens, uint256[] calldata amounts) external {
         uint256 tokensLength = tokens.length;
         for (uint256 i; i < tokensLength; ++i) {

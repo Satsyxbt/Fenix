@@ -24,6 +24,37 @@ import {
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS } from './constants';
+import { algebraFactoryFixture } from '../../lib/fenix-dex-v3/src/farming/test/shared';
+
+export type SignersList = {
+  deployer: HardhatEthersSigner;
+  blastGovernor: HardhatEthersSigner;
+  fenixTeam: HardhatEthersSigner;
+  proxyAdmin: HardhatEthersSigner;
+  otherUser1: HardhatEthersSigner;
+  otherUser2: HardhatEthersSigner;
+  otherUser3: HardhatEthersSigner;
+  otherUser4: HardhatEthersSigner;
+  otherUser5: HardhatEthersSigner;
+};
+export type CoreFixtureDeployed = {
+  signers: SignersList;
+  voter: VoterUpgradeable;
+  fenix: Fenix;
+  minter: MinterUpgradeable;
+  veArtProxy: VeArtProxyUpgradeable;
+  veArtProxyImplementation: VeArtProxyUpgradeable;
+  votingEscrow: VotingEscrowUpgradeable;
+  v2PairFactory: PairFactoryUpgradeable;
+  gaugeFactory: GaugeFactoryUpgradeable;
+  gaugeImplementation: GaugeUpgradeable;
+  bribeFactory: BribeFactoryUpgradeable;
+  bribeImplementation: BribeUpgradeable;
+  merklGaugeMiddleman: MerklGaugeMiddleman;
+  merklDistributionCreator: MerkleDistributionCreatorMock;
+  feesVaultImplementation: FeesVaultUpgradeable;
+  feesVaultFactory: FeesVaultFactory;
+};
 
 export type SignersList = {
   deployer: HardhatEthersSigner;
@@ -330,6 +361,8 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     await bribeFactory.getAddress(),
   );
 
+  await voter.setMinter(await minter.target);
+  await minter._initialize(1);
   await fenix.transferOwnership(minter.target);
   await feesVaultFactory.setWhitelistedCreatorStatus(v2PairFactory.target, true);
 

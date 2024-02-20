@@ -58,6 +58,9 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
             merklGaugeMiddleman,
             _feeVault
         );
+
+        last_gauge = newLastGauge;
+
         return newLastGauge;
     }
 
