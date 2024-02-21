@@ -9,7 +9,6 @@ import {IPair} from "./interfaces/IPair.sol";
 import {IFeesVaultFactory} from "../integration/interfaces/IFeesVaultFactory.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 import {IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20RebasingManage.sol";
-import "hardhat/console.sol";
 
 contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessControlUpgradeable {
     bytes32 public constant override PAIRS_ADMINISTRATOR_ROLE = keccak256("PAIRS_ADMINISTRATOR");
