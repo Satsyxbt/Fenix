@@ -91,6 +91,10 @@ interface IWETH {
     function withdraw(uint) external;
 }
 
+interface IBlast {
+    function configureGovernor(address _governor) external;
+}
+
 // Experimental Extension [ftm.guru/solidly/BaseV1Router02]
 // contract BaseV1Router02 is BaseV1Router01
 // with Support for Fee-on-Transfer Tokens
@@ -116,7 +120,8 @@ contract RouterV2 {
         _;
     }
 
-    constructor(address _factory, address _wETH) {
+    constructor(address _blastGovernor, address _factory, address _wETH) {
+        IBlast(0x4300000000000000000000000000000000000002).configureGovernor(_blastGovernor);
         factory = _factory;
         pairCodeHash = IBaseV1Factory(_factory).pairCodeHash();
         wETH = IWETH(_wETH);

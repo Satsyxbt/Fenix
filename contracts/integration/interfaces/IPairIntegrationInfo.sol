@@ -10,5 +10,7 @@ interface IPairIntegrationInfo {
     /// @return The token contract address
     function token1() external view returns (address);
 
+    /// @notice The contract to which community fees are transferred
+    /// @return communityVaultAddress The communityVault address
     function communityVault() external view returns (address);
 }
