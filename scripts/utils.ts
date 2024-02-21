@@ -98,6 +98,19 @@ export async function getDeployedDataFromDeploys() {
     FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
   };
 }
+export async function deployERC20Faucet(name: string, symbol: string, decimals: number) {
+  console.log(`Start deploy ${name} contract...`);
+
+  const factory = await ethers.getContractFactory('ERC20Faucet');
+
+  const signers = await ethers.getSigners();
+  const deployer = signers[0];
+
+  let contract = await factory.connect(deployer).deploy(name, symbol, decimals);
+  await contract.waitForDeployment();
+
+  console.log(`Successful deploy ${name} contract: ${await contract.getAddress()}`);
+}
 
 export async function deployERC20Mock(name: string, symbol: string, decimals: number) {
   console.log(`Start deploy ${name} contract...`);
