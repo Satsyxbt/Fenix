@@ -22,7 +22,6 @@ import {
   BlastMock__factory,
   MinterUpgradeable,
   Pair,
-  ERC20RebasingMock__factory,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from './constants';
@@ -87,7 +86,6 @@ export async function deployMinter(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
   governor: string,
-  team: string,
   voter: string,
   votingEscrow: string,
 ): Promise<MinterUpgradeable> {
@@ -95,7 +93,7 @@ export async function deployMinter(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as MinterUpgradeable;
-  await attached.initialize(governor, team, voter, votingEscrow);
+  await attached.initialize(governor, voter, votingEscrow);
   return attached;
 }
 
@@ -281,7 +279,6 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     signers.deployer,
     signers.proxyAdmin.address,
     signers.blastGovernor.address,
-    signers.fenixTeam.address,
     await voter.getAddress(),
     await votingEscrow.getAddress(),
   );
@@ -341,7 +338,7 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
   );
 
   await voter.setMinter(minter.target);
-  await minter._initialize(1);
+  await minter.initialize();
   await fenix.transferOwnership(minter.target);
   await feesVaultFactory.setWhitelistedCreatorStatus(v2PairFactory.target, true);
 
