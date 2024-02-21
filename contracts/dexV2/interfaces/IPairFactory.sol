@@ -20,6 +20,8 @@ interface IPairFactory {
     error IdenticalAddress();
     error PairExist();
 
+    function implementation() external view returns (address);
+
     function PAIRS_ADMINISTRATOR_ROLE() external view returns (bytes32);
 
     function FEES_MANAGER_ROLE() external view returns (bytes32);

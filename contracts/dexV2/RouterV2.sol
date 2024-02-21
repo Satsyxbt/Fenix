@@ -1,3 +1,6 @@
+import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {IPairFactory} from "./interfaces/IPairFactory.sol";
+
 /**
  *Submitted for verification at FtmScan.com on 2022-02-20
  */
@@ -9,19 +12,6 @@
 // https://github.com/ftm1337/solidly-with-FoT/blob/master/contracts/BaseV1-periphery.sol
 
 pragma solidity =0.8.19;
-
-interface IBaseV1Factory {
-    function allPairsLength() external view returns (uint);
-
-    function isPair(address pair) external view returns (bool);
-
-    function pairCodeHash() external pure returns (bytes32);
-
-    function getPair(address tokenA, address token, bool stable) external view returns (address);
-
-    function createPair(address tokenA, address tokenB, bool stable) external returns (address pair);
-}
-
 interface IBaseV1Pair {
     function transferFrom(address src, address dst, uint amount) external returns (bool);
 
@@ -54,11 +44,6 @@ interface erc20 {
     function approve(address spender, uint value) external returns (bool);
 }
 
-interface IPairFactory {
-    function getFee(bool _stable) external view returns (uint256);
-
-    function MAX_REFERRAL_FEE() external view returns (uint256);
-}
 
 library Math {
     function min(uint a, uint b) internal pure returns (uint) {
@@ -110,7 +95,6 @@ contract RouterV2 {
     address public immutable factory;
     IWETH public immutable wETH;
     uint internal constant MINIMUM_LIQUIDITY = 10 ** 3;
-    bytes32 immutable pairCodeHash;
 
     // swap event for the referral system
     event Swap(address indexed sender, uint amount0In, address _tokenIn, address indexed to, bool stable);
@@ -123,7 +107,6 @@ contract RouterV2 {
     constructor(address _blastGovernor, address _factory, address _wETH) {
         IBlast(0x4300000000000000000000000000000000000002).configureGovernor(_blastGovernor);
         factory = _factory;
-        pairCodeHash = IBaseV1Factory(_factory).pairCodeHash();
         wETH = IWETH(_wETH);
     }
 
@@ -140,20 +123,9 @@ contract RouterV2 {
     // calculates the CREATE2 address for a pair without making any external calls
     function pairFor(address tokenA, address tokenB, bool stable) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        pair = address(
-            uint160(
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            hex"ff",
-                            factory,
-                            keccak256(abi.encodePacked(token0, token1, stable)),
-                            pairCodeHash // init code hash
-                        )
-                    )
-                )
-            )
-        );
+        bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable));
+        pair = Clones.predictDeterministicAddress(IPairFactory(factory).implementation(), salt, factory);
+
     }
 
     // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
@@ -175,11 +147,11 @@ contract RouterV2 {
         address pair = pairFor(tokenIn, tokenOut, true);
         uint amountStable;
         uint amountVolatile;
-        if (IBaseV1Factory(factory).isPair(pair)) {
+        if (IPairFactory(factory).isPair(pair)) {
             amountStable = IBaseV1Pair(pair).getAmountOut(amountIn, tokenIn);
         }
         pair = pairFor(tokenIn, tokenOut, false);
-        if (IBaseV1Factory(factory).isPair(pair)) {
+        if (IPairFactory(factory).isPair(pair)) {
             amountVolatile = IBaseV1Pair(pair).getAmountOut(amountIn, tokenIn);
         }
         return amountStable > amountVolatile ? (amountStable, true) : (amountVolatile, false);
@@ -192,14 +164,14 @@ contract RouterV2 {
         amounts[0] = amountIn;
         for (uint i = 0; i < routes.length; i++) {
             address pair = pairFor(routes[i].from, routes[i].to, routes[i].stable);
-            if (IBaseV1Factory(factory).isPair(pair)) {
+            if (IPairFactory(factory).isPair(pair)) {
                 amounts[i + 1] = IBaseV1Pair(pair).getAmountOut(amounts[i], routes[i].from);
             }
         }
     }
 
     function isPair(address pair) external view returns (bool) {
-        return IBaseV1Factory(factory).isPair(pair);
+        return IPairFactory(factory).isPair(pair);
     }
 
     function quoteAddLiquidity(
@@ -210,7 +182,7 @@ contract RouterV2 {
         uint amountBDesired
     ) external view returns (uint amountA, uint amountB, uint liquidity) {
         // create the pair if it doesn't exist yet
-        address _pair = IBaseV1Factory(factory).getPair(tokenA, tokenB, stable);
+        address _pair = IPairFactory(factory).getPair(tokenA, tokenB, stable);
         (uint reserveA, uint reserveB) = (0, 0);
         uint _totalSupply = 0;
         if (_pair != address(0)) {
@@ -240,7 +212,7 @@ contract RouterV2 {
         uint liquidity
     ) external view returns (uint amountA, uint amountB) {
         // create the pair if it doesn't exist yet
-        address _pair = IBaseV1Factory(factory).getPair(tokenA, tokenB, stable);
+        address _pair = IPairFactory(factory).getPair(tokenA, tokenB, stable);
 
         if (_pair == address(0)) {
             return (0, 0);
@@ -265,9 +237,9 @@ contract RouterV2 {
         require(amountADesired >= amountAMin);
         require(amountBDesired >= amountBMin);
         // create the pair if it doesn't exist yet
-        address _pair = IBaseV1Factory(factory).getPair(tokenA, tokenB, stable);
+        address _pair = IPairFactory(factory).getPair(tokenA, tokenB, stable);
         if (_pair == address(0)) {
-            _pair = IBaseV1Factory(factory).createPair(tokenA, tokenB, stable);
+            _pair = IPairFactory(factory).createPair(tokenA, tokenB, stable);
         }
         (uint reserveA, uint reserveB) = getReserves(tokenA, tokenB, stable);
         if (reserveA == 0 && reserveB == 0) {

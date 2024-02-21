@@ -18,8 +18,7 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
     uint256 public constant MAX_FEE = 500; // 0.25%
     uint256 public constant PRECISION = 10000; // 100%
 
-    address public implementation;
-
+    address public override implementation;
     bool public override isPaused;
     bool public override isPublicPoolCreationMode;
 
