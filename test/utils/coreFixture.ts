@@ -21,9 +21,11 @@ import {
   MerkleDistributionCreatorMock,
   BlastMock__factory,
   MinterUpgradeable,
+  Pair,
+  ERC20RebasingMock__factory,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { BLAST_PREDEPLOYED_ADDRESS } from './constants';
+import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from './constants';
 import { algebraFactoryFixture } from '../../lib/fenix-dex-v3/src/farming/test/shared';
 
 export type SignersList = {
@@ -46,36 +48,7 @@ export type CoreFixtureDeployed = {
   veArtProxyImplementation: VeArtProxyUpgradeable;
   votingEscrow: VotingEscrowUpgradeable;
   v2PairFactory: PairFactoryUpgradeable;
-  gaugeFactory: GaugeFactoryUpgradeable;
-  gaugeImplementation: GaugeUpgradeable;
-  bribeFactory: BribeFactoryUpgradeable;
-  bribeImplementation: BribeUpgradeable;
-  merklGaugeMiddleman: MerklGaugeMiddleman;
-  merklDistributionCreator: MerkleDistributionCreatorMock;
-  feesVaultImplementation: FeesVaultUpgradeable;
-  feesVaultFactory: FeesVaultFactory;
-};
-
-export type SignersList = {
-  deployer: HardhatEthersSigner;
-  blastGovernor: HardhatEthersSigner;
-  fenixTeam: HardhatEthersSigner;
-  proxyAdmin: HardhatEthersSigner;
-  otherUser1: HardhatEthersSigner;
-  otherUser2: HardhatEthersSigner;
-  otherUser3: HardhatEthersSigner;
-  otherUser4: HardhatEthersSigner;
-  otherUser5: HardhatEthersSigner;
-};
-export type CoreFixtureDeployed = {
-  signers: SignersList;
-  voter: VoterUpgradeable;
-  fenix: Fenix;
-  minter: MinterUpgradeable;
-  veArtProxy: VeArtProxyUpgradeable;
-  veArtProxyImplementation: VeArtProxyUpgradeable;
-  votingEscrow: VotingEscrowUpgradeable;
-  v2PairFactory: PairFactoryUpgradeable;
+  v2PairImplementation: Pair;
   gaugeFactory: GaugeFactoryUpgradeable;
   gaugeImplementation: GaugeUpgradeable;
   bribeFactory: BribeFactoryUpgradeable;
@@ -203,13 +176,14 @@ export async function deployV2PairFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
   governor: string,
+  pairImplementation: string,
   communityVaultFeeFactory: string,
 ): Promise<PairFactoryUpgradeable> {
   const factory = (await ethers.getContractFactory('PairFactoryUpgradeable')) as PairFactoryUpgradeable__factory;
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as PairFactoryUpgradeable;
-  await attached.connect(deployer).initialize(governor, communityVaultFeeFactory);
+  await attached.connect(deployer).initialize(governor, pairImplementation, communityVaultFeeFactory);
 
   return attached;
 }
@@ -238,7 +212,9 @@ export async function deployBribeFactory(
   await attached.connect(deployer).initialize(governor, voter, bribeImplementation);
   return attached;
 }
-
+export async function deployV2PairImplementation(deployer: HardhatEthersSigner): Promise<Pair> {
+  return await ethers.deployContract('Pair');
+}
 export async function deployGaugeFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
@@ -320,10 +296,13 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     await voter.getAddress(),
   );
 
+  const v2PairImplementation = await deployV2PairImplementation(signers.deployer);
+
   const v2PairFactory = await deployV2PairFactory(
     signers.deployer,
     signers.proxyAdmin.address,
     signers.blastGovernor.address,
+    await v2PairImplementation.getAddress(),
     await feesVaultFactory.getAddress(),
   );
 
@@ -361,10 +340,14 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     await bribeFactory.getAddress(),
   );
 
-  await voter.setMinter(await minter.target);
+  await voter.setMinter(minter.target);
   await minter._initialize(1);
   await fenix.transferOwnership(minter.target);
   await feesVaultFactory.setWhitelistedCreatorStatus(v2PairFactory.target, true);
+
+  await v2PairFactory.grantRole(await v2PairFactory.PAIRS_CREATOR_ROLE(), signers.deployer.address);
+  await v2PairFactory.grantRole(await v2PairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.deployer.address);
+  await v2PairFactory.grantRole(await v2PairFactory.FEES_MANAGER_ROLE(), signers.deployer.address);
 
   return {
     signers: signers,
@@ -375,6 +358,7 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     veArtProxyImplementation: resultArtProxy.implementation,
     votingEscrow: votingEscrow,
     v2PairFactory: v2PairFactory,
+    v2PairImplementation: v2PairImplementation,
     gaugeFactory: gaugeFactory,
     gaugeImplementation: gaugeImplementation,
     bribeFactory: bribeFactory,
