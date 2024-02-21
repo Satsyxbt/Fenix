@@ -10,9 +10,9 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
 
 /**
  * @title Merkl Gauge Middleman Contract
- * @dev This contract acts as a middleman between Fenix Gauges and the DistributionCreator,
+ * @dev This contract acts as a middleman between Gauges and the DistributionCreator,
  * facilitating the reward distribution process. It allows setting up distribution parameters
- * for each gauge, adjusting FENIX token allowance, and notifying about rewards.
+ * for each gauge, adjusting token allowance, and notifying about rewards.
  *
  * This version is a modified implementation based on the MerklGaugeMiddleman contract from Angle Protocol.
  * See original implementation at: https://github.com/AngleProtocol/merkl-contracts/blob/main/contracts/middleman/MerklGaugeMiddleman.sol
@@ -25,33 +25,33 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
     // Mapping of each gauge to its reward distribution parameters
     mapping(address => DistributionParameters) public gaugeParams;
 
-    // FENIX token interface
-    IERC20 public fenix;
+    // token interface
+    IERC20 public token;
 
     // Distribution creator contract interface
     IDistributionCreator public merklDistributionCreator;
 
     // =================================== EVENT ===================================
 
-    constructor(address governor_, address fenix_, address merklDistributionCreator_) {
+    constructor(address governor_, address token_, address merklDistributionCreator_) {
         __BlastGovernorSetup_init(governor_);
 
-        if (fenix_ == address(0) || merklDistributionCreator_ == address(0)) {
+        if (token_ == address(0) || merklDistributionCreator_ == address(0)) {
             revert AddressZero();
         }
 
-        fenix = IERC20(fenix_);
+        token = IERC20(token_);
         merklDistributionCreator = IDistributionCreator(merklDistributionCreator_);
 
-        IERC20(fenix_).safeIncreaseAllowance(merklDistributionCreator_, type(uint256).max);
+        IERC20(token_).safeIncreaseAllowance(merklDistributionCreator_, type(uint256).max);
     }
 
     // ============================= EXTERNAL FUNCTIONS ============================
 
     /// @notice Restores the allowance for the FENIX token to the `DistributionCreator` contract
-    /// Depending on the token implementation, may not need to
+    /// Depending on the token implementation, not needed for Fenix implementations
     function setFenixAllowance() external {
-        IERC20 fenixCache = fenix;
+        IERC20 fenixCache = token;
         address creator = address(merklDistributionCreator);
         uint256 currentAllowance = fenixCache.allowance(address(this), creator);
         if (currentAllowance < type(uint256).max) fenixCache.safeIncreaseAllowance(creator, type(uint256).max - currentAllowance);
@@ -66,12 +66,8 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
      */
     function setGauge(address gauge_, DistributionParameters memory params_) external onlyOwner {
         IDistributionCreator creator = merklDistributionCreator;
-        if (
-            gauge_ == address(0) ||
-            params_.rewardToken != address(fenix) ||
-            (creator.isWhitelistedToken(IPairIntegrationInfo(params_.uniV3Pool).token0()) == 0 &&
-                creator.isWhitelistedToken(IPairIntegrationInfo(params_.uniV3Pool).token1()) == 0)
-        ) revert InvalidParams();
+        if (gauge_ == address(0) || params_.rewardToken != address(token) || creator.rewardTokenMinAmounts(params_.rewardToken) == 0)
+            revert InvalidParams();
 
         gaugeParams[gauge_] = params_;
 
@@ -90,14 +86,14 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
     }
 
     /**
-     * @dev Transfers FENIX tokens from the caller and notifies the DistributionCreator about the reward.
+     * @dev Transfers tokens from the caller and notifies the DistributionCreator about the reward.
      * This function allows combining the transfer and notification into a single transaction.
      *
      * @param gauge_ Address of the gauge to notify
      * @param amount_ Amount of FENIX tokens to transfer and notify about
      */
     function notifyRewardWithTransfer(address gauge_, uint256 amount_) external virtual override {
-        fenix.safeTransferFrom(msg.sender, address(this), amount_);
+        token.safeTransferFrom(msg.sender, address(this), amount_);
         _notifyReward(gauge_, amount_);
     }
 
@@ -106,26 +102,26 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
      * then either creates a distribution or refunds the FENIX tokens if the amount is below the minimum threshold.
      *
      * @param gauge_ Address of the gauge to notify
-     * @param amount_ Amount of FENIX tokens to use for the distribution
+     * @param amount_ Amount of tokens to use for the distribution
      */
     function _notifyReward(address gauge_, uint256 amount_) internal {
         DistributionParameters memory params = gaugeParams[gauge_];
         if (params.uniV3Pool == address(0)) revert InvalidParams();
 
-        IERC20 fenixCache = fenix;
+        IERC20 tokenChache = token;
 
-        if (amount_ == 0) amount_ = fenixCache.balanceOf(address(this));
+        if (amount_ == 0) amount_ = tokenChache.balanceOf(address(this));
 
-        params.epochStart = uint32(block.timestamp);
-        params.amount = amount_;
-
-        IDistributionCreator creator = merklDistributionCreator;
         if (amount_ > 0) {
-            if (amount_ > creator.rewardTokenMinAmounts(address(fenixCache)) * params.numEpoch) {
-                uint256 distributionAmount = creator.createDistribution(params);
+            params.epochStart = uint32(block.timestamp);
+            params.amount = amount_;
+
+            IDistributionCreator creatorCache = merklDistributionCreator;
+            if (amount_ > creatorCache.rewardTokenMinAmounts(address(tokenChache)) * params.numEpoch) {
+                uint256 distributionAmount = creatorCache.createDistribution(params);
                 emit CreateDistribution(msg.sender, gauge_, amount_, distributionAmount);
             } else {
-                fenixCache.safeTransfer(msg.sender, amount_);
+                tokenChache.safeTransfer(msg.sender, amount_);
             }
         }
     }
