@@ -249,9 +249,9 @@ describe('PairFactoryUpgradeable Contract', function () {
         );
       });
       it('fails if try set protocol fee > MAX_FEE% or fee == 0', async () => {
-        await expect(pairFactory.setFee(false, 26)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
+        await expect(pairFactory.setFee(false, 501)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
         await expect(pairFactory.setFee(false, 0)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
-        await expect(pairFactory.setFee(true, 26)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
+        await expect(pairFactory.setFee(true, 501)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
         await expect(pairFactory.setFee(true, 0)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
       });
       it('should corect set fee for stable pairs', async () => {

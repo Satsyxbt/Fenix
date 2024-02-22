@@ -1,5 +1,20 @@
 import { ethers } from 'hardhat';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { getCreateAddress } from 'ethers';
+import {
+  abi as FACTORY_ABI,
+  bytecode as FACTORY_BYTECODE,
+} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactory.sol/AlgebraFactory.json';
+
+import {
+  abi as POOL_DEPLOYER_ABI,
+  bytecode as POOL_DEPLOYER_BYTECODE,
+} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPoolDeployer.sol/AlgebraPoolDeployer.json';
+import {
+  abi as ALGEBRA_COMMUNITY_VAULT_ABI,
+  bytecode as ALGEBRA_COMMUNITY_VAULT_BYTECODE,
+} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraCommunityVault.sol/AlgebraCommunityVault.json';
+
 import {
   ERC20Mock,
   Fenix,
@@ -25,7 +40,12 @@ import {
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from './constants';
-import { algebraFactoryFixture } from '../../lib/fenix-dex-v3/src/farming/test/shared';
+import {
+  AlgebraCommunityVault,
+  AlgebraFactory,
+  AlgebraFactory__factory,
+  AlgebraPoolDeployer,
+} from '../../lib/fenix-dex-v3/src/core/typechain';
 
 export type SignersList = {
   deployer: HardhatEthersSigner;
@@ -253,6 +273,33 @@ export async function getSigners() {
     otherUser4: signers[7],
     otherUser5: signers[8],
   };
+}
+
+export interface FactoryFixture {
+  factory: AlgebraFactory;
+  vault: AlgebraCommunityVault;
+}
+
+export async function deployAlgebraCore(): Promise<FactoryFixture> {
+  const signers = await getSigners();
+
+  const poolDeployerAddress = getCreateAddress({
+    from: signers.deployer.address,
+    nonce: (await ethers.provider.getTransactionCount(signers.deployer.address)) + 1,
+  });
+  const factoryFactory = await ethers.getContractFactory(FACTORY_ABI, FACTORY_BYTECODE);
+  const factory = (await factoryFactory.deploy(signers.blastGovernor.address, poolDeployerAddress)) as any as AlgebraFactory;
+
+  const poolDeployerFactory = await ethers.getContractFactory(POOL_DEPLOYER_ABI, POOL_DEPLOYER_BYTECODE);
+  const poolDeployer = (await poolDeployerFactory.deploy(signers.blastGovernor.address, factory)) as any as AlgebraPoolDeployer;
+
+  const vaultFactory = await ethers.getContractFactory(ALGEBRA_COMMUNITY_VAULT_ABI, ALGEBRA_COMMUNITY_VAULT_BYTECODE);
+  const vault = (await vaultFactory.deploy(
+    signers.blastGovernor.address,
+    factory,
+    signers.deployer.address,
+  )) as any as AlgebraCommunityVault;
+  return { factory, vault };
 }
 
 export async function completeFixture(isFork: boolean = false): Promise<CoreFixtureDeployed> {

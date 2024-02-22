@@ -20,13 +20,16 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     function initialize(address governor_, address _voter, address _bribeImplementation) external initializer {
         __BlastGovernorSetup_init(governor_);
         __Ownable_init();
+        _checkAddressZero(_voter);
+        _checkAddressZero(_bribeImplementation);
+
         defaultBlastGovernor = governor_;
         voter = _voter;
         bribeImplementation = _bribeImplementation;
     }
 
     function createBribe(address _token0, address _token1, string memory _type) external returns (address) {
-        require(msg.sender == voter || msg.sender == owner(), "only voter");
+        require(msg.sender == voter || msg.sender == owner(), "only voter or voter");
 
         address newLastBribe = address(new BribeProxy());
 
@@ -45,6 +48,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     }
 
     function changeImplementation(address _implementation) external onlyOwner {
+        _checkAddressZero(_implementation);
+
         require(_implementation != address(0));
         emit bribeImplementationChanged(bribeImplementation, _implementation);
         bribeImplementation = _implementation;
@@ -56,6 +61,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
      * @param voter_ The new voter address to be set.
      */
     function setVoter(address voter_) external virtual onlyOwner {
+        _checkAddressZero(voter_);
+
         emit SetVoter(voter, voter_);
         voter = voter_;
     }
@@ -66,6 +73,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
      * @param defaultBlastGovernor_ The new default governor address to be set.
      */
     function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        _checkAddressZero(defaultBlastGovernor_);
+
         emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
         defaultBlastGovernor = defaultBlastGovernor_;
     }
@@ -87,6 +96,17 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
             unchecked {
                 i++;
             }
+        }
+    }
+
+    /**
+     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
+     *
+     * @param addr_ The address which will checked on zero
+     */
+    function _checkAddressZero(address addr_) internal pure {
+        if (addr_ == address(0)) {
+            revert AddressZero();
         }
     }
 
