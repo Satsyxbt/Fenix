@@ -49,7 +49,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _voter, address _bribeFactory, string memory _type) public initializer {
+    function initialize(address governor_, address _voter, address _bribeFactory, string memory _type) external initializer {
         __ReentrancyGuard_init();
         __BlastGovernorSetup_init(governor_);
 
@@ -329,9 +329,6 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
     /// @notice Notify a bribe amount
     /// @dev    Rewards are saved into NEXT EPOCH mapping.
     function notifyRewardAmount(address _rewardsToken, uint256 reward) external nonReentrant {
-        /*if (__internal) {
-            require( (msg.sender == owner || msg.sender == voter || IVoter(voter).isGauge(msg.sender) ), "permission is denied!" );
-        }*/
         require(isRewardToken[_rewardsToken], "reward token not verified");
         IERC20Upgradeable(_rewardsToken).safeTransferFrom(msg.sender, address(this), reward);
 

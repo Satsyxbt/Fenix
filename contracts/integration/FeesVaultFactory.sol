@@ -17,23 +17,25 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  * and tracks the association between pools and their corresponding fee vaults.
  */
 contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableBeacon {
-    address public voter;
-    address public defaultBlastGovernor;
-
-    mapping(address => bool) internal _whitelistedCreators;
-    mapping(address => address) internal _poolToVault;
+    address public override voter;
+    address public override defaultBlastGovernor;
+    mapping(address => bool) public override isWhitelistedCreator;
+    mapping(address => address) public override getVaultForPool;
 
     /**
      * @dev Initializes the factory with necessary parameters and configurations.
      *
      * @param feesVaultImplementation_ The implementation address for the FeesVault to be used by the beacon.
      * @param voter_ The default voting address for new fee vaults.
-     * @param governor_ The default governor address for new fee vaults.
+     * @param blastGovernor_ The default governor address for new fee vaults and current contract.
      */
-    constructor(address governor_, address feesVaultImplementation_, address voter_) UpgradeableBeacon(feesVaultImplementation_) {
-        __BlastGovernorSetup_init(governor_);
+    constructor(address blastGovernor_, address feesVaultImplementation_, address voter_) UpgradeableBeacon(feesVaultImplementation_) {
+        __BlastGovernorSetup_init(blastGovernor_);
+
+        _checkAddressZero(voter_);
+
         voter = voter_;
-        defaultBlastGovernor = governor_;
+        defaultBlastGovernor = blastGovernor_;
     }
 
     /**
@@ -44,7 +46,7 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
      * @param status_ Boolean representing the new whitelisted status.
      */
     function setWhitelistedCreatorStatus(address creator_, bool status_) external virtual override onlyOwner {
-        _whitelistedCreators[creator_] = status_;
+        isWhitelistedCreator[creator_] = status_;
         emit SetWhitelistedCreatorStatus(creator_, status_);
     }
 
@@ -54,6 +56,7 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
      * @param voter_ The new voter address to be set.
      */
     function setVoter(address voter_) external virtual onlyOwner {
+        _checkAddressZero(voter_);
         emit SetVoter(voter, voter_);
         voter = voter_;
     }
@@ -64,6 +67,7 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
      * @param defaultBlastGovernor_ The new default governor address to be set.
      */
     function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        _checkAddressZero(defaultBlastGovernor_);
         emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
         defaultBlastGovernor = defaultBlastGovernor_;
     }
@@ -75,41 +79,21 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
      * @return The address of the newly created fee vault.
      */
     function createVaultForPool(address pool_) external virtual override returns (address) {
-        if (!_whitelistedCreators[msg.sender]) {
+        if (!isWhitelistedCreator[msg.sender]) {
             revert AccessDenied();
         }
 
-        if (_poolToVault[pool_] != address(0)) {
+        if (getVaultForPool[pool_] != address(0)) {
             revert AlreadyCreated();
         }
 
         address newFeesVault = address(new BeaconProxy(address(this), ""));
 
-        IFeesVault(newFeesVault).initialize(defaultBlastGovernor, address(this), pool_, voter);
-        _poolToVault[pool_] = newFeesVault;
+        IFeesVault(newFeesVault).initialize(defaultBlastGovernor, address(this), pool_);
+        getVaultForPool[pool_] = newFeesVault;
 
         emit FeesVaultCreated(pool_, newFeesVault);
         return newFeesVault;
-    }
-
-    /**
-     * @dev Returns the address of the fee vault associated with a specific pool.
-     *
-     * @param pool_ The address of the pool whose fee vault address is being queried.
-     * @return The address of the fee vault associated with the given pool.
-     */
-    function getVaultForPool(address pool_) external view virtual override returns (address) {
-        return _poolToVault[pool_];
-    }
-
-    /**
-     * @dev Checks if a creator address is whitelisted to create fee vaults.
-     *
-     * @param creator_ The address of the creator to check.
-     * @return True if the creator is whitelisted, false otherwise.
-     */
-    function isWhitelistedCreator(address creator_) external view virtual override returns (bool) {
-        return _whitelistedCreators[creator_];
     }
 
     /**
@@ -119,5 +103,16 @@ contract FeesVaultFactory is IFeesVaultFactory, BlastGovernorSetup, UpgradeableB
      */
     function feesVaultOwner() external view virtual override returns (address) {
         return owner();
+    }
+
+    /**
+     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
+     *
+     * @param addr_ The address which will checked on zero
+     */
+    function _checkAddressZero(address addr_) internal pure {
+        if (addr_ == address(0)) {
+            revert AddressZero();
+        }
     }
 }

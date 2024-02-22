@@ -106,8 +106,9 @@ contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradea
 
         isDistributeEmissionToMerkle = _isDistributeEmissionToMerkle;
         if (_isDistributeEmissionToMerkle) {
-            require(merklGaugeMiddleman != address(0));
+            require(_merklGaugeMiddleman != address(0));
         }
+
         merklGaugeMiddleman = _merklGaugeMiddleman;
         feeVault = _feeVault;
         emergency = false; // emergency flag

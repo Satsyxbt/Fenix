@@ -20,10 +20,10 @@ contract Fenix is IFenix, BlastGovernorSetup, ERC20Burnable, Ownable {
      * @dev Initializes the contract, giving the transferred address the right to mint
      * and also mints the initial supply
      *
-     * @param minter_ Address that will be granted minting rights
+     * @param minter_ Address that will be granted ownership and minting rights
      */
-    constructor(address governor_, address minter_) ERC20("Fenix", "FNX") Ownable() {
-        __BlastGovernorSetup_init(governor_);
+    constructor(address blastGovernor_, address minter_) ERC20("Fenix", "FNX") Ownable() {
+        __BlastGovernorSetup_init(blastGovernor_);
         _mint(msg.sender, 7_500_000e18);
         _transferOwnership(minter_);
     }

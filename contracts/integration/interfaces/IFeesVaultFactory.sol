@@ -76,4 +76,18 @@ interface IFeesVaultFactory is IAlgebraVaultFactory {
      * @return The address of the FeesVault owner.
      */
     function feesVaultOwner() external view returns (address);
+
+    /**
+     * @dev Returns the current setuped voter .
+     *
+     * @return The address of the Voter contract.
+     */
+    function voter() external view returns (address);
+
+    /**
+     * @dev Returns the default blast governor address for future FeesVaults
+     *
+     * @return The address of the blast governor.
+     */
+    function defaultBlastGovernor() external view returns (address);
 }

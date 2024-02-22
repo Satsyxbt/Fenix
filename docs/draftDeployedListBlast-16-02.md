@@ -31,3 +31,10 @@
 | VeArtProxyImplementation | `0x174137A94899615f2ded72a2B8E7C32b20d19A49` |
 | VoterImplementation | `0xe36dA13c9e1aC1c3209B14C289cA56630EB43d4d` |
 | VotingEscrowImplementation | `0x35B84D38277c388928C1CD42919264b3151F2E0a` |
+
+
+## Tests tokens
+| Contract Name | Address |
+|---------------|---------|
+| fnUSDT ERC20 | `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` |
+| fnTOK ERC20 | `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` |

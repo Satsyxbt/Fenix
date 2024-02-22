@@ -18,7 +18,7 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     uint8 public constant decimals = 18;
 
     // Used to denote stable or volatile pair, not immutable since construction happens in the initialize method for CREATE2 deterministic addresses
-    bool public immutable stable;
+    bool public stable;
 
     uint public totalSupply = 0;
 
@@ -32,10 +32,10 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
     uint internal constant MINIMUM_LIQUIDITY = 10 ** 3;
 
-    address public immutable token0;
-    address public immutable token1;
-    address public immutable fees;
-    address public immutable factory;
+    address public token0;
+    address public token1;
+    address public fees;
+    address public factory;
 
     address public communityVault;
 
@@ -51,8 +51,8 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
     Observation[] public observations;
 
-    uint internal immutable decimals0;
-    uint internal immutable decimals1;
+    uint internal decimals0;
+    uint internal decimals1;
 
     uint public reserve0;
     uint public reserve1;
@@ -80,18 +80,35 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to);
     event Sync(uint reserve0, uint reserve1);
     event Claim(address indexed sender, address indexed recipient, uint amount0, uint amount1);
+    event SetCommunityVault(address indexed communityVault_);
 
     event Transfer(address indexed from, address indexed to, uint amount);
     event Approval(address indexed owner, address indexed spender, uint amount);
 
-    constructor() {
+    // simple re-entrancy check
+    uint internal _unlocked;
+
+    modifier lock() {
+        require(_unlocked == 1);
+        _unlocked = 2;
+        _;
+        _unlocked = 1;
+    }
+
+    constructor() {}
+
+    function initialize(address _blastGovernor, address _token0, address _token1, bool _stable, address _communityVault) external {
+        require(factory == address(0), "Initialized");
+
         factory = msg.sender;
-        (address _governor, address _token0, address _token1, bool _stable) = IPairFactory(msg.sender).getInitializable();
 
-        __BlastGovernorSetup_init(_governor);
+        __BlastGovernorSetup_init(_blastGovernor);
 
-        (token0, token1, stable) = (_token0, _token1, _stable);
+        (token0, token1, stable, communityVault) = (_token0, _token1, _stable, _communityVault);
+
         fees = address(new PairFees(_token0, _token1));
+
+        _unlocked = 1;
 
         if (_stable) {
             name = string(abi.encodePacked("StableV1 AMM - ", IERC20Metadata(_token0).symbol(), "/", IERC20Metadata(_token1).symbol()));
@@ -108,22 +125,18 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     }
 
     function setCommunityVault(address communityVault_) external virtual override {
-        require(msg.sender == factory, "ACCESS_DENIED");
-
+        IPairFactory factoryCache = IPairFactory(factory);
+        require(factoryCache.hasRole(factoryCache.PAIRS_ADMINISTRATOR_ROLE(), msg.sender), "ACCESS_DENIED");
         communityVault = communityVault_;
+        emit SetCommunityVault(communityVault_);
     }
 
     function _checkAccessForManageBlastERC20Rebasing() internal virtual override {
-        require(msg.sender == factory, "ACCESS_DENIED");
-    }
-
-    // simple re-entrancy check
-    uint internal _unlocked = 1;
-    modifier lock() {
-        require(_unlocked == 1);
-        _unlocked = 2;
-        _;
-        _unlocked = 1;
+        IPairFactory factoryCache = IPairFactory(factory);
+        require(
+            msg.sender == address(factoryCache) || factoryCache.hasRole(factoryCache.PAIRS_ADMINISTRATOR_ROLE(), msg.sender),
+            "ACCESS_DENIED"
+        );
     }
 
     function observationLength() external view returns (uint) {
@@ -179,6 +192,8 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
         }
 
         if (amount > 0) {
+            _safeTransfer(token0, fees, amount);
+
             uint256 _ratio = (amount * 1e18) / totalSupply; // 1e18 adjustment is removed during claim
             if (_ratio > 0) {
                 index0 += _ratio;
@@ -197,12 +212,14 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
             uint256 _protocolFeeRate = IPairFactory(factory).getProtocolFee(address(this));
             if (_protocolFeeRate > 0) {
                 _protocolFee = (amount * _protocolFeeRate) / 10000;
-                _safeTransfer(token1, address(0), _protocolFee); // transfer the fees out to PairFees
+                _safeTransfer(token1, communityVaultCache, _protocolFee); // transfer the fees out to PairFees
                 amount -= _protocolFee;
             }
         }
 
         if (amount > 0) {
+            _safeTransfer(token1, fees, amount);
+
             uint256 _ratio = (amount * 1e18) / totalSupply;
 
             if (_ratio > 0) {
@@ -438,11 +455,12 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     }
 
     function _f(uint x0, uint y) internal pure returns (uint) {
-        return (x0 * ((((y * y) / 1e18) * y) / 1e18)) / 1e18 + (((((x0 * x0) / 1e18) * x0) / 1e18) * y) / 1e18;
+        return x0*(y*y/1e18*y/1e18)/1e18+(x0*x0/1e18*x0/1e18)*y/1e18;
     }
 
     function _d(uint x0, uint y) internal pure returns (uint) {
-        return (3 * x0 * ((y * y) / 1e18)) / 1e18 + ((((x0 * x0) / 1e18) * x0) / 1e18);
+        return 3*x0*(y*y/1e18)/1e18+(x0*x0/1e18*x0/1e18);
+ 
     }
 
     function _get_y(uint x0, uint xy, uint y) internal pure returns (uint) {

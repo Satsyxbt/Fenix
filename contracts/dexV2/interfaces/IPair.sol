@@ -42,4 +42,6 @@ interface IPair {
     function claimable1(address _user) external view returns (uint);
 
     function isStable() external view returns (bool);
+
+    function initialize(address blastGovernor, address token0, address token1, bool isStable, address communityVault) external;
 }
