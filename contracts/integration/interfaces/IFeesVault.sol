@@ -113,9 +113,8 @@ interface IFeesVault {
      * @param blastGovernor_ Address of the governor contract for authorization checks.
      * @param factory_ Address of the contract factory for this vault.
      * @param pool_ Address of the liquidity pool associated with this vault.
-     * @param voter_ Address of the voter contract to validate gauge authorization.
      */
-    function initialize(address blastGovernor_, address factory_, address pool_, address voter_) external;
+    function initialize(address blastGovernor_, address factory_, address pool_) external;
 
     /**
      * @notice Calculates the fee distribution for a given amount.

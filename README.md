@@ -1,13 +1,21 @@
-# Sample Hardhat Project
+### Getting the code
+```sh
+git clone --recursive -j8  https://github.com/Satsyxbt/Fenix
+```
+or
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+```sh
+git clone https://github.com/Satsyxbt/Fenix
+cd fenix
+git submodule update --init --recursive
+```
 
-Try running some of the following tasks:
+### Enter into the directory
+```sh
+cd fenix
+```
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+### Running basic tests
+```sh
+npm run test
 ```

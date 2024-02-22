@@ -11,23 +11,27 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUpgradeable {
     address public last_gauge;
     address public voter;
+    address public defaultBlastGovernor;
     address public override gaugeImplementation;
     address public override merklGaugeMiddleman;
-    address public defaultBlastGovernor;
 
     constructor() {
         _disableInitializers();
     }
 
     function initialize(
-        address governor_,
+        address _blastGovernor,
         address _voter,
         address _gaugeImplementation,
         address _merklGaugeMiddleman
     ) external initializer {
-        __BlastGovernorSetup_init(governor_);
+        __BlastGovernorSetup_init(_blastGovernor);
         __Ownable_init();
-        defaultBlastGovernor = governor_;
+
+        _checkAddressZero(_voter);
+        _checkAddressZero(_gaugeImplementation);
+
+        defaultBlastGovernor = _blastGovernor;
         voter = _voter;
         gaugeImplementation = _gaugeImplementation;
         merklGaugeMiddleman = _merklGaugeMiddleman;
@@ -43,7 +47,7 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         bool _isDistributeEmissionToMerkle,
         address _feeVault
     ) external virtual override returns (address) {
-        require(msg.sender == voter || msg.sender == owner(), "only voter");
+        require(msg.sender == voter || msg.sender == owner(), "only voter or owner");
 
         address newLastGauge = address(new GaugeProxy());
         IGauge(newLastGauge).initialize(
@@ -64,12 +68,24 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         return newLastGauge;
     }
 
+    /**
+     * @dev Sets the default governor address for new fee vaults. Only callable by the contract owner.
+     *
+     * @param defaultBlastGovernor_ The new default governor address to be set.
+     */
+    function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        _checkAddressZero(defaultBlastGovernor_);
+
+        emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
+        defaultBlastGovernor = defaultBlastGovernor_;
+    }
+
     function gaugeOwner() external view returns (address) {
         return owner();
     }
 
     function changeImplementation(address _implementation) external onlyOwner {
-        require(_implementation != address(0));
+        _checkAddressZero(_implementation);
         emit GaugeImplementationChanged(gaugeImplementation, _implementation);
         gaugeImplementation = _implementation;
     }
@@ -79,7 +95,19 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
     }
 
     function setDistribution(address _gauge, address _newDistribution) external onlyOwner {
+        _checkAddressZero(_newDistribution);
         IGauge(_gauge).setDistribution(_newDistribution);
+    }
+
+    /**
+     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
+     *
+     * @param addr_ The address which will checked on zero
+     */
+    function _checkAddressZero(address addr_) internal pure {
+        if (addr_ == address(0)) {
+            revert AddressZero();
+        }
     }
 
     /**

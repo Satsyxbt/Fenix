@@ -105,5 +105,7 @@ describe('BlastERC20RebasingManage Contract', function () {
         expect(await wethRebasing.getClaimableAmount(rebasingManage.target)).to.be.eq(ZERO);
       });
     });
+  } else {
+    it('Skip if not blast fork', async () => {});
   }
 });

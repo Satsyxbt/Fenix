@@ -12,21 +12,25 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     address public voter;
     address public bribeImplementation;
     address public defaultBlastGovernor;
+    address[] public defaultRewardToken;
 
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _voter, address _bribeImplementation) external initializer {
-        __BlastGovernorSetup_init(governor_);
+    function initialize(address _blastGovernor, address _voter, address _bribeImplementation) external initializer {
+        __BlastGovernorSetup_init(_blastGovernor);
         __Ownable_init();
-        defaultBlastGovernor = governor_;
+        _checkAddressZero(_voter);
+        _checkAddressZero(_bribeImplementation);
+
+        defaultBlastGovernor = _blastGovernor;
         voter = _voter;
         bribeImplementation = _bribeImplementation;
     }
 
     function createBribe(address _token0, address _token1, string memory _type) external returns (address) {
-        require(msg.sender == voter || msg.sender == owner(), "only voter");
+        require(msg.sender == voter || msg.sender == owner(), "only voter or voter");
 
         address newLastBribe = address(new BribeProxy());
 
@@ -34,6 +38,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
 
         if (_token0 != address(0)) IBribe(newLastBribe).addRewardToken(_token0);
         if (_token1 != address(0)) IBribe(newLastBribe).addRewardToken(_token1);
+
+        IBribe(newLastBribe).addRewardTokens(defaultRewardToken);
 
         last_bribe = newLastBribe;
 
@@ -45,6 +51,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     }
 
     function changeImplementation(address _implementation) external onlyOwner {
+        _checkAddressZero(_implementation);
+
         require(_implementation != address(0));
         emit bribeImplementationChanged(bribeImplementation, _implementation);
         bribeImplementation = _implementation;
@@ -56,6 +64,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
      * @param voter_ The new voter address to be set.
      */
     function setVoter(address voter_) external virtual onlyOwner {
+        _checkAddressZero(voter_);
+
         emit SetVoter(voter, voter_);
         voter = voter_;
     }
@@ -66,6 +76,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
      * @param defaultBlastGovernor_ The new default governor address to be set.
      */
     function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
+        _checkAddressZero(defaultBlastGovernor_);
+
         emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
         defaultBlastGovernor = defaultBlastGovernor_;
     }
@@ -87,6 +99,37 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
             unchecked {
                 i++;
             }
+        }
+    }
+
+    /// @notice set the bribe factory permission registry
+    function pushDefaultRewardToken(address _token) external onlyOwner {
+        _checkAddressZero(_token);
+        defaultRewardToken.push(_token);
+    }
+
+    /// @notice set the bribe factory permission registry
+    function removeDefaultRewardToken(address _token) external onlyOwner {
+        _checkAddressZero(_token);
+
+        uint i = 0;
+        for (i; i < defaultRewardToken.length; i++) {
+            if (defaultRewardToken[i] == _token) {
+                defaultRewardToken[i] = defaultRewardToken[defaultRewardToken.length - 1];
+                defaultRewardToken.pop();
+                break;
+            }
+        }
+    }
+
+    /**
+     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
+     *
+     * @param addr_ The address which will checked on zero
+     */
+    function _checkAddressZero(address addr_) internal pure {
+        if (addr_ == address(0)) {
+            revert AddressZero();
         }
     }
 
