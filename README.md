@@ -46,7 +46,7 @@ https://github.com/Satsyxbt/Fenix
         |-- BribeFactoryUpgradeable.sol [Full]
         |-- BribeUpgradeable.sol [Only changes and his effect on other parts]
     |-- gauges/
-        |-- GaugeFactoryUpgradeable.sol
+        |-- GaugeFactoryUpgradeable.sol [Full]
         |-- GaugeUpgradeable.sol [Only changes and his effect on other parts]
     |-- core/
         |-- Fenix.sol [Full]
@@ -79,7 +79,7 @@ The following contracts are out of scope
         |-- VeArtProxyUpgradeable.sol
         |-- libraries
             |-- DateTime.sol
-            |-- NumberFormatter.sol [Full]
+            |-- NumberFormatter.sol
     |-- mocks/**/*
 ```
 
