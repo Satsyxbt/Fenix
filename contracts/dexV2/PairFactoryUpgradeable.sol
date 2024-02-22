@@ -15,7 +15,7 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
     bytes32 public constant override FEES_MANAGER_ROLE = keccak256("FEES_MANAGER");
     bytes32 public constant override PAIRS_CREATOR_ROLE = keccak256("PAIRS_CREATOR");
 
-    uint256 public constant MAX_FEE = 500; // 0.25%
+    uint256 public constant MAX_FEE = 500; // 5%
     uint256 public constant PRECISION = 10000; // 100%
 
     address public override implementation;

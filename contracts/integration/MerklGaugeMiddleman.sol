@@ -3,6 +3,7 @@ pragma solidity =0.8.19;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import {IDistributionCreator, DistributionParameters} from "./interfaces/IDistributionCreator.sol";
 import {IMerklGaugeMiddleman} from "./interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "./interfaces/IPairIntegrationInfo.sol";
@@ -48,7 +49,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
 
     // ============================= EXTERNAL FUNCTIONS ============================
 
-    /// @notice Restores the allowance for the FENIX token to the `DistributionCreator` contract
+    /// @notice Restores the allowance for the token to the `DistributionCreator` contract
     /// Depending on the token implementation, not needed for Fenix implementations
     function setFenixAllowance() external {
         IERC20 fenixCache = token;
@@ -90,7 +91,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
      * This function allows combining the transfer and notification into a single transaction.
      *
      * @param gauge_ Address of the gauge to notify
-     * @param amount_ Amount of FENIX tokens to transfer and notify about
+     * @param amount_ Amount of tokens to transfer and notify about
      */
     function notifyRewardWithTransfer(address gauge_, uint256 amount_) external virtual override {
         token.safeTransferFrom(msg.sender, address(this), amount_);
@@ -99,7 +100,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
 
     /**
      * @dev Internal function to handle the notification logic. Validates the gauge parameters and amount,
-     * then either creates a distribution or refunds the FENIX tokens if the amount is below the minimum threshold.
+     * then either creates a distribution or refunds the tokens if the amount is below the minimum threshold.
      *
      * @param gauge_ Address of the gauge to notify
      * @param amount_ Amount of tokens to use for the distribution

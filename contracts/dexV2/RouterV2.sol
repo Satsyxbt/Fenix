@@ -12,6 +12,7 @@ import {IPairFactory} from "./interfaces/IPairFactory.sol";
 // https://github.com/ftm1337/solidly-with-FoT/blob/master/contracts/BaseV1-periphery.sol
 
 pragma solidity =0.8.19;
+
 interface IBaseV1Pair {
     function transferFrom(address src, address dst, uint amount) external returns (bool);
 
@@ -43,7 +44,6 @@ interface erc20 {
 
     function approve(address spender, uint value) external returns (bool);
 }
-
 
 library Math {
     function min(uint a, uint b) internal pure returns (uint) {
@@ -125,7 +125,6 @@ contract RouterV2 {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable));
         pair = Clones.predictDeterministicAddress(IPairFactory(factory).implementation(), salt, factory);
-
     }
 
     // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset

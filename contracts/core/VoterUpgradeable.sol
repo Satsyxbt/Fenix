@@ -89,8 +89,14 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     address[] public clPools; // all pools viable for incentives
 
-    function initialize(address governor_, address __ve, address _pairFactory, address _gaugeFactory, address _bribes) public initializer {
-        __BlastGovernorSetup_init(governor_);
+    function initialize(
+        address blastGovernor_,
+        address __ve,
+        address _pairFactory,
+        address _gaugeFactory,
+        address _bribes
+    ) external initializer {
+        __BlastGovernorSetup_init(blastGovernor_);
         __ReentrancyGuard_init();
 
         admin = msg.sender;
@@ -576,7 +582,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         if (_gaugeType == 1) {
             symbol = string.concat(IERC20Metadata(tokenA).symbol(), "/", IERC20Metadata(tokenB).symbol());
         } else {
-            symbol = IERC20Metadata(tokenA).symbol();
+            symbol = IERC20Metadata(_pool).symbol();
         }
 
         // create internal and external bribe

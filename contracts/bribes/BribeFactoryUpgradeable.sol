@@ -18,13 +18,13 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _voter, address _bribeImplementation) external initializer {
-        __BlastGovernorSetup_init(governor_);
+    function initialize(address _blastGovernor, address _voter, address _bribeImplementation) external initializer {
+        __BlastGovernorSetup_init(_blastGovernor);
         __Ownable_init();
         _checkAddressZero(_voter);
         _checkAddressZero(_bribeImplementation);
 
-        defaultBlastGovernor = governor_;
+        defaultBlastGovernor = _blastGovernor;
         voter = _voter;
         bribeImplementation = _bribeImplementation;
     }
