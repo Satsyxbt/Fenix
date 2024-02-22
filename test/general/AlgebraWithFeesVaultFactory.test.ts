@@ -3,7 +3,7 @@ import completeFixture, { CoreFixtureDeployed, FactoryFixture, deployAlgebraCore
 import { ERC20Mock } from '../../typechain-types';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { expect } from 'chai';
-import { ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import {
   abi as POOL_ABI,
@@ -14,7 +14,7 @@ import {
   bytecode as CALLE_BYTECODE,
 } from '@cryptoalgebra/integral-core/artifacts/contracts/test/TestAlgebraCallee.sol/TestAlgebraCallee.json';
 
-import { MAX_TICK, MIN_TICK, encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
+import { createPoolFunctions, encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
 import { TestAlgebraCallee, TestAlgebraCallee__factory } from '@cryptoalgebra/integral-core/typechain';
 
 describe('AlgebraWithFeesVaultFactory', function () {
@@ -54,6 +54,7 @@ describe('AlgebraWithFeesVaultFactory', function () {
     expect(await algebraCore.factory.vaultFactory()).to.be.eq(deployed.feesVaultFactory.target);
     expect(await algebraCore.factory.vaultFactory()).to.be.not.eq(algebraCore.vault.target);
   });
+
   it('Should corect deploy new pair with new feesVault factory', async () => {
     let factory = algebraCore.factory;
     await factory.grantRole(await factory.POOLS_CREATOR_ROLE(), signers.deployer.address);
@@ -77,9 +78,9 @@ describe('AlgebraWithFeesVaultFactory', function () {
       await deployed.feesVaultFactory.getVaultForPool(await factory.poolByPair(tokenTK18.target, tokenTK9.target)),
     );
   });
-  it('Should corect transfer fee to feesVault after swap every hour', async () => {
-    let factory = algebraCore.factory;
 
+  it('Should corect transfer fee to feesVault which was created', async () => {
+    let factory = algebraCore.factory;
     let deployedPoolAddr = await factory.poolByPair(tokenTK18.target, tokenTK6.target);
     let pool = await ethers.getContractAt(POOL_ABI, deployedPoolAddr);
 
@@ -91,30 +92,33 @@ describe('AlgebraWithFeesVaultFactory', function () {
     let callerFactory = (await ethers.getContractFactory(CALLE_ABI, CALLE_BYTECODE)) as any as TestAlgebraCallee__factory;
     let caller = await callerFactory.deploy();
 
+    let poolFunctions = await createPoolFunctions({
+      swapTarget: caller,
+      token0: tokenTK18 as any,
+      token1: tokenTK6 as any,
+      pool: pool as any,
+    });
+
     await tokenTK18.mint(signers.deployer.address, ethers.parseEther('10000'));
     await tokenTK6.mint(signers.deployer.address, ethers.parseEther('100000'));
 
-    await tokenTK18.approve(caller.target, ethers.parseEther('10000'));
-    await tokenTK6.approve(caller.target, ethers.parseEther('10000'));
-    await tokenTK18.approve(pool.target, ethers.parseEther('10000'));
-    await tokenTK6.approve(pool.target, ethers.parseEther('10000'));
-
-    await tokenTK18.mint(pool.target, ethers.parseEther('100'));
-    await tokenTK6.mint(pool.target, 100e6);
-
-    await caller.mint(pool.target, signers.deployer.address, -180, 180, ethers.parseEther('100'));
+    await poolFunctions.mint(signers.deployer.address, -60, 60, ethers.parseEther('1'));
 
     expect(await tokenTK18.balanceOf(feesVault.target)).to.be.eq(ZERO);
     expect(await tokenTK6.balanceOf(feesVault.target)).to.be.eq(ZERO);
 
-    console.log('Before swap');
+    expect(await pool.totalFeeGrowth0Token()).to.be.eq(ZERO);
+    expect(await pool.totalFeeGrowth1Token()).to.be.eq(ZERO);
+
+    await pool.setCommunityFee(100); // 100%
+
     if ((await pool.token0()) == tokenTK18.target) {
-      await caller.swap0ForExact1(pool.target, 1e6, signers.deployer.address, 0);
+      await poolFunctions.swap0ForExact1(ethers.parseEther('1'), '0x0000000000000000000000000000000000000001');
     } else {
-      await caller.swap1ForExact0(pool.target, 1e6, signers.deployer.address, 0);
+      await poolFunctions.swap1ForExact0(ethers.parseEther('1'), '0x0000000000000000000000000000000000000001');
     }
 
-    expect(await tokenTK18.balanceOf(feesVault.target)).to.be.eq(ZERO);
+    expect(await tokenTK18.balanceOf(feesVault.target)).to.be.greaterThan(ZERO);
     expect(await tokenTK6.balanceOf(feesVault.target)).to.be.eq(ZERO);
   });
 });
