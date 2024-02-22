@@ -44,10 +44,10 @@ describe('MerklGaugeMiddleman Contract', function () {
     poolMock = await poolMockFactory.deploy();
     startTime = await time.latest();
 
-    await merkleDistributorCreatorMock.toggleTokenWhitelist(agEUR.target);
-
+    await merkleDistributorCreatorMock.setRewardTokenMinAmounts([fenix.target], [1]);
     await fenix.mint(signers.otherUser1.address, ethers.parseEther('1000'));
     await fenix.connect(signers.otherUser1).approve(merklGaugeMiddleman.target, ethers.MaxUint256);
+    await poolMock.setTokens(fenix.target, agEUR.target);
 
     params = {
       uniV3Pool: poolMock.target,
@@ -69,8 +69,8 @@ describe('MerklGaugeMiddleman Contract', function () {
   });
 
   describe('Deployments', async () => {
-    it('should correct set fenix', async () => {
-      expect(await merklGaugeMiddleman.fenix()).to.be.eq(fenix.target);
+    it('should correct set token', async () => {
+      expect(await merklGaugeMiddleman.token()).to.be.eq(fenix.target);
     });
     it('should correct set deployer as owner in contract', async () => {
       expect(await merklGaugeMiddleman.owner()).to.be.eq(signers.deployer.address);
@@ -101,7 +101,6 @@ describe('MerklGaugeMiddleman Contract', function () {
   });
   describe('#setFenixAllowance', async () => {
     it('can be called by anyone and increase allowance of fenix to merkle distributor to max', async () => {
-      await poolMock.setTokens(fenix.target, agEUR.target);
       await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await fenix.connect(signers.otherUser1).transfer(merklGaugeMiddleman.target, ethers.parseEther('0.7'));
       expect(await fenix.balanceOf(merklGaugeMiddleman.target)).to.be.equal(ethers.parseEther('0.7'));
@@ -124,7 +123,7 @@ describe('MerklGaugeMiddleman Contract', function () {
     it('reverts - invalid params', async () => {
       const params0 = {
         uniV3Pool: poolMock.target,
-        rewardToken: fenix.target,
+        rewardToken: agEUR.target,
         positionWrappers: [signers.otherUser1.address, signers.otherUser2.address, signers.deployer.address],
         wrapperTypes: [0, 1, 2],
         amount: ethers.parseEther('1'),
@@ -163,14 +162,8 @@ describe('MerklGaugeMiddleman Contract', function () {
       await expect(
         merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params0),
       ).to.be.revertedWithCustomError(merklGaugeMiddleman, 'InvalidParams');
-      // Pool does not have valid tokens 0 and 1
-      await expect(
-        merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params),
-      ).to.be.revertedWithCustomError(merklGaugeMiddleman, 'InvalidParams');
-      await expect(merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser2.address, params1)).to.be.reverted;
     });
     it('success - value updated - token 0', async () => {
-      await poolMock.setTokens(agEUR.target, fenix.target);
       const receipt = await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await expect(receipt).to.be.emit(merklGaugeMiddleman, 'GaugeSet').withArgs(signers.otherUser1.address);
 
@@ -189,7 +182,6 @@ describe('MerklGaugeMiddleman Contract', function () {
       expect(reward.rewardId).to.be.equal(ethers.id('TEST') as string);
     });
     it('success - value updated - token 1', async () => {
-      await poolMock.setTokens(ZERO_ADDRESS, agEUR.target);
       const receipt = await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await expect(receipt).to.be.emit(merklGaugeMiddleman, 'GaugeSet').withArgs(signers.otherUser1.address);
 
@@ -210,7 +202,6 @@ describe('MerklGaugeMiddleman Contract', function () {
   });
   describe('notifyReward', () => {
     it('reverts - invalid params', async () => {
-      await poolMock.setTokens(fenix.target, agEUR.target);
       await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await expect(
         merklGaugeMiddleman.connect(signers.otherUser2).notifyReward(ZERO_ADDRESS, ethers.parseEther('0.5')),
@@ -220,7 +211,6 @@ describe('MerklGaugeMiddleman Contract', function () {
       ).to.be.revertedWithCustomError(merklGaugeMiddleman, 'InvalidParams');
     });
     it('success - rewards well sent', async () => {
-      await poolMock.setTokens(fenix.target, agEUR.target);
       await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await fenix.connect(signers.otherUser1).transfer(merklGaugeMiddleman.target, ethers.parseEther('0.7'));
       expect(await fenix.balanceOf(merklGaugeMiddleman.target)).to.be.equal(ethers.parseEther('0.7'));
@@ -230,12 +220,13 @@ describe('MerklGaugeMiddleman Contract', function () {
     });
   });
   it('success - rewards well sent when zero amount', async () => {
-    await poolMock.setTokens(fenix.target, agEUR.target);
     await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
     await fenix.connect(signers.otherUser1).transfer(merklGaugeMiddleman.target, ethers.parseEther('0.7'));
     expect(await fenix.balanceOf(merklGaugeMiddleman.target)).to.be.equal(ethers.parseEther('0.7'));
     expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.equal(ethers.parseEther('999.3'));
+
     await merkleDistributorCreatorMock.setRewardTokenMinAmounts([fenix.target], [ethers.parseEther('10')]);
+
     await merklGaugeMiddleman.connect(signers.otherUser1).notifyReward(signers.otherUser1.address, ethers.parseEther('0'));
     expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.equal(ethers.parseEther('1000'));
     expect(await fenix.balanceOf(merklGaugeMiddleman.target)).to.be.equal(ethers.parseEther('0'));
@@ -260,7 +251,6 @@ describe('MerklGaugeMiddleman Contract', function () {
       rewardId: ethers.id('TEST') as string,
       additionalData: ethers.id('test2ng') as string,
     };
-    await poolMock.setTokens(fenix.target, agEUR.target);
     await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
     await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser2.address, params0);
 
@@ -275,7 +265,6 @@ describe('MerklGaugeMiddleman Contract', function () {
   });
   describe('notifyRewardWithAmount', () => {
     it('success - rewards well sent', async () => {
-      await poolMock.setTokens(fenix.target, agEUR.target);
       await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await fenix.connect(signers.otherUser1).approve(merklGaugeMiddleman.target, ethers.parseEther('0.7'));
       expect(await fenix.balanceOf(merklGaugeMiddleman.target)).to.be.equal(ethers.parseEther('0'));
@@ -283,7 +272,6 @@ describe('MerklGaugeMiddleman Contract', function () {
       expect(await fenix.balanceOf(merkleDistributorCreatorMock.target)).to.be.equal(ethers.parseEther('0.7'));
     });
     it('reverts - no approval', async () => {
-      await poolMock.setTokens(fenix.target, agEUR.target);
       await merklGaugeMiddleman.connect(signers.deployer).setGauge(signers.otherUser1.address, params);
       await fenix.connect(signers.otherUser1).approve(merklGaugeMiddleman.target, 0);
       await expect(

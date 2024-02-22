@@ -50,6 +50,11 @@ describe('FeesVaultFactory Contract', function () {
         factory.connect(signers.deployer).deploy(ZERO_ADDRESS, await feesVaultImplementation.getAddress(), deployed.voter.target),
       ).to.be.revertedWithCustomError(factory, 'AddressZero');
     });
+    it('fails if provide zero voter address', async () => {
+      await expect(
+        factory.connect(signers.deployer).deploy(signers.blastGovernor.address, await feesVaultImplementation.getAddress(), ZERO_ADDRESS),
+      ).to.be.revertedWithCustomError(factory, 'AddressZero');
+    });
     it('fails if provide incorrect implementation', async () => {
       await expect(
         factory.connect(signers.deployer).deploy(signers.blastGovernor.address, ZERO_ADDRESS, deployed.voter.target),
@@ -95,6 +100,9 @@ describe('FeesVaultFactory Contract', function () {
         ERRORS.Ownable.NotOwner,
       );
     });
+    it('fails if try set ZERO_ADDRESS', async () => {
+      await expect(feesVaultFactory.setVoter(ZERO_ADDRESS)).to.be.revertedWithCustomError(feesVaultFactory, 'AddressZero');
+    });
     it('success set new voter address and emit event', async () => {
       expect(await feesVaultFactory.voter()).to.be.eq(deployed.voter.target);
 
@@ -110,6 +118,9 @@ describe('FeesVaultFactory Contract', function () {
       await expect(feesVaultFactory.connect(signers.otherUser1).setDefaultBlastGovernor(signers.otherUser1.address)).to.be.revertedWith(
         ERRORS.Ownable.NotOwner,
       );
+    });
+    it('fails if try set ZERO_ADDRESS', async () => {
+      await expect(feesVaultFactory.setDefaultBlastGovernor(ZERO_ADDRESS)).to.be.revertedWithCustomError(feesVaultFactory, 'AddressZero');
     });
     it('success set new default blast governor address and emit event', async () => {
       expect(await feesVaultFactory.defaultBlastGovernor()).to.be.eq(signers.blastGovernor.address);
@@ -148,7 +159,6 @@ describe('FeesVaultFactory Contract', function () {
         let feesVault = await ethers.getContractAt('FeesVaultUpgradeable', newFeesVaultAddress);
 
         expect(await feesVault.factory()).to.be.eq(feesVaultFactory.target);
-        expect(await feesVault.voter()).to.be.eq(await feesVaultFactory.voter());
         expect(await feesVault.pool()).to.be.eq(mockPoolAddress1);
       });
       it('correct set poolToVault', async () => {
@@ -168,9 +178,7 @@ describe('FeesVaultFactory Contract', function () {
         await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress1);
         let feesVault = await ethers.getContractAt('FeesVaultUpgradeable', newFeesVaultAddress);
 
-        await expect(feesVault.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(
-          ERRORS.Initializable.Initialized,
-        );
+        await expect(feesVault.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(ERRORS.Initializable.Initialized);
       });
     });
   });

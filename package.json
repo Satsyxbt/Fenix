@@ -6,7 +6,7 @@
   "private": "true",
   "scripts": {
     "compile": "hardhat clean && npx hardhat compile",
-    "test": "npx hardhat test",
+    "test": "npx hardhat test --parallel",
     "test:coverage": "npx hardhat coverage",
     "clean": "hardhat clean",
     "lint": "npm run lint:ts && npm run lint:prettier && npm run lint:solhint",
@@ -28,17 +28,17 @@
     "DEX",
     "Centralized liquidity"
   ],
-  "author": "Aegas",
+  "author": "Fenix",
   "license": "MIT",
   "devDependencies": {
-    "@openzeppelin/contracts": "4.9.5"
+    "@openzeppelin/contracts": "4.9.5",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5"
   },
   "dependencies": {
     "@cryptoalgebra/integral-core": "file:./lib/fenix-dex-v3/src/core",
     "@ethersproject/bignumber": "^5.7.0",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@openzeppelin/hardhat-upgrades": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
