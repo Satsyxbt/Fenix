@@ -1,4 +1,4 @@
-# [02/20/2024] Fenix Features Implementation
+# [02/22/2024] Fenix Features Implementation
 
 ## Sources
 - [THENA Contracts](https://github.com/ThenafiBNB/THENA-Contracts)
