@@ -35,7 +35,7 @@ A key goal of this initiative is to review and validate the changes made, as wel
   
 ## Audit competition scope
 
-All contract code marked as `[FULL]` is within the scope. The tag `[Only changes and his effect on other parts]` means that only the part that has been changed relative to the implementations from Chronos or Thena is within scope, including any impact these changes may have on other parts of the system. Any vulnerabilities critical to the system leading to loss of funds/blockages are also considered within scope.
+All contract code marked as `[FULL]` is within the scope. The tag `[Only changes and their effect on other parts]` means that only the part that has been changed relative to the implementations from Chronos or Thena is within scope, including any impact these changes may have on other parts of the system. Any vulnerabilities critical to the system leading to loss of funds/blockages are also considered within scope.
 
 The contracts listed below are partially or fully in the scope
 ```
@@ -44,20 +44,20 @@ https://github.com/Satsyxbt/Fenix
 |-- contracts/
     |-- bribes/
         |-- BribeFactoryUpgradeable.sol [Full]
-        |-- BribeUpgradeable.sol [Only changes and his effect on other parts]
+        |-- BribeUpgradeable.sol [Only changes and their effect on other parts]
     |-- gauges/
         |-- GaugeFactoryUpgradeable.sol [Full]
-        |-- GaugeUpgradeable.sol [Only changes and his effect on other parts]
+        |-- GaugeUpgradeable.sol [Only changes and their effect on other parts]
     |-- core/
         |-- Fenix.sol [Full]
         |-- MinterUpgradeable.sol [Full]
-        |-- VoterUpgradeable.sol [Only changes and his effect on other parts]
-        |-- VotingEscrowUpgradeable.sol [Only changes and his effect on other parts]
+        |-- VoterUpgradeable.sol [Only changes and their effect on other parts]
+        |-- VotingEscrowUpgradeable.sol [Only changes and their effect on other parts]
     |-- dexV2/
-        |-- Pair.sol [Only changes and his effect on other parts]
+        |-- Pair.sol [Only changes and their effect on other parts]
         |-- PairFactoryUpgradeable.sol [Full]
         |-- PairFees.sol [Full]
-        |-- RouterV2.sol [Only changes and his effect on other parts]
+        |-- RouterV2.sol [Only changes and their effect on other parts]
     |-- integration/
         |-- BlastERC20RebasingManage.sol [Full]
         |-- BlastGovernorSetup.sol [Full]
