@@ -15,7 +15,12 @@ import {
 } from '../../typechain-types';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { BLAST_PREDEPLOYED_ADDRESS, DEAD_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
+import completeFixture, {
+  CoreFixtureDeployed,
+  SignersList,
+  deployERC20MockToken,
+  deployTransaperntUpgradeableProxy,
+} from '../utils/coreFixture';
 import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { deployERC20Mock } from '../../scripts/utils';
 
@@ -85,24 +90,62 @@ describe('FeesVault Contract', function () {
     it('should correct set initial factory address', async () => {
       expect(await feesVault.factory()).to.be.eq(feesVaultFactory.target);
     });
-    it('should correct set voter address', async () => {
-      expect(await feesVault.voter()).to.be.eq(voterMock.target);
-    });
     it('should correct set pool address', async () => {
       expect(await feesVault.pool()).to.be.eq(poolMock.target);
     });
 
     it('fails if try initialzie contract twice', async () => {
-      await expect(
-        feesVault.initialize(signers.blastGovernor.address, feesVaultFactory.target, poolMock.target, voterMock.target),
-      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      await expect(feesVault.initialize(signers.blastGovernor.address, feesVaultFactory.target, poolMock.target)).to.be.revertedWith(
+        ERRORS.Initializable.Initialized,
+      );
     });
+    it('fails if provide zero governor address', async () => {
+      let vault = factory.attach(
+        await deployTransaperntUpgradeableProxy(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          await deployed.feesVaultImplementation.getAddress(),
+        ),
+      ) as FeesVaultUpgradeable;
 
+      await expect(vault.initialize(ZERO_ADDRESS, feesVaultFactory.target, poolMock.target)).to.be.revertedWithCustomError(
+        vault,
+        'AddressZero',
+      );
+    });
+    it('fails if try initialize with zero factory address', async () => {
+      let vault = factory.attach(
+        await deployTransaperntUpgradeableProxy(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          await deployed.feesVaultImplementation.getAddress(),
+        ),
+      ) as FeesVaultUpgradeable;
+
+      await expect(vault.initialize(signers.blastGovernor.address, ZERO_ADDRESS, poolMock.target)).to.be.revertedWithCustomError(
+        vault,
+        'AddressZero',
+      );
+    });
+    it('fails if try initialize with zero pool address', async () => {
+      let vault = factory.attach(
+        await deployTransaperntUpgradeableProxy(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          await deployed.feesVaultImplementation.getAddress(),
+        ),
+      ) as FeesVaultUpgradeable;
+
+      await expect(vault.initialize(signers.blastGovernor.address, feesVaultFactory.target, ZERO_ADDRESS)).to.be.revertedWithCustomError(
+        vault,
+        'AddressZero',
+      );
+    });
     it('initialize disabled on implementation', async () => {
       let vault = await (await ethers.getContractFactory('FeesVaultUpgradeable')).deploy();
-      await expect(
-        vault.initialize(signers.blastGovernor.address, feesVaultFactory.target, poolMock.target, voterMock.target),
-      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      await expect(vault.initialize(signers.blastGovernor.address, feesVaultFactory.target, poolMock.target)).to.be.revertedWith(
+        ERRORS.Initializable.Initialized,
+      );
     });
   });
   describe('#setProtocolRecipient', async () => {
@@ -111,6 +154,12 @@ describe('FeesVault Contract', function () {
         feesVault,
         'AccessDenied',
       );
+    });
+    it('fails if try set zero address when protocolRate more than zero', async () => {
+      await feesVault.setProtocolRecipient(signers.otherUser1);
+      await feesVault.setDistributionConfig(9999, 1, 0);
+
+      await expect(feesVault.setProtocolRecipient(ZERO_ADDRESS)).to.be.revertedWithCustomError(feesVault, 'AddressZero');
     });
     it('success set new protocol recipient address and emit event', async () => {
       expect(await feesVault.protocolRecipient()).to.be.eq(ZERO_ADDRESS);
@@ -128,6 +177,13 @@ describe('FeesVault Contract', function () {
         feesVault,
         'AccessDenied',
       );
+    });
+    it('fails if try set zero address when partner rate more than zero', async () => {
+      await feesVault.setPartnerRecipient(signers.otherUser1);
+
+      await feesVault.setDistributionConfig(9999, 0, 1);
+
+      await expect(feesVault.setPartnerRecipient(ZERO_ADDRESS)).to.be.revertedWithCustomError(feesVault, 'AddressZero');
     });
     it('success set new protocol recipient address and emit event', async () => {
       expect(await feesVault.partnerRecipient()).to.be.eq(ZERO_ADDRESS);
@@ -239,6 +295,17 @@ describe('FeesVault Contract', function () {
       await voterMock.setGauge(gauge.address, DEAD_ADDRESS);
 
       await expect(feesVault.connect(gauge).claimFees()).to.be.revertedWithCustomError(feesVault, 'PoolMismatch');
+    });
+    it('always should take actual Voter address from factory', async () => {
+      let newVoter = await voterMockFactory.deploy();
+
+      await voterMock.setGauge(gauge.address, poolMock.target);
+
+      await expect(feesVault.connect(gauge).claimFees()).to.be.not.reverted;
+
+      await feesVaultFactory.setVoter(newVoter.target);
+
+      await expect(feesVault.connect(gauge).claimFees()).to.be.revertedWithCustomError(feesVault, 'AccessDenied');
     });
     it('specific case with one wei rest', async () => {
       let iterator = {

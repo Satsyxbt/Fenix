@@ -11,6 +11,9 @@ export const USDB_PREDEPLOYED_ADDRESS = '0x4200000000000000000000000000000000000
 
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const BEACON_IMPLEMENTATION_SLOT = '0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50';
+export function getAccessControlError(role: string, address: string) {
+  return `AccessControl: account ${address.toLowerCase()} is missing role ${role.toLowerCase()}`;
+}
 export const ERRORS = {
   ERC20: {
     InsufficientBalance: 'ERC20: transfer amount exceeds balance',

@@ -28,10 +28,10 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     address public _ve; // the ve token that governs these contracts
     address[] internal _factories; // Array with all the pair factories
-    address internal base; // $chr token
+    address internal base; // $fnx token
     address[] internal _gaugeFactories; // array with all the gauge factories
     address public bribefactory; // bribe factory (internal and external)
-    address public minter; // minter mints $chr each epoch
+    address public minter; // minter mints $fnx each epoch
     address[] public pools; // all pools viable for incentives
     address public admin;
     address public governance;
@@ -42,7 +42,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     uint256 public constant MAX_VOTE_DELAY = 7 days; // Max vote delay allowed
 
     mapping(address => uint256) internal supplyIndex; // gauge    => index
-    mapping(address => uint256) public claimable; // gauge    => claimable $chr
+    mapping(address => uint256) public claimable; // gauge    => claimable $fnx
     mapping(address => address) public gauges; // pool     => gauge
     mapping(address => uint256) public gaugesDistributionTimestmap; // gauge    => last Distribution Time
     mapping(address => address) public poolForGauge; // gauge    => pool
@@ -89,8 +89,14 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     address[] public clPools; // all pools viable for incentives
 
-    function initialize(address governor_, address __ve, address _pairFactory, address _gaugeFactory, address _bribes) public initializer {
-        __BlastGovernorSetup_init(governor_);
+    function initialize(
+        address blastGovernor_,
+        address __ve,
+        address _pairFactory,
+        address _gaugeFactory,
+        address _bribes
+    ) external initializer {
+        __BlastGovernorSetup_init(blastGovernor_);
         __ReentrancyGuard_init();
 
         admin = msg.sender;
@@ -132,7 +138,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     /// @notice initialize the voter contract
     /// @param  _tokens array of tokens to whitelist
-    /// @param  _minter the minter of $chr
+    /// @param  _minter the minter of $fnx
     function _init(address[] memory _tokens, address _minter) external {
         require(msg.sender == admin);
         require(!initflag);
@@ -210,7 +216,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     function addFactory(address _pairFactory, address _gaugeFactory) external VoterAdmin {
         require(_pairFactory != address(0), "addr0");
         require(_gaugeFactory != address(0), "addr0");
-        require(!isFactory[_pairFactory], "fact");
+        //require(!isFactory[_pairFactory], "fact");
         //require(!isGaugeFactory[_gaugeFactory], 'gFact');
         require(_pairFactory.code.length > 0, "!contract");
         require(_gaugeFactory.code.length > 0, "!contract");
@@ -485,7 +491,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     function createGauges(
         address[] memory _pool,
         uint256[] memory _gaugeTypes
-    ) external nonReentrant returns (address[] memory, address[] memory, address[] memory) {
+    ) external nonReentrant Governance returns (address[] memory, address[] memory, address[] memory) {
         require(_pool.length == _gaugeTypes.length, "len mismatch");
         require(_pool.length <= 10, "max 10");
         address[] memory _gauge = new address[](_pool.length);
@@ -503,7 +509,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     function createGauge(
         address _pool,
         uint256 _gaugeType
-    ) external nonReentrant returns (address _gauge, address _internal_bribe, address _external_bribe) {
+    ) external nonReentrant Governance returns (address _gauge, address _internal_bribe, address _external_bribe) {
         (_gauge, _internal_bribe, _external_bribe) = _createGauge(_pool, _gaugeType);
     }
 
@@ -538,13 +544,15 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
             clPools.push(_pool);
             feeVault = IPairIntegrationInfo(_pool).communityVault();
         } else if (_gaugeType == 2) {
-            // v3 pairs but with ICIH Vault
+            // v3 pairs but with ICHI Vault
             address poolFromFactory = IAlgebraFactory(_factory).poolByPair(tokenA, tokenB);
+
             address poolFromIchi = IVault(_pool).pool();
+
             require(poolFromIchi == poolFromFactory, "wrong tokens");
             isDistributeEmissionToMerkle = true;
             clPools.push(_pool);
-            feeVault = IPairIntegrationInfo(_pool).communityVault();
+            feeVault = IPairIntegrationInfo(poolFromFactory).communityVault();
         }
 
         // gov can create for any pool, even non-Fenix pairs
@@ -569,11 +577,19 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
             _pool,
             _gaugeType
         );
+
+        string memory symbol;
+        if (_gaugeType == 1) {
+            symbol = string.concat(IERC20Metadata(tokenA).symbol(), "/", IERC20Metadata(tokenB).symbol());
+        } else {
+            symbol = IERC20Metadata(_pool).symbol();
+        }
+
         // create internal and external bribe
-        string memory _type = string.concat("Fenix LP Fees: ", IERC20Metadata(_pool).symbol());
+        string memory _type = string.concat("Fenix LP Fees: ", symbol);
         _internal_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
 
-        _type = string.concat("Fenix Bribes: ", IERC20Metadata(_pool).symbol());
+        _type = string.concat("Fenix Bribes: ", symbol);
         _external_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
 
         // create gauge
