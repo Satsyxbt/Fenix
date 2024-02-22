@@ -12,6 +12,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     address public voter;
     address public bribeImplementation;
     address public defaultBlastGovernor;
+    address[] public defaultRewardToken;
 
     constructor() {
         _disableInitializers();
@@ -37,6 +38,8 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
 
         if (_token0 != address(0)) IBribe(newLastBribe).addRewardToken(_token0);
         if (_token1 != address(0)) IBribe(newLastBribe).addRewardToken(_token1);
+
+        IBribe(newLastBribe).addRewardTokens(defaultRewardToken);
 
         last_bribe = newLastBribe;
 
@@ -95,6 +98,26 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
             IBribe(_bribes[i]).addRewardTokens(_token[i]);
             unchecked {
                 i++;
+            }
+        }
+    }
+
+    /// @notice set the bribe factory permission registry
+    function pushDefaultRewardToken(address _token) external onlyOwner {
+        _checkAddressZero(_token);
+        defaultRewardToken.push(_token);
+    }
+
+    /// @notice set the bribe factory permission registry
+    function removeDefaultRewardToken(address _token) external onlyOwner {
+        _checkAddressZero(_token);
+
+        uint i = 0;
+        for (i; i < defaultRewardToken.length; i++) {
+            if (defaultRewardToken[i] == _token) {
+                defaultRewardToken[i] = defaultRewardToken[defaultRewardToken.length - 1];
+                defaultRewardToken.pop();
+                break;
             }
         }
     }
