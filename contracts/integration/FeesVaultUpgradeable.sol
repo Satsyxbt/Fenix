@@ -26,9 +26,6 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
     /// @notice The address of the factory contract that deployed this Fees Vault.
     address public factory;
 
-    /// @notice The address of the voter contract used to verify gauge authorization.
-    address public voter;
-
     /// @notice The address of the liquidity pool associated with this Fees Vault.
     address public pool;
 
@@ -47,16 +44,6 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
     /// @notice The recipient address for fees allocated to the partner.
     address public partnerRecipient;
 
-    /**
-     * @dev Ensures that the function can only be called by an authorized gauge.
-     * Reverts with `AccessDenied` if the caller is not recognized as a gauge by the voter contract.
-     */
-    modifier onlyGauge() {
-        if (!IVoter(voter).isGauge(msg.sender)) {
-            revert AccessDenied();
-        }
-        _;
-    }
     /**
      * @dev Ensures that the function can only be called by an fees vault owner.
      * Reverts with `AccessDenied` if the caller is not recognized as a vault owner
@@ -78,14 +65,16 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
      * @param blastGovernor_ Address of the governor contract for authorization checks.
      * @param factory_ Address of the contract factory for this vault.
      * @param pool_ Address of the liquidity pool associated with this vault.
-     * @param voter_ Address of the voter contract to validate gauge authorization.
      */
-    function initialize(address blastGovernor_, address factory_, address pool_, address voter_) external initializer {
+    function initialize(address blastGovernor_, address factory_, address pool_) external virtual override initializer {
         __BlastGovernorSetup_init(blastGovernor_);
+
+        if (factory_ == address(0) || pool_ == address(0)) {
+            revert AddressZero();
+        }
 
         factory = factory_;
         pool = pool_;
-        voter = voter_;
 
         toGaugeRate = PRECISION; // Default 100% to the gauge
     }
@@ -96,11 +85,17 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
      * @return gauge0 Amount of token0 distributed to the calling gauge.
      * @return gauge1 Amount of token1 distributed to the calling gauge.
      */
-    function claimFees() external virtual override onlyGauge returns (uint256 gauge0, uint256 gauge1) {
+    function claimFees() external virtual override returns (uint256 gauge0, uint256 gauge1) {
+        address voterCache = IFeesVaultFactory(factory).voter();
+        if (!IVoter(voterCache).isGauge(msg.sender)) {
+            revert AccessDenied();
+        }
+
         address poolCache = pool;
-        if (poolCache != IVoter(voter).poolForGauge(msg.sender)) {
+        if (poolCache != IVoter(voterCache).poolForGauge(msg.sender)) {
             revert PoolMismatch();
         }
+
         address token0 = IPairIntegrationInfo(poolCache).token0();
         address token1 = IPairIntegrationInfo(poolCache).token1();
 
@@ -158,6 +153,9 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
      * @param newProtocolRecipient_ The address to which protocol fees should be directed.
      */
     function setProtocolRecipient(address newProtocolRecipient_) external virtual override onlyOwner {
+        if (toProtocolRate > 0 && newProtocolRecipient_ == address(0)) {
+            revert AddressZero();
+        }
         emit SetProtocolRecipient(protocolRecipient, newProtocolRecipient_);
         protocolRecipient = newProtocolRecipient_;
     }
@@ -168,6 +166,9 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
      * @param newPartnerRecipient_ The address to which partner fees should be directed.
      */
     function setPartnerRecipient(address newPartnerRecipient_) external virtual override onlyOwner {
+        if (toPartnerRate > 0 && newPartnerRecipient_ == address(0)) {
+            revert AddressZero();
+        }
         emit SetPartnerRecipient(partnerRecipient, newPartnerRecipient_);
         partnerRecipient = newPartnerRecipient_;
     }
@@ -232,4 +233,11 @@ contract FeesVaultUpgradeable is IFeesVault, BlastGovernorSetup, Initializable {
             toPartnerAmount = amount_ - toGaugeAmount - toProtocolAmount;
         }
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

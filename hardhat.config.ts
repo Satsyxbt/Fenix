@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
-    blast_sepolia_deploy: {
+    blastSepolia: {
       url: 'https://sepolia.blast.io',
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
@@ -62,7 +62,7 @@ const config: HardhatUserConfig = {
           viaIR: true,
           optimizer: {
             enabled: true,
-            runs: 500,
+            runs: 200,
           },
         },
       },

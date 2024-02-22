@@ -49,5 +49,7 @@ describe('BlastGovernorSetup Contract', function () {
       await expect(blast.configureClaimableYieldOnBehalf(mock.target)).to.be.revertedWith('not authorized to configure contract');
       await expect(blast.configureClaimableGasOnBehalf(mock.target)).to.be.revertedWith('not authorized to configure contract');
     });
+  } else {
+    it('Skip if not blast fork', async () => {});
   }
 });

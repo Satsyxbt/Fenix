@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 /**
  * @title IMerklGaugeMiddleman Interface
  * @dev Interface for the MerklGaugeMiddleman contract, which acts as an intermediary
- * between Fenix Gauges and a DistributionCreator to manage reward distributions.
+ * between Gauges and a DistributionCreator to manage reward distributions.
  */
 interface IMerklGaugeMiddleman {
     /**

@@ -13,7 +13,15 @@ import {
   Pair__factory,
 } from '../../typechain-types';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ZERO_ADDRESS } from '../utils/constants';
+import {
+  BLAST_PREDEPLOYED_ADDRESS,
+  ERRORS,
+  ONE,
+  USDB_PREDEPLOYED_ADDRESS,
+  WETH_PREDEPLOYED_ADDRESS,
+  ZERO_ADDRESS,
+  getAccessControlError,
+} from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
@@ -34,7 +42,6 @@ describe('PairFactoryUpgradeable Contract', function () {
   let tokenTK6: ERC20Mock;
   let poolAddress: string;
   let poolAddress2: string;
-
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
@@ -48,15 +55,24 @@ describe('PairFactoryUpgradeable Contract', function () {
 
     await feesVaultFactory.setWhitelistedCreatorStatus(pairFactory.target, true);
 
-    await deployed.v2PairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, false);
-    await deployed.v2PairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, true);
+    await pairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, false);
+    await pairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, true);
     poolAddress = await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true);
     poolAddress2 = await pairFactory.getPair(tokenTK18.target, tokenTK6.target, false);
   });
 
   describe('Deployments', async () => {
-    it('have MAX_FEE', async () => {
-      expect(await pairFactory.MAX_FEE()).to.be.eq(25);
+    it('has MAX_FEE', async () => {
+      expect(await pairFactory.MAX_FEE()).to.be.eq(500);
+    });
+    it('has PAIRS_ADMINISTRATOR role', async () => {
+      expect(await pairFactory.PAIRS_ADMINISTRATOR_ROLE()).to.be.eq('0x8bb7efba716b8bd9b59b6661dd03848105f980fb29035ebc6d805a30527f6e3d');
+    });
+    it('has FEES_MANAGER_ROLE role', async () => {
+      expect(await pairFactory.FEES_MANAGER_ROLE()).to.be.eq('0xad51469fd38cb9e4028f769761e769052a9f1f331b57ad921ac8a45c7903db28');
+    });
+    it('has PAIRS_CREATOR_ROLE role', async () => {
+      expect(await pairFactory.PAIRS_CREATOR_ROLE()).to.be.eq('0x4f895bdce78ed3edb90e9af75173c797e6234073a00b76fc9593b754504e7520');
     });
     it('should correct set initial paused', async () => {
       expect(await pairFactory.isPaused()).to.be.false;
@@ -69,15 +85,19 @@ describe('PairFactoryUpgradeable Contract', function () {
     it('should correct set defaultBlastGovernor', async () => {
       expect(await pairFactory.defaultBlastGovernor()).to.be.eq(signers.blastGovernor.address);
     });
-    it('should correct set deployer as owner in contract', async () => {
-      expect(await pairFactory.owner()).to.be.eq(signers.deployer.address);
+
+    it('should correct set deployer as DEFAULT_ADMIN_ROLE in contract', async () => {
+      expect(await pairFactory.hasRole(await pairFactory.DEFAULT_ADMIN_ROLE(), signers.deployer.address)).to.be.true;
     });
+
     it('fails if try initialize on implementations', async () => {
       let newFactory = await pairFactoryFactory.connect(signers.deployer).deploy();
-      await expect(newFactory.initialize(ZERO_ADDRESS, feesVaultFactory.target)).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      await expect(newFactory.initialize(ZERO_ADDRESS, ZERO_ADDRESS, feesVaultFactory.target)).to.be.revertedWith(
+        ERRORS.Initializable.Initialized,
+      );
     });
     it('fails if try initialize second time', async () => {
-      await expect(pairFactory.initialize(signers.blastGovernor.address, feesVaultFactory.target)).to.be.revertedWith(
+      await expect(pairFactory.initialize(signers.blastGovernor.address, ZERO_ADDRESS, feesVaultFactory.target)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
       );
     });
@@ -86,25 +106,94 @@ describe('PairFactoryUpgradeable Contract', function () {
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,
+
         await implementation.getAddress(),
       );
       const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
 
-      await expect(attached.initialize(ZERO_ADDRESS, feesVaultFactory.target)).to.be.revertedWithCustomError(
+      await expect(
+        attached.initialize(ZERO_ADDRESS, deployed.v2PairImplementation.target, feesVaultFactory.target),
+      ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
+    });
+    it('fails if provide zero implementations', async () => {
+      const implementation = await pairFactoryFactory.deploy();
+      const proxy = await deployTransaperntUpgradeableProxy(
+        signers.deployer,
+        signers.proxyAdmin.address,
+
+        await implementation.getAddress(),
+      );
+      const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
+
+      await expect(attached.initialize(signers.blastGovernor.address, ZERO_ADDRESS, feesVaultFactory.target)).to.be.revertedWithCustomError(
         pairFactoryFactory,
         'AddressZero',
       );
     });
+    it('fails if provide zero fees vault factory', async () => {
+      const implementation = await pairFactoryFactory.deploy();
+      const proxy = await deployTransaperntUpgradeableProxy(
+        signers.deployer,
+        signers.proxyAdmin.address,
+
+        await implementation.getAddress(),
+      );
+      const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
+
+      await expect(
+        attached.initialize(signers.blastGovernor.address, deployed.v2PairImplementation.target, ZERO_ADDRESS),
+      ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
+    });
+  });
+  describe('#setDefaultBlastGovernor', async () => {
+    it('fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
+      await expect(pairFactory.connect(signers.otherUser1).setDefaultBlastGovernor(signers.otherUser1.address)).to.be.revertedWith(
+        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
+      );
+    });
+    it('should corect set default blast governor ', async () => {
+      expect(await pairFactory.defaultBlastGovernor()).to.be.eq(signers.blastGovernor.address);
+      await expect(pairFactory.setDefaultBlastGovernor(signers.otherUser1.address))
+        .to.be.emit(pairFactory, 'SetDefaultBlastGovernor')
+        .withArgs(signers.otherUser1.address);
+
+      expect(await pairFactory.defaultBlastGovernor()).to.be.not.eq(signers.blastGovernor.address);
+      expect(await pairFactory.defaultBlastGovernor()).to.be.eq(signers.otherUser1.address);
+    });
+  });
+  describe('#setConfigurationForRebaseToken', async () => {
+    it('fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
+      await expect(pairFactory.connect(signers.otherUser1).setConfigurationForRebaseToken(tokenTK18.target, true, 1)).to.be.revertedWith(
+        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
+      );
+    });
+    it('should corect set default rebase configuration for token ', async () => {
+      expect(await pairFactory.isRebaseToken(tokenTK18.target)).to.be.false;
+      expect(await pairFactory.configurationForBlastRebaseTokens(tokenTK18.target)).to.be.eq(0);
+
+      await expect(pairFactory.setConfigurationForRebaseToken(tokenTK18.target, true, 1))
+        .to.be.emit(pairFactory, 'SetConfigurationForRebaseToken')
+        .withArgs(tokenTK18.target, true, 1);
+
+      expect(await pairFactory.isRebaseToken(tokenTK18.target)).to.be.true;
+      expect(await pairFactory.configurationForBlastRebaseTokens(tokenTK18.target)).to.be.eq(1);
+    });
   });
   describe('#setPause', async () => {
-    it('fails if caller is not factory owner', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).setPause(true)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+    it('fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
+      await expect(pairFactory.connect(signers.otherUser1).setPause(true)).to.be.revertedWith(
+        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
+      );
+      await expect(pairFactory.connect(signers.otherUser1).setPause(false)).to.be.revertedWith(
+        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
+      );
     });
     it('should corect set pause state from owner and emit events', async () => {
       expect(await pairFactory.isPaused()).to.be.false;
-      await pairFactory.setPause(true);
+      await expect(pairFactory.setPause(true)).to.be.emit(pairFactory, 'SetPaused').withArgs(true);
+
       expect(await pairFactory.isPaused()).to.be.true;
-      await pairFactory.setPause(false);
+      await expect(pairFactory.setPause(false)).to.be.emit(pairFactory, 'SetPaused').withArgs(false);
       expect(await pairFactory.isPaused()).to.be.false;
     });
   });
@@ -133,8 +222,10 @@ describe('PairFactoryUpgradeable Contract', function () {
   });
   describe('Fees', async () => {
     describe('#setProtocolFee', async () => {
-      it('fails if caller is not factory owner', async () => {
-        await expect(pairFactory.connect(signers.otherUser1).setProtocolFee(0)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+      it('fails if caller is not have FEES_MANAGER_ROLE', async () => {
+        await expect(pairFactory.connect(signers.otherUser1).setProtocolFee(0)).to.be.revertedWith(
+          getAccessControlError(await pairFactory.FEES_MANAGER_ROLE(), signers.otherUser1.address),
+        );
       });
       it('fails if try set protocol fee > 100%', async () => {
         await expect(pairFactory.setProtocolFee(PRECISION + 1)).to.be.reverted;
@@ -142,48 +233,52 @@ describe('PairFactoryUpgradeable Contract', function () {
       });
       it('should corect set protocol fee and emit event', async () => {
         expect(await pairFactory.protocolFee()).to.be.eq(PRECISION);
-        await pairFactory.setProtocolFee(123);
+        await expect(pairFactory.setProtocolFee(123)).to.be.emit(pairFactory, 'SetProtocolFee').withArgs(123);
         expect(await pairFactory.protocolFee()).to.be.eq(123);
-        await pairFactory.setProtocolFee(0);
+        await expect(pairFactory.setProtocolFee(0)).to.be.emit(pairFactory, 'SetProtocolFee').withArgs(0);
         expect(await pairFactory.protocolFee()).to.be.eq(0);
       });
     });
     describe('#setFee', async () => {
-      it('fails if caller is not factory owner', async () => {
-        await expect(pairFactory.connect(signers.otherUser1).setFee(false, 1)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
-        await expect(pairFactory.connect(signers.otherUser1).setFee(true, 1)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+      it('fails if caller is not have FEES_MANAGER role', async () => {
+        await expect(pairFactory.connect(signers.otherUser1).setFee(false, 1)).to.be.revertedWith(
+          getAccessControlError(await pairFactory.FEES_MANAGER_ROLE(), signers.otherUser1.address),
+        );
+        await expect(pairFactory.connect(signers.otherUser1).setFee(true, 1)).to.be.revertedWith(
+          getAccessControlError(await pairFactory.FEES_MANAGER_ROLE(), signers.otherUser1.address),
+        );
       });
       it('fails if try set protocol fee > MAX_FEE% or fee == 0', async () => {
-        await expect(pairFactory.setFee(false, 26)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
+        await expect(pairFactory.setFee(false, 501)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
         await expect(pairFactory.setFee(false, 0)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
-        await expect(pairFactory.setFee(true, 26)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
+        await expect(pairFactory.setFee(true, 501)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
         await expect(pairFactory.setFee(true, 0)).to.be.revertedWithCustomError(pairFactory, 'IncorrcectFee');
       });
       it('should corect set fee for stable pairs', async () => {
         expect(await pairFactory.stableFee()).to.be.eq(4);
-        await pairFactory.setFee(true, 1);
+        await expect(pairFactory.setFee(true, 1)).to.be.emit(pairFactory, 'SetFee').withArgs(true, 1);
         expect(await pairFactory.stableFee()).to.be.eq(1);
-        await pairFactory.setFee(true, 25);
+        await expect(pairFactory.setFee(true, 25)).to.be.emit(pairFactory, 'SetFee').withArgs(true, 25);
         expect(await pairFactory.stableFee()).to.be.eq(25);
-        await pairFactory.setFee(true, 11);
+        await expect(pairFactory.setFee(true, 11)).to.be.emit(pairFactory, 'SetFee').withArgs(true, 11);
         expect(await pairFactory.stableFee()).to.be.eq(11);
       });
       it('should corect set fee for volatily pair', async () => {
         expect(await pairFactory.volatileFee()).to.be.eq(18);
-        await pairFactory.setFee(false, 1);
+
+        await expect(pairFactory.setFee(false, 1)).to.be.emit(pairFactory, 'SetFee').withArgs(false, 1);
         expect(await pairFactory.volatileFee()).to.be.eq(1);
-        await pairFactory.setFee(false, 25);
+        await expect(pairFactory.setFee(false, 25)).to.be.emit(pairFactory, 'SetFee').withArgs(false, 25);
         expect(await pairFactory.volatileFee()).to.be.eq(25);
-        await pairFactory.setFee(false, 11);
+        await expect(pairFactory.setFee(false, 11)).to.be.emit(pairFactory, 'SetFee').withArgs(false, 11);
         expect(await pairFactory.volatileFee()).to.be.eq(11);
       });
     });
     describe('#setCustomProtocolFee', async () => {
-      it('fails if caller is not factory owner', async () => {
+      it('fails if caller is not have FEES_MANAGER', async () => {
         let poolAddress = await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true);
-
         await expect(pairFactory.connect(signers.otherUser1).setCustomProtocolFee(poolAddress, 0)).to.be.revertedWith(
-          ERRORS.Ownable.NotOwner,
+          getAccessControlError(await pairFactory.FEES_MANAGER_ROLE(), signers.otherUser1.address),
         );
       });
       it('fails if try set fee for not pair address', async () => {
@@ -205,19 +300,25 @@ describe('PairFactoryUpgradeable Contract', function () {
         expect(await pairFactory.getProtocolFee(poolAddress)).to.be.eq(PRECISION);
         expect(await pairFactory.getProtocolFee(poolAddress2)).to.be.eq(PRECISION);
 
-        await pairFactory.setCustomProtocolFee(poolAddress, 123);
+        await expect(pairFactory.setCustomProtocolFee(poolAddress, 123))
+          .to.be.emit(pairFactory, 'SetCustomProtocolFee')
+          .withArgs(poolAddress, 123);
 
         expect(await pairFactory.protocolFee()).to.be.eq(PRECISION);
         expect(await pairFactory.getProtocolFee(poolAddress)).to.be.eq(123);
         expect(await pairFactory.getProtocolFee(poolAddress2)).to.be.eq(PRECISION);
 
-        await pairFactory.setCustomProtocolFee(poolAddress2, 555);
+        await expect(pairFactory.setCustomProtocolFee(poolAddress2, 555))
+          .to.be.emit(pairFactory, 'SetCustomProtocolFee')
+          .withArgs(poolAddress2, 555);
 
         expect(await pairFactory.protocolFee()).to.be.eq(PRECISION);
         expect(await pairFactory.getProtocolFee(poolAddress)).to.be.eq(123);
         expect(await pairFactory.getProtocolFee(poolAddress2)).to.be.eq(555);
 
-        await pairFactory.setCustomProtocolFee(poolAddress, 1);
+        await expect(pairFactory.setCustomProtocolFee(poolAddress, 1))
+          .to.be.emit(pairFactory, 'SetCustomProtocolFee')
+          .withArgs(poolAddress, 1);
 
         expect(await pairFactory.protocolFee()).to.be.eq(PRECISION);
         expect(await pairFactory.getProtocolFee(poolAddress)).to.be.eq(1);
@@ -242,36 +343,24 @@ describe('PairFactoryUpgradeable Contract', function () {
     });
   });
   describe('#setCommunityVaultFactory', async () => {
-    it('fails if caller is not factory owner', async () => {
+    it('fails if caller is not PAIRS_ADMINISTRATOR', async () => {
       await expect(pairFactory.connect(signers.otherUser1).setCommunityVaultFactory(signers.otherUser1.address)).to.be.revertedWith(
-        ERRORS.Ownable.NotOwner,
+        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
       );
     });
     it('should correct change community vault factory', async () => {
       expect(await pairFactory.communityVaultFactory()).to.be.eq(feesVaultFactory.target);
-      await pairFactory.setCommunityVaultFactory(signers.otherUser1.address);
+      await expect(pairFactory.setCommunityVaultFactory(signers.otherUser1.address))
+        .to.be.emit(pairFactory, 'SetCommunityVaultFactory')
+        .withArgs(signers.otherUser1.address);
       expect(await pairFactory.communityVaultFactory()).to.be.not.eq(feesVaultFactory.target);
       expect(await pairFactory.communityVaultFactory()).to.be.eq(signers.otherUser1.address);
     });
   });
-  describe('#configure', async () => {
-    it('fails if caller is not factory owner', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).configure(poolAddress, await tokenTK18.getAddress(), 0)).to.be.revertedWith(
-        ERRORS.Ownable.NotOwner,
-      );
-    });
-  });
-  describe('#claim', async () => {
-    it('fails if caller is not factory owner', async () => {
-      await expect(
-        pairFactory.connect(signers.otherUser1).claim(poolAddress, tokenTK18.target, signers.otherUser1.address, 100),
-      ).to.be.revertedWith(ERRORS.Ownable.NotOwner);
-    });
-  });
   describe('#createPair', async () => {
-    it('fails if caller is not factory owner', async () => {
+    it('fails if caller is not have PAIRS_CREATOR_ROLE', async () => {
       await expect(pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false)).to.be.revertedWith(
-        ERRORS.Ownable.NotOwner,
+        getAccessControlError(await pairFactory.PAIRS_CREATOR_ROLE(), signers.otherUser1.address),
       );
     });
     it('fails if token address is same', async () => {
@@ -279,6 +368,17 @@ describe('PairFactoryUpgradeable Contract', function () {
         pairFactory,
         'IdenticalAddress',
       );
+    });
+    it('fails if try initialzie created Pair second time', async () => {
+      let newPairAddress = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+
+      await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
+
+      let p = await ethers.getContractAt('Pair', newPairAddress);
+
+      await expect(
+        p.initialize(signers.blastGovernor.address, tokenTK18.target, tokenTK6.target, true, deployed.feesVaultFactory.target),
+      ).to.be.rejectedWith('Initialized');
     });
     it('fails if token address is zero', async () => {
       await expect(pairFactory.createPair(deployed.fenix.target, ZERO_ADDRESS, false)).to.be.revertedWithCustomError(
@@ -291,6 +391,29 @@ describe('PairFactoryUpgradeable Contract', function () {
         pairFactory,
         'PairExist',
       );
+    });
+    it('success create pair from other user if set public mode', async () => {
+      let count = (await pairFactory.allPairsLength()) + ONE;
+
+      await pairFactory.setIsPublicPoolCreationMode(true);
+
+      let newPairAddress = await pairFactory
+        .connect(signers.otherUser1)
+        .createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+
+      await expect(pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false))
+        .to.be.emit(pairFactory, 'PairCreated')
+        .withArgs(deployed.fenix, tokenTK6.target, false, newPairAddress, count);
+
+      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let pair = await ethers.getContractAt('Pair', pairAddress);
+
+      expect(newPairAddress).to.be.eq(pair);
+      expect(await pairFactory.isPair(pair)).to.be.true;
+      expect(await pairFactory.allPairs(count - ONE)).to.be.eq(pairAddress);
+      expect(await pair.token0()).to.be.eq(deployed.fenix.target);
+      expect(await pair.token1()).to.be.eq(tokenTK6.target);
+      expect(await pair.factory()).to.be.eq(pairFactory.target);
     });
     it('success create pair', async () => {
       let count = (await pairFactory.allPairsLength()) + ONE;
