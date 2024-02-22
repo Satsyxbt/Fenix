@@ -28,10 +28,10 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     address public _ve; // the ve token that governs these contracts
     address[] internal _factories; // Array with all the pair factories
-    address internal base; // $chr token
+    address internal base; // $fnx token
     address[] internal _gaugeFactories; // array with all the gauge factories
     address public bribefactory; // bribe factory (internal and external)
-    address public minter; // minter mints $chr each epoch
+    address public minter; // minter mints $fnx each epoch
     address[] public pools; // all pools viable for incentives
     address public admin;
     address public governance;
@@ -42,7 +42,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     uint256 public constant MAX_VOTE_DELAY = 7 days; // Max vote delay allowed
 
     mapping(address => uint256) internal supplyIndex; // gauge    => index
-    mapping(address => uint256) public claimable; // gauge    => claimable $chr
+    mapping(address => uint256) public claimable; // gauge    => claimable $fnx
     mapping(address => address) public gauges; // pool     => gauge
     mapping(address => uint256) public gaugesDistributionTimestmap; // gauge    => last Distribution Time
     mapping(address => address) public poolForGauge; // gauge    => pool
@@ -132,7 +132,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     /// @notice initialize the voter contract
     /// @param  _tokens array of tokens to whitelist
-    /// @param  _minter the minter of $chr
+    /// @param  _minter the minter of $fnx
     function _init(address[] memory _tokens, address _minter) external {
         require(msg.sender == admin);
         require(!initflag);

@@ -5,23 +5,13 @@ import {
   BribeFactoryUpgradeable,
   BribeFactoryUpgradeable__factory,
   BribeUpgradeable__factory,
-  CLGaugeFactoryUpgradeable,
-  CLGaugeFactoryUpgradeable__factory,
-  CLGaugeUpgradeable,
-  CLGaugeUpgradeable__factory,
   ERC20Mock,
   ERC20Mock__factory,
-  EmissionManagerUpgradeable,
-  EmissionManagerUpgradeable__factory,
   Fenix,
   Fenix__factory,
-  PairFactoryMock,
-  PermissionsRegistry,
-  PermissionsRegistry__factory,
+  MinterUpgradeable,
   ProxyAdmin,
   ProxyAdmin__factory,
-  RewardsDistributor,
-  RewardsDistributor__factory,
   TransparentUpgradeableProxy__factory,
   VeArtProxyUpgradeable,
   VeArtProxyUpgradeable__factory,
@@ -32,198 +22,39 @@ import {
 } from '../../typechain-types/index';
 import { ERRORS, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
+import completeFixture, { CoreFixtureDeployed, SignersList, getSigners } from '../utils/coreFixture';
+import { getSigner } from '@openzeppelin/hardhat-upgrades/dist/utils';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('VoterUpgradeable Contract', function () {
-  let ProxyAdmin: ProxyAdmin__factory;
-  let TransparentUpgradeableProxy: TransparentUpgradeableProxy__factory;
-  let VotingEscrowUpgradeable: VotingEscrowUpgradeable__factory;
-  let VoterUpgradeable: VoterUpgradeable__factory;
-  let BribeFactoryUpgradeable: BribeFactoryUpgradeable__factory;
-  let BribeUpgradeable: BribeUpgradeable__factory;
-  let CLGaugeUpgradeable: CLGaugeUpgradeable__factory;
-  let VeArtProxyUpgradeable: VeArtProxyUpgradeable__factory;
-  let CLGaugeFactoryUpgradeable: CLGaugeFactoryUpgradeable__factory;
-  let EmissionManagerUpgradeable: EmissionManagerUpgradeable__factory;
-  let PermissionsRegistry: PermissionsRegistry__factory;
-  let RewardsDistributor: RewardsDistributor__factory;
-  let PairFactoryMock: PairFactoryMock__factory;
-  let UniswapV2PoolMock: UniswapV2PoolMock__factory;
-
-  let FenixFactory: Fenix__factory;
-  let ERC20MockFactory: ERC20Mock__factory;
-
-  let fenixInstance = Fenix;
-  let emissionManagerImplementation: EmissionManagerUpgradeable;
-  let emissionManagerInstance: EmissionManagerUpgradeable;
-  let permissionRegistryInstance: PermissionsRegistry;
-  let voterImplementation: VoterUpgradeable;
+  let signers: SignersList;
+  let deployed: CoreFixtureDeployed;
   let voterInstance: VoterUpgradeable;
-  let votingEscrowImplementation: VotingEscrowUpgradeable;
   let votingEscrowInstance: VotingEscrowUpgradeable;
-  let bribeImplementation: BribeUpgradeable;
-  let clGaugeImplementation: CLGaugeUpgradeable;
-  let bribeFactoryImplementation: BribeFactoryUpgradeable;
+  let fenixInstance: Fenix;
+  let emissionManagerInstance: MinterUpgradeable;
   let bribeFactoryInstance: BribeFactoryUpgradeable;
-  let clGaugeFactoryImplementation: CLGaugeFactoryUpgradeable;
-  let clGaugeFactoryInstance: CLGaugeFactoryUpgradeable;
-  let veArtProxyImplementation: VeArtProxyUpgradeable;
-  let veArtProxyInstance: VeArtProxyUpgradeable;
-  let pairFactoryMockInstance: PairFactoryMock;
-  let rewardsDistributorInstance: RewardsDistributor;
-  let proxyAdminInstance: ProxyAdmin;
 
-  let usdcInstance: ERC20Mock;
-
-  let deployer: HardhatEthersSigner;
-  let governance: HardhatEthersSigner;
-  let voterAdmin: HardhatEthersSigner;
-  let otheruser: HardhatEthersSigner;
-  let otheruser2: HardhatEthersSigner;
-
-  let snapshot: SnapshotRestorer;
-
-  async function createGauge(): Promise<CLGaugeUpgradeable> {
-    let pool = await UniswapV2PoolMock.deploy();
-    await pool.setToken0(await fenixInstance.getAddress());
-    await pool.setToken1(await usdcInstance.getAddress());
-    await pool.setSymbol('FNX-USDC Mock');
-
-    await pairFactoryMockInstance.setIsPair(await pool.getAddress(), true);
-
-    let result = await voterInstance.connect(governance).createGauge.staticCall(pool, 0);
-    await voterInstance.connect(governance).createGauge(pool, 0);
-
-    return CLGaugeUpgradeable.attach(result[0]) as CLGaugeUpgradeable;
-  }
   before(async function () {
-    [deployer, governance, voterAdmin, otheruser, otheruser2] = await ethers.getSigners();
-    ProxyAdmin = await ethers.getContractFactory('ProxyAdmin');
-    TransparentUpgradeableProxy = await ethers.getContractFactory('TransparentUpgradeableProxy');
-    VotingEscrowUpgradeable = await ethers.getContractFactory('VotingEscrowUpgradeable');
-    VoterUpgradeable = await ethers.getContractFactory('VoterUpgradeable');
-    BribeFactoryUpgradeable = await ethers.getContractFactory('BribeFactoryUpgradeable');
-    BribeUpgradeable = await ethers.getContractFactory('BribeUpgradeable');
-    CLGaugeUpgradeable = await ethers.getContractFactory('CLGaugeUpgradeable');
-    VeArtProxyUpgradeable = await ethers.getContractFactory('VeArtProxyUpgradeable');
-    CLGaugeFactoryUpgradeable = await ethers.getContractFactory('CLGaugeFactoryUpgradeable');
-    EmissionManagerUpgradeable = await ethers.getContractFactory('EmissionManagerUpgradeable');
-    PermissionsRegistry = await ethers.getContractFactory('PermissionsRegistry');
-    RewardsDistributor = await ethers.getContractFactory('RewardsDistributor');
-    PairFactoryMock = await ethers.getContractFactory('PairFactoryMock');
-    FenixFactory = await ethers.getContractFactory('Fenix');
-    ERC20MockFactory = await ethers.getContractFactory('ERC20Mock');
-    UniswapV2PoolMock = await ethers.getContractFactory('UniswapV2PoolMock');
-
-    emissionManagerImplementation = await EmissionManagerUpgradeable.deploy();
-    voterImplementation = await VoterUpgradeable.deploy();
-    votingEscrowImplementation = await VotingEscrowUpgradeable.deploy();
-    bribeImplementation = await BribeUpgradeable.deploy();
-    clGaugeImplementation = await CLGaugeUpgradeable.deploy();
-    bribeFactoryImplementation = await BribeFactoryUpgradeable.deploy();
-    clGaugeFactoryImplementation = await CLGaugeFactoryUpgradeable.deploy();
-    veArtProxyImplementation = await VeArtProxyUpgradeable.deploy();
-    permissionRegistryInstance = await PermissionsRegistry.deploy();
-    pairFactoryMockInstance = await PairFactoryMock.deploy();
-    proxyAdminInstance = await ProxyAdmin.deploy();
-    usdcInstance = (await ERC20MockFactory.deploy('USDC', 'USDC', 18)) as ERC20Mock;
-
-    await permissionRegistryInstance.setRoleFor(voterAdmin.address, 'VOTER_ADMIN');
-    await permissionRegistryInstance.setRoleFor(governance.address, 'GOVERNANCE');
-
-    emissionManagerInstance = EmissionManagerUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(
-          await emissionManagerImplementation.getAddress(),
-          await proxyAdminInstance.getAddress(),
-          '0x',
-        )
-      ).getAddress(),
-    ) as EmissionManagerUpgradeable;
-
-    fenixInstance = await FenixFactory.deploy(await emissionManagerInstance.getAddress());
-
-    voterInstance = VoterUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(await voterImplementation.getAddress(), await proxyAdminInstance.getAddress(), '0x')
-      ).getAddress(),
-    ) as VoterUpgradeable;
-    votingEscrowInstance = VotingEscrowUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(await votingEscrowImplementation.getAddress(), await proxyAdminInstance.getAddress(), '0x')
-      ).getAddress(),
-    ) as VotingEscrowUpgradeable;
-
-    bribeFactoryInstance = BribeFactoryUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(await bribeFactoryImplementation.getAddress(), await proxyAdminInstance.getAddress(), '0x')
-      ).getAddress(),
-    ) as BribeFactoryUpgradeable;
-    clGaugeFactoryInstance = CLGaugeFactoryUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(
-          await clGaugeFactoryImplementation.getAddress(),
-          await proxyAdminInstance.getAddress(),
-          '0x',
-        )
-      ).getAddress(),
-    ) as CLGaugeFactoryUpgradeable;
-    veArtProxyInstance = VeArtProxyUpgradeable.attach(
-      await (
-        await TransparentUpgradeableProxy.deploy(await veArtProxyImplementation.getAddress(), await proxyAdminInstance.getAddress(), '0x')
-      ).getAddress(),
-    ) as VeArtProxyUpgradeable;
-
-    await votingEscrowInstance.initialize(await fenixInstance.getAddress(), await veArtProxyInstance.getAddress());
-
-    rewardsDistributorInstance = await RewardsDistributor.deploy(await votingEscrowInstance.getAddress());
-
-    await voterInstance.initialize(
-      await votingEscrowInstance.getAddress(),
-      await bribeFactoryInstance.getAddress(),
-      await permissionRegistryInstance.getAddress(),
-      await emissionManagerInstance.getAddress(),
-      [await fenixInstance.getAddress()],
-      {
-        gaugeFactory: await clGaugeFactoryInstance.getAddress(),
-        pairFactory: await pairFactoryMockInstance.getAddress(),
-      },
-    );
-
-    await emissionManagerInstance.initialize(
-      await voterInstance.getAddress(),
-      await votingEscrowInstance.getAddress(),
-      await rewardsDistributorInstance.getAddress(),
-    );
-
-    await bribeFactoryInstance.initialize(
-      await voterInstance.getAddress(),
-      await permissionRegistryInstance.getAddress(),
-      await bribeImplementation.getAddress(),
-      [await fenixInstance.getAddress()],
-    );
-    await clGaugeFactoryInstance.initialize(await permissionRegistryInstance.getAddress(), await clGaugeImplementation.getAddress());
-
-    snapshot = await takeSnapshot();
-  });
-
-  afterEach(async function () {
-    await snapshot.restore();
+    signers = await getSigners();
+    deployed = await loadFixture(completeFixture);
+    voterInstance = deployed.voter;
+    votingEscrowInstance = deployed.votingEscrow;
+    emissionManagerInstance = deployed.minter;
+    bribeFactoryInstance = deployed.bribeFactory;
   });
 
   describe('Deployment', async () => {
     describe('Should corect setup initial settings', async () => {
       it('Should corect setup initial settings', async () => {
-        expect(await voterInstance.votingEscrow()).to.be.equal(await votingEscrowInstance.getAddress());
-        expect(await voterInstance.emissionToken()).to.be.equal(await fenixInstance.getAddress());
-        expect(await voterInstance.bribeFactory()).to.be.equal(await bribeFactoryInstance.getAddress());
-        expect(await voterInstance.emissionManager()).to.be.equal(await emissionManagerInstance.getAddress());
-        expect(await voterInstance.permissionRegistry()).to.be.equal(await permissionRegistryInstance.getAddress());
-        expect(await voterInstance.voteDelay()).to.be.equal(ZERO);
+        expect(await voterInstance._ve()).to.be.equal(await votingEscrowInstance.getAddress());
+        expect(await voterInstance.bribefactory()).to.be.equal(await bribeFactoryInstance.getAddress());
+        expect(await voterInstance.minter()).to.be.equal(await emissionManagerInstance.getAddress());
+        expect(await voterInstance.VOTE_DELAY()).to.be.equal(ZERO);
         expect(await voterInstance.isWhitelisted(await fenixInstance.getAddress())).to.be.true;
-        expect(await voterInstance.gaugeTypes(0)).to.be.deep.equal([
-          await clGaugeFactoryInstance.getAddress(),
-          await pairFactoryMockInstance.getAddress(),
-        ]);
+        expect(await voterInstance.gaugeFactories()).to.be.deep.equal([deployed.gaugeFactory.target]);
+        expect(await voterInstance.bribefactory()).to.be.deep.equal([deployed.bribeFactory.target]);
+        expect(await voterInstance.factories()).to.be.deep.equal([deployed.v2PairFactory.target]);
       });
     });
     it('Should fail if try initialize second time', async () => {
@@ -325,32 +156,29 @@ describe('VoterUpgradeable Contract', function () {
         );
       });
       it('Should corect change vote delay and emit event', async () => {
-        expect(await voterInstance.voteDelay()).to.be.equal(ZERO);
+        expect(await voterInstance.VOTE_DELAY()).to.be.equal(ZERO);
         let tx = await voterInstance.connect(voterAdmin).setVoteDelay(86400);
         await expect(tx).to.be.emit(voterInstance, 'SetVoteDelay').withArgs(0, 86400);
-        expect(await voterInstance.voteDelay()).to.be.equal(86400);
+        expect(await voterInstance.VOTE_DELAY()).to.be.equal(86400);
       });
     });
     describe('#setEmissionManager', async () => {
       it('Should fail if try setup ZERO_ADDRESS', async () => {
-        await expect(voterInstance.connect(voterAdmin).setEmissionManager(ZERO_ADDRESS)).to.be.revertedWithCustomError(
-          voterInstance,
-          'ZeroAdress',
-        );
+        await expect(voterInstance.connect(voterAdmin).setMinter(ZERO_ADDRESS)).to.be.revertedWithCustomError(voterInstance, 'ZeroAdress');
       });
       it('Should fail if try setup not contract address', async () => {
-        await expect(voterInstance.connect(voterAdmin).setEmissionManager(voterAdmin.address)).to.be.revertedWithCustomError(
+        await expect(voterInstance.connect(voterAdmin).setMinter(voterAdmin.address)).to.be.revertedWithCustomError(
           voterInstance,
           'NotContract',
         );
       });
       it('Should corect setup new emission manager and emit event', async () => {
-        expect(await voterInstance.emissionManager()).to.be.equal(await emissionManagerInstance.getAddress());
-        let tx = await voterInstance.connect(voterAdmin).setEmissionManager(await emissionManagerImplementation.getAddress());
+        expect(await voterInstance.minter()).to.be.equal(await emissionManagerInstance.getAddress());
+        let tx = await voterInstance.connect(voterAdmin).setMinter(await emissionManagerImplementation.getAddress());
         await expect(tx)
-          .to.be.emit(voterInstance, 'SetEmissionManager')
+          .to.be.emit(voterInstance, 'SetMinter')
           .withArgs(await emissionManagerInstance.getAddress(), await emissionManagerImplementation.getAddress());
-        expect(await voterInstance.emissionManager()).to.be.equal(await emissionManagerImplementation.getAddress());
+        expect(await voterInstance.minter()).to.be.equal(await emissionManagerImplementation.getAddress());
       });
     });
     describe('#setBribeFactory', async () => {

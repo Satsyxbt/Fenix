@@ -338,7 +338,7 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
   );
 
   await voter.setMinter(minter.target);
-  await minter.initialize();
+  await minter.start();
   await fenix.transferOwnership(minter.target);
   await feesVaultFactory.setWhitelistedCreatorStatus(v2PairFactory.target, true);
 
