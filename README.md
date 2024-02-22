@@ -88,7 +88,7 @@ The following issues are known:
 
 * **Centralized risks** - Potential concentration of accesses on certain addresses.
 * **Initialization front-running** - We see a low chance of this issue, which would at most lead to contract redeployment.
-* **Miss configuration** - Any possible incorrect parameter settings in authorized methods.
+* **Misconfiguration** - Any possible incorrect parameter settings in authorized methods.
 * **Blast address hardcoded** - According to the documentation, the Blast address will be changeable in the mainnet, so this will also be changed in the code.
 * **Loss of emissions in the event of a period update on the miner** -  Loss of emissions in the absence of calls for update_period or distribution- this event is considered unlikely.
 * **Operation of v2 Pair with rebasing tokens from Blast** - The implementation does not anticipate normal operation with these tokens in terms of configuration with automatic balance increase, so there is a possibility to configure these tokens during pair creation, by default, this will be `Claimable` mode.
