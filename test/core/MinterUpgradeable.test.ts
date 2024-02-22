@@ -65,6 +65,7 @@ describe('MinterUpgradeable Contract', function () {
       expect(await minter.MAX_TEAM_RATE()).to.be.eq(500);
       expect(await minter.weekly()).to.be.eq(ethers.parseEther('225000'));
       expect(await minter.lastInflationPeriod()).to.be.eq(ZERO);
+      expect(await minter.TAIL_EMISSION()).to.be.eq(20);
     });
     it('Should set avtive_period in two weeks', async () => {
       let inTwoPeriod = ((BigInt(await time.latest()) + BigInt(2) * WEEK) / WEEK) * WEEK;
@@ -402,6 +403,33 @@ describe('MinterUpgradeable Contract', function () {
       }
 
       expect(await fenix.totalSupply()).to.be.closeTo(ethers.parseEther('18232672'), ethers.parseEther('1'));
+    });
+  });
+
+  describe('TAIL_EMISSION', async () => {
+    it('Should corect calculate circulating_emission()', async () => {
+      // when circulation supply = totalSuply()
+      let supply = await fenix.totalSupply();
+      expect(supply).to.be.eq(await minter.circulating_supply());
+      expect(await minter.circulating_emission()).to.be.eq((supply * BigInt(20)) / BigInt(10000));
+
+      await fenix.transfer(voterEscrow.target, supply / BigInt(2));
+
+      expect(await minter.circulating_supply()).to.be.eq(supply / BigInt(2));
+      expect(await minter.circulating_emission()).to.be.closeTo(((supply / BigInt(2)) * BigInt(20)) / BigInt(10000), ONE);
+    });
+    it('Should corect calculate weekly_emission() when emission is less than circulation_emisison()', async () => {
+      // lock 60% fnx on veFNX
+      await fenix.transfer(voterEscrow.target, ((await fenix.totalSupply()) * BigInt(60)) / BigInt(100));
+      await minter.start();
+      for (let i = 0; i < 300; i++) {
+        await time.increase(WEEK);
+        await minter.update_period();
+        // should be never less then 0.2% from circlation supply
+        let circulation = await minter.circulating_supply();
+        let minEmission = (circulation * BigInt(20)) / BigInt(10000);
+        expect(await minter.weekly_emission()).to.be.greaterThanOrEqual(minEmission);
+      }
     });
   });
 });

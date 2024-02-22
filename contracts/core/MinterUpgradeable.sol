@@ -16,6 +16,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
     uint256 public constant PRECISION = 10_000; // 10,000 = 100%
     uint256 public constant MAX_TEAM_RATE = 500; // 500 bips =  5%
     uint256 public constant WEEK = 86400 * 7; // allows minting once per week (reset every Thursday 00:00 UTC)
+    uint256 public constant TAIL_EMISSION = 20; // 0.2%
 
     bool public isFirstMint;
     bool public isStarted;
@@ -92,6 +93,10 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
         return fenix.totalSupply() - fenix.balanceOf(address(ve));
     }
 
+    function circulating_emission() public view returns (uint) {
+        return (circulating_supply() * TAIL_EMISSION) / PRECISION;
+    }
+
     function calculate_emission_decay() public view returns (uint256) {
         return (weekly * decayRate) / PRECISION;
     }
@@ -107,7 +112,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
             return calculate_emission_inflation() + weeklyCache;
         } else {
             uint256 decay = calculate_emission_decay();
-            return weeklyCache < decay ? 0 : weeklyCache - decay;
+            return Math.max(weeklyCache < decay ? 0 : weeklyCache - decay, circulating_emission());
         }
     }
 
