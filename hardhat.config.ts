@@ -3,6 +3,36 @@ import '@nomicfoundation/hardhat-toolbox';
 import 'hardhat-contract-sizer';
 import '@nomicfoundation/hardhat-verify';
 import 'dotenv/config';
+import { SolcUserConfig } from 'hardhat/types';
+
+const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
+  version: '0.8.19',
+  settings: {
+    evmVersion: 'paris',
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 800,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+};
+
+const SPECIFIC_COMPILER_SETTINGS: SolcUserConfig = {
+  version: '0.8.19',
+  settings: {
+    evmVersion: 'paris',
+    optimizer: {
+      enabled: true,
+      runs: 400,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+};
 
 const config: HardhatUserConfig = {
   sourcify: {
@@ -10,11 +40,11 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      blast_sepolia_deploy: 'blast_sepolia_deploy', // apiKey is not required, just set a placeholder
+      blastSepolia: 'blastSepolia', // apiKey is not required, just set a placeholder
     },
     customChains: [
       {
-        network: 'blast_sepolia_deploy',
+        network: 'blastSepolia',
         chainId: 168587773,
         urls: {
           apiURL: 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan',
@@ -28,7 +58,7 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: false,
     },
     blastSepolia: {
-      url: 'https://sepolia.blast.io',
+      url: 'https://rpc.ankr.com/blast_testnet_sepolia',
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
         path: "m/44'/60'/0'/0",
@@ -36,7 +66,7 @@ const config: HardhatUserConfig = {
         count: 20,
         passphrase: '',
       },
-      gasPrice: 1e9,
+      gasPrice: 12e9,
     },
     blast_sepolia: {
       forking: {
@@ -55,18 +85,10 @@ const config: HardhatUserConfig = {
     },
   },
   solidity: {
-    compilers: [
-      {
-        version: '0.8.19',
-        settings: {
-          viaIR: true,
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
-      },
-    ],
+    compilers: [DEFAULT_COMPILER_SETTINGS],
+    overrides: {
+      'contracts/core/VotingEscrowUpgradeable.sol': SPECIFIC_COMPILER_SETTINGS,
+    },
   },
 };
 

@@ -3,28 +3,13 @@ import { getDeploysData } from '../utils';
 
 async function main() {
   let deploysData = getDeploysData();
+  let fnUSDT = '0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a';
+  let fnTok = '0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5';
+  let fenix = '0xCE286b104F86733B24c02a5CDA9483176BcE02d6';
 
-  if (
-    deploysData['TK18'] &&
-    deploysData['TK9'] &&
-    deploysData['TK6'] &&
-    deploysData['PairFactory'] &&
-    deploysData['Fenix'] &&
-    deploysData['Voter']
-  ) {
-    let factory = await ethers.getContractAt('PairFactoryUpgradeable', deploysData['PairFactory']);
-    let voter = await ethers.getContractAt('VoterUpgradeable', deploysData['Voter']);
-    await voter.createGauges(
-      [
-        await factory.getPair(deploysData['TK18'], deploysData['TK9'], true),
-        await factory.getPair(deploysData['TK18'], deploysData['TK9'], false),
-        await factory.getPair(deploysData['Fenix'], deploysData['TK18'], true),
-      ],
-      [0, 0, 0],
-    );
-  } else {
-    console.log('Contracts not present');
-  }
+  let factory = await ethers.getContractAt('PairFactoryUpgradeable', deploysData['PairFactory']);
+  let voter = await ethers.getContractAt('VoterUpgradeable', deploysData['Voter']);
+  await voter.createGauges([await factory.getPair(fnUSDT, fnTok, true), await factory.getPair(fenix, fnTok, false)], [0, 0]);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

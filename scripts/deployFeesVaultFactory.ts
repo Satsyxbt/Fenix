@@ -25,6 +25,15 @@ async function main() {
       saveDeploysData(deploysData);
 
       console.log(`Successful deploy ${NAME} contract: ${await contract.getAddress()}`);
+
+      try {
+        await hre.run('verify:verify', {
+          address: deploysData[NAME],
+          constructorArguments: [deployer.address, deploysData['FeesVaultImplementation'], deploysData['Voter']],
+        });
+      } catch (e) {
+        console.warn('Error with verification proccess');
+      }
     }
   }
 }

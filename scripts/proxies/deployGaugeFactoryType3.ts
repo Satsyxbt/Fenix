@@ -3,7 +3,7 @@ import { deployProxy, getDeploysData } from '../utils';
 async function main() {
   let data = getDeploysData();
   if (data['GaugeFactoryImplementation'] && data['ProxyAdmin']) {
-    await deployProxy(data['ProxyAdmin'], data['GaugeFactoryImplementation'], 'GaugeFactory');
+    await deployProxy(data['ProxyAdmin'], data['GaugeFactoryImplementation'], 'GaugeFactoryType3');
   } else {
     console.warn('Nessesary contract address not present');
   }

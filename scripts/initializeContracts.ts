@@ -21,13 +21,13 @@ async function main() {
   );
 
   console.log('Try initialize PairFactory');
-  await deploysData.PairFactory.initialize(deployer.address, deploysData.FeesVaultFactory.target);
-
-  console.log('Try initialize Minter');
-  await deploysData.Minter.initialize(deployer.address, deployer.address, deploysData.Voter.target, deploysData.VotingEscrow.target);
+  await deploysData.PairFactory.initialize(deployer.address, deploysData.PairImplementation.target, deploysData.FeesVaultFactory.target);
 
   console.log('Try initialize VotingEscrow');
   await deploysData.VotingEscrow.initialize(deployer.address, deploysData.Fenix.target, deploysData.VeArtProxy.target);
+
+  console.log('Try initialize Minter');
+  await deploysData.Minter.initialize(deployer.address, deploysData.Voter.target, deploysData.VotingEscrow.target);
 
   console.log('Try initialize Voter');
   await deploysData.Voter.initialize(
@@ -43,8 +43,8 @@ async function main() {
 
   console.log('Try initialize FeesVaultFactory');
   await deploysData.FeesVaultFactory.setWhitelistedCreatorStatus(deploysData.PairFactory.target, true);
-  console.log('Set Voter');
 
+  console.log('Set Voter');
   await deploysData.VotingEscrow.setVoter(deploysData.Voter.target);
 }
 

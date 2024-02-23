@@ -35,13 +35,22 @@ export async function deployBase(contractFactoryName: string, name: string) {
     saveDeploysData(deploysData);
 
     console.log(`Successful deploy ${NAME} contract: ${await contract.getAddress()}`);
+
+    console.log('Wait before start veriy, for indexed from explorer');
+
+    function timeout(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    await timeout(30000);
+
     try {
       await hre.run('verify:verify', {
         address: deploysData[NAME],
         constructorArguments: [],
       });
     } catch (e) {
-      console.warn('Error with verification proccess');
+      console.warn('Error with verification proccess', e);
     }
   }
 }
@@ -96,6 +105,7 @@ export async function getDeployedDataFromDeploys() {
     VeArtProxy: await ethers.getContractAt('VeArtProxyUpgradeable', deploysData['VeArtProxy']),
     Minter: await ethers.getContractAt('MinterUpgradeable', deploysData['Minter']),
     FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
+    PairImplementation: await ethers.getContractAt('Pair', deploysData['PairImplementation']),
   };
 }
 export async function deployERC20Faucet(name: string, symbol: string, decimals: number) {
