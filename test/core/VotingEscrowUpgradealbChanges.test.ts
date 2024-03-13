@@ -188,7 +188,25 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
         expect(await fenix.balanceOf(veBoost.target)).to.be.eq(ethers.parseEther('100'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
       });
+      it('should not provide fnx boost if call by create_lock_without_boost', async () => {
+        await votingEscrow.setVeBoost(veBoost.target);
+        await fenix.connect(signers.otherUser1).approve(votingEscrow.target, ethers.MaxUint256);
 
+        expect(await votingEscrow.veBoost()).to.be.eq(veBoost.target);
+        expect(await votingEscrow.supply()).to.be.eq(ZERO);
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ZERO);
+        expect(await fenix.balanceOf(veBoost.target)).to.be.eq(ethers.parseEther('100'));
+
+        await votingEscrow
+          .connect(signers.otherUser1)
+          .create_lock_for_without_boost(ethers.parseEther('100'), 182 * 86400, signers.otherUser1.address);
+        expect(await votingEscrow.veBoost()).to.be.eq(veBoost.target);
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+        expect(await fenix.balanceOf(veBoost.target)).to.be.eq(ethers.parseEther('100'));
+      });
       it('during token increase unlock', async () => {
         expect(await votingEscrow.veBoost()).to.be.eq(ZERO_ADDRESS);
         expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));

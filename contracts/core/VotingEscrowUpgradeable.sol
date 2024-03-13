@@ -9,7 +9,6 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
-import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
 import {IVeBoost} from "./interfaces/IVeBoost.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
@@ -691,7 +690,8 @@ contract VotingEscrowUpgradeable is
         uint _value,
         uint unlock_time,
         LockedBalance memory locked_balance,
-        DepositType deposit_type
+        DepositType deposit_type,
+        bool isShouldBoosted
     ) internal {
         LockedBalance memory _locked = locked_balance;
         uint supply_before = supply;
@@ -707,7 +707,7 @@ contract VotingEscrowUpgradeable is
 
         uint256 boostedValue;
         IVeBoost veBoostCached = IVeBoost(veBoost);
-        if (address(veBoostCached) != address(0)) {
+        if (address(veBoostCached) != address(0) && isShouldBoosted) {
             if (
                 deposit_type == DepositType.CREATE_LOCK_TYPE ||
                 deposit_type == DepositType.DEPOSIT_FOR_TYPE ||
@@ -769,14 +769,14 @@ contract VotingEscrowUpgradeable is
         require(_value > 0); // dev: need non-zero value
         require(_locked.amount > 0, "No existing lock found");
         require(_locked.end > block.timestamp, "Cannot add to expired lock. Withdraw");
-        _deposit_for(_tokenId, _value, 0, _locked, DepositType.DEPOSIT_FOR_TYPE);
+        _deposit_for(_tokenId, _value, 0, _locked, DepositType.DEPOSIT_FOR_TYPE, true);
     }
 
     /// @notice Deposit `_value` tokens for `_to` and lock for `_lock_duration`
     /// @param _value Amount to deposit
     /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
     /// @param _to Address to deposit
-    function _create_lock(uint _value, uint _lock_duration, address _to) internal returns (uint) {
+    function _create_lock(uint _value, uint _lock_duration, address _to, bool isShouldBoosted) internal returns (uint) {
         uint unlock_time = ((block.timestamp + _lock_duration) / WEEK) * WEEK; // Locktime is rounded down to weeks
 
         require(_value > 0); // dev: need non-zero value
@@ -787,7 +787,7 @@ contract VotingEscrowUpgradeable is
         uint _tokenId = tokenId;
         _mint(_to, _tokenId);
 
-        _deposit_for(_tokenId, _value, unlock_time, locked[_tokenId], DepositType.CREATE_LOCK_TYPE);
+        _deposit_for(_tokenId, _value, unlock_time, locked[_tokenId], DepositType.CREATE_LOCK_TYPE, isShouldBoosted);
         return _tokenId;
     }
 
@@ -795,7 +795,7 @@ contract VotingEscrowUpgradeable is
     /// @param _value Amount to deposit
     /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
     function create_lock(uint _value, uint _lock_duration) external nonReentrant returns (uint) {
-        return _create_lock(_value, _lock_duration, msg.sender);
+        return _create_lock(_value, _lock_duration, msg.sender, true);
     }
 
     /// @notice Deposit `_value` tokens for `_to` and lock for `_lock_duration`
@@ -803,7 +803,15 @@ contract VotingEscrowUpgradeable is
     /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
     /// @param _to Address to deposit
     function create_lock_for(uint _value, uint _lock_duration, address _to) external nonReentrant returns (uint) {
-        return _create_lock(_value, _lock_duration, _to);
+        return _create_lock(_value, _lock_duration, _to, true);
+    }
+
+    /// @notice Deposit `_value` tokens for `_to` and lock for `_lock_duration` without boost
+    /// @param _value Amount to deposit
+    /// @param _lock_duration Number of seconds to lock tokens for (rounded down to nearest week)
+    /// @param _to Address to deposit
+    function create_lock_for_without_boost(uint _value, uint _lock_duration, address _to) external nonReentrant returns (uint) {
+        return _create_lock(_value, _lock_duration, _to, false);
     }
 
     /// @notice Deposit `_value` additional tokens for `_tokenId` without modifying the unlock time
@@ -817,7 +825,7 @@ contract VotingEscrowUpgradeable is
         require(_locked.amount > 0, "No existing lock found");
         require(_locked.end > block.timestamp, "Cannot add to expired lock. Withdraw");
 
-        _deposit_for(_tokenId, _value, 0, _locked, DepositType.INCREASE_LOCK_AMOUNT);
+        _deposit_for(_tokenId, _value, 0, _locked, DepositType.INCREASE_LOCK_AMOUNT, true);
     }
 
     /// @notice Extend the unlock time for `_tokenId`
@@ -833,7 +841,7 @@ contract VotingEscrowUpgradeable is
         require(unlock_time > _locked.end, "Can only increase lock duration");
         require(unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 182 days max");
 
-        _deposit_for(_tokenId, 0, unlock_time, _locked, DepositType.INCREASE_UNLOCK_TIME);
+        _deposit_for(_tokenId, 0, unlock_time, _locked, DepositType.INCREASE_UNLOCK_TIME, false);
     }
 
     /// @notice Withdraw all tokens for `_tokenId`
@@ -1096,7 +1104,7 @@ contract VotingEscrowUpgradeable is
         locked[_from] = LockedBalance(0, 0);
         _checkpoint(_from, _locked0, LockedBalance(0, 0));
         _burn(_from);
-        _deposit_for(_to, value0, end, _locked1, DepositType.MERGE_TYPE);
+        _deposit_for(_to, value0, end, _locked1, DepositType.MERGE_TYPE, false);
     }
 
     /**
@@ -1142,7 +1150,7 @@ contract VotingEscrowUpgradeable is
             _tokenId = tokenId;
             _mint(_to, _tokenId);
             _value = (value * amounts[i]) / totalWeight;
-            _deposit_for(_tokenId, _value, unlock_time, locked[_tokenId], DepositType.SPLIT_TYPE);
+            _deposit_for(_tokenId, _value, unlock_time, locked[_tokenId], DepositType.SPLIT_TYPE, false);
         }
     }
 
