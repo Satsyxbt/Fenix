@@ -37,6 +37,7 @@ import {
   BlastMock__factory,
   MinterUpgradeable,
   Pair,
+  VeBoostUpgradeable,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from './constants';
@@ -76,6 +77,7 @@ export type CoreFixtureDeployed = {
   merklDistributionCreator: MerkleDistributionCreatorMock;
   feesVaultImplementation: FeesVaultUpgradeable;
   feesVaultFactory: FeesVaultFactory;
+  veBoost: VeBoostUpgradeable;
 };
 
 export async function mockBlast() {
@@ -396,6 +398,11 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
   await v2PairFactory.grantRole(await v2PairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.deployer.address);
   await v2PairFactory.grantRole(await v2PairFactory.FEES_MANAGER_ROLE(), signers.deployer.address);
 
+  let veBoostImpl = await (await ethers.getContractFactory('VeBoostUpgradeable')).deploy();
+  let veBoost = (await ethers.getContractFactory('VeBoostUpgradeable')).attach(
+    await deployTransaperntUpgradeableProxy(signers.blastGovernor, signers.proxyAdmin.address, await veBoostImpl.getAddress()),
+  ) as VeBoostUpgradeable;
+
   return {
     signers: signers,
     voter: voter,
@@ -414,6 +421,7 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     merklDistributionCreator: merklDistributionCreator,
     feesVaultImplementation: communityFeeVaultImplementation,
     feesVaultFactory: feesVaultFactory,
+    veBoost: veBoost,
   };
 }
 

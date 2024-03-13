@@ -10,6 +10,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
+import {IVeBoost} from "./interfaces/IVeBoost.sol";
 import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
 /// @title Voting Escrow
@@ -73,6 +74,7 @@ contract VotingEscrowUpgradeable is
     address public voter;
     address public team;
     address public artProxy;
+    address public veBoost;
 
     mapping(uint => Point) public point_history; // epoch -> unsigned point
 
@@ -136,6 +138,11 @@ contract VotingEscrowUpgradeable is
     function setArtProxy(address _proxy) external {
         require(msg.sender == team);
         artProxy = _proxy;
+    }
+
+    function setVeBoost(address _veBoost) external {
+        require(msg.sender == team);
+        veBoost = _veBoost;
     }
 
     /// @dev Returns current token URI metadata
@@ -697,6 +704,29 @@ contract VotingEscrowUpgradeable is
         if (unlock_time != 0) {
             _locked.end = unlock_time;
         }
+
+        uint256 boostedValue;
+        IVeBoost veBoostCached = IVeBoost(veBoost);
+        if (address(veBoostCached) != address(0)) {
+            if (
+                deposit_type == DepositType.CREATE_LOCK_TYPE ||
+                deposit_type == DepositType.DEPOSIT_FOR_TYPE ||
+                deposit_type == DepositType.INCREASE_LOCK_AMOUNT
+            ) {
+                uint256 minLockedEndTime = ((block.timestamp + veBoostCached.getMinLockedTimeForBoost()) / WEEK) * WEEK;
+                if (minLockedEndTime <= _locked.end && _value >= veBoostCached.getMinFNXAmountForBoost()) {
+                    uint256 calculatedBoostValue = veBoostCached.calculateBoostFNXAmount(_value);
+                    uint256 availableFNXBoostAmount = veBoostCached.getAvailableBoostFNXAmount();
+                    boostedValue = calculatedBoostValue < availableFNXBoostAmount ? calculatedBoostValue : availableFNXBoostAmount;
+                    if (boostedValue > 0) {
+                        _locked.amount += int128(int256(boostedValue));
+                    }
+                }
+            }
+        }
+        uint256 newSupply = supply_before + _value + boostedValue;
+        supply = newSupply;
+
         locked[_tokenId] = _locked;
 
         // Possibilities:
@@ -708,10 +738,15 @@ contract VotingEscrowUpgradeable is
         address from = msg.sender;
         if (_value != 0 && deposit_type != DepositType.MERGE_TYPE && deposit_type != DepositType.SPLIT_TYPE) {
             assert(IERC20(token).transferFrom(from, address(this), _value));
+
+            if (boostedValue > 0) {
+                veBoostCached.beforeFNXBoostPaid(idToOwner[_tokenId], _tokenId, _value, boostedValue);
+                assert(IERC20(token).transferFrom(address(veBoostCached), address(this), boostedValue));
+            }
         }
 
         emit Deposit(from, _tokenId, _value, _locked.end, deposit_type, block.timestamp);
-        emit Supply(supply_before, supply_before + _value);
+        emit Supply(supply_before, newSupply);
     }
 
     function block_number() external view returns (uint) {
@@ -1053,6 +1088,9 @@ contract VotingEscrowUpgradeable is
         LockedBalance memory _locked0 = locked[_from];
         LockedBalance memory _locked1 = locked[_to];
         uint value0 = uint(int256(_locked0.amount));
+
+        supply -= value0;
+
         uint end = _locked0.end >= _locked1.end ? _locked0.end : _locked1.end;
 
         locked[_from] = LockedBalance(0, 0);
