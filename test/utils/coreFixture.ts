@@ -78,6 +78,9 @@ export type CoreFixtureDeployed = {
   feesVaultFactory: FeesVaultFactory;
 };
 
+export async function mockBlast() {
+  await setCode('0x4300000000000000000000000000000000000002', BlastMock__factory.bytecode);
+}
 export async function deployERC20MockToken(
   deployer: HardhatEthersSigner,
   name: string,
