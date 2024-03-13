@@ -38,6 +38,7 @@ import {
   MinterUpgradeable,
   Pair,
   VeBoostUpgradeable,
+  VeFnxDistributorUpgradeable,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from './constants';
@@ -78,6 +79,7 @@ export type CoreFixtureDeployed = {
   feesVaultImplementation: FeesVaultUpgradeable;
   feesVaultFactory: FeesVaultFactory;
   veBoost: VeBoostUpgradeable;
+  veFnxDistributor: VeFnxDistributorUpgradeable;
 };
 
 export async function mockBlast() {
@@ -119,6 +121,21 @@ export async function deployMinter(
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as MinterUpgradeable;
   await attached.initialize(governor, voter, votingEscrow);
+  return attached;
+}
+
+export async function deployVeFnxDistributor(
+  deployer: HardhatEthersSigner,
+  proxyAdmin: string,
+  governor: string,
+  fenix: string,
+  votingEscrow: string,
+): Promise<VeFnxDistributorUpgradeable> {
+  const factory = await ethers.getContractFactory('VeFnxDistributorUpgradeable');
+  const implementation = await factory.connect(deployer).deploy();
+  const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
+  const attached = factory.attach(proxy.target) as any as VeFnxDistributorUpgradeable;
+  await attached.initialize(governor, fenix, votingEscrow);
   return attached;
 }
 
@@ -403,6 +420,13 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     await deployTransaperntUpgradeableProxy(signers.blastGovernor, signers.proxyAdmin.address, await veBoostImpl.getAddress()),
   ) as VeBoostUpgradeable;
 
+  let veFnxDistributor = await deployVeFnxDistributor(
+    signers.deployer,
+    signers.proxyAdmin.address,
+    signers.blastGovernor.address,
+    await fenix.getAddress(),
+    await votingEscrow.getAddress(),
+  );
   return {
     signers: signers,
     voter: voter,
@@ -422,6 +446,7 @@ export async function completeFixture(isFork: boolean = false): Promise<CoreFixt
     feesVaultImplementation: communityFeeVaultImplementation,
     feesVaultFactory: feesVaultFactory,
     veBoost: veBoost,
+    veFnxDistributor: veFnxDistributor,
   };
 }
 

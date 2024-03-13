@@ -12,7 +12,7 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
     viaIR: true,
     optimizer: {
       enabled: true,
-      runs: 800,
+      runs: 2000,
     },
     metadata: {
       bytecodeHash: 'none',
@@ -24,9 +24,10 @@ const SPECIFIC_COMPILER_SETTINGS: SolcUserConfig = {
   version: '0.8.19',
   settings: {
     evmVersion: 'paris',
+    viaIR: true,
     optimizer: {
       enabled: true,
-      runs: 400,
+      runs: 1,
     },
     metadata: {
       bytecodeHash: 'none',
