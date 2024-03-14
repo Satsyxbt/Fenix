@@ -3,7 +3,8 @@ import hre from 'hardhat';
 
 import { getDeploysData, saveDeploysData } from './utils';
 
-const NAME = 'MerklGaugeMiddleman';
+const WETH = '0x4200000000000000000000000000000000000023';
+const NAME = 'RouterV2';
 async function main() {
   console.log(`Start deploy ${NAME} contract...`);
 
@@ -11,15 +12,13 @@ async function main() {
   if (deploysData[NAME]) {
     console.warn(`${NAME} contract already deployed, skip deployment, address: ${deploysData[NAME]}`);
   } else {
-    const factory = await ethers.getContractFactory('MerklGaugeMiddleman');
+    const factory = await ethers.getContractFactory('RouterV2');
 
     const signers = await ethers.getSigners();
     const deployer = signers[0];
     console.log(`deployer: ${deployer.address}`);
 
-    let contract = await factory
-      .connect(deployer)
-      .deploy(deployer.address, deploysData['Fenix'], '0xF42A6bbDacB2E83B84060e2489a0eE85cf0F02c3');
+    let contract = await factory.connect(deployer).deploy(deployer.address, deploysData['PairFactory'], WETH);
     await contract.waitForDeployment();
 
     deploysData[NAME] = await contract.getAddress();
@@ -30,7 +29,7 @@ async function main() {
     try {
       await hre.run('verify:verify', {
         address: deploysData[NAME],
-        constructorArguments: [deployer.address, deploysData['Fenix'], '0xF42A6bbDacB2E83B84060e2489a0eE85cf0F02c3'],
+        constructorArguments: [deployer.address, deploysData['PairFactory'], WETH],
       });
     } catch (e) {
       console.warn('Error with verification proccess');

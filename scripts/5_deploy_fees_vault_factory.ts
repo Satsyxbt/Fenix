@@ -5,13 +5,15 @@ import { getDeploysData, saveDeploysData } from './utils';
 
 const NAME = 'FeesVaultFactory';
 async function main() {
-  console.log(`Start deploy ${NAME} contract...`);
+  console.log('5_deploys_fees_vault_factory -- started');
 
   let deploysData = getDeploysData();
   if (deploysData['Voter'] && deploysData['FeesVaultImplementation']) {
     if (deploysData[NAME]) {
       console.warn(`${NAME} contract already deployed, skip deployment, address: ${deploysData[NAME]}`);
     } else {
+      console.log(`Start deploy ${NAME} contract...`);
+
       const factory = await ethers.getContractFactory('FeesVaultFactory');
 
       const signers = await ethers.getSigners();
@@ -26,6 +28,12 @@ async function main() {
 
       console.log(`Successful deploy ${NAME} contract: ${await contract.getAddress()}`);
 
+      function timeout(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      await timeout(30000);
+
       try {
         await hre.run('verify:verify', {
           address: deploysData[NAME],
@@ -35,7 +43,10 @@ async function main() {
         console.warn('Error with verification proccess');
       }
     }
+  } else {
+    console.warn('address of Voter or FeesVaultImplementation not found');
   }
+  console.log('5_deploys_fees_vault_factory -- finished');
 }
 
 // We recommend this pattern to be able to use async/await everywhere

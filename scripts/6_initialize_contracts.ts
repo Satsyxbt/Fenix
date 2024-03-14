@@ -13,13 +13,26 @@ async function main() {
   await deploysData.BribeFactory.initialize(deployer.address, deploysData.Voter.target, deploysData.BribeImplementation.target);
 
   console.log('Try initialize GaugeFactory');
-  await deploysData.GaugeFactory.initialize(
+  await deploysData.GaugeFactoryType.initialize(
     deployer.address,
     deploysData.Voter.target,
     deploysData.GaugeImplementation.target,
     ethers.ZeroAddress,
   );
 
+  await deploysData.GaugeFactoryType2.initialize(
+    deployer.address,
+    deploysData.Voter.target,
+    deploysData.GaugeImplementation.target,
+    ethers.ZeroAddress,
+  );
+
+  await deploysData.GaugeFactoryType3.initialize(
+    deployer.address,
+    deploysData.Voter.target,
+    deploysData.GaugeImplementation.target,
+    ethers.ZeroAddress,
+  );
   console.log('Try initialize PairFactory');
   await deploysData.PairFactory.initialize(deployer.address, deploysData.PairImplementation.target, deploysData.FeesVaultFactory.target);
 
@@ -34,18 +47,9 @@ async function main() {
     deployer.address,
     deploysData.VotingEscrow.target,
     deploysData.PairFactory.target,
-    deploysData.GaugeFactory.target,
+    deploysData.GaugeFactoryType.target,
     deploysData.BribeFactory.target,
   );
-
-  console.log('Try initialize Fenix');
-  await deploysData.Fenix.transferOwnership(deploysData.Minter.target);
-
-  console.log('Try initialize FeesVaultFactory');
-  await deploysData.FeesVaultFactory.setWhitelistedCreatorStatus(deploysData.PairFactory.target, true);
-
-  console.log('Set Voter');
-  await deploysData.VotingEscrow.setVoter(deploysData.Voter.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

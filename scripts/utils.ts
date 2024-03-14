@@ -98,7 +98,9 @@ export async function getDeployedDataFromDeploys() {
     VoterImplementation: await ethers.getContractAt('VoterUpgradeable', deploysData['VoterImplementation']),
     VotingEscrowImplementation: await ethers.getContractAt('VotingEscrowUpgradeable', deploysData['VotingEscrowImplementation']),
     BribeFactory: await ethers.getContractAt('BribeFactoryUpgradeable', deploysData['BribeFactory']),
-    GaugeFactory: await ethers.getContractAt('GaugeFactoryUpgradeable', deploysData['GaugeFactory']),
+    GaugeFactoryType: await ethers.getContractAt('GaugeFactoryUpgradeable', deploysData['GaugeFactoryType']),
+    GaugeFactoryType2: await ethers.getContractAt('GaugeFactoryUpgradeable', deploysData['GaugeFactoryType2']),
+    GaugeFactoryType3: await ethers.getContractAt('GaugeFactoryUpgradeable', deploysData['GaugeFactoryType3']),
     PairFactory: await ethers.getContractAt('PairFactoryUpgradeable', deploysData['PairFactory']),
     Voter: await ethers.getContractAt('VoterUpgradeable', deploysData['Voter']),
     VotingEscrow: await ethers.getContractAt('VotingEscrowUpgradeable', deploysData['VotingEscrow']),
@@ -106,6 +108,8 @@ export async function getDeployedDataFromDeploys() {
     Minter: await ethers.getContractAt('MinterUpgradeable', deploysData['Minter']),
     FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
     PairImplementation: await ethers.getContractAt('Pair', deploysData['PairImplementation']),
+    VeFnxDistributor: await ethers.getContractAt('VeFnxDistributorUpgradeable', deploysData['VeFnxDistributor']),
+    MerklGaugeMiddleman: await ethers.getContractAt('MerklGaugeMiddleman', deploysData['MerklGaugeMiddleman']),
   };
 }
 export async function deployERC20Faucet(name: string, symbol: string, decimals: number) {
@@ -148,7 +152,7 @@ export async function deployERC20Mock(name: string, symbol: string, decimals: nu
         constructorArguments: [deployer.address, deployer.address],
       });
     } catch (e) {
-      console.warn('Error with verification proccess');
+      console.warn('Error with verification proccess', e);
     }
   }
 }

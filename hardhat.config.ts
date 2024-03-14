@@ -59,7 +59,7 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: false,
     },
     blastSepolia: {
-      url: 'https://rpc.ankr.com/blast_testnet_sepolia',
+      url: 'https://rpc.ankr.com/blast_testnet_sepolia/8b23c0c39114674729a2260aa732f5bc09264b988b054f82c8d084e26e32cdc9',
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
         path: "m/44'/60'/0'/0",
@@ -67,7 +67,7 @@ const config: HardhatUserConfig = {
         count: 20,
         passphrase: '',
       },
-      gasPrice: 12e9,
+      gasPrice: 1e3,
     },
     blast_sepolia: {
       forking: {
