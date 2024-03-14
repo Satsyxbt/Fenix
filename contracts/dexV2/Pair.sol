@@ -31,6 +31,7 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     mapping(address => uint) public nonces;
 
     uint internal constant MINIMUM_LIQUIDITY = 10 ** 3;
+    uint256 internal constant MINIMUM_K = 10 ** 10;
 
     address public token0;
     address public token1;
@@ -363,6 +364,10 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
         if (_totalSupply == 0) {
             liquidity = Math.sqrt(_amount0 * _amount1) - MINIMUM_LIQUIDITY;
             _mint(address(0), MINIMUM_LIQUIDITY); // permanently lock the first MINIMUM_LIQUIDITY tokens
+            if (stable) {
+                require((_amount0 * 1e18) / decimals0 == (_amount1 * 1e18) / decimals1, "Pair: stable deposits must be equal");
+                require(_k(_amount0, _amount1) > MINIMUM_K, "Pair: stable deposits must be above minimum k");
+            }
         } else {
             liquidity = Math.min((_amount0 * _totalSupply) / _reserve0, (_amount1 * _totalSupply) / _reserve1);
         }
@@ -455,12 +460,11 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
     }
 
     function _f(uint x0, uint y) internal pure returns (uint) {
-        return x0*(y*y/1e18*y/1e18)/1e18+(x0*x0/1e18*x0/1e18)*y/1e18;
+        return (x0 * ((((y * y) / 1e18) * y) / 1e18)) / 1e18 + (((((x0 * x0) / 1e18) * x0) / 1e18) * y) / 1e18;
     }
 
     function _d(uint x0, uint y) internal pure returns (uint) {
-        return 3*x0*(y*y/1e18)/1e18+(x0*x0/1e18*x0/1e18);
- 
+        return (3 * x0 * ((y * y) / 1e18)) / 1e18 + ((((x0 * x0) / 1e18) * x0) / 1e18);
     }
 
     function _get_y(uint x0, uint xy, uint y) internal pure returns (uint) {
