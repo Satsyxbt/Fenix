@@ -107,7 +107,7 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
         (token0, token1, stable, communityVault) = (_token0, _token1, _stable, _communityVault);
 
-        fees = address(new PairFees(_token0, _token1));
+        fees = address(new PairFees(_blastGovernor, msg.sender, _token0, _token1));
 
         _unlocked = 1;
 

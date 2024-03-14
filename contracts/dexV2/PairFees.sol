@@ -2,17 +2,25 @@
 pragma solidity =0.8.19;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.sol";
+
+import {IPairFactory} from "./interfaces/IPairFactory.sol";
 
 // Pair Fees contract is used as a 1:1 pair relationship to split out fees, this ensures that the curve does not need to be modified for LP shares
-contract PairFees {
+contract PairFees is BlastGovernorSetup, BlastERC20RebasingManage {
     address internal immutable pair; // The pair it is bonded to
     address internal immutable token0; // token0 of pair, saved localy and statically for gas optimization
     address internal immutable token1; // Token1 of pair, saved localy and statically for gas optimization
+    address internal immutable factory; // The pair factory
 
-    constructor(address _token0, address _token1) {
+    constructor(address _blastGovernor, address _factory, address _token0, address _token1) {
+        __BlastGovernorSetup_init(_blastGovernor);
+
         pair = msg.sender;
         token0 = _token0;
         token1 = _token1;
+        factory = _factory;
     }
 
     function _safeTransfer(address token, address to, uint256 value) internal {
@@ -26,5 +34,13 @@ contract PairFees {
         require(msg.sender == pair);
         if (amount0 > 0) _safeTransfer(token0, recipient, amount0);
         if (amount1 > 0) _safeTransfer(token1, recipient, amount1);
+    }
+
+    function _checkAccessForManageBlastERC20Rebasing() internal virtual override {
+        IPairFactory factoryCache = IPairFactory(factory);
+        require(
+            msg.sender == address(factoryCache) || factoryCache.hasRole(factoryCache.PAIRS_ADMINISTRATOR_ROLE(), msg.sender),
+            "ACCESS_DENIED"
+        );
     }
 }
