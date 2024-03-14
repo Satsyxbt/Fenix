@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@cryptoalgebra/integral-core": "file:./lib/fenix-dex-v3/src/core",
+    "@cryptoalgebra/integral-plugin": "file:./lib/fenix-dex-v3/src/plugin",
     "@ethersproject/bignumber": "^5.7.0",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
