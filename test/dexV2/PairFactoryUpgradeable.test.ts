@@ -11,6 +11,7 @@ import {
   Pair,
   ERC20Mock,
   Pair__factory,
+  PairFees,
 } from '../../typechain-types';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import {
@@ -400,38 +401,44 @@ describe('PairFactoryUpgradeable Contract', function () {
       let newPairAddress = await pairFactory
         .connect(signers.otherUser1)
         .createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+      const [token0, token1] =
+        deployed.fenix.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
+          ? [deployed.fenix.target, tokenTK6.target]
+          : [tokenTK6.target, deployed.fenix.target];
 
-      await expect(pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false))
-        .to.be.emit(pairFactory, 'PairCreated')
-        .withArgs(deployed.fenix, tokenTK6.target, false, newPairAddress, count);
-
+      let tx = await pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false);
       let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
+
+      await expect(tx).to.be.emit(pairFactory, 'PairCreated').withArgs(token0, token1, false, newPairAddress, count);
 
       expect(newPairAddress).to.be.eq(pair);
       expect(await pairFactory.isPair(pair)).to.be.true;
       expect(await pairFactory.allPairs(count - ONE)).to.be.eq(pairAddress);
-      expect(await pair.token0()).to.be.eq(deployed.fenix.target);
-      expect(await pair.token1()).to.be.eq(tokenTK6.target);
+      expect(await pair.token0()).to.be.eq(token0);
+      expect(await pair.token1()).to.be.eq(token1);
       expect(await pair.factory()).to.be.eq(pairFactory.target);
     });
     it('success create pair', async () => {
       let count = (await pairFactory.allPairsLength()) + ONE;
 
+      const [token0, token1] =
+        deployed.fenix.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
+          ? [deployed.fenix.target, tokenTK6.target]
+          : [tokenTK6.target, deployed.fenix.target];
+
       let newPairAddress = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
-
-      await expect(pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false))
-        .to.be.emit(pairFactory, 'PairCreated')
-        .withArgs(deployed.fenix, tokenTK6.target, false, newPairAddress, count);
-
+      let tx = await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
       let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
+
+      await expect(tx).to.be.emit(pairFactory, 'PairCreated').withArgs(token0, token1, false, newPairAddress, count);
 
       expect(newPairAddress).to.be.eq(pair);
       expect(await pairFactory.isPair(pair)).to.be.true;
       expect(await pairFactory.allPairs(count - ONE)).to.be.eq(pairAddress);
-      expect(await pair.token0()).to.be.eq(deployed.fenix.target);
-      expect(await pair.token1()).to.be.eq(tokenTK6.target);
+      expect(await pair.token0()).to.be.eq(token0);
+      expect(await pair.token1()).to.be.eq(token1);
       expect(await pair.factory()).to.be.eq(pairFactory.target);
     });
     it('success create feeVault for pair', async () => {
@@ -444,6 +451,19 @@ describe('PairFactoryUpgradeable Contract', function () {
       let pair = await ethers.getContractAt('Pair', pairAddress);
       expect(await feesVaultFactory.getVaultForPool(adr)).to.be.not.eq(ZERO_ADDRESS);
       expect(await feesVaultFactory.getVaultForPool(adr)).to.be.eq(await pair.communityVault());
+    });
+    it('success create PairFees with correct parameters', async () => {
+      await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
+
+      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let pair = await ethers.getContractAt('Pair', pairAddress);
+
+      let pairFeesAddr = await pair.fees();
+      let pairFees = (await ethers.getContractAt('PairFees', pairFeesAddr)) as PairFees;
+
+      expect(pairFeesAddr).to.be.not.eq(ZERO_ADDRESS);
+      await expect(pairFees.connect(signers.otherUser1).configure(tokenTK6.target, 1)).to.be.revertedWith('ACCESS_DENIED');
+      await expect(pairFees.configure(tokenTK6.target, 1)).to.be.not.revertedWith('ACCESS_DENIED');
     });
   });
 });
