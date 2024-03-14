@@ -94,11 +94,6 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         merklGaugeMiddleman = _newMerklGaugeMiddleman;
     }
 
-    function setDistribution(address _gauge, address _newDistribution) external onlyOwner {
-        _checkAddressZero(_newDistribution);
-        IGauge(_gauge).setDistribution(_newDistribution);
-    }
-
     /**
      * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
      *
