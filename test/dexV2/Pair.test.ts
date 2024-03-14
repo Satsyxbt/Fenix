@@ -49,12 +49,24 @@ describe('Pair Contract', function () {
     });
     it('corect initialize start parameters', async () => {
       expect(await pairVolatily.factory()).to.be.eq(pairFactory.target);
-      expect(await pairVolatily.name()).to.be.eq('VolatileV1 AMM - TK18/TK6');
-      expect(await pairVolatily.symbol()).to.be.eq('vAMM-TK18/TK6');
+
+      if (tokenTK18.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()) {
+        expect(await pairVolatily.name()).to.be.eq('VolatileV1 AMM - TK18/TK6');
+        expect(await pairVolatily.symbol()).to.be.eq('vAMM-TK18/TK6');
+      } else {
+        expect(await pairVolatily.name()).to.be.eq('VolatileV1 AMM - TK6/TK18');
+        expect(await pairVolatily.symbol()).to.be.eq('vAMM-TK6/TK18');
+      }
 
       expect(await pairStable.factory()).to.be.eq(pairFactory.target);
-      expect(await pairStable.name()).to.be.eq('StableV1 AMM - FNX/TK6');
-      expect(await pairStable.symbol()).to.be.eq('sAMM-FNX/TK6');
+
+      if (deployed.fenix.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()) {
+        expect(await pairStable.name()).to.be.eq('StableV1 AMM - FNX/TK6');
+        expect(await pairStable.symbol()).to.be.eq('sAMM-FNX/TK6');
+      } else {
+        expect(await pairStable.name()).to.be.eq('StableV1 AMM - TK6/FNX');
+        expect(await pairStable.symbol()).to.be.eq('sAMM-TK6/FNX');
+      }
     });
   });
   describe('swaps fees corect calculate and transfer to feesVault for volatility pairs', async () => {
@@ -173,7 +185,7 @@ describe('Pair Contract', function () {
 
         let calcFee = (ethers.parseEther('0.12') * BigInt(80)) / PRECISION;
 
-        let calcFeeToFees = (calcFee * BigInt(20000)) / PRECISION;
+        let calcFeeToFees = (calcFee * BigInt(2000)) / PRECISION;
 
         calcFee = calcFee - calcFeeToFees;
 
@@ -431,7 +443,7 @@ describe('Pair Contract', function () {
 
         let calcFee = (ethers.parseEther('0.12') * BigInt(80)) / PRECISION;
 
-        let calcFeeToFees = (calcFee * BigInt(20000)) / PRECISION;
+        let calcFeeToFees = (calcFee * BigInt(2000)) / PRECISION;
 
         calcFee = calcFee - calcFeeToFees;
 
