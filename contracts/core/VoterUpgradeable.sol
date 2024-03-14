@@ -346,18 +346,19 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         for (uint256 i = 0; i < _poolVoteCnt; i++) {
             address _pool = _poolVote[i];
             uint256 _votes = votes[_tokenId][_pool];
-
             if (_votes != 0) {
-                // if user last vote is < than epochTimestamp then votes are 0! IF not underflow occur
-                if (lastVoted[_tokenId] > _time) weightsPerEpoch[_time][_pool] -= _votes;
-
                 votes[_tokenId][_pool] -= _votes;
 
-                IBribe(internal_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
-                IBribe(external_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
+                // if user last vote is < than epochTimestamp then votes are 0! IF not underflow occur
+                if (lastVoted[_tokenId] > _time) {
+                    weightsPerEpoch[_time][_pool] -= _votes;
 
-                // if is alive remove _votes, else don't because we already done it in killGauge()
-                if (isAlive[gauges[_pool]]) _totalWeight += _votes;
+                    IBribe(internal_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
+                    IBribe(external_bribes[gauges[_pool]]).withdraw(uint256(_votes), _tokenId);
+
+                    // if is alive remove _votes, else don't because we already done it in killGauge()
+                    if (isAlive[gauges[_pool]]) _totalWeight += _votes;
+                }
 
                 emit Abstained(_tokenId, _votes);
             }
