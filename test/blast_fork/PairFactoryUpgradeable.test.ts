@@ -70,6 +70,16 @@ describe('PairFactoryUpgradeable Contract', function () {
     });
 
     describe('#createPair', async () => {
+      it('success create pair and set blast operator', async () => {
+        let points = await ethers.getContractAt('BlastPointsMock', '0x2fc95838c71e76ec69ff817983BFf17c710F34E0');
+
+        let pairAddr = await pairFactory.createPair.staticCall(WETH_PREDEPLOYED_ADDRESS, tokenTK6.target, false);
+
+        expect(await points.operatorMap(pairAddr)).to.be.eq(ZERO_ADDRESS);
+        await pairFactory.createPair(WETH_PREDEPLOYED_ADDRESS, tokenTK6.target, false);
+
+        expect(await points.operatorMap(pairAddr)).to.be.eq(signers.blastGovernor.address);
+      });
       it('success create pair and set default configuration mode for token0', async () => {
         await pairFactory.setConfigurationForRebaseToken(WETH_PREDEPLOYED_ADDRESS, true, 1);
         let weth = (await ethers.getContractAt('IERC20RebasingMock', WETH_PREDEPLOYED_ADDRESS)) as any as IERC20RebasingMock;

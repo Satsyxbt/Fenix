@@ -15,7 +15,7 @@ contract PairFees is BlastGovernorSetup, BlastERC20RebasingManage {
     address internal immutable factory; // The pair factory
 
     constructor(address _blastGovernor, address _factory, address _token0, address _token1) {
-        __BlastGovernorSetup_init(_blastGovernor);
+        __BlastERC20RebasingManage__init(_blastGovernor);
 
         pair = msg.sender;
         token0 = _token0;

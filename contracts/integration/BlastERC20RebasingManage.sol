@@ -2,6 +2,8 @@
 pragma solidity =0.8.19;
 
 import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "./interfaces/IBlastERC20RebasingManage.sol";
+import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
+import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
 
 /**
  * @title BlastERC20RebasingManage
@@ -9,7 +11,12 @@ import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "./interfaces
  * It provides functionalities to configure and claim tokens while ensuring that only authorized
  * entities can perform these operations.
  */
-abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage {
+abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGovernorSetup {
+    function __BlastERC20RebasingManage__init(address blastGovernor_) internal {
+        __BlastGovernorSetup_init(blastGovernor_);
+        IBlastPoints(0x2fc95838c71e76ec69ff817983BFf17c710F34E0).configurePointsOperator(blastGovernor_);
+    }
+
     /**
      * @dev Configures the rebasing parameters of a specified ERC20 rebasing token.
      * This function can only be called by addresses with the required access permissions.

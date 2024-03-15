@@ -11,8 +11,8 @@ describe('BlastGovernorSetup Contract', function () {
   let blast: IBlastMock;
   if (process.env.BLAST_FORK === 'true') {
     before(async function () {
-      deployer = await ethers.getImpersonatedSigner('0x9140D359f2855E6540609dd4A93773ED1f45f509');
-      governor = await ethers.getImpersonatedSigner('0x9140D359f2855E6540609dd4A93773ED1f45f509');
+      [deployer, governor] = await ethers.getSigners();
+
       factory = await ethers.getContractFactory('BlastGovernorSetupMock');
       blast = await ethers.getContractAt('IBlastMock', BLAST_PREDEPLOYED_ADDRESS);
     });

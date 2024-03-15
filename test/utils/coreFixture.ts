@@ -84,6 +84,8 @@ export type CoreFixtureDeployed = {
 
 export async function mockBlast() {
   await setCode('0x4300000000000000000000000000000000000002', BlastMock__factory.bytecode);
+  await setCode('0x2fc95838c71e76ec69ff817983BFf17c710F34E0', BlastMock__factory.bytecode);
+  await setCode('0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800', BlastMock__factory.bytecode);
 }
 export async function deployERC20MockToken(
   deployer: HardhatEthersSigner,
@@ -326,7 +328,7 @@ export async function deployAlgebraCore(): Promise<FactoryFixture> {
 
 export async function completeFixture(isFork: boolean = false): Promise<CoreFixtureDeployed> {
   if (!isFork) {
-    await setCode(BLAST_PREDEPLOYED_ADDRESS, BlastMock__factory.bytecode);
+    await mockBlast();
   }
 
   const signers = await getSigners();

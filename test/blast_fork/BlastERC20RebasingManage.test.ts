@@ -17,11 +17,15 @@ describe('BlastERC20RebasingManage Contract', function () {
     before(async function () {
       [deployer, other] = await ethers.getSigners();
       factory = await ethers.getContractFactory('BlastERC20RebasingManageMock');
-      rebasingManage = await factory.deploy();
+      rebasingManage = await factory.deploy(deployer.address);
       wethRebasing = await ethers.getContractAt('IERC20RebasingMock', WETH_PREDEPLOYED_ADDRESS);
       usdbRebasing = await ethers.getContractAt('IERC20RebasingMock', USDB_PREDEPLOYED_ADDRESS);
     });
     describe('Deployment', async () => {
+      it('Should corect setup blast points operator', async () => {
+        let points = await ethers.getContractAt('BlastPointsMock', '0x2fc95838c71e76ec69ff817983BFf17c710F34E0');
+        expect(await points.operatorMap(rebasingManage.target)).to.be.eq(deployer.address);
+      });
       it('Default Yield mode for USDB is Automatic', async () => {
         expect(await usdbRebasing.getConfiguration(rebasingManage.target)).to.be.eq(0);
       });

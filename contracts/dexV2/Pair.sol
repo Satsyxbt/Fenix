@@ -103,7 +103,7 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
         factory = msg.sender;
 
-        __BlastGovernorSetup_init(_blastGovernor);
+        __BlastERC20RebasingManage__init(_blastGovernor);
 
         (token0, token1, stable, communityVault) = (_token0, _token1, _stable, _communityVault);
 
