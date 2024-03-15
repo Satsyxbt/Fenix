@@ -1,0 +1,347 @@
+npx hardhat run .\scripts\1_deploy_implementations.ts --network blastSepolia
+1_deploy_implementations.ts -- started
+1_deploy_implementations.ts -- start deploy core part
+Start deploy MinterImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy MinterImplementation contract: 0x30448e49743c55af3C83d2A7011df36E0438F0Ae
+Wait before start veriy, for indexed from explorer
+The contract 0x30448e49743c55af3C83d2A7011df36E0438F0Ae has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x30448e49743c55af3C83d2A7011df36E0438F0Ae#code
+Start deploy VeArtProxyImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VeArtProxyImplementation contract: 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD
+Wait before start veriy, for indexed from explorer
+The contract 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD#code
+Start deploy VoterImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VoterImplementation contract: 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+Wait before start veriy, for indexed from explorer
+The contract 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7#code
+Start deploy VotingEscrowImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VotingEscrowImplementation contract: 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C
+Wait before start veriy, for indexed from explorer
+The contract 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C#code
+1_deploy_implementations.ts -- start deploy additional part
+Start deploy VeFnxDistributorImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VeFnxDistributorImplementation contract: 0x6CB746214D07a894Dfd4306FD509265B5b64baD7
+Wait before start veriy, for indexed from explorer
+The contract 0x6CB746214D07a894Dfd4306FD509265B5b64baD7 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x6CB746214D07a894Dfd4306FD509265B5b64baD7#code
+1_deploy_implementations.ts -- start deploy bribes part
+Start deploy BribeFactoryImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy BribeFactoryImplementation contract: 0xdb83A57274B4D839C363e1C8827518979F7C160e
+Wait before start veriy, for indexed from explorer
+The contract 0xdb83A57274B4D839C363e1C8827518979F7C160e has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xdb83A57274B4D839C363e1C8827518979F7C160e#code
+Start deploy BribeImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy BribeImplementation contract: 0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a
+Wait before start veriy, for indexed from explorer
+The contract 0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a#code
+1_deploy_implementations.ts -- start deploy gauge part
+Start deploy GaugeFactoryImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy GaugeFactoryImplementation contract: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+Wait before start veriy, for indexed from explorer
+The contract 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0#code
+Start deploy GaugeImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy GaugeImplementation contract: 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc
+Wait before start veriy, for indexed from explorer
+The contract 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc#code
+1_deploy_implementations.ts -- start deploy dexv2 part
+Start deploy PairFactoryImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PairFactoryImplementation contract: 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5
+Wait before start veriy, for indexed from explorer
+The contract 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5#code
+Start deploy PairImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PairImplementation contract: 0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://testnet.blastscan.io/address/0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b#code
+
+1_deploy_implementations.ts -- start deploy integral part
+Start deploy FeesVaultImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy FeesVaultImplementation contract: 0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1
+Wait before start veriy, for indexed from explorer
+The contract 0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1#code
+1_deploy_implementations -- success finished
+
+
+
+ npx hardhat run .\scripts\2_deploy_proxy_admin.ts --network blastSepolia    
+2_deploy_proxy_admin.ts -- started
+2_deploy_proxy_admin.ts -- start deploy
+Start deploy ProxyAdmin contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy ProxyAdmin contract: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Wait before start veriy, for indexed from explorer
+The contract 0x9502993595815b1Fa674C5133F42C3919a696bEc has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x9502993595815b1Fa674C5133F42C3919a696bEc#code
+2_deploy_proxy_admin -- success finished
+
+
+
+ npx hardhat run .\scripts\3_deploy_proxies.ts --network blastSepolia    
+3_deploy_proxies.ts -- started
+3_deploy_proxies.ts -- start deploy
+3_deploy_proxies.ts -- start deploy core part
+Start deploy proxy for Minter contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x30448e49743c55af3C83d2A7011df36E0438F0Ae
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy Minter contract: 0xDA283872Fc205f56cE5b0268D719373dc33e35dA
+Start deploy proxy for VeArtProxy contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy VeArtProxy contract: 0xF959E9af422217796CdF3BAc405e38AA1C922143
+Start deploy proxy for VotingEscrow contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy VotingEscrow contract: 0x4dD9e7dd344a309030B22d36A567f0d99C6a5403
+Start deploy proxy for Voter contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy Voter contract: 0x81a2d913B4eF510f241a3F0522B7727Cf3189135
+3_deploy_proxies.ts -- start deploy additional part
+Start deploy proxy for VeFnxDistributor contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x6CB746214D07a894Dfd4306FD509265B5b64baD7
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy VeFnxDistributor contract: 0x3B23472ad7134508cb24DAB353Cfb7097D33C706
+3_deploy_proxies.ts -- start deploy bribes part
+Start deploy proxy for BribeFactory contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xdb83A57274B4D839C363e1C8827518979F7C160e
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy BribeFactory contract: 0x4044d19418d30FFE4eE6900C2AD83F57225fE387
+3_deploy_proxies.ts -- start deploy gauge part
+Start deploy proxy for GaugeFactoryType contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType contract: 0x64569E85d807DC7Ce8D44d14A156976C72e7e145
+Start deploy proxy for GaugeFactoryType2 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType2 contract: 0x6CfEF9Fce688682f05D111b990a3EBC41DeC9f70
+Start deploy proxy for GaugeFactoryType3 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType3 contract: 0x0E284f3D945498F4C69ccb68e4529b9EED79d333
+3_deploy_proxies.ts -- start deploy dex V2 part
+Start deploy proxy for PairFactory contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy PairFactory contract: 0xe19D414E2A994D21d2b2c495812fBf4fdA38558f
+3_deploy_proxies.ts -- success finished
+
+
+npx hardhat run .\scripts\4_deploy_fenix.ts --network blastSepolia  
+4_deploy_fenix.ts -- started
+Start deploy Fenix contract...
+Successful deploy Fenix contract: 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6
+Wait before start veriy, for indexed from explorer
+The contract 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6#code
+3_deploy_proxies.ts -- success finished
+
+
+npx hardhat run .\scripts\5_deploy_fees_vault_factory.ts --network blastSepolia
+5_deploys_fees_vault_factory -- started
+Start deploy FeesVaultFactory contract...
+Successful deploy FeesVaultFactory contract: 0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E
+Successfully submitted source code for contract
+contracts/integration/FeesVaultFactory.sol:FeesVaultFactory at 0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactory on the block explorer.
+https://testnet.blastscan.io/address/0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E#code
+
+5_deploys_fees_vault_factory -- finished
+
+
+
+npx hardhat run .\scripts\7_deploy_merkl_gauge_middleman.ts --network blastSepolia
+Start deploy MerklGaugeMiddleman contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy MerklGaugeMiddleman contract: 0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85
+Successfully submitted source code for contract
+contracts/integration/MerklGaugeMiddleman.sol:MerklGaugeMiddleman at 0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MerklGaugeMiddleman on the block explorer.
+https://testnet.blastscan.io/address/0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85#code
+
+
+
+
+npx hardhat run .\scripts\6_initialize_contracts.ts --network blastSepolia        
+Start initialize contract...
+Try initialize BribeFactory
+Try initialize GaugeFactory
+Try initialize PairFactory
+Try initialize VotingEscrow
+Try initialize Minter
+Try initialize Voter
+
+
+
+npx hardhat run .\scripts\8_deploy_routerV2.ts --network blastSepolia     
+Start deploy RouterV2 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy RouterV2 contract: 0x58DA44Da9af06d43378440549cEd8712125D49B5
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0x58DA44Da9af06d43378440549cEd8712125D49B5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://testnet.blastscan.io/address/0x58DA44Da9af06d43378440549cEd8712125D49B5#code
+
+
+
+npx hardhat run .\scripts\9_configure_claimable_gas_fee_mode.ts --network blastSepolia
+Check setuped governor address for MinterImplementation - 0x30448e49743c55af3C83d2A7011df36E0438F0Ae
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VeArtProxyImplementation - 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VoterImplementation - 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VotingEscrowImplementation - 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VeFnxDistributorImplementation - 0x6CB746214D07a894Dfd4306FD509265B5b64baD7
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeFactoryImplementation - 0xdb83A57274B4D839C363e1C8827518979F7C160e
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeImplementation - 0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for GaugeFactoryImplementation - 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for GaugeImplementation - 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for PairFactoryImplementation - 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for PairImplementation - 0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for FeesVaultImplementation - 0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for ProxyAdmin - 0x9502993595815b1Fa674C5133F42C3919a696bEc
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for Minter - 0xDA283872Fc205f56cE5b0268D719373dc33e35dA
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for VeArtProxy - 0xF959E9af422217796CdF3BAc405e38AA1C922143
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VotingEscrow - 0x4dD9e7dd344a309030B22d36A567f0d99C6a5403
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for Voter - 0x81a2d913B4eF510f241a3F0522B7727Cf3189135
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for VeFnxDistributor - 0x3B23472ad7134508cb24DAB353Cfb7097D33C706
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeFactory - 0x4044d19418d30FFE4eE6900C2AD83F57225fE387
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType - 0x64569E85d807DC7Ce8D44d14A156976C72e7e145
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType2 - 0x6CfEF9Fce688682f05D111b990a3EBC41DeC9f70
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType3 - 0x0E284f3D945498F4C69ccb68e4529b9EED79d333
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for PairFactory - 0xe19D414E2A994D21d2b2c495812fBf4fdA38558f
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for Fenix - 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for FeesVaultFactory - 0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for MerklGaugeMiddleman - 0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for RouterV2 - 0x58DA44Da9af06d43378440549cEd8712125D49B5
+-- Governor - 0x9140D359f2855E6540609dd4A93773ED1f45f509
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+
+
+
+ npx hardhat run .\scripts\10_rest_setups.ts --network blastSepolia
+Try transferOwnership from Feniux to Minter
+Try initialize setWhitelistedCreatorStatus
+Set Voter
+setMinter
+setConfigurationForRebaseToken WETH
+setConfigurationForRebaseToken USDB
+GaugeFactoryType2.setMerklGaugeMiddleman
+GaugeFactoryType3.setMerklGaugeMiddleman
+  await deploysData.Voter.addFactory(V3PairFactory, deploysData.GaugeFactoryType2.target)
+  await deploysData.Voter.addFactory(V3PairFactory, deploysData.GaugeFactoryType3.target);
+    await deploysData.PairFactory.grantRole(0x4f895bdce78ed3edb90e9af75173c797e6234073a00b76fc9593b754504e7520, deployer.address);  

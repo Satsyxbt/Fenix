@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 import { getDeployedDataFromDeploys } from './utils';
 
-const V3PairFactory = '0xb912025101ff97fDf10B815C6367663E05423f0f';
+const V3PairFactory = '0xE3b3CcDaC95f83602FeE385Caf8C8cA037bBCA16';
 async function main() {
   const signers = await ethers.getSigners();
   const deployer = signers[0];

@@ -2,55 +2,41 @@
 
 ## Core
 
-| Contract Name         | Address                                  |
-|-----------------------|------------------------------------------|
-| Fenix                                   | `0x8f1d73816436558f45525F566e0e29139694a5a1` |
-| ProxyAdmin                              | `0x90763003cF635e88B80565aC40ca541c767e5593` |
-| BribeFactory                            | `0x92d28F95B41CD80952b826D93099B242abAC15a8` |
-| PairFactory                             | `0x29E7c8EF7bFA1FEbFeF805C6E2E9Cf6799602dc6` |
-| Voter                                   | `0x7fC24e341883f1b05172DB9A5eC2fc667Df13023` |
-| VotingEscrow                            | `0xBb6EE156327b60e207b40c5ED3519f4492e009d6` |
-| VeArtProxy                              | `0xec95ffe27c9eE6D9F8Df46e037175f703C99Cb26` |
-| Minter                                  | `0x43900639DA4ac1743df757AfF0883Adbf16E6ADE` |
-| FeesVaultFactory                        | `0x26D760D86bec3CeaC9636DcDE75E6cA6733Ae290` |
-| RouterV2                                | `0xe28Ae4857b664617afa028Aa93585c7fAeBdedbf` |
-| MerklGaugeMiddleman                     | `0x224829B9816Bf89a8764F221e609490DECF1A170` |
+| Contract Name                | Address                                  |
+|------------------------------|------------------------------------------|
+| Fenix                        | `0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6` |
+| ProxyAdmin                   | `0x9502993595815b1Fa674C5133F42C3919a696bEc` |
+| BribeFactory                 | `0x4044d19418d30FFE4eE6900C2AD83F57225fE387` |
+| PairFactory                  | `0xe19D414E2A994D21d2b2c495812fBf4fdA38558f` |
+| Voter                        | `0x81a2d913B4eF510f241a3F0522B7727Cf3189135` |
+| VotingEscrow                 | `0x4dD9e7dd344a309030B22d36A567f0d99C6a5403` |
+| VeArtProxy                   | `0xF959E9af422217796CdF3BAc405e38AA1C922143` |
+| Minter                       | `0xDA283872Fc205f56cE5b0268D719373dc33e35dA` |
+| FeesVaultFactory             | `0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E` |
+| RouterV2                     | `0x58DA44Da9af06d43378440549cEd8712125D49B5` |
+| MerklGaugeMiddleman          | `0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85` |
 
 ## Gauge Factory Types
 
-| Type                                    | Address                                  |
-|-----------------------------------------|------------------------------------------|
-| GaugeFactoryType                        | `0xAbbb4531DDD8D37bF3696aaaeecaCf83992efA7b` |
-| GaugeFactoryType2                       | `0xc5B8fe4feF8203a3c1beC1C0d35C3AF66d399f89` |
-| GaugeFactoryType3                       | `0x8Ec7213Fe95baE6eED8BDa02fAAca2Df247C45bE` |
+| Type                         | Address                                  |
+|------------------------------|------------------------------------------|
+| GaugeFactoryType             | `0x64569E85d807DC7Ce8D44d14A156976C72e7e145` |
+| GaugeFactoryType2            | `0x6CfEF9Fce688682f05D111b990a3EBC41DeC9f70` |
+| GaugeFactoryType3            | `0x0E284f3D945498F4C69ccb68e4529b9EED79d333` |
 
 ## Implementations for Proxy
 
-| Contract Name                           | Address                                  |
-|-----------------------------------------|------------------------------------------|
-| MinterImplementation                    | `0x37b82F53B69Ca18B3489e7e577f806f24E0FA3c7` |
-| VeArtProxyImplementation                | `0x0ca0eB95A23300d194D3012325B07884136b0165` |
-| VoterImplementation                     | `0x5b11eB91c94ea4bbF51E2497eAFA3B29a74C7F4E` |
-| VotingEscrowImplementation              | `0xf1427b7302851CDa69Dcd16FE93AEfb70f870F17` |
-| VeBoostImplementation                   | `0xB34D753a9D22B7929791f1670355127b4bBF489D` |
-| VeFnxDistributorImplementation          | `0x73338797FA11e1DE1ba1dc740982dE90fb53eE1C` |
-| BribeFactoryImplementation              | `0xF7325cA0ab60bD4046525408Fe861D02E521A198` |
-| BribeImplementation                     | `0xD829b4cF075D3fd76D16e76e9F0C86C170a6cA9C` |
-| GaugeFactoryImplementation              | `0xCBbdf726a63cd995856215Af1bD66160670299f7` |
-| GaugeImplementation                     | `0xE3DEB842281E37354670d372F65d4C9e9136f6bc` |
-| PairFactoryImplementation               | `0x681A2D60C7D4396fAbBab3507D2774FBB79c680a` |
-| PairImplementation                      | `0x8a2A34ac66daC1B36cA17E0c2f2E55137711476e` |
-| AlgebraFNXPriceProviderImplementation   | `0x13Bc13eD7d7CE2Ee4cd0069a76C8C7EcDfC4e652` |
-| FeesVaultImplementation                 | `0xDeb6d7aAAe38a9A677bD2cd38f310c252717E734` |
-
-## Additional Contracts
-- **AlgebraFNXPriceProvider:** `0xBD11cDe70daaDDAa5A4535eA16C815E3DfA5c17d`
-- **FeesVaultFactory:** `0x26D760D86bec3CeaC9636DcDE75E6cA6733Ae290`
-
-
-
-## Tests tokens
-| Contract Name | Address |
-|---------------|---------|
-| fnUSDT ERC20 | `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` |
-| fnTOK ERC20 | `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` |
+| Contract Name                | Address                                  |
+|------------------------------|------------------------------------------|
+| MinterImplementation         | `0x30448e49743c55af3C83d2A7011df36E0438F0Ae` |
+| VeArtProxyImplementation     | `0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD` |
+| VoterImplementation          | `0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7` |
+| VotingEscrowImplementation   | `0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C` |
+| VeFnxDistributorImplementation | `0x6CB746214D07a894Dfd4306FD509265B5b64baD7` |
+| BribeFactoryImplementation   | `0xdb83A57274B4D839C363e1C8827518979F7C160e` |
+| BribeImplementation          | `0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a` |
+| GaugeFactoryImplementation   | `0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0` |
+| GaugeImplementation          | `0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc` |
+| PairFactoryImplementation    | `0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5` |
+| PairImplementation           | `0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b` |
+| FeesVaultImplementation      | `0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1` |
