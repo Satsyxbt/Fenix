@@ -14,7 +14,7 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
 abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGovernorSetup {
     function __BlastERC20RebasingManage__init(address blastGovernor_) internal {
         __BlastGovernorSetup_init(blastGovernor_);
-        IBlastPoints(0x2fc95838c71e76ec69ff817983BFf17c710F34E0).configurePointsOperator(blastGovernor_);
+        IBlastPoints(0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800).configurePointsOperator(blastGovernor_);
     }
 
     /**

@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 import { getDeployedDataFromDeploys } from './utils';
 
-const V3PairFactory = '0xE3b3CcDaC95f83602FeE385Caf8C8cA037bBCA16';
+const V3PairFactory = '0x77f6637d2279b1c122d13DC92aAcb7fF168ff959';
 async function main() {
   const signers = await ethers.getSigners();
   const deployer = signers[0];
@@ -19,13 +19,15 @@ async function main() {
   console.log('setMinter');
 
   await deploysData.Voter.setMinter(deploysData.Minter.target);
-  console.log('setConfigurationForRebaseToken WETH');
+  console.log('await deploysData.PairFactory.grantRole');
 
   await deploysData.PairFactory.grantRole(await deploysData.PairFactory.PAIRS_ADMINISTRATOR_ROLE(), deployer.address);
-  await deploysData.PairFactory.setConfigurationForRebaseToken('0x4200000000000000000000000000000000000023', true, 2);
+  console.log('setConfigurationForRebaseToken WETH');
+
+  await deploysData.PairFactory.setConfigurationForRebaseToken('0x4300000000000000000000000000000000000004', true, 2);
   console.log('setConfigurationForRebaseToken USDB');
 
-  await deploysData.PairFactory.setConfigurationForRebaseToken('0x4200000000000000000000000000000000000022', true, 2);
+  await deploysData.PairFactory.setConfigurationForRebaseToken('0x4300000000000000000000000000000000000003', true, 2);
 
   console.log('GaugeFactoryType2.setMerklGaugeMiddleman');
 

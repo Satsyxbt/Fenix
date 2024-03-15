@@ -3,7 +3,7 @@ import hre from 'hardhat';
 
 import { getDeploysData, saveDeploysData } from './utils';
 
-const WETH = '0x4200000000000000000000000000000000000023';
+const WETH = '0x4300000000000000000000000000000000000004';
 const NAME = 'RouterV2';
 async function main() {
   console.log(`Start deploy ${NAME} contract...`);

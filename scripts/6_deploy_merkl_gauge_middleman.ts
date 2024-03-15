@@ -3,7 +3,7 @@ import hre from 'hardhat';
 
 import { getDeploysData, saveDeploysData } from './utils';
 
-const MERKLE_DISTRIBUTOR_CREATOR = '0xF42A6bbDacB2E83B84060e2489a0eE85cf0F02c3';
+const MERKLE_DISTRIBUTOR_CREATOR = '0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd';
 const NAME = 'MerklGaugeMiddleman';
 async function main() {
   console.log(`Start deploy ${NAME} contract...`);

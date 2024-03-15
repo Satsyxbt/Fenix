@@ -1,0 +1,423 @@
+npx hardhat run .\scripts\1_deploy_implementations.ts --network blastMainnet
+1_deploy_implementations.ts -- started
+1_deploy_implementations.ts -- start deploy core part
+Start deploy MinterImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy MinterImplementation contract: 0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3#code
+
+Start deploy VeArtProxyImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy VeArtProxyImplementation contract: 0x3eD36254b340B39c5150fBc97e1d96593Aa38770
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VeArtProxyUpgradeable.sol:VeArtProxyUpgradeable at 0x3eD36254b340B39c5150fBc97e1d96593Aa38770
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeArtProxyUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x3eD36254b340B39c5150fBc97e1d96593Aa38770#code
+
+Start deploy VoterImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy VoterImplementation contract: 0x015FD12D47241DC6766315fB033b8DE7D043e705
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeable.sol:VoterUpgradeable at 0x015FD12D47241DC6766315fB033b8DE7D043e705
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x015FD12D47241DC6766315fB033b8DE7D043e705#code
+
+Start deploy VotingEscrowImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy VotingEscrowImplementation contract: 0x77B485433DB4cf314929A36DC3c3601c579091B6
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeable.sol:VotingEscrowUpgradeable at 0x77B485433DB4cf314929A36DC3c3601c579091B6
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x77B485433DB4cf314929A36DC3c3601c579091B6#code
+
+1_deploy_implementations.ts -- start deploy additional part
+Start deploy VeFnxDistributorImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy VeFnxDistributorImplementation contract: 0x3c772ee7Ab45BD106f6af53DE20548df58C3829d
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x3c772ee7Ab45BD106f6af53DE20548df58C3829d
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxDistributorUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x3c772ee7Ab45BD106f6af53DE20548df58C3829d#code
+
+1_deploy_implementations.ts -- start deploy bribes part
+Start deploy BribeFactoryImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy BribeFactoryImplementation contract: 0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/bribes/BribeFactoryUpgradeable.sol:BribeFactoryUpgradeable at 0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeFactoryUpgradeable on the block explorer.
+https://blastexplorer.io/address/0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3#code
+
+Start deploy BribeImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy BribeImplementation contract: 0xBB3A43D792cDCB3d810c0e500c21bD958686B90b
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0xBB3A43D792cDCB3d810c0e500c21bD958686B90b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://blastexplorer.io/address/0xBB3A43D792cDCB3d810c0e500c21bD958686B90b#code
+
+1_deploy_implementations.ts -- start deploy gauge part
+Start deploy GaugeFactoryImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy GaugeFactoryImplementation contract: 0xAfBA5614db7d3708c61a63B23E53c37217e52f82
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/gauges/GaugeFactoryUpgradeable.sol:GaugeFactoryUpgradeable at 0xAfBA5614db7d3708c61a63B23E53c37217e52f82
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeFactoryUpgradeable on the block explorer.
+https://blastexplorer.io/address/0xAfBA5614db7d3708c61a63B23E53c37217e52f82#code
+
+Start deploy GaugeImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy GaugeImplementation contract: 0x5f95aF3EE7cA36Eea7D34dEe30F3CaCbBCe7D657
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x5f95aF3EE7cA36Eea7D34dEe30F3CaCbBCe7D657
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x5f95aF3EE7cA36Eea7D34dEe30F3CaCbBCe7D657#code
+
+1_deploy_implementations.ts -- start deploy dexv2 part
+Start deploy PairFactoryImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy PairFactoryImplementation contract: 0x6349fAb8624a0fF654a91C7B0bd4A55A1E1Dc957
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/dexV2/PairFactoryUpgradeable.sol:PairFactoryUpgradeable at 0x6349fAb8624a0fF654a91C7B0bd4A55A1E1Dc957
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairFactoryUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x6349fAb8624a0fF654a91C7B0bd4A55A1E1Dc957#code
+
+Start deploy PairImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy PairImplementation contract: 0xDa902D5763BcF82218FDeB7DF32Ec91ab989A7eE
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0xDa902D5763BcF82218FDeB7DF32Ec91ab989A7eE
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://blastexplorer.io/address/0xDa902D5763BcF82218FDeB7DF32Ec91ab989A7eE#code
+
+1_deploy_implementations.ts -- start deploy integral part
+Start deploy FeesVaultImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy FeesVaultImplementation contract: 0x5CAD868fb930d733B407211a1F15D65635964A19
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/integration/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0x5CAD868fb930d733B407211a1F15D65635964A19
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x5CAD868fb930d733B407211a1F15D65635964A19#code
+
+1_deploy_implementations -- success finished
+
+npx hardhat run .\scripts\2_deploy_proxy_admin.ts --network blastMainnet    
+2_deploy_proxy_admin.ts -- started
+2_deploy_proxy_admin.ts -- start deploy
+Start deploy ProxyAdmin contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy ProxyAdmin contract: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol:ProxyAdmin at 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ProxyAdmin on the block explorer.
+https://blastexplorer.io/address/0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5#code
+
+2_deploy_proxy_admin -- success finished
+
+npx hardhat run .\scripts\3_deploy_proxies.ts --network blastMainnet
+3_deploy_proxies.ts -- started
+3_deploy_proxies.ts -- start deploy
+3_deploy_proxies.ts -- start deploy core part
+Start deploy proxy for Minter contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy Minter contract: 0xa4FF6fe53212e8da028e0a34819006A26615D9f8
+Start deploy proxy for VeArtProxy contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x3eD36254b340B39c5150fBc97e1d96593Aa38770      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy VeArtProxy contract: 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8
+Start deploy proxy for VotingEscrow contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x77B485433DB4cf314929A36DC3c3601c579091B6      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy VotingEscrow contract: 0x99988De25e33A2CAF1B8d0A13fa67558059dd937
+Start deploy proxy for Voter contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x015FD12D47241DC6766315fB033b8DE7D043e705      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy Voter contract: 0xf35065A60fA9C1faf6fCCa28522c932cB9468D80
+3_deploy_proxies.ts -- start deploy additional part
+Start deploy proxy for VeFnxDistributor contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x3c772ee7Ab45BD106f6af53DE20548df58C3829d      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy VeFnxDistributor contract: 0x4F5BdBc19025bBa0244C764F52CC064AbC76eC96
+3_deploy_proxies.ts -- start deploy bribes part
+Start deploy proxy for BribeFactory contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy BribeFactory contract: 0x0136d0b6E3a3fA7fabCb809fc1697a89D451f97f
+3_deploy_proxies.ts -- start deploy gauge part
+Start deploy proxy for GaugeFactoryType contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0xAfBA5614db7d3708c61a63B23E53c37217e52f82      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy GaugeFactoryType contract: 0xbe30369717700A2C5Ab87B79C696476F0e8C68a5
+Start deploy proxy for GaugeFactoryType2 contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0xAfBA5614db7d3708c61a63B23E53c37217e52f82      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy GaugeFactoryType2 contract: 0xDa8eBD4f13bBD89EFA70Fa522612f3A1ba6b2756
+Start deploy proxy for GaugeFactoryType3 contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0xAfBA5614db7d3708c61a63B23E53c37217e52f82      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy GaugeFactoryType3 contract: 0xd6e1a5154D0d4B26e7F8d14dcFd715287aEeDAf5
+3_deploy_proxies.ts -- start deploy dex V2 part
+Start deploy proxy for PairFactory contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+implementation: 0x6349fAb8624a0fF654a91C7B0bd4A55A1E1Dc957      
+proxyAdmin: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+Successful deploy PairFactory contract: 0x6E5A858a65AF18BC85935944E6BaE9A97ee2f59c
+3_deploy_proxies.ts -- success finished
+
+
+npx hardhat run .\scripts\4_deploy_fenix.ts --network blastMainnet  
+4_deploy_fenix.ts -- started
+Start deploy Fenix contract...
+Successful deploy Fenix contract: 0x52f847356b38720B55ee18Cb3e094ca11C85A192
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/Fenix.sol:Fenix at 0x52f847356b38720B55ee18Cb3e094ca11C85A192
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Fenix on the block explorer.
+https://blastexplorer.io/address/0x52f847356b38720B55ee18Cb3e094ca11C85A192#code
+
+
+
+
+
+ npx hardhat run .\scripts\6_deploy_merkl_gauge_middleman.ts --network blastMainnet
+Start deploy MerklGaugeMiddleman contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy MerklGaugeMiddleman contract: 0x0145C48FC4c0BB3034f332B3171124d607D6Bd2C
+Successfully submitted source code for contract
+contracts/integration/MerklGaugeMiddleman.sol:MerklGaugeMiddleman at 0x0145C48FC4c0BB3034f332B3171124d607D6Bd2C
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MerklGaugeMiddleman on the block explorer.
+https://blastexplorer.io/address/0x0145C48FC4c0BB3034f332B3171124d607D6Bd2C#code
+
+
+npx hardhat run .\scripts\7_initialize_contracts.ts --network blastMainnet        
+Start initialize contract...
+Try initialize BribeFactory
+Try initialize GaugeFactory
+Try initialize PairFactory
+Try initialize VotingEscrow
+Try initialize Minter
+Try initialize Voter
+
+
+npx hardhat run .\scripts\8_deploy_routerV2.ts --network blastMainnet     
+Start deploy RouterV2 contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+ProviderError: insufficient funds for gas * price + value: balance 4027617971522487, tx cost 7030092145038397, overshot 3002474173515910
+    at HttpProvider.request (E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88:21)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatEthersSigner.sendTransaction (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:125:18)   
+    at async ContractFactory.deploy (E:\aegas\fenix-2-clear\node_modules\ethers\src.ts\contract\factory.ts:111:24)
+    at async main (E:\aegas\fenix-2-clear\scripts\8_deploy_routerV2.ts:21:20)
+PS E:\aegas\fenix-2-clear> npx hardhat run .\scripts\8_deploy_routerV2.ts --network blastMainnet
+Start deploy RouterV2 contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+ProviderError: we can't execute this request
+    at HttpProvider.request (E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88:21)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatEthersProvider.estimateGas (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\internal\hardhat-ethers-provider.ts:237:27)
+    at async E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:235:35
+    at async Promise.all (index 0)
+    at async HardhatEthersSigner._sendUncheckedTransaction (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:256:7)
+    at async HardhatEthersSigner.sendTransaction (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:125:18)   
+    at async ContractFactory.deploy (E:\aegas\fenix-2-clear\node_modules\ethers\src.ts\contract\factory.ts:111:24)
+    at async main (E:\aegas\fenix-2-clear\scripts\8_deploy_routerV2.ts:21:20)
+PS E:\aegas\fenix-2-clear> npx hardhat run .\scripts\8_deploy_routerV2.ts --network blastMainnet
+Start deploy RouterV2 contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy RouterV2 contract: 0xc1792D8C5ec987f2E801A8B39D87DF569118F605
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0xc1792D8C5ec987f2E801A8B39D87DF569118F605
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess
+PS E:\aegas\fenix-2-clear> npx hardhat verify 0xc1792D8C5ec987f2E801A8B39D87DF569118F605 --network blastMainnet 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30 0x6E5A858a65AF18BC85935944E6BaE9A97ee2f59c 0x4300000000000000000000000000000000000004
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0xc1792D8C5ec987f2E801A8B39D87DF569118F605
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://blastexplorer.io/address/0xc1792D8C5ec987f2E801A8B39D87DF569118F605#code
+
+
+
+
+ npx hardhat run .\scripts\9_configure_claimable_gas_fee_mode.ts --network blastMainnet                              
+Check setuped governor address for MinterImplementation - 0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VeArtProxyImplementation - 0x3eD36254b340B39c5150fBc97e1d96593Aa38770
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VoterImplementation - 0x015FD12D47241DC6766315fB033b8DE7D043e705
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VotingEscrowImplementation - 0x77B485433DB4cf314929A36DC3c3601c579091B6
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VeFnxDistributorImplementation - 0x3c772ee7Ab45BD106f6af53DE20548df58C3829d
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeFactoryImplementation - 0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeImplementation - 0xBB3A43D792cDCB3d810c0e500c21bD958686B90b
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for GaugeFactoryImplementation - 0xAfBA5614db7d3708c61a63B23E53c37217e52f82
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for GaugeImplementation - 0x5f95aF3EE7cA36Eea7D34dEe30F3CaCbBCe7D657
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for PairFactoryImplementation - 0x6349fAb8624a0fF654a91C7B0bd4A55A1E1Dc957
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for PairImplementation - 0xDa902D5763BcF82218FDeB7DF32Ec91ab989A7eE
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for FeesVaultImplementation - 0x5CAD868fb930d733B407211a1F15D65635964A19
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for ProxyAdmin - 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for Minter - 0xa4FF6fe53212e8da028e0a34819006A26615D9f8
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for VeArtProxy - 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for VotingEscrow - 0x99988De25e33A2CAF1B8d0A13fa67558059dd937
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for Voter - 0xf35065A60fA9C1faf6fCCa28522c932cB9468D80
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for VeFnxDistributor - 0x4F5BdBc19025bBa0244C764F52CC064AbC76eC96
+-- Governor - 0x0000000000000000000000000000000000000000
+-- Another Governor - SKIP
+Check setuped governor address for BribeFactory - 0x0136d0b6E3a3fA7fabCb809fc1697a89D451f97f
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType - 0xbe30369717700A2C5Ab87B79C696476F0e8C68a5
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType2 - 0xDa8eBD4f13bBD89EFA70Fa522612f3A1ba6b2756
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for GaugeFactoryType3 - 0xd6e1a5154D0d4B26e7F8d14dcFd715287aEeDAf5
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for PairFactory - 0x6E5A858a65AF18BC85935944E6BaE9A97ee2f59c
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for Fenix - 0x52f847356b38720B55ee18Cb3e094ca11C85A192
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for FeesVaultFactory - 0xC202E30A55a85FdD00270D033AaE8CF9D44612C2
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for MerklGaugeMiddleman - 0x0145C48FC4c0BB3034f332B3171124d607D6Bd2C
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+Check setuped governor address for RouterV2 - 0xc1792D8C5ec987f2E801A8B39D87DF569118F605
+-- Governor - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+---- Deployer is Governor
+---- Set Gas Claimable mode
+---- Success
+
+
+
+
+
+ npx hardhat run .\scripts\10_rest_setups.ts --network blastMainnet                    
+Try transferOwnership from Feniux to Minter
+Try initialize setWhitelistedCreatorStatus
+Set Voter
+setMinter
+await deploysData.PairFactory.grantRole
+setConfigurationForRebaseToken WETH
+setConfigurationForRebaseToken USDB
+GaugeFactoryType2.setMerklGaugeMiddleman
+GaugeFactoryType3.setMerklGaugeMiddleman
+  await deploysData.Voter.addFactory(V3PairFactory, deploysData.GaugeFactoryType2.target)
+  await deploysData.Voter.addFactory(V3PairFactory, deploysData.GaugeFactoryType3.target);
+    await deploysData.PairFactory.grantRole(0x4f895bdce78ed3edb90e9af75173c797e6234073a00b76fc9593b754504e7520, deployer.address);  
