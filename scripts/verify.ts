@@ -1,9 +1,11 @@
-import { getDeployedDataFromDeploys } from './utils';
+import { getDeployedDataFromDeploys, getDeploysData } from './utils';
 import hre from 'hardhat';
 import { ethers } from 'hardhat';
 
 async function main() {
   let deployed = await getDeployedDataFromDeploys();
+  let data = await getDeploysData();
+
   const signers = await ethers.getSigners();
   const deployer = signers[0];
 
@@ -72,8 +74,18 @@ async function main() {
   });
 
   await hre.run('verify:verify', {
-    address: '0x58DA44Da9af06d43378440549cEd8712125D49B5',
+    address: data['RouterV2'],
     constructorArguments: [deployer.address, deployed.PairFactory.target, '0x4200000000000000000000000000000000000023'],
+  });
+
+  await hre.run('verify:verify', {
+    address: data['AlgebraFNXPriceProviderImplementation'],
+    constructorArguments: [],
+  });
+
+  await hre.run('verify:verify', {
+    address: data['VeBoostImplementation'],
+    constructorArguments: [],
   });
 }
 

@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { deployProxy, getDeployedDataFromDeploys, getDeploysData } from './utils';
 import { deployBase } from './utils';
 
-const FNX_fnUSDB_V3_PAIR = '0x3F54816A4A42f69C67778E74aA5cD5e66f5A2AD1';
+const FNX_fnUSDB_V3_PAIR = '0x3D4074Eb14bD269C82df3de111552A48b6b41018';
 const fnUSD = '0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a';
 async function main() {
   const signers = await ethers.getSigners();
@@ -14,6 +14,8 @@ async function main() {
 
   await deployBase('VeBoostUpgradeable', 'VeBoostImplementation');
   await deployBase('AlgebraFNXPriceProviderUpgradeable', 'AlgebraFNXPriceProviderImplementation');
+
+  data = getDeploysData();
 
   await deployProxy(ProxyAdmin, data['VeBoostImplementation'], 'VeBoost');
   await deployProxy(ProxyAdmin, data['AlgebraFNXPriceProviderImplementation'], 'AlgebraFNXPriceProvider');

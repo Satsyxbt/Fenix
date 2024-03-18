@@ -1,5 +1,6 @@
-import { getDeployedDataFromDeploys } from './utils';
+import { getDeployedDataFromDeploys, getDeploysData } from './utils';
 import {
+  AlgebraFNXPriceProviderUpgradeable,
   BribeFactoryUpgradeable,
   BribeUpgradeable,
   FeesVaultFactory,
@@ -12,10 +13,13 @@ import {
   Pair,
   PairFactoryUpgradeable,
   VeArtProxyUpgradeable,
+  VeBoostUpgradeable,
   VeFnxDistributorUpgradeable,
   VoterUpgradeable,
   VotingEscrowUpgradeable,
 } from '../typechain-types';
+import { eToString } from '../test/core/veBoostCases';
+import { ethers } from 'hardhat';
 
 async function logFenix(fenix: Fenix) {
   console.log(`Fenix token ERC20 (${fenix.target}):
@@ -124,6 +128,7 @@ async function logMerklGaugeMiddleman(merklGaugeMiddleman: MerklGaugeMiddleman) 
   console.log(`MerklGaugeMiddleman (${merklGaugeMiddleman.target}):
     \ttoken:\t${await merklGaugeMiddleman.token()}
     \tmerklDistributionCreator:\t${await merklGaugeMiddleman.merklDistributionCreator()}
+    \towner:\t${await merklGaugeMiddleman.owner()}
   `);
 }
 
@@ -132,11 +137,49 @@ async function logFeesVaultFactory(feesVaultFactory: FeesVaultFactory) {
     \tvoter:\t${await feesVaultFactory.voter()}
     \tdefaultBlastGovernor:\t${await feesVaultFactory.defaultBlastGovernor()}
     \timplementation:\t${await feesVaultFactory.implementation()}
+    \towner:\t${await feesVaultFactory.owner()}
+  `);
+}
+async function logAlgebraFNXPriceProviderUpgradeable(algebraFNXPriceProvider: AlgebraFNXPriceProviderUpgradeable) {
+  console.log(`AlgebraFNXPriceProviderUpgradeable (${algebraFNXPriceProvider.target}):
+    \tONE_USD:\t${await algebraFNXPriceProvider.ONE_USD()}
+    \tFNX:\t${await algebraFNXPriceProvider.FNX()}
+    \tUSD:\t${await algebraFNXPriceProvider.USD()}
+    \tpool:\t${await algebraFNXPriceProvider.pool()}
+    -- Functions
+    \tcurrentTick:\t${await algebraFNXPriceProvider.currentTick()}
+    \tgetUsdToFNXPrice:\t${await algebraFNXPriceProvider.getUsdToFNXPrice()}
+  `);
+}
+async function logVeBoostUpgradeable(veBoost: VeBoostUpgradeable) {
+  console.log(`VeBoostUpgradeable (${veBoost.target}):
+      \tfenix:\t${await veBoost.fenix()}
+      \tvotingEscrow:\t${await veBoost.votingEscrow()}
+      \tpriceProvider:\t${await veBoost.priceProvider()}
+      \tminUSDAmount:\t${await veBoost.minUSDAmount()}
+      \tminLockedTime:\t${await veBoost.getMinLockedTimeForBoost()}
+      \tboostFNXPercentage:\t${await veBoost.getBoostFNXPercentage()}
+      \towner:\t${await veBoost.owner()}
+      -- Calculations
+      \tminFNXAmountForBoost:\t${await veBoost.getMinFNXAmountForBoost()}
+      \tavailableBoostFNXAmount:\t${await veBoost.getAvailableBoostFNXAmount()}
+      -- Reward Tokens
+      \trewardTokens:\t${await veBoost.rewardTokens()},
+      
+  `);
+}
+
+async function logVeFnxDistributorUpgradeable(veFnxDistributor: VeFnxDistributorUpgradeable) {
+  console.log(`VeFnxDistributorUpgradeable (${veFnxDistributor.target}):
+    \tfenix:\t${await veFnxDistributor.fenix()}
+    \tvotingEscrow:\t${await veFnxDistributor.votingEscrow()}
+    \towner:\t${await veFnxDistributor.owner()}
   `);
 }
 
 async function main() {
   let deploysData = await getDeployedDataFromDeploys();
+  let data = await getDeploysData();
 
   await logFenix(deploysData.Fenix);
 
@@ -153,6 +196,14 @@ async function main() {
   await logMerklGaugeMiddleman(deploysData.MerklGaugeMiddleman);
 
   await logFeesVaultFactory(deploysData.FeesVaultFactory);
+
+  await logVeBoostUpgradeable(await ethers.getContractAt('VeBoostUpgradeable', data['VeBoost']));
+
+  await logAlgebraFNXPriceProviderUpgradeable(
+    await ethers.getContractAt('AlgebraFNXPriceProviderUpgradeable', data['AlgebraFNXPriceProvider']),
+  );
+
+  await logVeFnxDistributorUpgradeable(deploysData.VeFnxDistributor);
 }
 
 main()

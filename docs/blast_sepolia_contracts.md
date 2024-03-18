@@ -31,8 +31,9 @@ External:
 | GaugeFactoryType             | `0x64569E85d807DC7Ce8D44d14A156976C72e7e145` | Gauge Factory for Gauges Type 1 (v2) | Upgradeable |
 | GaugeFactoryType2            | `0x6CfEF9Fce688682f05D111b990a3EBC41DeC9f70` | Gauge Factory for Gauges Type 2 (ICHI) | Upgradeable |
 | GaugeFactoryType3            | `0x0E284f3D945498F4C69ccb68e4529b9EED79d333` | Gauge Factory for Gauges Type 3 (v3) | Upgradeable |
-
-
+| VeBoost                      | `0x23b400098864300B3c2EB40255559c750109f24c` | VeBoost                              | Upgradeable |
+| AlgebraFNXPriceProvider      | `0xb36b3777AC4f8f6f911F8DA725Ab71e54B10C200` | AlgebraFNXPriceProvider              | Upgradeable |
+| VeFnxDistributor | `0x3B23472ad7134508cb24DAB353Cfb7097D33C706` |   FNX Distributor in veFNX NFT | Upgradeable|
 
 
 ## Implementations for Proxy
@@ -51,6 +52,8 @@ External:
 | PairFactoryImplementation    | `0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5` |
 | PairImplementation           | `0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b` |
 | FeesVaultImplementation      | `0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1` |
+| VeBoostImplementation        | `0x1EdaC08F0B5a60110Bebab6977afB9ACBe65C0C9` |
+| AlgebraFNXPriceProviderImplementation  | `0x1AE69A793A4e20997dd76a51D909859ca869482C` |
 
 ## Settings
 ### Ownership
@@ -68,6 +71,8 @@ External:
 | GaugeFactoryType        | Ownable       | Deployer                                            |
 | GaugeFactoryType2       | Ownable       | Deployer                                            |
 | GaugeFactoryType3       | Ownable       | Deployer                                            | 
+| VeFnxDistributor       | Ownable       | Deployer                                            | 
+| VeBoost       | Ownable       | Deployer                                            | 
 
 ### Blast governor
 
@@ -121,9 +126,13 @@ External:
   - `gaugeFactory` - `0x0E284f3D945498F4C69ccb68e4529b9EED79d333` - GaugeFactory Type 3
   - `distribute by merkl` - `true`
   
-
+#### VeBoost
+- `Pool price provder` - `0x3D4074Eb14bD269C82df3de111552A48b6b41018`
+- `Min USD for boost` - 10$
+- `Boost percentage` - 10%
+- `FNX boost supply` - 100_000 FNX for boosting
+  
 ## Test & Mocks
-
 ### Tokens
 - `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` - fnUSDT
 - `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` - fnTOK
