@@ -1,148 +1,123 @@
-Описанний порядок дій з розгортання контрактів протоколу:
-## Визначення ціни газу
+# Protocol Contract Deployment Procedure
 
-Ціна газу береться з актуальний значень target мережі і передбачає завищення для норального деплою на 10-20% шляхом хардоку газ прайсу або внесення специфічної конфігурації в hardhatconfig
+## Gas Price Determination
 
+The gas price is taken from the network's current `target` values and assumes a 10-20% overestimation for normal deployment. This is achieved by hardcoding the gas price or entering specific configurations in `hardhat.config`.
 
-## Очищення минулих залишків розгортання
-Файл 'scripts/deploys.json' має бути очищенний, перед початком деплою чистого протоколу, у випадку наявності записів в ньому ці записи будуть використовуватись в подальшому деплої
+## Clearing Previous Deployment Residues
 
-## Деплой реалізацій до існуючих контрактів які будуть проксі/upgradeable
+The `scripts/deploys.json` file must be cleared before starting a fresh protocol deployment. If there are existing entries, they will be used in the subsequent deployment.
 
-Це включає в себе наступний список:
+## Deployment of Implementations to Existing Contracts for Proxy/Upgradeable
 
-1. Core:
-   1. `MinterUpgradeable`
-   2. `VeArtProxyUpgradeable`
-   3. `VoterUpgradeable`
-   4. `VotingEscrowUpgradeable`
-2. Additional:
-   1. `VeBoostUpgradeable`
-   2. `VeFnxDistributorUpgradeable`
-3. Bribes:
-   1. `BribeFactoryUpgradeable`
-   2. `BribeUpgradeable`
-4. Gauges:
-   1.  `GaugeFactoryUpgradeable`
-   2.  `GaugeUpgradeable`
-5. DexV2:
-   1.  `PairFactoryUpgradeable`
-   2.  `Pair`
-6. Integration:
-   1. `AlgebraFNXPriceProviderUpgradeable`
-   2. `FeesVaultUpgradeable`
+This includes the following list:
 
-Розгортання відбуваєть простим деплоєм контрактів на мережу, без будь-якої конфігурації чи змінн. Задеплоїні контракти будуть використані, як адреси реалізацій кінцевих контрактів
+- **Core:**
+  - `MinterUpgradeable`
+  - `VeArtProxyUpgradeable`
+  - `VoterUpgradeable`
+  - `VotingEscrowUpgradeable`
 
+- **Additional:**
+  - `VeBoostUpgradeable`
+  - `VeFnxDistributorUpgradeable`
+
+- **Bribes:**
+  - `BribeFactoryUpgradeable`
+  - `BribeUpgradeable`
+
+- **Gauges:**
+  - `GaugeFactoryUpgradeable`
+  - `GaugeUpgradeable`
+
+- **DexV2:**
+  - `PairFactoryUpgradeable`
+  - `Pair`
+
+- **Integration:**
+  - `AlgebraFNXPriceProviderUpgradeable`
+  - `FeesVaultUpgradeable`
+
+Deploy simply by running the contract deployment script without any configurations or changes. The deployed contracts will be used as implementation addresses for the final contracts.
 
 `npx hardhat run .\scripts\1_deploy_implementations.ts`
 
-## Деплой ProxyAdmin
-Для управлніння зміннами реалізацій і тд, зі сторони `Deployer`, відбувається розгортання ProxyAdmin від OZ прости деплоєм на мережу
+## Deployment of ProxyAdmin
 
-Власність над контрактом залишаєтсья на `Deployer`
+To manage implementation changes etc., from the `Deployer` side, deploy the ProxyAdmin from OZ simply on the network. Ownership of the contract remains with `Deployer`.
 
 `npx hardhat run .\scripts\2_deploy_proxy_admin.ts`
 
-## Розгортання TransparentUpgradeableProxy для передбачених контрактів
+## Deployment of TransparentUpgradeableProxy for Specified Contracts
 
-!!! IMPORTANT для данного етапу повинні бути задеплоїні реалізації і Proxy Admin на минулих кроках
-!!! IMPORTANT розгортання не передбачає моментальної ініаціалізації, відповідко шкідливі користувачі матимуть змогу зафронтранити або dos розгорнутий проксі
+!!! IMPORTANT: Implementations and Proxy Admin must be deployed in previous steps.
+!!! IMPORTANT: Deployment does not entail immediate initialization, thus allowing malicious users the potential to front-run or DOS the deployed proxy.
 
+Contracts for which TransparentUpgradeableProxy is deployed:
 
-Список контрактів для який розгортається TransparentUpgradeableProxy:
-1. Core:
-   1. `MinterUpgradeable` - ``
-   2. `VeArtProxyUpgradeable`
-   3. `VoterUpgradeable`
-   4. `VotingEscrowUpgradeable`
-2. Additional:
-   1. `VeBoostUpgradeable`
-   2. `VeFnxDistributorUpgradeable`
-3. Bribes:
-   1. `BribeFactoryUpgradeable`
-4. Gauges:
-   1. `GaugeFactoryUpgradeable` #1 for V2
-   2. `GaugeFactoryUpgradeable` #2 for ICHI
-   3. `GaugeFactoryUpgradeable` #2 for V3
-5. DexV2:
-   1.  `PairFactoryUpgradeable`
-6. Integration:
-   1. `AlgebraFNXPriceProviderUpgradeable`
+- **Core:**
+  - `MinterUpgradeable`
+  - `VeArtProxyUpgradeable`
+  - `VoterUpgradeable`
+  - `VotingEscrowUpgradeable`
 
+- **Additional, Bribes, Gauges, DexV2, Integration** as previously listed.
 
-Аргументами конструктора при розгортанні являються наступні:
-- `implementation` для заданного контракту взятий з минулих кроках деплою
-- `proxyAdmin` адреса контракту задеплоїного в минулих кроках
-- `data` - `0x` не передбачається ініціалізація зразу, тому залишається пустим
-
+Constructor arguments for deployment include:
+- `implementation` for the given contract from previous deployment steps
+- `proxyAdmin` the address of the contract deployed in previous steps
+- `data` is `0x`, implying no initial initialization, hence it remains empty
 
 `npx hardhat run .\scripts\3_deploy_proxies.ts`
 
-## Розгортання Fenix
+## Deployment of Fenix
 
-Відбувається простим деплоєм контракта `Fenix` на мережу
+This occurs simply by deploying the `Fenix` contract on the network. After deployment, `Deployer` receives `7,500,000 FNX` on the balance.
 
-Після розгортання `Deployer` отримає на баланс `7_500_000 FNX`
+**Parameters include:**
+- `blastGovernor_` - the management address
+- `minter_` - the address to be granted minting rights and token ownership. Initially set to `Deployer`, then changed to the actual minter contract address.
 
-**Вхідними параметрами є:**
-- `blastGovernor_` - адреса управління бласт
-- `minter_` - адреса на яку буде передано права мінтингу і власність над токеном. 
-Важливо для початку деплою слід виставити адресу `Deployer`, після зміннити на актуальний контракт мінтера
+## Deployment of FeesVaultFactory
 
-## Розгортання FeesVaultFactory
+Deploy the contract simply on the network.
 
-Відбувається простим деплоєм контракта на мережу
-
-**Вхідними параметрами є:**
-- `blastGovernor_` - адреса управління бласт
+**Parameters include:**
+- `blastGovernor_` - the management address
 - `FeesVault - implementation`
-- `Voter - proxy` - ардеса не ініціалізованого проксі
+- `Voter - proxy` - the address of the uninitialized proxy
 
+## Initialization of Main Contracts
 
-## Ініціалізація основних контрактів
+At this stage, the already deployed proxies are initialized. It is assumed that the contracts can be initialized by the addresses of other contracts which are not yet initialized.
 
-На данному етапі відбувається ініціалізація уже розгорнутих проксі, передбачається що контракти можуть бути ініціалізовані адресами інших контрактів які ще не є ініціалізовані
+The order and initialization include:
 
+1. `BribeFactory`
+2. `GaugeFactory #1`
+3. `GaugeFactory #2`
+4. `GaugeFactory #3`
+5. `VotingEscrow`
+6. `PairFactory`
+7. `Minter`
+8. `Voter`
 
-Порядок і ініціалізація:
-1. `BribeFactory` - (`BlastGovernor`, `Voter - proxy`, `Bribe - implementation`)
-2. `GaugeFactory #1` - (`BlastGovernor`, `Voter - implementation`, `Bribe - implementation`, `MerkleDistributor - ZERO_ADDRESS`)
-3. `GaugeFactory #2` - (`BlastGovernor`, `Voter - implementation`, `Bribe - implementation`, `MerkleDistributor - ZERO_ADDRESS`)
-4. `GaugeFactory #3` - (`BlastGovernor`, `Voter - implementation`, `Bribe - implementation`, `MerkleDistributor - ZERO_ADDRESS`)
-5. `VotingEscrow` - (`BlastGovernor`, `Fenix - instance`, `VeArtProxy - proxy`, `MerkleDistributor - ZERO_ADDRESS`)
-6. `PairFactory` - (`BlastGovernor`, `PairImplementation - implementation`, `FeesVaultFactory - instance`)
-7. `Minter` - (`BlastGovernor`, `Voter - proxy`, `VotingEscrow - proxy`)
-8. `Voter` -  (`BlastGovernor`, `VotingEscrow - proxy`, `PairFactory - proxy`, `GaugeFactory - proxy`, `BribeFactory - proxy`)
+Details for each are based on specific contract requirements.
 
+## Deployment of MerklGaugeMiddleman
 
+Deploy with set parameters such as `governor_`, `token_` (fenix token address), and `merklDistributionCreator_` (actual merkle distributor creator address on target network).
 
-## Розгортання MerklGaugeMiddleman
-Відбувається шляхом деплою з встановленними параметрами
-- `governor_` - `BlastGovernor`
-- `token_` - fenix token address
-- `merklDistributionCreator_` - actual merkle distributor creator address on target network
-  
-## Розгортання RouterV2
-Відбувається шляхом простого деплою і встановлення параметрів:
-- `BlastGovernor`
-- `PairFactory`
-- `WETH` - адреса WETH вибраної мережі
-  
-## Налаштування Gas Mode в усіх контрактах
-Потрібно для всіх розгорнутих контрактах встановити мод на Claimable
+## Deployment of RouterV2
 
-## Початкові налаштування і конфігурації
-1. Передача права власності з Deployer на Minter контракт над Fenix токеном 
-2. Додавання PairFactory як створювача для FeesVault в FeesVaultFactory
-3. Додавання AlgebraFactory V3 як створювача для FeesVault в FeesVaultFactory
-4. Додавання встановлення в AlgebraFactory нової фабрики FeesVaultFactory
-5. Установлення правильнї адреси Minter в Voter контракті
-6. Установлення адреси VotingEscrow в Voter контракті
-7. Встановлення MerkleDistributor в GaugeFactoryType2, GaugeFactoryType3
-8. Встановлення фабрик для типу 2 Gauge, і типу 3 Gauge в Voter
-9. Виставлення стандартних налаштувань в V2 парах для WETH/USDB ребейз токенів
-10. Initialize PriceProvider
-11. Initialize VeBoost
-12. Setup VeBoost to VotingEscrow contract
-   
+Deploy simply and set parameters like `BlastGovernor`, `PairFactory`, and `WETH` (address of WETH in the selected network).
+
+## Setting Gas Mode in All Contracts
+
+Set the mode to Claimable in all deployed contracts for gas optimization.
+
+## Initial Settings and Configurations
+
+Includes transferring ownership from Deployer to the Minter contract over Fenix token, adding PairFactory as a creator in FeesVaultFactory, establishing correct Minter address in Voter contract, and setting up various configurations for operational efficiency.
+
+Initialize PriceProvider, VeBoost, and set up VeBoost in VotingEscrow contract.
