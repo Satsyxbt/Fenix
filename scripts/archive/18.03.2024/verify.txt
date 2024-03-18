@@ -1,0 +1,171 @@
+ npx hardhat run .\scripts\verify.ts --network blastScanSepolia
+The contract 0x6CB746214D07a894Dfd4306FD509265B5b64baD7 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x6CB746214D07a894Dfd4306FD509265B5b64baD7#code
+The contract 0xdb83A57274B4D839C363e1C8827518979F7C160e has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xdb83A57274B4D839C363e1C8827518979F7C160e#code
+The contract 0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a#code
+The contract 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0#code
+The contract 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc#code
+The contract 0x30448e49743c55af3C83d2A7011df36E0438F0Ae has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x30448e49743c55af3C83d2A7011df36E0438F0Ae#code
+The contract 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C#code
+The contract 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD#code
+The contract 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7#code
+The contract 0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1#code
+The contract 0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b#code
+The contract 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5#code
+The contract 0x9502993595815b1Fa674C5133F42C3919a696bEc has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x9502993595815b1Fa674C5133F42C3919a696bEc#code
+The contract 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6#code
+The contract 0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E#code
+The contract 0x58DA44Da9af06d43378440549cEd8712125D49B5 has already been verified on Etherscan.
+https://testnet.blastscan.io/address/0x58DA44Da9af06d43378440549cEd8712125D49B5#code
+PS E:\aegas\fenix-2-clear> npx hardhat run .\scripts\verify.ts --network blastScanSepolia
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x6CB746214D07a894Dfd4306FD509265B5b64baD7
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxDistributorUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x6CB746214D07a894Dfd4306FD509265B5b64baD7#code
+
+Successfully submitted source code for contract
+contracts/bribes/BribeFactoryUpgradeable.sol:BribeFactoryUpgradeable at 0xdb83A57274B4D839C363e1C8827518979F7C160e
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeFactoryUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xdb83A57274B4D839C363e1C8827518979F7C160e#code
+
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a#code
+
+Successfully submitted source code for contract
+contracts/gauges/GaugeFactoryUpgradeable.sol:GaugeFactoryUpgradeable at 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeFactoryUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0#code
+
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc#code
+
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x30448e49743c55af3C83d2A7011df36E0438F0Ae
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x30448e49743c55af3C83d2A7011df36E0438F0Ae#code
+
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeable.sol:VotingEscrowUpgradeable at 0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C#code
+
+Successfully submitted source code for contract
+contracts/core/VeArtProxyUpgradeable.sol:VeArtProxyUpgradeable at 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeArtProxyUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD#code
+
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeable.sol:VoterUpgradeable at 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7#code
+
+Successfully submitted source code for contract
+contracts/integration/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x405518aDC7cecE6c0E8e2929138e7b4531Cc72F1#code
+
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://sepolia.blastscan.io/address/0xfE4752F1980aBF493ee3dc335096d5e319DE5B0b#code
+
+Successfully submitted source code for contract
+contracts/dexV2/PairFactoryUpgradeable.sol:PairFactoryUpgradeable at 0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairFactoryUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x50342C7AE6Edd78aE1837B6345ccA837D5FF80f5#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol:ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ProxyAdmin on the block explorer.
+https://sepolia.blastscan.io/address/0x9502993595815b1Fa674C5133F42C3919a696bEc#code
+
+Successfully submitted source code for contract
+contracts/core/Fenix.sol:Fenix at 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Fenix on the block explorer.
+https://sepolia.blastscan.io/address/0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6#code
+
+Successfully submitted source code for contract
+contracts/integration/FeesVaultFactory.sol:FeesVaultFactory at 0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactory on the block explorer.
+https://sepolia.blastscan.io/address/0xabc03eF501C3eeF03Bb0a1338653A8DfF7f1e36E#code
+
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0x58DA44Da9af06d43378440549cEd8712125D49B5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://sepolia.blastscan.io/address/0x58DA44Da9af06d43378440549cEd8712125D49B5#code
+
+
+
+Successfully submitted source code for contract
+contracts/mocks/MDCBlastMock.sol:MDCBlastMock at 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MDCBlastMock on the block explorer.
+https://sepolia.blastscan.io/address/0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42#code
+
+PS E:\aegas\fenix-2-clear> npx hardhat verify 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42 --network blastSepolia
+Successfully submitted source code for contract
+contracts/mocks/MDCBlastMock.sol:MDCBlastMock at 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42
+for verification on the block explorer. Waiting for verification result...
+
+
+
+
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x81a2d913B4eF510f241a3F0522B7727Cf3189135
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://sepolia.blastscan.io/address/0x81a2d913B4eF510f241a3F0522B7727Cf3189135#code
+

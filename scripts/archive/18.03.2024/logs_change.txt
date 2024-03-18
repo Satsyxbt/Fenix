@@ -1,0 +1,25 @@
+npx hardhat run .\scripts\mocks\deployMDCBlastMock.ts  --network blastScanSepolia   
+Successfully submitted source code for contract
+contracts/mocks/MDCBlastMock.sol:MDCBlastMock at 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MDCBlastMock on the block explorer.
+https://sepolia.blastscan.io/address/0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42#code
+
+ npx hardhat verify 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42 --network blastSepolia
+Successfully submitted source code for contract
+contracts/mocks/MDCBlastMock.sol:MDCBlastMock at 0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42
+for verification on the block explorer. Waiting for verification result...
+
+
+
+
+npx hardhat run .\scripts\mocks\deployTestV2Pairs.ts --network blastSepolia
+Pair fnUSDT, fnTok, true
+Pair fenix, fnTok, true
+Pair fenix, fnUSDT, true
+Pair fenix, fnTok, false
+Pair fenix, fnTok, false
+
+
+ npx hardhat run .\scripts\mocks\deployTestV2Gauges.ts --network blastSepolia

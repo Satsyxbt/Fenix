@@ -41,9 +41,18 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      blastScanSepolia: `${process.env.API_KEY}`,
       blastSepolia: 'blastSepolia', // apiKey is not required, just set a placeholder
     },
     customChains: [
+      {
+        network: 'blastScanSepolia',
+        chainId: 168587773,
+        urls: {
+          apiURL: 'https://api-sepolia.blastscan.io/api',
+          browserURL: 'https://sepolia.blastscan.io/',
+        },
+      },
       {
         network: 'blastSepolia',
         chainId: 168587773,
@@ -58,8 +67,19 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
+    blastScanSepolia: {
+      url: `https://rpc.ankr.com/blast_testnet_sepolia/${process.env.ANKR_API_KEY}`,
+      accounts: {
+        mnemonic: `${process.env.MNEMONIC}`,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: '',
+      },
+      gasPrice: 1e3,
+    },
     blastSepolia: {
-      url: 'https://rpc.ankr.com/blast_testnet_sepolia/8b23c0c39114674729a2260aa732f5bc09264b988b054f82c8d084e26e32cdc9',
+      url: `https://rpc.ankr.com/blast_testnet_sepolia/${process.env.ANKR_API_KEY}`,
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
         path: "m/44'/60'/0'/0",

@@ -108,6 +108,10 @@ export async function getDeployedDataFromDeploys() {
     Minter: await ethers.getContractAt('MinterUpgradeable', deploysData['Minter']),
     FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
     PairImplementation: await ethers.getContractAt('Pair', deploysData['PairImplementation']),
+    VeFnxDistributorImplementation: await ethers.getContractAt(
+      'VeFnxDistributorUpgradeable',
+      deploysData['VeFnxDistributorImplementation'],
+    ),
     VeFnxDistributor: await ethers.getContractAt('VeFnxDistributorUpgradeable', deploysData['VeFnxDistributor']),
     MerklGaugeMiddleman: await ethers.getContractAt('MerklGaugeMiddleman', deploysData['MerklGaugeMiddleman']),
   };
