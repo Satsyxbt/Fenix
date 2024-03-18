@@ -90,6 +90,9 @@ External:
 | FeesVaultFactory         | Claimable     | Deployer       |
 | MerklGaugeMiddleman      | Claimable     | Deployer       |
 | RouterV2                 | Claimable     | Deployer       |
+| VeBoost                  | Claimable     | Deployer       |
+| AlgebraFNXPriceProvider  | Claimable     | Deployer       |
+| VeFnxDistributor         | Claimable     | Deployer       |
 
 ## Setup
 * `0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42` - Mock Merkl Distribution Creator

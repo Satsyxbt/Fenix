@@ -2,23 +2,17 @@ import { getDeployedDataFromDeploys, getDeploysData } from './utils';
 import {
   AlgebraFNXPriceProviderUpgradeable,
   BribeFactoryUpgradeable,
-  BribeUpgradeable,
   FeesVaultFactory,
-  FeesVaultUpgradeable,
   Fenix,
   GaugeFactoryUpgradeable,
-  GaugeUpgradeable,
   MerklGaugeMiddleman,
   MinterUpgradeable,
-  Pair,
   PairFactoryUpgradeable,
-  VeArtProxyUpgradeable,
   VeBoostUpgradeable,
   VeFnxDistributorUpgradeable,
   VoterUpgradeable,
   VotingEscrowUpgradeable,
 } from '../typechain-types';
-import { eToString } from '../test/core/veBoostCases';
 import { ethers } from 'hardhat';
 
 async function logFenix(fenix: Fenix) {
@@ -177,6 +171,17 @@ async function logVeFnxDistributorUpgradeable(veFnxDistributor: VeFnxDistributor
   `);
 }
 
+async function logGaugeFactoryUpgradeable(gaugeFactory: GaugeFactoryUpgradeable) {
+  console.log(`GaugeFactoryUpgradeable (${gaugeFactory.target}):
+    \tlast_gauge:\t${await gaugeFactory.last_gauge()}
+    \tvoter:\t${await gaugeFactory.voter()}
+    \towner:\t${await gaugeFactory.owner()}
+    \tgauge_owner:\t${await gaugeFactory.gaugeOwner()}
+    \tdefaultBlastGovernor:\t${await gaugeFactory.defaultBlastGovernor()}
+    \tgaugeImplementation:\t${await gaugeFactory.gaugeImplementation()}
+    \tmerklGaugeMiddleman:\t${await gaugeFactory.merklGaugeMiddleman()}
+  `);
+}
 async function main() {
   let deploysData = await getDeployedDataFromDeploys();
   let data = await getDeploysData();
@@ -204,6 +209,12 @@ async function main() {
   );
 
   await logVeFnxDistributorUpgradeable(deploysData.VeFnxDistributor);
+
+  await logGaugeFactoryUpgradeable(deploysData.GaugeFactoryType);
+
+  await logGaugeFactoryUpgradeable(deploysData.GaugeFactoryType2);
+
+  await logGaugeFactoryUpgradeable(deploysData.GaugeFactoryType3);
 }
 
 main()

@@ -39,6 +39,8 @@ async function main() {
   console.log('Try initialize VotingEscrow');
   await deploysData.VotingEscrow.initialize(deployer.address, deploysData.Fenix.target, deploysData.VeArtProxy.target);
 
+  await deploysData.VotingEscrow.checkpoint();
+
   console.log('Try initialize Minter');
   await deploysData.Minter.initialize(deployer.address, deploysData.Voter.target, deploysData.VotingEscrow.target);
 
