@@ -43,8 +43,26 @@ const config: HardhatUserConfig = {
     apiKey: {
       blastSepolia: 'blastSepolia', // apiKey is not required, just set a placeholder
       blastMainnet: 'blastMainnet',
+      blastScanSepolia: `${process.env.API_KEY}`,
+      blastScanMainnet: `${process.env.API_KEY}`,
     },
     customChains: [
+      {
+        network: 'blastScanSepolia',
+        chainId: 168587773,
+        urls: {
+          apiURL: 'https://api-sepolia.blastscan.io/api',
+          browserURL: 'https://sepolia.blastscan.io/',
+        },
+      },
+      {
+        network: 'blastScanMainnet',
+        chainId: 81457,
+        urls: {
+          apiURL: 'https://api.blastscan.io/api',
+          browserURL: 'https://blastscan.io/',
+        },
+      },
       {
         network: 'blastMainnet',
         chainId: 81457,
@@ -67,6 +85,17 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
+    blastScanSepolia: {
+      url: `https://rpc.ankr.com/blast_testnet_sepolia/${process.env.ANKR_API_KEY}`,
+      accounts: {
+        mnemonic: `${process.env.MNEMONIC}`,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: '',
+      },
+      gasPrice: 1e3,
+    },
     blastSepolia: {
       url: 'https://testnet.blast.din.dev/rpc',
       accounts: {
@@ -77,6 +106,17 @@ const config: HardhatUserConfig = {
         passphrase: '',
       },
       gasPrice: 1e3,
+    },
+    blastScanMainnet: {
+      url: 'https://rpc.blast.io',
+      gasPrice: 1e3,
+      accounts: {
+        mnemonic: `${process.env.MNEMONIC}`,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: '',
+      },
     },
     blastMainnet: {
       url: 'https://rpc.blast.io',

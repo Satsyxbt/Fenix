@@ -50,6 +50,10 @@ async function main() {
     deploysData.GaugeFactoryType.target,
     deploysData.BribeFactory.target,
   );
+
+  console.log('Try initialize VeFnxDistributor');
+
+  await deploysData.VeFnxDistributor.initialize(deployer.address, deploysData.Fenix.target, deploysData.VotingEscrow.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
