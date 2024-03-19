@@ -34,7 +34,7 @@ External:
 | VeBoost                      | `0x23b400098864300B3c2EB40255559c750109f24c` | VeBoost                              | Upgradeable |
 | AlgebraFNXPriceProvider      | `0xb36b3777AC4f8f6f911F8DA725Ab71e54B10C200` | AlgebraFNXPriceProvider              | Upgradeable |
 | VeFnxDistributor | `0x3B23472ad7134508cb24DAB353Cfb7097D33C706` |   FNX Distributor in veFNX NFT | Upgradeable|
-
+| rFNX | `0x0CBc34cDd5d177c813068fD01D11B419D794eE96` | rFNX with convert to FNX & veFNX | Default |
 
 ## Implementations for Proxy
 
@@ -73,6 +73,7 @@ External:
 | GaugeFactoryType3       | Ownable       | Deployer                                            | 
 | VeFnxDistributor       | Ownable       | Deployer                                            | 
 | VeBoost       | Ownable       | Deployer                                            | 
+| rFNX       | Ownable2Step       | Deployer                                            | 
 
 ### Blast governor
 
@@ -93,6 +94,7 @@ External:
 | VeBoost                  | Claimable     | Deployer       |
 | AlgebraFNXPriceProvider  | Claimable     | Deployer       |
 | VeFnxDistributor         | Claimable     | Deployer       |
+| rFNX | Claimable | Deployer |
 
 ## Setup
 * `0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42` - Mock Merkl Distribution Creator
