@@ -1,28 +1,17 @@
-import { expect } from 'chai';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { ERRORS, ONE, ONE_ETHER, ONE_GWEI, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { takeSnapshot, SnapshotRestorer } from '@nomicfoundation/hardhat-network-helpers';
+import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
 
-import {
-  BribeFactoryUpgradeable,
-  BribeFactoryUpgradeable__factory,
-  BribeUpgradeable,
-  BribeUpgradeable__factory,
-  ERC20Mock,
-  TransparentUpgradeableProxy__factory,
-} from '../../typechain-types';
-import { deployToken } from '../utils/fixture';
-import { token } from '../../typechain-types/@openzeppelin/contracts';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { BribeFactoryUpgradeable, BribeFactoryUpgradeable__factory, BribeUpgradeable, ERC20Mock } from '../../typechain-types';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
-  deployBribeFactory,
   deployERC20MockToken,
   deployTransaperntUpgradeableProxy,
   deployVoter,
 } from '../utils/coreFixture';
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('BribeFactoryUpgradeable Contract', function () {
   let signers: SignersList;

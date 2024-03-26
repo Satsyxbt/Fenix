@@ -40,7 +40,7 @@ describe('AlgebraFNXPriceProvider', function () {
   beforeEach(async function () {
     signers = await getSigners();
 
-    await mockBlast();
+    let blastPointsMock = await mockBlast();
 
     fenix = await deployFenixToken(signers.deployer, signers.blastGovernor.address, signers.deployer.address);
     tokenTR6 = await deployERC20MockToken(signers.deployer, 'TR6', 'TR6', 6);
@@ -55,7 +55,7 @@ describe('AlgebraFNXPriceProvider', function () {
 
     await priceProvider.initialize(signers.blastGovernor, poolMock.target, fenix.target, tokenTR6.target);
 
-    algebraCore = await deployAlgebraCore();
+    algebraCore = await deployAlgebraCore(await blastPointsMock.getAddress());
 
     await algebraCore.factory.grantRole(await algebraCore.factory.POOLS_CREATOR_ROLE(), signers.deployer.address);
 

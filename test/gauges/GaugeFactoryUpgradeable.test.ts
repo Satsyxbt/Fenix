@@ -1,16 +1,9 @@
-import { expect } from 'chai';
-import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
-import { ethers } from 'hardhat';
-import {
-  ERC20Mock,
-  GaugeFactoryUpgradeable,
-  GaugeFactoryUpgradeable__factory,
-  VotingEscrowUpgradeable,
-  VotingEscrowUpgradeable__factory,
-} from '../../typechain-types';
-import { Fenix } from '../../typechain-types';
-import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
 import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { ERC20Mock, Fenix, GaugeFactoryUpgradeable, GaugeFactoryUpgradeable__factory } from '../../typechain-types';
+import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
 
 describe('GaugeFactoryUpgradeable', function () {
   let deployed: CoreFixtureDeployed;

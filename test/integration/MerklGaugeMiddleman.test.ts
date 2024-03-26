@@ -1,16 +1,16 @@
+import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  MerklGaugeMiddleman__factory,
   ERC20Mock,
   MerklGaugeMiddleman,
+  MerklGaugeMiddleman__factory,
   MerkleDistributionCreatorMock,
-  PoolMock__factory,
   PoolMock,
+  PoolMock__factory,
 } from '../../typechain-types';
-import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
-import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { SignersList, deployERC20MockToken } from '../utils/coreFixture';
 
 describe('MerklGaugeMiddleman Contract', function () {
   let signers: SignersList;

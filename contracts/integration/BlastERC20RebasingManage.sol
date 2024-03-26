@@ -12,9 +12,26 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  * entities can perform these operations.
  */
 abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGovernorSetup {
-    function __BlastERC20RebasingManage__init(address blastGovernor_) internal {
+    /**
+     * @dev Initializes the BlastERC20RebasingManage contract. Sets up the initial configuration
+     * for managing ERC20 rebasing tokens within the Blast ecosystem. This includes setting the Blast Governor,
+     * configuring the Blast Points, and assigning the Blast Points operator.
+     *
+     * @param blastGovernor_ The address of the Blast Governor to be used for governance processes.
+     * @param blastPoints_ The address of the Blast Points contract, used for managing points within the ecosystem.
+     * @param blastPointsOperator_ The address of the operator authorized to manage points in the Blast Points contract.
+     *
+     * Requirements:
+     * - `blastGovernor_`, `blastPoints_` and `blastPointsOperator_` must not be the zero address.
+     *
+     * Emits an `AddressZero` error if any of the required addresses are zero.
+     */
+    function __BlastERC20RebasingManage__init(address blastGovernor_, address blastPoints_, address blastPointsOperator_) internal {
+        if (blastPoints_ == address(0) || blastPointsOperator_ == address(0)) {
+            revert AddressZero();
+        }
         __BlastGovernorSetup_init(blastGovernor_);
-        IBlastPoints(0x2fc95838c71e76ec69ff817983BFf17c710F34E0).configurePointsOperator(blastGovernor_);
+        IBlastPoints(blastPoints_).configurePointsOperator(blastPointsOperator_);
     }
 
     /**

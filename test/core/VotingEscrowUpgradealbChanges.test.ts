@@ -1,14 +1,17 @@
+import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
+import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
-import { ERRORS, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import {
   AlgebraFNXPriceProviderUpgradeable,
   ERC20Mock,
+  Fenix,
   VeBoostUpgradeable,
   VotingEscrowUpgradeable,
   VotingEscrowUpgradeable__factory,
 } from '../../typechain-types';
-import { Fenix } from '../../typechain-types';
+import { ERRORS, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
@@ -16,9 +19,6 @@ import completeFixture, {
   deployERC20MockToken,
   deployTransaperntUpgradeableProxy,
 } from '../utils/coreFixture';
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
-import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
 
 describe('VotingEscrowUpgradeableEarlyExit', function () {
   let deployed: CoreFixtureDeployed;
@@ -45,7 +45,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
     ) as AlgebraFNXPriceProviderUpgradeable;
 
-    let algebraCore = await deployAlgebraCore();
+    let algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
 
     let algebraFactory = algebraCore.factory;
     await algebraFactory.grantRole(await algebraFactory.POOLS_CREATOR_ROLE(), signers.deployer.address);

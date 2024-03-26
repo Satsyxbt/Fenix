@@ -14,7 +14,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
-import {IFeesVault} from "../integration/interfaces/IFeesVault.sol";
+import {IFeesVault} from "../fees/interfaces/IFeesVault.sol";
 
 contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradeable {
     using SafeERC20 for IERC20;

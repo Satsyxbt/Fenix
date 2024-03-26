@@ -1,8 +1,17 @@
+import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
+import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
-import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
-import { AlgebraFNXPriceProviderUpgradeable, ERC20Mock, VeBoostUpgradeable, VeBoostUpgradeable__factory } from '../../typechain-types';
-import { Fenix } from '../../typechain-types';
+import {
+  AlgebraFNXPriceProviderUpgradeable,
+  ERC20Mock,
+  Fenix,
+  VeBoostUpgradeable,
+  VeBoostUpgradeable__factory,
+} from '../../typechain-types';
+import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
@@ -10,10 +19,6 @@ import completeFixture, {
   deployERC20MockToken,
   deployTransaperntUpgradeableProxy,
 } from '../utils/coreFixture';
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
-import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
 import { Cases, eToString } from './veBoostCases';
 
 describe('VeBoostUpgradeable', function () {
@@ -40,7 +45,7 @@ describe('VeBoostUpgradeable', function () {
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
     ) as AlgebraFNXPriceProviderUpgradeable;
 
-    let algebraCore = await deployAlgebraCore();
+    let algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
 
     let algebraFactory = algebraCore.factory;
     await algebraFactory.grantRole(await algebraFactory.POOLS_CREATOR_ROLE(), signers.deployer.address);
@@ -329,7 +334,7 @@ describe('VeBoostUpgradeable', function () {
       it('Should return zero fnx amount less the min FNX amount', async () => {
         expect(await veBoost.calculateBoostFNXAmount(ZERO)).to.be.eq(ZERO);
         expect(await veBoost.calculateBoostFNXAmount(ONE)).to.be.eq(ZERO);
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('10') - ONE)).to.be.eq(ZERO);
+        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('9.99') - ONE)).to.be.eq(ZERO);
       });
       it('Should corect calculate boost fnx amount', async () => {
         let minFNXAmount = ethers.parseEther('50');

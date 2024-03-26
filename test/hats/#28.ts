@@ -1,21 +1,22 @@
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { FeesVaultFactory, PairFactoryUpgradeable__factory, PairFactoryUpgradeable, ERC20Mock, Pair, Fenix } from '../../typechain-types';
-import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, {
-  CoreFixtureDeployed,
-  SignersList,
-  deployERC20MockToken,
-  deployTransaperntUpgradeableProxy,
-} from '../utils/coreFixture';
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import {
+  ERC20Mock,
+  FeesVaultFactoryUpgradeable,
+  Fenix,
+  Pair,
+  PairFactoryUpgradeable,
+  PairFactoryUpgradeable__factory,
+} from '../../typechain-types';
+import { ONE, ZERO } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
 
-const PRECISION = BigInt(10000);
 describe('Pair Contract', function () {
   let signers: SignersList;
   let pairFactoryFactory: PairFactoryUpgradeable__factory;
   let pairFactory: PairFactoryUpgradeable;
-  let feesVaultFactory: FeesVaultFactory;
+  let feesVaultFactory: FeesVaultFactoryUpgradeable;
   let deployed: CoreFixtureDeployed;
   let dai: ERC20Mock;
   let pairStable: Pair;
@@ -32,7 +33,7 @@ describe('Pair Contract', function () {
 
     dai = await deployERC20MockToken(deployed.signers.deployer, 'TK18', 'TK18', 18);
 
-    await feesVaultFactory.setWhitelistedCreatorStatus(pairFactory.target, true);
+    await deployed.feesVaultFactory.grantRole(await deployed.feesVaultFactory.WHITELISTED_CREATOR_ROLE(), pairFactory.target);
 
     await deployed.v2PairFactory.connect(signers.deployer).createPair(deployed.fenix.target, dai.target, true);
     pairStable = await ethers.getContractAt('Pair', await pairFactory.getPair(deployed.fenix.target, dai.target, true));
@@ -65,7 +66,7 @@ describe('Pair Contract', function () {
     }
     await pair.swap(amount0, amount1, signers.deployer.address, '0x');
   }
-  it('FOR UNFIXED BUG: First liquidity provider of a stable pair can DOS the pool', async () => {
+  it('AFTER FIXED BUG, SHOULD FAIL : First liquidity provider of a stable pair can DOS the pool', async () => {
     await dai.mint(signers.deployer.address, ethers.parseEther('100'));
     expect(await dai.balanceOf(pairStable)).to.be.eq(ZERO);
     expect(await frax.balanceOf(pairStable)).to.be.eq(ZERO);

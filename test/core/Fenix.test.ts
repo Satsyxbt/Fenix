@@ -1,9 +1,9 @@
-import { ethers } from 'hardhat';
-import { expect } from 'chai';
-import { BlastMock__factory, Fenix } from '../../typechain-types/index';
-import { ZERO, ONE_ETHER, ERRORS, ONE, BLAST_PREDEPLOYED_ADDRESS } from '../utils/constants';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { BlastMock__factory, Fenix } from '../../typechain-types/index';
+import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO } from '../utils/constants';
 
 describe('Fenix Contract', function () {
   let fenixInstance: Fenix;

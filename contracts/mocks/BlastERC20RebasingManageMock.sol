@@ -4,8 +4,8 @@ import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BlastERC20RebasingManageMock is BlastERC20RebasingManage, Ownable {
-    constructor(address blastGovernor_) {
-        __BlastERC20RebasingManage__init(blastGovernor_);
+    constructor(address _blastGovernor, address _blastPoints, address _blastPointsOperator) {
+        __BlastERC20RebasingManage__init(_blastGovernor, _blastPoints, _blastPointsOperator);
     }
 
     function _checkAccessForManageBlastERC20Rebasing() internal override onlyOwner {}

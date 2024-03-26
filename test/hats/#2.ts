@@ -1,14 +1,14 @@
-import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import completeFixture, { CoreFixtureDeployed, FactoryFixture, deployAlgebraCore, deployERC20MockToken } from '../utils/coreFixture';
-import { ERC20Mock, Fenix, GaugeFactoryUpgradeable, GaugeUpgradeable, ICHIMock, Pair } from '../../typechain-types';
-import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { ethers } from 'hardhat';
-import { expect } from 'chai';
 import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
-import { AlgebraPool } from '@cryptoalgebra/integral-core/typechain';
 import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
+import { AlgebraPool } from '@cryptoalgebra/integral-core/typechain';
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { ERC20Mock, Fenix, Pair } from '../../typechain-types';
 import { ZERO } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, FactoryFixture, deployAlgebraCore, deployERC20MockToken } from '../utils/coreFixture';
 
 describe('#2 Adversary can steal all bribe rewards', function () {
   let deployed: CoreFixtureDeployed;
@@ -36,13 +36,13 @@ describe('#2 Adversary can steal all bribe rewards', function () {
     deployed = await loadFixture(completeFixture);
     fenix = deployed.fenix;
 
-    algebraCore = await deployAlgebraCore();
+    algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
     signers = deployed.signers;
 
     tokenTK18 = await deployERC20MockToken(deployed.signers.deployer, 'TK18', 'TK18', 18);
     tokenTK6 = await deployERC20MockToken(deployed.signers.deployer, 'TK6', 'TK6', 6);
 
-    await deployed.feesVaultFactory.setWhitelistedCreatorStatus(algebraCore.factory.target, true);
+    await deployed.feesVaultFactory.grantRole(await deployed.feesVaultFactory.WHITELISTED_CREATOR_ROLE(), algebraCore.factory.target);
 
     await algebraCore.factory.setVaultFactory(deployed.feesVaultFactory.target);
 

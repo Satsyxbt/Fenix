@@ -1,21 +1,16 @@
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { FeesVaultFactory, PairFactoryUpgradeable__factory, PairFactoryUpgradeable, ERC20Mock, Pair } from '../../typechain-types';
-import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, {
-  CoreFixtureDeployed,
-  SignersList,
-  deployERC20MockToken,
-  deployTransaperntUpgradeableProxy,
-} from '../utils/coreFixture';
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { ERC20Mock, FeesVaultUpgradeable, Pair, PairFactoryUpgradeable, PairFactoryUpgradeable__factory } from '../../typechain-types';
+import { ONE_ETHER, ZERO } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken } from '../utils/coreFixture';
 
 const PRECISION = BigInt(10000);
 describe('Pair Contract', function () {
   let signers: SignersList;
   let pairFactoryFactory: PairFactoryUpgradeable__factory;
   let pairFactory: PairFactoryUpgradeable;
-  let feesVaultFactory: FeesVaultFactory;
+  let feesVaultFactory: FeesVaultUpgradeable;
   let deployed: CoreFixtureDeployed;
   let tokenTK18: ERC20Mock;
   let tokenTK6: ERC20Mock;
@@ -33,7 +28,7 @@ describe('Pair Contract', function () {
     tokenTK18 = await deployERC20MockToken(deployed.signers.deployer, 'TK18', 'TK18', 18);
     tokenTK6 = await deployERC20MockToken(deployed.signers.deployer, 'TK6', 'TK6', 6);
 
-    await feesVaultFactory.setWhitelistedCreatorStatus(pairFactory.target, true);
+    await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), pairFactory.target);
 
     await deployed.v2PairFactory.connect(signers.deployer).createPair(deployed.fenix.target, tokenTK6.target, true);
     await deployed.v2PairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, false);
@@ -44,7 +39,15 @@ describe('Pair Contract', function () {
   describe('deployments', async () => {
     it('fail if try initialzie second time', async () => {
       await expect(
-        pairVolatily.initialize(signers.blastGovernor.address, tokenTK18.target, tokenTK6.target, true, signers.otherUser1.address),
+        pairVolatily.initialize(
+          signers.blastGovernor.address,
+          deployed.blastPoints.target,
+          signers.blastGovernor.address,
+          tokenTK18.target,
+          tokenTK6.target,
+          true,
+          signers.otherUser1.address,
+        ),
       ).to.be.revertedWith('Initialized');
     });
     it('corect initialize start parameters', async () => {

@@ -1,19 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {YieldMode} from "../../integration/interfaces/IERC20Rebasing.sol";
-
 interface IPairFactory {
     event PairCreated(address indexed token0, address indexed token1, bool stable, address pair, uint);
     event SetPaused(bool state);
-    event SetDefaultBlastGovernor(address indexed defaultBlastGovernor);
     event SetCommunityVaultFactory(address indexed communityVaultFactory);
     event SetIsPublicPoolCreationMode(bool mode);
     event SetProtocolFee(uint256 fee);
     event SetCustomProtocolFee(address indexed pair, uint256 fee);
     event SetCustomFee(address indexed pair, uint256 fee);
     event SetFee(bool stable, uint256 fee);
-    event SetConfigurationForRebaseToken(address indexed token, bool isRebase, YieldMode mode);
 
     error IncorrcectFee();
     error IncorrectPair();

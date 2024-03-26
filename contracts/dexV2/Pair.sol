@@ -9,10 +9,9 @@ import {IPairCallee} from "./interfaces/IPairCallee.sol";
 import {IPairFactory} from "./interfaces/IPairFactory.sol";
 import {PairFees} from "./PairFees.sol";
 import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 
 // The base pair of pools, either stable or volatile
-contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
+contract Pair is IPair, BlastERC20RebasingManage {
     string public name;
     string public symbol;
     uint8 public constant decimals = 18;
@@ -98,16 +97,24 @@ contract Pair is IPair, BlastGovernorSetup, BlastERC20RebasingManage {
 
     constructor() {}
 
-    function initialize(address _blastGovernor, address _token0, address _token1, bool _stable, address _communityVault) external {
+    function initialize(
+        address _blastGovernor,
+        address _blastPoints,
+        address _blastPointsOperator,
+        address _token0,
+        address _token1,
+        bool _stable,
+        address _communityVault
+    ) external {
         require(factory == address(0), "Initialized");
 
         factory = msg.sender;
 
-        __BlastERC20RebasingManage__init(_blastGovernor);
+        __BlastERC20RebasingManage__init(_blastGovernor, _blastPoints, _blastPointsOperator);
 
         (token0, token1, stable, communityVault) = (_token0, _token1, _stable, _communityVault);
 
-        fees = address(new PairFees(_blastGovernor, msg.sender, _token0, _token1));
+        fees = address(new PairFees(_blastGovernor, _blastPoints, _blastPointsOperator, msg.sender, _token0, _token1));
 
         _unlocked = 1;
 

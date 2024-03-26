@@ -2,8 +2,8 @@ import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { VeArtProxyUpgradeable } from '../../typechain-types';
+import { buildFullBase64Art, buildJson, buildSvgImage, getSvg512, svgImageToBase64 } from '../utils/art';
 import completeFixture from '../utils/coreFixture';
-import { getSvg512, buildSvgImage, svgImageToBase64, buildFullBase64Art, buildJson } from '../utils/art';
 
 describe('VeArtProxyUpgradeable Contract', function () {
   let veArtProxy: VeArtProxyUpgradeable;

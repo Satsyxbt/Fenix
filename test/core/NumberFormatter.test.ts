@@ -1,6 +1,6 @@
+import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { NumberFormatterMock } from '../../typechain-types';
-import { expect } from 'chai';
 
 function formatIntegerPart(number: bigint) {
   return number.toLocaleString('en-US');

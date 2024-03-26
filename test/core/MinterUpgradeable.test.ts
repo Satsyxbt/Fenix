@@ -1,18 +1,9 @@
-import { MinterUpgradeable, Fenix, ProxyAdmin, VoterMock, VoterEscrowMock, BlastMock__factory } from '../../typechain-types/index';
-import { Signer } from 'ethers';
-import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import completeFixture, {
-  CoreFixtureDeployed,
-  SignersList,
-  deployFenixToken,
-  deployMinter,
-  deployTransaperntUpgradeableProxy,
-  getSigners,
-} from '../utils/coreFixture';
+import { setCode, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
+import { BlastMock__factory, Fenix, MinterUpgradeable, VoterEscrowMock, VoterMock } from '../../typechain-types/index';
 import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import { setCode, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { SignersList, deployFenixToken, deployMinter, getSigners } from '../utils/coreFixture';
 
 describe('MinterUpgradeable Contract', function () {
   let minter: MinterUpgradeable;

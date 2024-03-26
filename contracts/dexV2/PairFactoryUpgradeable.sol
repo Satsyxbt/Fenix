@@ -4,13 +4,14 @@ pragma solidity =0.8.19;
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
-import {YieldMode, IPairFactory} from "./interfaces/IPairFactory.sol";
-import {IPair} from "./interfaces/IPair.sol";
-import {IFeesVaultFactory} from "../integration/interfaces/IFeesVaultFactory.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
-import {IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20RebasingManage.sol";
+import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20RebasingManage.sol";
 
-contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessControlUpgradeable {
+import {IPairFactory} from "./interfaces/IPairFactory.sol";
+import {IPair} from "./interfaces/IPair.sol";
+import {IFeesVaultFactory} from "../fees/interfaces/IFeesVaultFactory.sol";
+import {BlastERC20FactoryManager} from "../integration/BlastERC20FactoryManager.sol";
+
+contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, AccessControlUpgradeable {
     bytes32 public constant override PAIRS_ADMINISTRATOR_ROLE = keccak256("PAIRS_ADMINISTRATOR");
     bytes32 public constant override FEES_MANAGER_ROLE = keccak256("FEES_MANAGER");
     bytes32 public constant override PAIRS_CREATOR_ROLE = keccak256("PAIRS_CREATOR");
@@ -27,10 +28,6 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
     uint256 public volatileFee;
 
     address public communityVaultFactory;
-    address public defaultBlastGovernor;
-
-    mapping(address => YieldMode) public configurationForBlastRebaseTokens;
-    mapping(address => bool) public isRebaseToken;
 
     address[] public allPairs;
     mapping(address => mapping(address => mapping(bool => address))) public getPair;
@@ -43,11 +40,18 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
         _disableInitializers();
     }
 
-    function initialize(address blastGovernor_, address implementation_, address communityVaultFactory_) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
-        __AccessControl_init();
+    function initialize(
+        address blastGovernor_,
+        address blastPoints_,
+        address blastPointsOperator_,
+        address implementation_,
+        address communityVaultFactory_
+    ) external initializer {
         _checkAddressZero(implementation_);
         _checkAddressZero(communityVaultFactory_);
+
+        __BlastERC20FactoryManager_init(blastGovernor_, blastPoints_, blastPointsOperator_);
+        __AccessControl_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
 
@@ -58,24 +62,11 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
         implementation = implementation_;
 
         communityVaultFactory = communityVaultFactory_;
-        defaultBlastGovernor = blastGovernor_;
-    }
-
-    function setConfigurationForRebaseToken(address token_, bool isRebase_, YieldMode mode_) external onlyRole(PAIRS_ADMINISTRATOR_ROLE) {
-        isRebaseToken[token_] = isRebase_;
-        configurationForBlastRebaseTokens[token_] = mode_;
-        emit SetConfigurationForRebaseToken(token_, isRebase_, mode_);
     }
 
     function setPause(bool _state) external onlyRole(PAIRS_ADMINISTRATOR_ROLE) {
         isPaused = _state;
         emit SetPaused(_state);
-    }
-
-    function setDefaultBlastGovernor(address defaultBlastGovernor_) external onlyRole(PAIRS_ADMINISTRATOR_ROLE) {
-        _checkAddressZero(defaultBlastGovernor_);
-        defaultBlastGovernor = defaultBlastGovernor_;
-        emit SetDefaultBlastGovernor(defaultBlastGovernor_);
     }
 
     function setCommunityVaultFactory(address communityVaultFactory_) external onlyRole(PAIRS_ADMINISTRATOR_ROLE) {
@@ -144,14 +135,26 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
 
         address feesVaultForPool = IFeesVaultFactory(communityVaultFactory).createVaultForPool(pair);
 
-        IPair(pair).initialize(defaultBlastGovernor, token0, token1, stable, feesVaultForPool);
+        IPair(pair).initialize(
+            defaultBlastGovernor,
+            defaultBlastPoints,
+            defaultBlastPointsOperator,
+            token0,
+            token1,
+            stable,
+            feesVaultForPool
+        );
+
+        IFeesVaultFactory(communityVaultFactory).afterPoolInitialize(pair);
 
         if (isRebaseToken[token0]) {
             IBlastERC20RebasingManage(pair).configure(token0, configurationForBlastRebaseTokens[token0]);
+            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token0, configurationForBlastRebaseTokens[token0]);
         }
 
         if (isRebaseToken[token1]) {
             IBlastERC20RebasingManage(pair).configure(token1, configurationForBlastRebaseTokens[token1]);
+            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token1, configurationForBlastRebaseTokens[token1]);
         }
 
         getPair[token0][token1][stable] = pair;
@@ -204,15 +207,8 @@ contract PairFactoryUpgradeable is IPairFactory, BlastGovernorSetup, AccessContr
         }
     }
 
-    /**
-     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
-     *
-     * @param addr_ The address which will checked on zero
-     */
-    function _checkAddressZero(address addr_) internal pure {
-        if (addr_ == address(0)) {
-            revert AddressZero();
-        }
+    function _checkAccessForBlastFactoryManager() internal view override {
+        _checkRole(PAIRS_ADMINISTRATOR_ROLE);
     }
 
     /**

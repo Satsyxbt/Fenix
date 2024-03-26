@@ -1,9 +1,9 @@
-import { expect } from 'chai';
-import { ZERO, ONE_ETHER, ERRORS, ONE, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { Fenix, RFenix, RFenix__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import { expect } from 'chai';
 import { ethers } from 'hardhat';
+import { Fenix, RFenix, RFenix__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 
 describe('rFNX', function () {
   let deployed: CoreFixtureDeployed;

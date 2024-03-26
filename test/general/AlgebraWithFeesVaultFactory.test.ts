@@ -1,21 +1,18 @@
-import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import completeFixture, { CoreFixtureDeployed, FactoryFixture, deployAlgebraCore, deployERC20MockToken } from '../utils/coreFixture';
-import { ERC20Mock } from '../../typechain-types';
-import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { expect } from 'chai';
-import { ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import { ethers } from 'hardhat';
-import {
-  abi as POOL_ABI,
-  bytecode as POOL_BYTECODE,
-} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
+import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
 import {
   abi as CALLE_ABI,
   bytecode as CALLE_BYTECODE,
 } from '@cryptoalgebra/integral-core/artifacts/contracts/test/TestAlgebraCallee.sol/TestAlgebraCallee.json';
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { ERC20Mock } from '../../typechain-types';
+import { ZERO, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, FactoryFixture, deployAlgebraCore, deployERC20MockToken } from '../utils/coreFixture';
 
 import { createPoolFunctions, encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
-import { TestAlgebraCallee, TestAlgebraCallee__factory } from '@cryptoalgebra/integral-core/typechain';
+import { TestAlgebraCallee__factory } from '@cryptoalgebra/integral-core/typechain';
 
 describe('AlgebraWithFeesVaultFactory', function () {
   let deployed: CoreFixtureDeployed;
@@ -37,8 +34,8 @@ describe('AlgebraWithFeesVaultFactory', function () {
 
   before('deployed', async () => {
     deployed = await loadFixture(completeFixture);
+    algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
 
-    algebraCore = await deployAlgebraCore();
     signers = deployed.signers;
 
     tokenTK18 = await deployERC20MockToken(deployed.signers.deployer, 'TK18', 'TK18', 18);
@@ -49,7 +46,7 @@ describe('AlgebraWithFeesVaultFactory', function () {
   it('Correct change feesVault for algebraFactory', async () => {
     expect(await algebraCore.factory.vaultFactory()).to.be.not.eq(deployed.feesVaultFactory.target);
     await algebraCore.factory.setVaultFactory(deployed.feesVaultFactory.target);
-    await deployed.feesVaultFactory.setWhitelistedCreatorStatus(algebraCore.factory.target, true);
+    await deployed.feesVaultFactory.grantRole(await deployed.feesVaultFactory.WHITELISTED_CREATOR_ROLE(), algebraCore.factory.target);
 
     expect(await algebraCore.factory.vaultFactory()).to.be.eq(deployed.feesVaultFactory.target);
     expect(await algebraCore.factory.vaultFactory()).to.be.not.eq(algebraCore.vault.target);

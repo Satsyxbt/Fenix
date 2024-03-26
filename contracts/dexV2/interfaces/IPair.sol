@@ -43,5 +43,15 @@ interface IPair {
 
     function isStable() external view returns (bool);
 
-    function initialize(address blastGovernor, address token0, address token1, bool isStable, address communityVault) external;
+    function initialize(
+        address blastGovernor,
+        address blastPoints,
+        address blastPointsOperator,
+        address token0,
+        address token1,
+        bool isStable,
+        address communityVault
+    ) external;
+
+    function fees() external view returns (address);
 }

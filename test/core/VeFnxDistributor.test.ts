@@ -1,10 +1,10 @@
+import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
+import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
-import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import { Fenix, VeFnxDistributorUpgradeable, VeFnxDistributorUpgradeable__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
-import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 
 describe('VeFnxDistributorUpgradeable', function () {
   let deployed: CoreFixtureDeployed;

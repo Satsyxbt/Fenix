@@ -6,25 +6,28 @@ import { WETH_PREDEPLOYED_ADDRESS, ERRORS, USDB_PREDEPLOYED_ADDRESS, ONE_ETHER, 
 import { setBalance } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('BlastERC20RebasingManage Contract', function () {
+  const BLAST_POINTS_TESTNET_CONTRACT = '0x2fc95838c71e76ec69ff817983BFf17c710F34E0';
   let factory: BlastERC20RebasingManageMock__factory;
   let rebasingManage: BlastERC20RebasingManageMock;
   let wethRebasing: IERC20RebasingMock;
   let usdbRebasing: IERC20RebasingMock;
 
   let deployer: HardhatEthersSigner;
+  let operator: HardhatEthersSigner;
   let other: HardhatEthersSigner;
+
   if (process.env.BLAST_FORK === 'true') {
     before(async function () {
-      [deployer, other] = await ethers.getSigners();
+      [deployer, operator, other] = await ethers.getSigners();
       factory = await ethers.getContractFactory('BlastERC20RebasingManageMock');
-      rebasingManage = await factory.deploy(deployer.address);
-      wethRebasing = await ethers.getContractAt('IERC20RebasingMock', WETH_PREDEPLOYED_ADDRESS);
-      usdbRebasing = await ethers.getContractAt('IERC20RebasingMock', USDB_PREDEPLOYED_ADDRESS);
+      rebasingManage = await factory.deploy(deployer.address, BLAST_POINTS_TESTNET_CONTRACT, operator.address);
+      wethRebasing = (await ethers.getContractAt('IERC20RebasingMock', WETH_PREDEPLOYED_ADDRESS)) as any as IERC20RebasingMock;
+      usdbRebasing = (await ethers.getContractAt('IERC20RebasingMock', USDB_PREDEPLOYED_ADDRESS)) as any as IERC20RebasingMock;
     });
     describe('Deployment', async () => {
       it('Should corect setup blast points operator', async () => {
-        let points = await ethers.getContractAt('BlastPointsMock', '0x2fc95838c71e76ec69ff817983BFf17c710F34E0');
-        expect(await points.operatorMap(rebasingManage.target)).to.be.eq(deployer.address);
+        let points = await ethers.getContractAt('BlastPointsMock', BLAST_POINTS_TESTNET_CONTRACT);
+        expect(await points.operatorMap(rebasingManage.target)).to.be.eq(operator.address);
       });
       it('Default Yield mode for USDB is Automatic', async () => {
         expect(await usdbRebasing.getConfiguration(rebasingManage.target)).to.be.eq(0);
