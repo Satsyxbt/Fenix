@@ -1,10 +1,10 @@
 import { ethers } from 'hardhat';
 import hre from 'hardhat';
 
-import { getDeploysData, saveDeploysData } from './utils';
+import { getDeploysData, saveDeploysData } from '../utils';
 
-const WETH = '0x4200000000000000000000000000000000000023';
-const NAME = 'RouterV2';
+const MERKLE_DISTRIBUTOR_CREATOR = '0xF42A6bbDacB2E83B84060e2489a0eE85cf0F02c3';
+const NAME = 'MerklGaugeMiddleman';
 async function main() {
   console.log(`Start deploy ${NAME} contract...`);
 
@@ -12,13 +12,13 @@ async function main() {
   if (deploysData[NAME]) {
     console.warn(`${NAME} contract already deployed, skip deployment, address: ${deploysData[NAME]}`);
   } else {
-    const factory = await ethers.getContractFactory('RouterV2');
+    const factory = await ethers.getContractFactory('MerklGaugeMiddleman');
 
     const signers = await ethers.getSigners();
     const deployer = signers[0];
     console.log(`deployer: ${deployer.address}`);
 
-    let contract = await factory.connect(deployer).deploy(deployer.address, deploysData['PairFactory'], WETH);
+    let contract = await factory.connect(deployer).deploy(deployer.address, deploysData['Fenix'], MERKLE_DISTRIBUTOR_CREATOR);
     await contract.waitForDeployment();
 
     deploysData[NAME] = await contract.getAddress();
@@ -29,7 +29,7 @@ async function main() {
     try {
       await hre.run('verify:verify', {
         address: deploysData[NAME],
-        constructorArguments: [deployer.address, deploysData['PairFactory'], WETH],
+        constructorArguments: [deployer.address, deploysData['Fenix'], MERKLE_DISTRIBUTOR_CREATOR],
       });
     } catch (e) {
       console.warn('Error with verification proccess');

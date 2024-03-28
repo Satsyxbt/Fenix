@@ -1,4 +1,4 @@
-import { deployBase } from './utils';
+import { deployBase } from '../utils';
 
 async function main() {
   console.log('1_deploy_implementations.ts -- started');

@@ -1,4 +1,4 @@
-import { deployBase } from './utils';
+import { deployBase } from '../utils';
 
 async function main() {
   console.log('2_deploy_proxy_admin.ts -- started');

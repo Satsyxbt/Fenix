@@ -41,6 +41,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      blastScanMainnet: `${process.env.API_KEY}`,
+      blastMainnet: 'blastMainnet',
       blastScanSepolia: `${process.env.API_KEY}`,
       blastSepolia: 'blastSepolia', // apiKey is not required, just set a placeholder
     },
@@ -61,6 +63,22 @@ const config: HardhatUserConfig = {
           browserURL: 'https://testnet.blastscan.io',
         },
       },
+      {
+        network: 'blastScanMainnet',
+        chainId: 81457,
+        urls: {
+          apiURL: 'https://api.blastscan.io/api',
+          browserURL: 'https://blastscan.io/',
+        },
+      },
+      {
+        network: 'blastMainnet',
+        chainId: 81457,
+        urls: {
+          apiURL: 'https://api.routescan.io/v2/network/mainnet/evm/81457/etherscan',
+          browserURL: 'https://blastexplorer.io',
+        },
+      },
     ],
   },
   networks: {
@@ -68,7 +86,7 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: false,
     },
     blastScanSepolia: {
-      url: `https://rpc.ankr.com/blast_testnet_sepolia/${process.env.ANKR_API_KEY}`,
+      url: `https://blast-sepolia.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
         path: "m/44'/60'/0'/0",
@@ -79,7 +97,7 @@ const config: HardhatUserConfig = {
       gasPrice: 1e3,
     },
     blastSepolia: {
-      url: `https://rpc.ankr.com/blast_testnet_sepolia/${process.env.ANKR_API_KEY}`,
+      url: `https://blast-sepolia.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
       accounts: {
         mnemonic: `${process.env.MNEMONIC}`,
         path: "m/44'/60'/0'/0",
@@ -89,16 +107,27 @@ const config: HardhatUserConfig = {
       },
       gasPrice: 1e3,
     },
-    blast_sepolia: {
-      forking: {
-        enabled: true,
-        url: `https://sepolia.blast.io`,
-      },
+    blastScanMainnet: {
+      url: `https://blast-mainnet.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
+      gasPrice: 1e3,
       accounts: {
-        mnemonic: 'test test test test test test test test test test test test',
+        mnemonic: `${process.env.MNEMONIC}`,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: '',
       },
-      url: 'https://sepolia.blast.io',
-      gasPrice: 1e9,
+    },
+    blastMainnet: {
+      url: `https://blast-mainnet.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
+      gasPrice: 1e3,
+      accounts: {
+        mnemonic: `${process.env.MNEMONIC}`,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: '',
+      },
     },
     local: {
       url: 'http://localhost:8545',
