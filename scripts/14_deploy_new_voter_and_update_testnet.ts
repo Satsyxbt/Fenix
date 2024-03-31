@@ -28,6 +28,7 @@ async function main() {
   let GaugeFactoryType2 = await ethers.getContractAt('GaugeFactoryUpgradeable', data['GaugeFactoryType2']);
   let GaugeFactoryType3 = await ethers.getContractAt('GaugeFactoryUpgradeable', data['GaugeFactoryType3']);
   let MerklGaugeMiddleman = await ethers.getContractAt('MerklGaugeMiddleman', data['MerklGaugeMiddleman']);
+  let FeesVaultFactory = await ethers.getContractAt('FeesVaultFactoryUpgradeable', data['FeesVaultFactory']);
 
   console.log('Try initialize GaugeFactory');
 
@@ -47,6 +48,7 @@ async function main() {
   await VotingEscrow.setVoter(Voter.target);
   await MinterUpgradeable.setVoter(Voter.target);
   await BribeFactoryUpgradeable.setVoter(Voter.target);
+  await FeesVaultFactory.setVoter(Voter.target);
 
   console.log('14_deploy_new_voter_and_update_testnet -- finished');
 }

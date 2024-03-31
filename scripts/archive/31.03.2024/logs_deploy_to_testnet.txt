@@ -1,0 +1,53 @@
+npx hardhat run .\scripts\14_deploy_new_voter_and_update_testnet.ts --network blastSepolia
+14_deploy_new_voter_and_update_testnet -- started
+-- start deploy voter
+Start deploy proxy for Voter contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy Voter contract: 0x6cCe3E45CCe11bE2CD4715442b0d1c3675C5D055
+-- start deploy gauge part
+Start deploy proxy for GaugeFactoryType contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType contract: 0x1abD24d6ea95BC2ea78e5BE16608B8068F0324D8
+Start deploy proxy for GaugeFactoryType2 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType2 contract: 0x0cC86Eb2dFB324cd7bFcAdA7F7819Ad72a059F0A
+Start deploy proxy for GaugeFactoryType3 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType3 contract: 0xD6Fe1FCb8f8F231Ce6dBF332e697E798bEC6fa79
+Try initialize GaugeFactory
+Try initialize Voter
+14_deploy_new_voter_and_update_testnet -- finished
+
+
+
+ npx hardhat verify 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5 --network blastScanSepolia
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xB40FB324F9448bb4eff37063BbE051d27e39CAd5#code
+
+
+Start deploy proxy for AlgebraFNXPriceProvider contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x1AE69A793A4e20997dd76a51D909859ca869482C
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy AlgebraFNXPriceProvider contract: 0x968106c45b72eB84A1Abc799CC4AaFf618495c76
+
+
+
+npx hardhat run .\scripts\16_deploy_routerV2.ts --network blastSepolia   
+Start deploy RouterV2 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy RouterV2 contract: 0xAC0D01f49798426d2cDff417835a3feA80B9e698
+The contract 0xAC0D01f49798426d2cDff417835a3feA80B9e698 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0xAC0D01f49798426d2cDff417835a3feA80B9e698#code

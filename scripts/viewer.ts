@@ -2,7 +2,7 @@ import { getDeployedDataFromDeploys, getDeploysData } from './utils';
 import {
   AlgebraFNXPriceProviderUpgradeable,
   BribeFactoryUpgradeable,
-  FeesVaultFactory,
+  FeesVaultFactoryUpgradeable,
   Fenix,
   GaugeFactoryUpgradeable,
   MerklGaugeMiddleman,
@@ -126,12 +126,11 @@ async function logMerklGaugeMiddleman(merklGaugeMiddleman: MerklGaugeMiddleman) 
   `);
 }
 
-async function logFeesVaultFactory(feesVaultFactory: FeesVaultFactory) {
+async function logFeesVaultFactory(feesVaultFactory: FeesVaultFactoryUpgradeable) {
   console.log(`FeesVaultFactory (${feesVaultFactory.target}):
     \tvoter:\t${await feesVaultFactory.voter()}
     \tdefaultBlastGovernor:\t${await feesVaultFactory.defaultBlastGovernor()}
-    \timplementation:\t${await feesVaultFactory.implementation()}
-    \towner:\t${await feesVaultFactory.owner()}
+    \timplementation:\t${await feesVaultFactory.feesVaultImplementation()}
   `);
 }
 async function logAlgebraFNXPriceProviderUpgradeable(algebraFNXPriceProvider: AlgebraFNXPriceProviderUpgradeable) {

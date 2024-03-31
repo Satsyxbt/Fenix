@@ -106,7 +106,7 @@ export async function getDeployedDataFromDeploys() {
     VotingEscrow: await ethers.getContractAt('VotingEscrowUpgradeable', deploysData['VotingEscrow']),
     VeArtProxy: await ethers.getContractAt('VeArtProxyUpgradeable', deploysData['VeArtProxy']),
     Minter: await ethers.getContractAt('MinterUpgradeable', deploysData['Minter']),
-    FeesVaultFactory: await ethers.getContractAt('FeesVaultFactory', deploysData['FeesVaultFactory']),
+    FeesVaultFactory: await ethers.getContractAt('FeesVaultFactoryUpgradeable', deploysData['FeesVaultFactory']),
     PairImplementation: await ethers.getContractAt('Pair', deploysData['PairImplementation']),
     VeFnxDistributorImplementation: await ethers.getContractAt(
       'VeFnxDistributorUpgradeable',
