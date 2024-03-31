@@ -1,0 +1,100 @@
+npx hardhat run .\scripts\13_deploy_new_impl_and_proxy.ts --network blastSepolia
+13_deploy_new_impl_and_proxy -- started
+Start deploy PairFactoryImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PairFactoryImplementation contract: 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d
+Wait before start veriy, for indexed from explorer
+^C^CTerminate batch job (Y/N)? N
+
+npx hardhat verify 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d --network blastSepolia
+Successfully submitted source code for contract
+contracts/dexV2/PairFactoryUpgradeable.sol:PairFactoryUpgradeable at 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairFactoryUpgradeable on the block explorer.
+https://testnet.blastscan.io/address/0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d#code
+
+ npx hardhat run .\scripts\13_deploy_new_impl_and_proxy.ts --network blastSepolia
+13_deploy_new_impl_and_proxy -- started
+Start deploy PairFactoryImplementation contract...
+PairFactoryImplementation contract already deployed, skip deployment, address: 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d
+Start deploy PairImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PairImplementation contract: 0x9AF9988701d106CB576D36B4c36C72519214a7Ac
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0x9AF9988701d106CB576D36B4c36C72519214a7Ac
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://testnet.blastscan.io/address/0x9AF9988701d106CB576D36B4c36C72519214a7Ac#code
+
+Start deploy FeesVaultFactoryImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy FeesVaultFactoryImplementation contract: 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://testnet.blastscan.io/address/0xB40FB324F9448bb4eff37063BbE051d27e39CAd5#code
+
+Start deploy FeesVaultImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy FeesVaultImplementation contract: 0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/fees/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://testnet.blastscan.io/address/0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707#code
+
+Start deploy proxy for PairFactory contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy PairFactory contract: 0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3
+Start deploy proxy for FeesVaultFactory contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy FeesVaultFactory contract: 0xa3103248290399cc2655b68f0038ce590ce8639E
+13_deploy_new_impl_and_proxy -- finished
+
+
+
+npx hardhat run .\scripts\14_deploy_new_voter_and_update_testnet.ts --network blastSepolia
+14_deploy_new_voter_and_update_testnet -- started
+-- start deploy voter
+Start deploy proxy for Voter contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy Voter contract: 0x61d112f19713A124583385F7E3BDf33F21C6F0d8
+-- start deploy gauge part
+Start deploy proxy for GaugeFactoryType contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType contract: 0x79D877D278421E5FE3D0C200510C9139c6877965
+Start deploy proxy for GaugeFactoryType2 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType2 contract: 0x054eFC23bf71DA1a68B0A2110E267410bb43aea6
+Start deploy proxy for GaugeFactoryType3 contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy GaugeFactoryType3 contract: 0xBC7EA7CAAA507DA361C34ED39478Dd88e4431aF2
+Try initialize GaugeFactory
+Try initialize Voter
+14_deploy_new_voter_and_update_testnet -- finished
+
+
+
+npx hardhat run .\scripts\15_deploy_initialize_contracts_testnet.ts --network blastSepolia
+15_deploy_initialize_contracts_testnet -- started
+15_deploy_initialize_contracts_testnet -- finished

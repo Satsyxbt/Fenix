@@ -42,7 +42,7 @@ export async function deployBase(contractFactoryName: string, name: string) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    await timeout(30000);
+    await timeout(15000);
 
     try {
       await hre.run('verify:verify', {
