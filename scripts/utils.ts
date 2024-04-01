@@ -13,7 +13,7 @@ export function saveDeploysData(newData: any) {
   fs.writeFileSync(deployDataPath, JSON.stringify(newData), 'utf-8');
 }
 
-export async function deployBase(contractFactoryName: string, name: string) {
+export async function deployBase(contractFactoryName: string, name: string, args?: any[]) {
   const NAME = name;
   console.log(`Start deploy ${NAME} contract...`);
 
@@ -27,7 +27,7 @@ export async function deployBase(contractFactoryName: string, name: string) {
     const deployer = signers[0];
     console.log(`deployer: ${deployer.address}`);
 
-    let contract = await factory.connect(deployer).deploy();
+    let contract = args ? await factory.connect(deployer).deploy(...args) : await factory.connect(deployer).deploy();
     await contract.waitForDeployment();
 
     deploysData[NAME] = await contract.getAddress();

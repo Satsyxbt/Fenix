@@ -130,7 +130,7 @@ async function logFeesVaultFactory(feesVaultFactory: FeesVaultFactoryUpgradeable
   console.log(`FeesVaultFactory (${feesVaultFactory.target}):
     \tvoter:\t${await feesVaultFactory.voter()}
     \tdefaultBlastGovernor:\t${await feesVaultFactory.defaultBlastGovernor()}
-    \timplementation:\t${await feesVaultFactory.feesVaultImplementation()}
+    \timplementation:\t 0x5CAD868fb930d733B407211a1F15D65635964A19
   `);
 }
 async function logAlgebraFNXPriceProviderUpgradeable(algebraFNXPriceProvider: AlgebraFNXPriceProviderUpgradeable) {
@@ -201,11 +201,11 @@ async function main() {
 
   await logFeesVaultFactory(deploysData.FeesVaultFactory);
 
-  await logVeBoostUpgradeable(await ethers.getContractAt('VeBoostUpgradeable', data['VeBoost']));
+  //await logVeBoostUpgradeable(await ethers.getContractAt('VeBoostUpgradeable', data['VeBoost']));
 
-  await logAlgebraFNXPriceProviderUpgradeable(
-    await ethers.getContractAt('AlgebraFNXPriceProviderUpgradeable', data['AlgebraFNXPriceProvider']),
-  );
+  // await logAlgebraFNXPriceProviderUpgradeable(
+  //   await ethers.getContractAt('AlgebraFNXPriceProviderUpgradeable', data['AlgebraFNXPriceProvider']),
+  // );
 
   await logVeFnxDistributorUpgradeable(deploysData.VeFnxDistributor);
 
