@@ -23,15 +23,18 @@ async function main() {
   let pairFactory = await ethers.getContractAt('PairFactoryUpgradeable', data['PairFactory']);
   await pairFactory.initialize(BLAST_GOVERNOR, BLAST_POINTS, BLAST_POINTS_OPERATOR, data['PairImplementation'], feesVaultFactory.target);
 
-  await pairFactory.setProtocolFee(1000);
-
-  await pairFactory.setConfigurationForRebaseToken(WETH, true, 2);
-  await pairFactory.setConfigurationForRebaseToken(USDB, true, 2);
-
   await feesVaultFactory.grantRole(await feesVaultFactory.CLAIM_FEES_CALLER_ROLE(), DEPLOYER);
   await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), DEPLOYER);
   await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), V3_PAIR_FACTORY);
   await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), pairFactory.target);
+
+  await pairFactory.grantRole(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), DEPLOYER);
+  await pairFactory.grantRole(await pairFactory.FEES_MANAGER_ROLE(), DEPLOYER);
+
+  await pairFactory.setProtocolFee(1000);
+
+  await pairFactory.setConfigurationForRebaseToken(WETH, true, 2);
+  await pairFactory.setConfigurationForRebaseToken(USDB, true, 2);
 }
 main()
   .then(() => process.exit(0))
