@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 
-import { getDeployedDataFromDeploys } from '../utils';
+import { getDeployedDataFromDeploys } from '../../utils';
 
 async function main() {
   console.log(`Start initialize contract...`);

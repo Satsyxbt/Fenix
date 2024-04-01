@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { deployProxy, getDeploysData } from './utils';
+import { deployProxy, getDeploysData } from '../utils';
 
 const BLAST_GOVERNOR = '0x9140D359f2855E6540609dd4A93773ED1f45f509';
 

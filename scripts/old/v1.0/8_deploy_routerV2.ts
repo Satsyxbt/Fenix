@@ -1,25 +1,24 @@
 import { ethers } from 'hardhat';
-import { getDeploysData, saveDeploysData } from './utils';
-import { deployBase } from './utils';
 import hre from 'hardhat';
 
-const NAME = 'rFNX';
+import { getDeploysData, saveDeploysData } from '../../utils';
+
+const WETH = '0x4200000000000000000000000000000000000023';
+const NAME = 'RouterV2';
 async function main() {
-  console.log('12_deploy_rFNX -- started');
+  console.log(`Start deploy ${NAME} contract...`);
 
   let deploysData = getDeploysData();
-
   if (deploysData[NAME]) {
     console.warn(`${NAME} contract already deployed, skip deployment, address: ${deploysData[NAME]}`);
   } else {
-    console.log(`Start deploy ${NAME} contract...`);
-
-    const factory = await ethers.getContractFactory('RFenix');
+    const factory = await ethers.getContractFactory('RouterV2');
 
     const signers = await ethers.getSigners();
     const deployer = signers[0];
+    console.log(`deployer: ${deployer.address}`);
 
-    let contract = await factory.connect(deployer).deploy(deployer.address, deploysData['VotingEscrow']);
+    let contract = await factory.connect(deployer).deploy(deployer.address, deploysData['PairFactory'], WETH);
     await contract.waitForDeployment();
 
     deploysData[NAME] = await contract.getAddress();
@@ -27,26 +26,20 @@ async function main() {
     saveDeploysData(deploysData);
 
     console.log(`Successful deploy ${NAME} contract: ${await contract.getAddress()}`);
-
-    function timeout(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    await timeout(30000);
-
     try {
       await hre.run('verify:verify', {
         address: deploysData[NAME],
-        constructorArguments: [deployer.address, deploysData['VotingEscrow']],
+        constructorArguments: [deployer.address, deploysData['PairFactory'], WETH],
       });
     } catch (e) {
       console.warn('Error with verification proccess');
     }
   }
 }
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 import hre from 'hardhat';
 
-import { getDeploysData, saveDeploysData } from '../utils';
+import { getDeploysData, saveDeploysData } from '../../utils';
 
 const NAME = 'Fenix';
 async function main() {

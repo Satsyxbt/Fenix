@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
-import { deployProxy, getDeploysData, saveDeploysData } from './utils';
-import { deployBase } from './utils';
+import { deployProxy, getDeploysData, saveDeploysData } from '../utils';
+import { deployBase } from '../utils';
 
 const WETH = '0x4200000000000000000000000000000000000023';
 const USDB = '0x4200000000000000000000000000000000000022';

@@ -1,5 +1,5 @@
-import { deployProxy, getDeploysData } from './utils';
-import { deployBase } from './utils';
+import { deployProxy, getDeploysData } from '../utils';
+import { deployBase } from '../utils';
 
 async function main() {
   console.log('13_deploy_new_impl_and_proxy -- started');

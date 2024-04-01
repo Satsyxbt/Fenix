@@ -1,4 +1,4 @@
-import { deployProxy, getDeploysData } from '../utils';
+import { deployProxy, getDeploysData } from '../../utils';
 
 async function main() {
   console.log('3_deploy_proxies.ts -- started');

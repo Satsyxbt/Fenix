@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { deployProxy, getDeployedDataFromDeploys, getDeploysData } from './utils';
+import { deployProxy, getDeployedDataFromDeploys, getDeploysData } from '../utils';
 
 const FNX_fnUSDB_V3_PAIR = '0x73a432d0758aDED25C1A8Ba4610e20EA4aE28ca9';
 const fnUSD = '0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a';
