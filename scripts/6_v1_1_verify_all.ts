@@ -4,6 +4,20 @@ import hre from 'hardhat';
 
 const WETH = '0x4300000000000000000000000000000000000004';
 
+async function verifyImplementations(data: any) {
+  let keys = Object.keys(data);
+
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index];
+    if (key.toLocaleLowerCase().includes('implementation')) {
+      const address = data[key];
+      await hre.run('verify:verify', {
+        address: address,
+        constructorArguments: [],
+      });
+    }
+  }
+}
 async function main() {
   let deployed = await getDeployedDataFromDeploys();
   let data = await getDeploysData();
@@ -11,21 +25,25 @@ async function main() {
   const signers = await ethers.getSigners();
   const deployer = signers[0];
 
+  await verifyImplementations(data);
+
   await hre.run('verify:verify', {
-    address: deployed.FeesVaultImplementation.target,
+    address: data['ProxyAdmin'],
     constructorArguments: [],
   });
+
   await hre.run('verify:verify', {
-    address: deployed.PairImplementation.target,
-    constructorArguments: [],
-  });
-  await hre.run('verify:verify', {
-    address: deployed.PairFactoryImplementation.target,
+    address: data['rFNX'],
     constructorArguments: [],
   });
 
   await hre.run('verify:verify', {
     address: data['RouterV2'],
+    constructorArguments: [deployer.address, deployed.PairFactory.target, WETH],
+  });
+
+  await hre.run('verify:verify', {
+    address: data['ProxyAdmin'],
     constructorArguments: [deployer.address, deployed.PairFactory.target, WETH],
   });
 }
