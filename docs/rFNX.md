@@ -48,7 +48,31 @@ When you convert rFNX tokens, the process follows a specific distribution:
 - Transactions may fail due to insufficient gas or unmet contract conditions.
 - Familiarize yourself with the current conversion rates and lock durations before initiating a conversion.
 
-
+### Abi
+```json
+[
+    {
+      "inputs": [],
+      "name": "convertAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "convert",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+]
+```
 ## Example
 
 Alice, an rFNX token holder, wants to convert her rFNX tokens into FNX and veFNX tokens.
