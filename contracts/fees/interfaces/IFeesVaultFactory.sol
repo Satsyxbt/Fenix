@@ -26,6 +26,12 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
     }
 
     /**
+     * @dev Emitted when a default distribution configuration is change.
+     * @param config The distribution configuration applied to all fees vault.
+     */
+    event DefaultDistributionConfig(DistributionConfig config);
+
+    /**
      * @dev Emitted when a custom distribution configuration is set for a fees vault.
      * @param feesVault The address of the fees vault for which the configuration is set.
      * @param config The custom distribution configuration applied to the fees vault.
@@ -162,4 +168,10 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
      * @param config_ The custom distribution configuration to apply.
      */
     function setCustomDistributionConfig(address feesVault_, DistributionConfig memory config_) external;
+
+    /**
+     * @notice Sets a default distribution configuration for a fees vaults.
+     * @param config_ The distribution configuration to apply.
+     */
+    function setDefaultDistributionConfig(DistributionConfig memory config_) external;
 }

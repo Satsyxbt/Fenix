@@ -88,6 +88,19 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
     }
 
     /**
+     * @notice Sets a default distribution configuration for a fees vaults.
+     * @param config_ The distribution configuration to apply.
+     */
+    function setDefaultDistributionConfig(
+        DistributionConfig memory config_
+    ) external virtual override onlyRole(FEES_VAULT_ADMINISTRATOR_ROLE) {
+        _checkDistributionConfig(config_);
+        _defaultDistributionConfig = config_;
+
+        emit DefaultDistributionConfig(config_);
+    }
+
+    /**
      * @notice Sets a custom distribution configuration for a specific fees vault.
      * @param feesVault_ The address of the fees vault to configure.
      * @param config_ The custom distribution configuration to apply.
