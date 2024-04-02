@@ -5,6 +5,7 @@ import {
   FeesVaultFactoryUpgradeable,
   Fenix,
   GaugeFactoryUpgradeable,
+  IBlastMock,
   MerklGaugeMiddleman,
   MinterUpgradeable,
   PairFactoryUpgradeable,
@@ -110,6 +111,8 @@ async function logPairFactoryUpgradeable(pairFactory: PairFactoryUpgradeable) {
     \tvolatileFee:\t${await pairFactory.volatileFee()}
     \tcommunityVaultFactory:\t${await pairFactory.communityVaultFactory()}
     \tdefaultBlastGovernor:\t${await pairFactory.defaultBlastGovernor()}
+    \tdefaultBlastPoints:\t${await pairFactory.defaultBlastPoints()}
+    \tdefaultBlastPointsOperator:\t${await pairFactory.defaultBlastPointsOperator()}
     -- Fees
     \tMAX_FEE:\t${await pairFactory.MAX_FEE()}
     \tPRECISION:\t${await pairFactory.PRECISION()}
@@ -130,6 +133,8 @@ async function logFeesVaultFactory(feesVaultFactory: FeesVaultFactoryUpgradeable
   console.log(`FeesVaultFactory (${feesVaultFactory.target}):
     \tvoter:\t${await feesVaultFactory.voter()}
     \tdefaultBlastGovernor:\t${await feesVaultFactory.defaultBlastGovernor()}
+    \tdefaultBlastPoints:\t${await feesVaultFactory.defaultBlastPoints()}
+    \tdefaultBlastPointsOperator:\t${await feesVaultFactory.defaultBlastPointsOperator()}
     \timplementation:\t 0x5CAD868fb930d733B407211a1F15D65635964A19
   `);
 }
@@ -181,9 +186,25 @@ async function logGaugeFactoryUpgradeable(gaugeFactory: GaugeFactoryUpgradeable)
     \tmerklGaugeMiddleman:\t${await gaugeFactory.merklGaugeMiddleman()}
   `);
 }
+
+async function logBlast(deploysData: any, blast: IBlastMock) {
+  console.log(`\nBlast`);
+
+  let keys = Object.keys(deploysData);
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index];
+    console.log(
+      `- ${key}\t${deploysData[key]}\t${await blast.governorMap(deploysData[key])}\t${await blast.readGasParams(deploysData[key])}`,
+    );
+  }
+}
+
 async function main() {
   let deploysData = await getDeployedDataFromDeploys();
   let data = await getDeploysData();
+
+  let blast = (await ethers.getContractAt('IBlastMock', '0x4300000000000000000000000000000000000002')) as any as IBlastMock;
+  await logBlast(data, blast);
 
   await logFenix(deploysData.Fenix);
 

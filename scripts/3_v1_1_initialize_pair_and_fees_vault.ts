@@ -35,6 +35,9 @@ async function main() {
 
   await pairFactory.setConfigurationForRebaseToken(WETH, true, 2);
   await pairFactory.setConfigurationForRebaseToken(USDB, true, 2);
+
+  await feesVaultFactory.setConfigurationForRebaseToken(WETH, true, 2);
+  await feesVaultFactory.setConfigurationForRebaseToken(USDB, true, 2);
 }
 main()
   .then(() => process.exit(0))
