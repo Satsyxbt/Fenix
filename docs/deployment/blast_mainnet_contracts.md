@@ -7,7 +7,7 @@ Last updated date: **02.04.2024**
 - `0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30` - Deployer
 - `0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4` - Default/Setted blast points operator address
 - `0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4` - Default/Setted blast governor address
-
+- `0xAC12571907b0aEE0eFd2BC13505B88284d5854db` - Fenix tresuary
 External:
 - `0x4300000000000000000000000000000000000004` - WETH
 - `0x4300000000000000000000000000000000000003` - USDB
@@ -102,3 +102,11 @@ Seted the address that will be set when deploying new pools as an operator for b
 - PairFactory USDB: `isRebase: true, mode: Clamable`
 - FeesVaultFactory WETH: `isRebase: true, mode: Clamable`
 - FeesVaultFactory USDB: `isRebase: true, mode: Clamable`
+- FeesVaultFactoty default distribution config:
+```json
+{
+    toGaugeRate: 0,
+    recipients: ['0xAC12571907b0aEE0eFd2BC13505B88284d5854db'],
+    rates: [10000],
+  }
+```
