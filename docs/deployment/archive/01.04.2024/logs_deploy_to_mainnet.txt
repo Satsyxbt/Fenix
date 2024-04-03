@@ -273,3 +273,25 @@ gas: 0,0,1712006045,1, yield: 2
 
 
 npx hardhat run .\scripts\8_v1_1_set_default_blast_governance.ts --network blastMainnet
+
+
+
+ npx hardhat run .\scripts\9_v1_1_update_fees_vault_impl.ts --network blastMainnet
+Start deploy FeesVaultFactoryImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy FeesVaultFactoryImplementation contract: 0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://blastexplorer.io/address/0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a#code
+
+PS E:\aegas\fenix-2-clear> npx hardhat verify 0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a --network blastMainnet  
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a#code

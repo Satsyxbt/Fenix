@@ -51,6 +51,7 @@ External:
 | PairFactoryImplementation    | `0x050faB54aaaEBf0F8DA36ffb69036C59B19a5b7e` | Implementation for pair factory  |
 | PairImplementation           | `0x2c3f891c0ca3635B6C5eA303a9cd7f29c7Fcd00E` | Implementation for pairs         |
 | FeesVaultImplementation      | `0xeD685caDAFf29520c27e3965D67AF14F00639A98` | Implementation for fees vault    |
+| FeesVaultFactoryImplementation      | `0xAbAD1E34dE64e0C06017A856F94EdEf0913c5D0a` | Implementation for fees vault    |
 
 ## Blast configuration
 ### Blast governor
