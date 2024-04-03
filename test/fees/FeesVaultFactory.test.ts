@@ -411,6 +411,177 @@ describe('FeesVaultFactory Contract', function () {
       ]);
       expect(await feesVaultFactory.defaultDistributionConfig()).to.be.deep.eq([10000, [], []]);
     });
+    describe('#setDefaultDistributionConfig', async () => {
+      it('fail if try set from not fees vault administrator role', async () => {
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [],
+          }),
+        ).to.be.revertedWith(getAccessControlError(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address));
+      });
+      it('fail if try set inncorect configs when array length mismatch', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({ toGaugeRate: 10000, recipients: [], rates: [1] }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+      });
+      it('fail if try set inncorect rates', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({ toGaugeRate: 9999, recipients: [], rates: [] }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({ toGaugeRate: 10001, recipients: [], rates: [] }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(feesVaultFactory.setDefaultDistributionConfig({ toGaugeRate: 10000, recipients: [], rates: [] })).to.be.not.reverted;
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 9999,
+            recipients: [signers.blastGovernor.address],
+            rates: [1],
+          }),
+        ).to.be.not.reverted;
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [10001],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [9999],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [10000],
+          }),
+        ).to.be.not.reverted;
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [5000, 50001],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({ toGaugeRate: 1, recipients: [], rates: [] }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [5000, 5000],
+          }),
+        ).to.be.not.reverted;
+      });
+      it('fail if try set zero recipient or with zero rates', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [0],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [0],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 9999,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [0, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 9998,
+            recipients: [signers.blastGovernor.address, ZERO_ADDRESS],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'AddressZero');
+      });
+      it('should correct set new default config', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 6000,
+            recipients: [signers.blastGovernor.address],
+            rates: [4000],
+          }),
+        ).to.be.emit(feesVaultFactory, 'DefaultDistributionConfig');
+
+        expect(await feesVaultFactory.defaultDistributionConfig()).to.be.deep.eq([6000, [signers.blastGovernor.address], [4000]]);
+        expect(await feesVaultFactory.getDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
+          6000,
+          [signers.blastGovernor.address],
+          [4000],
+        ]);
+
+        await expect(
+          feesVaultFactory.setDefaultDistributionConfig({
+            toGaugeRate: 9997,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [1, 2],
+          }),
+        ).to.be.emit(feesVaultFactory, 'DefaultDistributionConfig');
+
+        let res = await feesVaultFactory.defaultDistributionConfig();
+        expect(res.toGaugeRate).to.be.equal(9997);
+        expect(res.recipients).to.be.deep.equal([signers.blastGovernor.address, signers.deployer.address]);
+        expect(res.rates).to.be.deep.equal([1, 2]);
+      });
+    });
     describe('#setCustomDistributionConfig', async () => {
       it('fail if try set inncorect configs when array length mismatch', async () => {
         await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
