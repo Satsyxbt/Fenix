@@ -114,6 +114,7 @@ export async function getDeployedDataFromDeploys() {
     ),
     VeFnxDistributor: await ethers.getContractAt('VeFnxDistributorUpgradeable', deploysData['VeFnxDistributor']),
     MerklGaugeMiddleman: await ethers.getContractAt('MerklGaugeMiddleman', deploysData['MerklGaugeMiddleman']),
+    RFenix: await ethers.getContractAt('RFenix', deploysData['rFNX']),
   };
 }
 export async function deployERC20Faucet(name: string, symbol: string, decimals: number) {
