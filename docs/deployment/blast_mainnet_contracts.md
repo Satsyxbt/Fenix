@@ -111,3 +111,30 @@ Seted the address that will be set when deploying new pools as an operator for b
     rates: [10000],
   }
 ```
+
+#### Emission
+- Team rate - `5%`
+- Tail emission - `0.2%`
+- Inflation rate  - `1.5%`
+- Inflation period count - `8`
+- Start weekly emisison - `225_000` 
+- Decay rate - `1%`
+
+#### GaugesTypes
+- `0` for V2 pairs
+  - PairFactory v2 - `0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f`
+  - GaugeFactory - `0x0639ecB0B82D7fb625b9598956EE93e1FC4398cE`
+  - Distribution to Merkle - `false`
+- `1` for V3 pools
+  - PairFactory v2 - `0x7a44CD060afC1B6F4c80A2B9b37f4473E74E25Df`
+  - GaugeFactory - `0x30d245a690B2E2105bd22Bd475BBa09921D59EAB`
+  - Distribution to Merkle - `true`
+- `2` for ICHI vaults
+  - PairFactory v2 - `0x7a44CD060afC1B6F4c80A2B9b37f4473E74E25Df`
+  - GaugeFactory - `0xA57B11E7fF9A13Bb2A367dd507D4BB469a3C426d`
+  - Distribution to Merkle - `true`
+  
+#### rFNX
+- veFNX part lock period - `182 days`
+- Applying veBoosts to veFNX - `No`
+- Rate of ***rFNX -> FNX/veFNX*** convertation - `rFNX -> 40% FNX, 60% veFNX `
