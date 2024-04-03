@@ -4,7 +4,7 @@ import { getCreateAddress } from 'ethers';
 import {
   abi as FACTORY_ABI,
   bytecode as FACTORY_BYTECODE,
-} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactory.sol/AlgebraFactory.json';
+} from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 
 import {
   abi as POOL_DEPLOYER_ABI,
@@ -45,9 +45,9 @@ import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from './constants';
 import {
   AlgebraCommunityVault,
-  AlgebraFactory,
-  AlgebraFactory__factory,
+  IAlgebraFactory,
   AlgebraPoolDeployer,
+  AlgebraFactoryUpgradeable,
 } from '../../lib/fenix-dex-v3/src/core/typechain';
 
 export type SignersList = {
@@ -111,7 +111,7 @@ export async function deployTransaperntUpgradeableProxy(
   implementation: string,
 ): Promise<TransparentUpgradeableProxy> {
   const factory = await ethers.getContractFactory('TransparentUpgradeableProxy');
-  return await factory.connect(deployer).deploy(implementation, proxyAdmin, '0x');
+  return (await factory.connect(deployer).deploy(implementation, proxyAdmin, '0x')) as any as TransparentUpgradeableProxy;
 }
 
 export async function deployMinter(
@@ -316,7 +316,7 @@ export async function getSigners() {
 }
 
 export interface FactoryFixture {
-  factory: AlgebraFactory;
+  factory: AlgebraFactoryUpgradeable;
   vault: AlgebraCommunityVault;
 }
 
@@ -325,15 +325,17 @@ export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFix
 
   const poolDeployerAddress = getCreateAddress({
     from: signers.deployer.address,
-    nonce: (await ethers.provider.getTransactionCount(signers.deployer.address)) + 1,
+    nonce: (await ethers.provider.getTransactionCount(signers.deployer.address)) + 3,
   });
   const factoryFactory = await ethers.getContractFactory(FACTORY_ABI, FACTORY_BYTECODE);
-  const factory = (await factoryFactory.deploy(
-    signers.blastGovernor.address,
-    blastPoints,
-    signers.blastGovernor.address,
-    poolDeployerAddress,
-  )) as any as AlgebraFactory;
+  const factoryImplementation = await factoryFactory.deploy();
+
+  const factory = factoryFactory.attach(
+    (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await factoryImplementation.getAddress()))
+      .target,
+  ) as any;
+
+  await factory.initialize(signers.blastGovernor.address, blastPoints, signers.blastGovernor.address, poolDeployerAddress);
 
   const poolDeployerFactory = await ethers.getContractFactory(POOL_DEPLOYER_ABI, POOL_DEPLOYER_BYTECODE);
   const poolDeployer = (await poolDeployerFactory.deploy(signers.blastGovernor.address, factory)) as any as AlgebraPoolDeployer;
