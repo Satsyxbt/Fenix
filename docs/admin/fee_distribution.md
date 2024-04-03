@@ -86,7 +86,14 @@ function setCustomDistributionConfig(address feesVault_, DistributionConfig memo
 ```
 - `feesVault_`: The address of the FeesVault to configure.
 - `config_`: The distribution configuration to apply, specifying `toGaugeRate`, `recipients`, and their respective `rates`.
-
+- 
+#### Setting Default Distribution Configuration
+To define a default fee distribution for a all FeesVault, use the `setDefaultDistributionConfig` method:
+```js
+function setDefaultDistributionConfig(DistributionConfig memory config_)
+```
+- `config_`: The distribution configuration to apply, specifying `toGaugeRate`, `recipients`, and their respective `rates`.
+  
 #### Accessing Fee Distribution Configurations
 To view fee distribution configurations, use the following methods:
 
