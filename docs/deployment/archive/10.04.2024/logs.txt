@@ -9,3 +9,205 @@ for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract VoterUpgradeable on the block explorer.
 https://blastexplorer.io/address/0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9#code
+
+
+
+npx hardhat run .\scripts\11_v1_1_transfer_ownership.ts --network blastMainnet
+Transfer Fenix tokens
+  -- Before
+         totalSupply: 7500000000000000000000000
+         old owner balance: 7500000000000000000000000
+         new owner balance: 0
+
+
+  -- After
+         totalSupply: 7500000000000000000000000
+         old owner balance: 0
+         new owner balance: 7500000000000000000000000
+
+Transfer Minter Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0x0000000000000000000000000000000000000000
+
+:
+  -- After state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer RFenix Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0x0000000000000000000000000000000000000000
+
+:
+  -- After state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer VeFnxDistributor Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0x0000000000000000000000000000000000000000
+
+:
+  -- After state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         pendingOwner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer BribeFactory Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer GaugeFactoryType Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer GaugeFactoryType2 Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer GaugeFactoryType3 Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer MerklGaugeMiddleman Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer VotingEscrow Ownership:
+  -- Current state
+         team() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         team() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer Voter Ownership:
+  -- Current state
+         admin() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+         governance() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         team() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+         governance() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
+
+Transfer FeesVaultFactory Ownership:
+  -- Current state
+         old owner DEFAULT_ADMIN_ROLE - true
+         old owner CLAIM_FEES_CALLER_ROLE - true
+         old owner FEES_VAULT_ADMINISTRATOR_ROLE - true
+         new owner DEFAULT_ADMIN_ROLE - false
+         new owner FEES_VAULT_ADMINISTRATOR_ROLE - false
+         new owner CLAIM_FEES_CALLER_ROLE - false
+
+E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88
+      const error = new ProviderError(
+                    ^
+ProviderError: request failed or timed out
+    at HttpProvider.request (E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88:21)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatEthersProvider.getTransaction (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\internal\hardhat-ethers-provider.ts:307:25)
+    at async checkTx (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:135:26) {
+  parent: undefined,
+  _stack: 'ProviderError: request failed or timed out\n' +
+    '    at HttpProvider.request (E:\\aegas\\fenix-2-clear\\node_modules\\hardhat\\src\\internal\\core\\providers\\http.ts:88:21)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+    '    at async HardhatEthersProvider.getTransaction (E:\\aegas\\fenix-2-clear\\node_modules\\@nomicfoundation\\hardhat-ethers\\src\\internal\\hardhat-ethers-provider.ts:307:25)\n' +
+    '    at async checkTx (E:\\aegas\\fenix-2-clear\\node_modules\\@nomicfoundation\\hardhat-ethers\\src\\signers.ts:135:26)',
+  code: -32603,
+  _isProviderError: true,
+  data: undefined
+}
+
+
+
+
+> npx hardhat run .\scripts\11_v1_1_transfer_ownership.ts --network blastMainnet
+Transfer FeesVaultFactory Ownership:
+  -- Current state
+         old owner DEFAULT_ADMIN_ROLE - true
+         old owner CLAIM_FEES_CALLER_ROLE - false
+         old owner FEES_VAULT_ADMINISTRATOR_ROLE - false
+         new owner DEFAULT_ADMIN_ROLE - false
+         new owner FEES_VAULT_ADMINISTRATOR_ROLE - false
+         new owner CLAIM_FEES_CALLER_ROLE - false
+  
+ -- After state
+         old owner DEFAULT_ADMIN_ROLE - false
+         old owner CLAIM_FEES_CALLER_ROLE - false
+         old owner FEES_VAULT_ADMINISTRATOR_ROLE - false
+         new owner DEFAULT_ADMIN_ROLE - true
+         new owner FEES_VAULT_ADMINISTRATOR_ROLE - true
+         new owner CLAIM_FEES_CALLER_ROLE - true
+
+Tranfer PairFactory Ownership
+  -- Before state
+         old owner DEFAULT_ADMIN_ROLE - true
+         old owner PAIRS_ADMINISTRATOR_ROLE - true
+         old owner PAIRS_CREATOR_ROLE - false
+         old owner FEES_MANAGER_ROLE - true
+         new owner DEFAULT_ADMIN_ROLE - false
+         new owner PAIRS_CREATOR_ROLE - false
+         new owner PAIRS_ADMINISTRATOR_ROLE - false
+         new owner FEES_MANAGER_ROLE - false
+
+E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88
+      const error = new ProviderError(
+                    ^
+ProviderError: request failed or timed out
+    at HttpProvider.request (E:\aegas\fenix-2-clear\node_modules\hardhat\src\internal\core\providers\http.ts:88:21)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatEthersProvider.getTransaction (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\internal\hardhat-ethers-provider.ts:307:25)
+    at async checkTx (E:\aegas\fenix-2-clear\node_modules\@nomicfoundation\hardhat-ethers\src\signers.ts:135:26) {
+  parent: undefined,
+  _stack: 'ProviderError: request failed or timed out\n' +
+    '    at HttpProvider.request (E:\\aegas\\fenix-2-clear\\node_modules\\hardhat\\src\\internal\\core\\providers\\http.ts:88:21)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+    '    at async HardhatEthersProvider.getTransaction (E:\\aegas\\fenix-2-clear\\node_modules\\@nomicfoundation\\hardhat-ethers\\src\\internal\\hardhat-ethers-provider.ts:307:25)\n' +
+    '    at async checkTx (E:\\aegas\\fenix-2-clear\\node_modules\\@nomicfoundation\\hardhat-ethers\\src\\signers.ts:135:26)',
+  code: -32603,
+  _isProviderError: true,
+  data: undefined
+}
+
+
+npx hardhat run .\scripts\11_v1_1_transfer_ownership.ts --network blastMainnet
+ -- After state
+         old owner DEFAULT_ADMIN_ROLE - false
+         old owner PAIRS_ADMINISTRATOR_ROLE - false
+         old owner PAIRS_CREATOR_ROLE - false
+         old owner FEES_MANAGER_ROLE - false
+         new owner DEFAULT_ADMIN_ROLE - true
+         new owner PAIRS_CREATOR_ROLE - true
+         new owner PAIRS_ADMINISTRATOR_ROLE - true
+         new owner FEES_MANAGER_ROLE - true
+
+Transfer ProxyAdmin Ownership:
+  -- Current state
+         owner() - 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+
+:
+  -- After state
+         owner() - 0xED8276141873621c18258D1c963C9F5d4014b5E5
