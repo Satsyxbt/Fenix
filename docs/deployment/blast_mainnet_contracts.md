@@ -42,7 +42,7 @@ Last updated date: **02.04.2024**
 |------------------------------|------------------------------------------|----------------------------------|
 | MinterImplementation         | `0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3` | Implementation for minter        |
 | VeArtProxyImplementation     | `0x3eD36254b340B39c5150fBc97e1d96593Aa38770` | Implementation for art proxy     |
-| VoterImplementation          | `0x015FD12D47241DC6766315fB033b8DE7D043e705` | Implementation for voter         |
+| VoterImplementation          | `0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9` | Implementation for voter         |
 | VotingEscrowImplementation   | `0x77B485433DB4cf314929A36DC3c3601c579091B6` | Implementation for voting escrow |
 | VeFnxDistributorImplementation | `0x3c772ee7Ab45BD106f6af53DE20548df58C3829d` | Implementation for distribution  |
 | BribeFactoryImplementation   | `0xA2E5cd7D56d4e97614c6e0fBB708a8ecaA7437e3` | Implementation for bribe factory |

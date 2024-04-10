@@ -1,0 +1,11 @@
+ npx hardhat run .\scripts\10_v1_1_update_voter_impl.ts --network blastMainnet    
+Start deploy VoterImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy VoterImplementation contract: 0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeable.sol:VoterUpgradeable at 0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeable on the block explorer.
+https://blastexplorer.io/address/0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9#code
