@@ -83,6 +83,9 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     event SetVoteDelay(uint256 old, uint256 latest);
     event AddFactories(address indexed pairfactory, address indexed gaugefactory);
 
+    event SetGovernance(address indexed oldGovernance, address indexed newGovernance);
+    event SetVoterAdmin(address indexed oldAdmin, address indexed newAdmin);
+
     constructor() {
         _disableInitializers();
     }
@@ -163,6 +166,20 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         require(_delay <= MAX_VOTE_DELAY, "max delay");
         emit SetVoteDelay(VOTE_DELAY, _delay);
         VOTE_DELAY = _delay;
+    }
+
+    /// @notice Set a new VoterAdmin
+    function setVoterAdmin(address _admin) external VoterAdmin {
+        require(_admin != address(0), "addr0");
+        emit SetVoterAdmin(admin, _admin);
+        admin = _admin;
+    }
+
+    /// @notice Set a new Governance
+    function setGovernance(address _governance) external Governance {
+        require(_governance != address(0), "addr0");
+        emit SetGovernance(governance, _governance);
+        governance = _governance;
     }
 
     /// @notice Set a new Minter
