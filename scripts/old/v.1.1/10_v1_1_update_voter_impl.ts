@@ -1,4 +1,4 @@
-import { deployBase, getDeployedDataFromDeploys, getDeploysData } from './utils';
+import { deployBase, getDeployedDataFromDeploys, getDeploysData } from '../../utils';
 
 async function main() {
   await deployBase('VoterUpgradeable', 'VoterImplementation');

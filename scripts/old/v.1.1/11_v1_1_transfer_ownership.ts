@@ -1,4 +1,4 @@
-import { getDeployedDataFromDeploys } from './utils';
+import { getDeployedDataFromDeploys } from '../../utils';
 import hre from 'hardhat';
 
 const TARGET = '0xED8276141873621c18258D1c963C9F5d4014b5E5';

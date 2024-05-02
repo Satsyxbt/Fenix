@@ -1,4 +1,4 @@
-import { getDeployedDataFromDeploys, getDeploysData } from './utils';
+import { getDeployedDataFromDeploys, getDeploysData } from '../../utils';
 
 const TARGET_BLAST_GOVERNOR = '0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4';
 

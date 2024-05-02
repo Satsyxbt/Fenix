@@ -1,4 +1,4 @@
-import { getDeploysData } from './utils';
+import { getDeploysData } from '../../utils';
 import { ethers } from 'hardhat';
 
 const BLAST_GOVERNOR = '0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30';

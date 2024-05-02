@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
-import { getDeploysData, saveDeploysData } from './utils';
-import { deployBase } from './utils';
+import { getDeploysData, saveDeploysData } from '../../utils';
+import { deployBase } from '../../utils';
 import hre from 'hardhat';
 
 const WETH = '0x4300000000000000000000000000000000000004';

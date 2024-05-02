@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
-import { getDeploysData } from './utils';
-import { deployBase } from './utils';
+import { getDeploysData } from '../../utils';
+import { deployBase } from '../../utils';
 import hre from 'hardhat';
 
 const NAME = 'rFNX';

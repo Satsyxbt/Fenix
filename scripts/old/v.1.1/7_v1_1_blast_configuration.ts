@@ -2,8 +2,8 @@ import hre from 'hardhat';
 import path from 'path';
 import fs from 'fs';
 
-import { getDeploysData } from './utils';
-import { IBlastMock } from '../typechain-types';
+import { getDeploysData } from '../../utils';
+import { IBlastMock } from '../../../typechain-types';
 
 const TARGET_BLAST_GOVERNOR = '0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4';
 const BLAST = '0x4300000000000000000000000000000000000002';
