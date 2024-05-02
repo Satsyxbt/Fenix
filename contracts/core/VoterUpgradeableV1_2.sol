@@ -899,7 +899,7 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
 
         managedNFTManagerCache.onDettachFromManagedNFT(tokenId_);
 
-        uint256 weight = IVotingEscrowV1_2(_ve).balanceOfNFTAt(managedTokenId, block.timestamp);
+        uint256 weight = IVotingEscrowV1_2(_ve).balanceOfNftIgnoreOwnershipChange(managedTokenId);
         if (weight == 0) {
             _reset(managedTokenId);
             delete lastVoted[managedTokenId];

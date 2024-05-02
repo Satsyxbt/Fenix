@@ -874,8 +874,8 @@ contract VotingEscrowUpgradeableV1_2 is
         return _balanceOfNFT(_tokenId, block.timestamp);
     }
 
-    function balanceOfNFTAt(uint _tokenId, uint _t) external view returns (uint) {
-        return _balanceOfNFT(_tokenId, _t);
+    function balanceOfNftIgnoreOwnershipChange(uint _tokenId) external view returns (uint) {
+        return _balanceOfNFT(_tokenId, block.timestamp);
     }
 
     /// @notice Measure voting power of `_tokenId` at block height `_block`

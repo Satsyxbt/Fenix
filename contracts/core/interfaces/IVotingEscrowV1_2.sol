@@ -6,7 +6,7 @@ interface IVotingEscrowV1_2 {
 
     function deposit_for_without_boost(uint _tokenId, uint _value) external;
 
-    function balanceOfNFTAt(uint tokenId_, uint managedTokenId_) external view returns (uint256);
+    function balanceOfNftIgnoreOwnershipChange(uint tokenId_) external view returns (uint256);
 
     function createManagedNFT(address recipient) external returns (uint256);
 
