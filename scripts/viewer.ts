@@ -64,9 +64,6 @@ async function logVotingEscrow(votingEscrow: VotingEscrowUpgradeable) {
     \tepoch:\t${await votingEscrow.epoch()}
     -- Functions
     \ttotalSupply:\t${await votingEscrow.totalSupply()}
-    \ttotalTokens:\t${await votingEscrow.totalTokens()}
-    \ttotalTokensMinted:\t${await votingEscrow.totalTokensMinted()}
-    \ttotalTokensBurned:\t${await votingEscrow.totalTokensBurned()}
   `);
 }
 

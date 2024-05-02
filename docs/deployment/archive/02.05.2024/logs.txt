@@ -1,0 +1,201 @@
+npx hardhat run .\scripts\1_v1_2_testnet_nest_new_implementations_and_proxy.ts --network blastSepolia
+12_v1_2_testnet_nest_new_implementations_and_proxy -- started
+Start deploy CompoundVeFNXManagedNFTStrategyUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy CompoundVeFNXManagedNFTStrategyUpgradeableImplementation contract: 0x34D15c19210d31d35904CF94e24197F504C5B976
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyUpgradeable.sol:CompoundVeFNXManagedNFTStrategyUpgradeable at 0x34D15c19210d31d35904CF94e24197F504C5B976
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x34D15c19210d31d35904CF94e24197F504C5B976#code
+
+Start deploy SingelTokenVirtualRewarderUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy SingelTokenVirtualRewarderUpgradeableImplementation contract: 0x5470939F464829b340e6477f715324D2F29DDe0e
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0x5470939F464829b340e6477f715324D2F29DDe0e
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess UnexpectedError: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: The Etherscan API responded with a failure status.
+The verification may still succeed but should be checked manually.
+Reason: Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.
+    at Etherscan.getVerificationStatus (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\etherscan.ts:260:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:316:9)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:156:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:285:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+Start deploy CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation contract: 0x3b54C14236EB0758888c19966ac1254B796d7577
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyFactoryUpgradeable.sol:CompoundVeFNXManagedNFTStrategyFactoryUpgradeable at 0x3b54C14236EB0758888c19966ac1254B796d7577
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyFactoryUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x3b54C14236EB0758888c19966ac1254B796d7577#code
+
+Start deploy ManagedNFTManagerUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy ManagedNFTManagerUpgradeableImplementation contract: 0x7759097a047e8116603f57260f42037959C12DBE
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/ManagedNFTManagerUpgradeable.sol:ManagedNFTManagerUpgradeable at 0x7759097a047e8116603f57260f42037959C12DBE
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ManagedNFTManagerUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x7759097a047e8116603f57260f42037959C12DBE#code
+
+Start deploy RouterV2PathProviderUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy RouterV2PathProviderUpgradeableImplementation contract: 0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/RouterV2PathProviderUpgradeable.sol:RouterV2PathProviderUpgradeable at 0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2PathProviderUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D#code
+
+Start deploy VoterUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VoterUpgradeableV1_2Implementation contract: 0xEF13Bb4CcE924550902A5cE9136296bc7F71C9fA
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV1_2.sol:VoterUpgradeableV1_2 at 0xEF13Bb4CcE924550902A5cE9136296bc7F71C9fA
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV1_2 on the block explorer.
+https://sepolia.blastscan.io/address/0xEF13Bb4CcE924550902A5cE9136296bc7F71C9fA#code
+
+Start deploy VotingEscrowUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VotingEscrowUpgradeableV1_2Implementation contract: 0x158d595983C8d99A7795e6831Fe7De4A71c64c2d
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV1_2.sol:VotingEscrowUpgradeableV1_2 at 0x158d595983C8d99A7795e6831Fe7De4A71c64c2d
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess UnexpectedError: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: The Etherscan API responded with a failure status.
+The verification may still succeed but should be checked manually.
+Reason: Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.
+    at Etherscan.getVerificationStatus (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\etherscan.ts:260:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:316:9)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:156:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:285:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+Start deploy proxy for CompoundVeFNXManagedNFTStrategyFactory contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x3b54C14236EB0758888c19966ac1254B796d7577
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy CompoundVeFNXManagedNFTStrategyFactory contract: 0xA1657A57638694bF2cF777aD534FEd66dA22131F
+Start deploy proxy for ManagedNFTManager contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x7759097a047e8116603f57260f42037959C12DBE
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy ManagedNFTManager contract: 0xE905de6ee7252b502170e9105491BFB590Be1388
+Start deploy proxy for RouterV2PathProvider contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy RouterV2PathProvider contract: 0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648
+12_v1_2_testnet_nest_new_implementations_and_proxy -- finished
+
+
+
+ npx hardhat run .\scripts\1_v1_2_testnet_nest_new_implementations_and_proxy.ts --network blastSepolia
+12_v1_2_testnet_nest_new_implementations_and_proxy -- started
+Start deploy SingelTokenVirtualRewarderUpgradeableImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy SingelTokenVirtualRewarderUpgradeableImplementation contract: 0x1c327b1a260136FD528aE461942554c0e8a79b1c
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0x1c327b1a260136FD528aE461942554c0e8a79b1c
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess UnexpectedError: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: The Etherscan API responded with a failure status.
+The verification may still succeed but should be checked manually.
+Reason: Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.
+    at Etherscan.getVerificationStatus (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\etherscan.ts:260:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:316:9)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:156:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:285:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+Start deploy VotingEscrowUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VotingEscrowUpgradeableV1_2Implementation contract: 0x4213F51CcCEA1aa97e9d3E6a223589c48955cA51
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV1_2.sol:VotingEscrowUpgradeableV1_2 at 0x4213F51CcCEA1aa97e9d3E6a223589c48955cA51
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess UnexpectedError: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: The Etherscan API responded with a failure status.
+The verification may still succeed but should be checked manually.
+Reason: Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.
+    at Etherscan.getVerificationStatus (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\etherscan.ts:260:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:316:9)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:156:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:191:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:285:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:358:14)
+12_v1_2_testnet_nest_new_implementations_and_proxy -- finished
+PS E:\aegas\fenix-2-for-push> npx hardhat verify --network blastSepolia 0x5470939F464829b340e6477f715324D2F29DDe0e
+Successfully submitted source code for contract
+contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0x5470939F464829b340e6477f715324D2F29DDe0e
+for verification on the block explorer. Waiting for verification result...

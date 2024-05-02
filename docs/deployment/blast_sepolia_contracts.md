@@ -34,7 +34,9 @@ External:
 | VeBoost                      | `0x23b400098864300B3c2EB40255559c750109f24c` | VeBoost                              | Upgradeable |
 | AlgebraFNXPriceProvider      | `0x968106c45b72eB84A1Abc799CC4AaFf618495c76` | AlgebraFNXPriceProvider              | Upgradeable |
 | VeFnxDistributor | `0x3B23472ad7134508cb24DAB353Cfb7097D33C706` |   FNX Distributor in veFNX NFT | Upgradeable|
-| rFNX | `0x0CBc34cDd5d177c813068fD01D11B419D794eE96` | rFNX with convert to FNX & veFNX | Default |
+| ManagedNFTManager | `0xE905de6ee7252b502170e9105491BFB590Be1388` | Managed NFT Manager | Upgradeable |
+| RouterV2PathProvider | `0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648` | Route provider for buyback functionality | Upgradeable |
+| CompoundVeFNXManagedNFTStrategyFactory | `0xA1657A57638694bF2cF777aD534FEd66dA22131F` | Compound strategy factory |Upgradeable |
 
 ## Implementations for Proxy
 
@@ -54,6 +56,14 @@ External:
 | FeesVaultImplementation      | `0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707` |
 | VeBoostImplementation        | `0x1EdaC08F0B5a60110Bebab6977afB9ACBe65C0C9` |
 | AlgebraFNXPriceProviderImplementation  | `0x1AE69A793A4e20997dd76a51D909859ca869482C` |
+| SingelTokenVirtualRewarderUpgradeableImplementation  | `0x0B4B20da90b6B4DD6e451682A1b8B5aF30175BCc` |
+| CompoundVeFNXManagedNFTStrategyUpgradeableImplementation  | `0x34D15c19210d31d35904CF94e24197F504C5B976` |
+| CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation  | `0x3b54C14236EB0758888c19966ac1254B796d7577` |
+| ManagedNFTManagerUpgradeableImplementation  | `0x7759097a047e8116603f57260f42037959C12DBE` |
+| RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
+| VoterUpgradeableV1_2Implementation  | `0xEF13Bb4CcE924550902A5cE9136296bc7F71C9fA` |
+| VotingEscrowUpgradeableV1_2Implementation  | `0xc2eaCa012d2b8F3A094d4D9A222f9911f40D7d0C` |
+
 
 ## Settings
 ### Ownership
@@ -123,6 +133,9 @@ External:
 - `Min USD for boost` - 10$
 - `Boost percentage` - 10%
 - `FNX boost supply` - 100_000 FNX for boosting
+
+### Voter
+- `Distribution window` - 3600 seconds
   
 ## Test & Mocks
 ### Tokens
