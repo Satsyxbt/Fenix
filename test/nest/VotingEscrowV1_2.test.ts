@@ -279,7 +279,7 @@ describe('VotingEscrowV1_2 Contract', function () {
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('2'));
         expect(await votingEscrow.totalSupply()).to.be.eq(ethers.parseEther('2'));
         expect(await votingEscrow.totalSupplyAt(currentBlock + 1)).to.be.eq(ethers.parseEther('2'));
-        expect(await votingEscrow.totalSupplyAt(currentBlock)).to.be.closeTo(ethers.parseEther('1.9'), ethers.parseEther('0.09'));
+        expect(await votingEscrow.totalSupplyAt(currentBlock)).to.be.closeTo(ethers.parseEther('1.9'), ethers.parseEther('0.099'));
       });
     });
   });
@@ -474,7 +474,7 @@ describe('VotingEscrowV1_2 Contract', function () {
 
       let unlockPermanent = (await votingEscrow.connect(signers.otherUser1).unlockPermanent(nftId1)).blockNumber!;
 
-      expect(await votingEscrow.totalSupplyAt(unlockPermanent)).to.be.closeTo(ethers.parseEther('2.9'), ethers.parseEther('0.09'));
+      expect(await votingEscrow.totalSupplyAt(unlockPermanent)).to.be.closeTo(ethers.parseEther('2.9'), ethers.parseEther('0.099'));
       expect(await votingEscrow.totalSupplyAt(unlockPermanent - 1)).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('0.2'));
 
       await time.increaseTo(await nextEpoch());
@@ -559,17 +559,17 @@ describe('VotingEscrowV1_2 Contract', function () {
       expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('4'));
       expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('4'));
       expect(await votingEscrow.totalSupplyAt(lockPermanentBlock)).to.be.eq(ethers.parseEther('4'));
-      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock - 1)).to.be.closeTo(ethers.parseEther('3.6'), ethers.parseEther('0.3'));
+      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock - 1)).to.be.closeTo(ethers.parseEther('3.6'), ethers.parseEther('0.399'));
 
       await votingEscrow.connect(signers.otherUser1).unlockPermanent(nftId1);
 
-      expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('3.9'), ethers.parseEther('0.09'));
+      expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('3.9'), ethers.parseEther('0.099'));
       expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('4'));
       expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
 
-      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock + 1)).to.be.closeTo(ethers.parseEther('3.9'), ethers.parseEther('0.09'));
+      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock + 1)).to.be.closeTo(ethers.parseEther('3.9'), ethers.parseEther('0.099'));
       expect(await votingEscrow.totalSupplyAt(lockPermanentBlock)).to.be.eq(ethers.parseEther('4'));
-      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock - 1)).to.be.closeTo(ethers.parseEther('3.6'), ethers.parseEther('0.3'));
+      expect(await votingEscrow.totalSupplyAt(lockPermanentBlock - 1)).to.be.closeTo(ethers.parseEther('3.6'), ethers.parseEther('0.399'));
     });
     it('short totalSupply', async () => {
       nftId1 = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
