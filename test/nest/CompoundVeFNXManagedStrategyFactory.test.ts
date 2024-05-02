@@ -67,7 +67,7 @@ describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
     strategyImplementation = await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable');
     virtualRewarderImplementation = await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable');
 
-    strategyFactory.initialize(
+    await strategyFactory.initialize(
       signers.blastGovernor.address,
       strategyImplementation.target,
       virtualRewarderImplementation.target,

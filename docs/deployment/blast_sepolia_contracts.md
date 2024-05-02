@@ -61,8 +61,8 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation  | `0x3b54C14236EB0758888c19966ac1254B796d7577` |
 | ManagedNFTManagerUpgradeableImplementation  | `0x7759097a047e8116603f57260f42037959C12DBE` |
 | RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
-| VoterUpgradeableV1_2Implementation  | `0xEF13Bb4CcE924550902A5cE9136296bc7F71C9fA` |
-| VotingEscrowUpgradeableV1_2Implementation  | `0xc2eaCa012d2b8F3A094d4D9A222f9911f40D7d0C` |
+| VoterUpgradeableV1_2Implementation  | `0xAF15A0b49D3bc095d9cFa5560144A1B458f81574` |
+| VotingEscrowUpgradeableV1_2Implementation  | `0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F` |
 
 
 ## Settings
@@ -138,6 +138,12 @@ External:
 - `Distribution window` - 3600 seconds
   
 ## Test & Mocks
+
+### Managed NFTS
+- **Strategy**: 0x40BfCfd444c4085E939688A78b451761018B01a7
+- **veFNX Nft Id**: 4
+- **Type**: Compound
+  
 ### Tokens
 - `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` - fnUSDT
 - `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` - fnTOK

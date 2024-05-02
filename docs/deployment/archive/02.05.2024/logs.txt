@@ -199,3 +199,46 @@ PS E:\aegas\fenix-2-for-push> npx hardhat verify --network blastSepolia 0x547093
 Successfully submitted source code for contract
 contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0x5470939F464829b340e6477f715324D2F29DDe0e
 for verification on the block explorer. Waiting for verification result...
+
+npx hardhat run .\scripts\3_v1_2_update_vote_and_ve_to_last_implementation.ts --network blastSepolia
+3_v1_2_update_vote_and_ve_to_last_implementation -- started
+Start deploy VoterUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VoterUpgradeableV1_2Implementation contract: 0xAF15A0b49D3bc095d9cFa5560144A1B458f81574
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV1_2.sol:VoterUpgradeableV1_2 at 0xAF15A0b49D3bc095d9cFa5560144A1B458f81574
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV1_2 on the block explorer.
+https://testnet.blastscan.io/address/0xAF15A0b49D3bc095d9cFa5560144A1B458f81574#code
+
+Start deploy VotingEscrowUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VotingEscrowUpgradeableV1_2Implementation contract: 0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV1_2.sol:VotingEscrowUpgradeableV1_2 at 0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F
+for verification on the block explorer. Waiting for verification result...
+
+Error with verification proccess VerificationAPIUnexpectedMessageError: The API responded with an unexpected message.
+Please report this issue to the Hardhat team.
+Contract verification may have succeeded and should be checked manually.
+Message: Error: Compilation successful, but bytecode does not match with deployed bytecode for address 0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F, please check your parameters
+    at SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:317:15)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:155:7)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+    at async SimpleTaskDefinition.action (E:\aegas\fenix-2-for-push\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:284:9)
+    at async Environment._runTaskDefinition (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+    at async Environment.run (E:\aegas\fenix-2-for-push\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+3_v1_2_update_vote_and_ve_to_last_implementation -- finished
+
+
+
+
+
+
