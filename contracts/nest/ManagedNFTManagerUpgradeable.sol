@@ -64,11 +64,6 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
     }
 
     /**
-     * @dev Role identifier for managing NFTs, providing administrative privileges.
-     */
-    bytes32 public constant MANAGED_NFT_MANAGER = keccak256("MANAGED_NFT_MANAGER");
-
-    /**
      * @dev Role identifier for administrative functions within the NFT management context.
      */
     bytes32 public constant MANAGED_NFT_ADMIN = keccak256("MANAGED_NFT_ADMIN");
@@ -129,7 +124,6 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
         _checkAddressZero(voter_);
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MANAGED_NFT_MANAGER, msg.sender);
         _grantRole(MANAGED_NFT_ADMIN, msg.sender);
 
         votingEscrow = votingEscrow_;
@@ -140,12 +134,11 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
      * @notice Creates a managed NFT and attaches it to a strategy
      * @param strategy_ The strategy to which the managed NFT will be attached
      */
-    function createManagedNFT(address strategy_) external onlyRole(MANAGED_NFT_MANAGER) returns (uint256 managedTokenId) {
+    function createManagedNFT(address strategy_) external onlyRole(MANAGED_NFT_ADMIN) returns (uint256 managedTokenId) {
         managedTokenId = IVotingEscrowV1_2(votingEscrow).createManagedNFT(strategy_);
-
         managedTokensInfo[managedTokenId] = ManagedTokenInfo(true, false, address(0));
-
         IManagedNFTStrategy(strategy_).attachManagedNFT(managedTokenId);
+        emit CreateManagedNFT(msg.sender, strategy_, managedTokenId);
     }
 
     /**
@@ -153,9 +146,26 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
      * @param managedTokenId_ The token ID to authorize
      * @param authorizedUser_ The user being authorized
      */
-    function setAuthorizedUser(uint256 managedTokenId_, address authorizedUser_) external onlyRole(MANAGED_NFT_MANAGER) {
+    function setAuthorizedUser(uint256 managedTokenId_, address authorizedUser_) external onlyRole(MANAGED_NFT_ADMIN) {
+        if (!managedTokensInfo[managedTokenId_].isManaged) {
+            revert NotManagedNFT();
+        }
         managedTokensInfo[managedTokenId_].authorizedUser = authorizedUser_;
         emit SetAuthorizedUser(managedTokenId_, authorizedUser_);
+    }
+
+    /**
+     * @notice Toggles the disabled state of a managed NFT
+     * @param managedTokenId_ The ID of the managed token to toggle
+     * @dev Enables or disables a managed token to control its operational status, with an event emitted for state change.
+     */
+    function toggleDisableManagedNFT(uint256 managedTokenId_) external onlyRole(MANAGED_NFT_ADMIN) {
+        if (!managedTokensInfo[managedTokenId_].isManaged) {
+            revert NotManagedNFT();
+        }
+        bool isDisable = !managedTokensInfo[managedTokenId_].isDisabled;
+        managedTokensInfo[managedTokenId_].isDisabled = isDisable;
+        emit ToggleDisableManagedNFT(msg.sender, managedTokenId_, isDisable);
     }
 
     /**
@@ -215,7 +225,7 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
      * @param tokenId_ The token ID of the NFT
      * @param isWhitelisted_ True if whitelisting, false otherwise
      */
-    function setWhitelistedNFT(uint256 tokenId_, bool isWhitelisted_) external onlyRole(MANAGED_NFT_MANAGER) {
+    function setWhitelistedNFT(uint256 tokenId_, bool isWhitelisted_) external onlyRole(MANAGED_NFT_ADMIN) {
         isWhitelistedNFT[tokenId_] = isWhitelisted_;
         emit SetWhitelistedNFT(tokenId_, isWhitelisted_);
     }

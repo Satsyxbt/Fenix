@@ -73,6 +73,26 @@ interface ICompoundVeFNXManagedNFTStrategy is IManagedNFTStrategy, ISingelTokenB
     function fenix() external view returns (address);
 
     /**
+     * @notice Retrieves the total amount of locked rewards available for a specific NFT based on its tokenId.
+     * @param tokenId_ The identifier of the NFT to query.
+     * @return The total amount of locked rewards for the specified NFT.
+     */
+    function getLockedRewardsBalance(uint256 tokenId_) external view returns (uint256);
+
+    /**
+     * @notice Retrieves the balance or stake associated with a specific NFT.
+     * @param tokenId_ The identifier of the NFT to query.
+     * @return The balance of the specified NFT.
+     */
+    function balanceOf(uint256 tokenId_) external view returns (uint256);
+
+    /**
+     * @notice Retrieves the total supply of stakes managed by the strategy.
+     * @return The total supply of stakes.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
      * @notice Initializes the contract with necessary blast governance and operational addresses, and sets specific strategy parameters.
      *
      * @param blastGovernor_ Address of the blast governor contract.

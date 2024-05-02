@@ -97,6 +97,32 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
     }
 
     /**
+     * @notice Retrieves the total amount of locked rewards available for a specific NFT based on its tokenId.
+     * @param tokenId_ The identifier of the NFT to query.
+     * @return The total amount of locked rewards for the specified NFT.
+     */
+    function getLockedRewardsBalance(uint256 tokenId_) external view returns (uint256) {
+        return ISingelTokenVirtualRewarder(virtualRewarder).calculateAvailableRewardsAmount(tokenId_);
+    }
+
+    /**
+     * @notice Retrieves the balance or stake associated with a specific NFT.
+     * @param tokenId_ The identifier of the NFT to query.
+     * @return The balance of the specified NFT.
+     */
+    function balanceOf(uint256 tokenId_) external view returns (uint256) {
+        return ISingelTokenVirtualRewarder(virtualRewarder).balanceOf(tokenId_);
+    }
+
+    /**
+     * @notice Retrieves the total supply of stakes managed by the strategy.
+     * @return The total supply of stakes.
+     */
+    function totalSupply() external view returns (uint256) {
+        return ISingelTokenVirtualRewarder(virtualRewarder).totalSupply();
+    }
+
+    /**
      * @notice Compounds the earnings by reinvesting the harvested rewards into the underlying asset.
      * @dev Calls the Voting Escrow contract to lock up harvested FENIX tokens, thereby compounding the rewards.
      */
@@ -129,7 +155,9 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      * @param token_ The address of the token to recover.
      * @param recipient_ The address where the recovered tokens should be sent.
      */
-    function erc20Recover(address token_, address recipient_) external onlyAdmin {
+    function erc20Recover(address token_, address recipient_) external {
+        _checkBuybackSwapPermissions();
+
         if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
             revert IncorrectRecoverToken();
         }

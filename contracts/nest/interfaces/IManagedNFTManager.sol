@@ -7,6 +7,22 @@ pragma solidity >=0.8.0;
  */
 interface IManagedNFTManager {
     /**
+     * @dev Emitted when the disabled state of a managed NFT is toggled.
+     * @param sender The address that triggered the state change.
+     * @param tokenId The ID of the managed NFT affected.
+     * @param isDisable True if the NFT is now disabled, false if it is enabled.
+     */
+    event ToggleDisableManagedNFT(address indexed sender, uint256 indexed tokenId, bool indexed isDisable);
+
+    /**
+     * @dev Emitted when a new managed NFT is created and attached to a strategy.
+     * @param sender The address that performed the creation.
+     * @param strategy The address of the strategy to which the NFT is attached.
+     * @param tokenId The ID of the newly created managed NFT.
+     */
+    event CreateManagedNFT(address indexed sender, address indexed strategy, uint256 indexed tokenId);
+
+    /**
      * @dev Emitted when an NFT is whitelisted or removed from the whitelist.
      * @param tokenId The ID of the NFT being modified.
      * @param isWhitelisted True if the NFT is being whitelisted, false if it is being removed from the whitelist.
@@ -19,19 +35,6 @@ interface IManagedNFTManager {
      * @param authorizedUser The address being authorized.
      */
     event SetAuthorizedUser(uint256 indexed managedTokenId, address authorizedUser);
-
-    /**
-     * @notice Attaches a user's NFT to a managed NFT, enabling it within a specific strategy.
-     * @param tokenId_ The user's NFT token ID.
-     * @param managedTokenId The managed NFT token ID.
-     */
-    function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId) external;
-
-    /**
-     * @notice Detaches a user's NFT from a managed NFT, disabling it within the strategy.
-     * @param tokenId_ The user's NFT token ID.
-     */
-    function onDettachFromManagedNFT(uint256 tokenId_) external;
 
     /**
      * @notice Checks if a managed NFT is currently disabled.
@@ -62,18 +65,18 @@ interface IManagedNFTManager {
     function isAttachedNFT(uint256 tokenId_) external view returns (bool);
 
     /**
-     * @notice Retrieves the managed token ID that a user's NFT is attached to.
-     * @param tokenId_ The ID of the user's NFT.
-     * @return The ID of the managed token to which the NFT is attached.
-     */
-    function getAttachedManagedTokenId(uint256 tokenId_) external view returns (uint256);
-
-    /**
      * @notice Checks if a given account is an administrator of the managed NFT system.
      * @param account_ The address to check.
      * @return True if the address is an admin, false otherwise.
      */
     function isAdmin(address account_) external view returns (bool);
+
+    /**
+     * @notice Retrieves the managed token ID that a user's NFT is attached to.
+     * @param tokenId_ The ID of the user's NFT.
+     * @return The ID of the managed token to which the NFT is attached.
+     */
+    function getAttachedManagedTokenId(uint256 tokenId_) external view returns (uint256);
 
     /**
      * @notice Address of the Voting Escrow contract managing voting and staking mechanisms.
@@ -99,4 +102,30 @@ interface IManagedNFTManager {
      * @param authorizedUser_ The address to authorize.
      */
     function setAuthorizedUser(uint256 managedTokenId_, address authorizedUser_) external;
+
+    /**
+     * @notice Creates a managed NFT and attaches it to a strategy
+     * @param strategy_ The strategy to which the managed NFT will be attached
+     */
+    function createManagedNFT(address strategy_) external returns (uint256 managedTokenId);
+
+    /**
+     * @notice Toggles the disabled state of a managed NFT
+     * @param managedTokenId_ The ID of the managed token to toggle
+     * @dev Enables or disables a managed token to control its operational status, with an event emitted for state change.
+     */
+    function toggleDisableManagedNFT(uint256 managedTokenId_) external;
+
+    /**
+     * @notice Attaches a user's NFT to a managed NFT, enabling it within a specific strategy.
+     * @param tokenId_ The user's NFT token ID.
+     * @param managedTokenId The managed NFT token ID.
+     */
+    function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId) external;
+
+    /**
+     * @notice Detaches a user's NFT from a managed NFT, disabling it within the strategy.
+     * @param tokenId_ The user's NFT token ID.
+     */
+    function onDettachFromManagedNFT(uint256 tokenId_) external;
 }

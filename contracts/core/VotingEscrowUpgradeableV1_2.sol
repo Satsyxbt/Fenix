@@ -123,17 +123,17 @@ contract VotingEscrowUpgradeableV1_2 is
     uint8 public constant decimals = 18;
 
     function setTeam(address _team) external {
-        require(msg.sender == team);
+        _checkOnlyTeamAccess();
         team = _team;
     }
 
     function setArtProxy(address _proxy) external {
-        require(msg.sender == team);
+        _checkOnlyTeamAccess();
         artProxy = _proxy;
     }
 
     function setVeBoost(address _veBoost) external {
-        require(msg.sender == team);
+        _checkOnlyTeamAccess();
         veBoost = _veBoost;
     }
 
@@ -272,7 +272,7 @@ contract VotingEscrowUpgradeableV1_2 is
     ///      Throws if `_from` is not the current owner.
     ///      Throws if `_tokenId` is not a valid NFT.
     function _transferFrom(address _from, address _to, uint _tokenId, address _sender) internal {
-        require(attachments[_tokenId] == 0 && !voted[_tokenId], "attached");
+        require(!voted[_tokenId], "attached");
         // Check requirements
         require(_isApprovedOrOwner(_sender, _tokenId));
         // Clear approval. Throws if `_from` is not the current owner
@@ -487,7 +487,7 @@ contract VotingEscrowUpgradeableV1_2 is
         int128 permanent;
 
         if (_tokenId != 0) {
-            permanent = old_locked.isPermanentLocked ? new_locked.amount : int128(0);
+            permanent = new_locked.isPermanentLocked ? new_locked.amount : int128(0);
 
             // Calculate slopes and biases
             // Kept at zero when they have to
@@ -514,8 +514,10 @@ contract VotingEscrowUpgradeableV1_2 is
         }
 
         Point memory last_point = Point({bias: 0, slope: 0, ts: block.timestamp, blk: block.number});
+        uint256 permanentLockSupply = 0;
         if (_epoch > 0) {
             last_point = point_history[_epoch];
+            permanentLockSupply = permanentTotalSupplyPoints[_epoch];
         }
         uint last_checkpoint = last_point.ts;
         // initial_last_point is used for extrapolation to calculate block number
@@ -561,6 +563,7 @@ contract VotingEscrowUpgradeableV1_2 is
                     break;
                 } else {
                     point_history[_epoch] = last_point;
+                    permanentTotalSupplyPoints[_epoch] = permanentLockSupply;
                 }
             }
         }
@@ -583,6 +586,7 @@ contract VotingEscrowUpgradeableV1_2 is
 
         // Record the changed point into history
         point_history[_epoch] = last_point;
+        permanentTotalSupplyPoints[_epoch] = permanentTotalSupply;
 
         if (_tokenId != 0) {
             // Schedule the slope changes (slope is going down)
@@ -642,7 +646,7 @@ contract VotingEscrowUpgradeableV1_2 is
 
         // Adding to existing lock, or if a lock is expired - creating a new one
         _locked.amount += int128(int256(_value));
-        if (unlock_time != 0) {
+        if (unlock_time != 0 && !old_locked.isPermanentLocked) {
             _locked.end = unlock_time;
         }
         uint256 boostedValue;
@@ -674,10 +678,6 @@ contract VotingEscrowUpgradeableV1_2 is
 
         locked[_tokenId] = _locked;
 
-        // Possibilities:
-        // Both old_locked.end could be current or expired (>/< block.timestamp)
-        // value == 0 (extend lock) or value > 0 (add to lock or extend lock)
-        // _locked.end > block.timestamp (always)
         _checkpoint(_tokenId, old_locked, _locked);
 
         address from = msg.sender;
@@ -705,8 +705,15 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @param _tokenId lock NFT
     /// @param _value Amount to add to user's lock
     function deposit_for(uint _tokenId, uint _value) external nonReentrant {
-        _onlyCorrectLock(_tokenId, _value);
-        _deposit_for(_tokenId, _value, 0, locked[_tokenId], DepositType.DEPOSIT_FOR_TYPE, true);
+        require(_value > 0); // dev: need non-zero value
+
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        require(!managedNFTManagerCache.isAttachedNFT(_tokenId), "attached");
+        LockedBalance memory lockedBalance = locked[_tokenId];
+        require(lockedBalance.amount > 0, "no lock found");
+        require(lockedBalance.isPermanentLocked || lockedBalance.end > block.timestamp, "expired lock");
+
+        _deposit_for(_tokenId, _value, 0, lockedBalance, DepositType.DEPOSIT_FOR_TYPE, true);
     }
 
     /// @notice Deposit `_value` tokens for `_tokenId` and add to the lock
@@ -715,7 +722,15 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @param _tokenId lock NFT
     /// @param _value Amount to add to user's lock
     function deposit_for_without_boost(uint _tokenId, uint _value) external nonReentrant {
-        _onlyCorrectLock(_tokenId, _value);
+        require(_value > 0); // dev: need non-zero value
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        require(!managedNFTManagerCache.isAttachedNFT(_tokenId), "attached");
+        LockedBalance memory lockedBalance = locked[_tokenId];
+        if (!managedNFTManagerCache.isManagedNFT(_tokenId)) {
+            require(lockedBalance.amount > 0, "no lock found");
+        }
+        require(lockedBalance.isPermanentLocked || lockedBalance.end > block.timestamp, "expired lock");
+
         _deposit_for(_tokenId, _value, 0, locked[_tokenId], DepositType.DEPOSIT_FOR_TYPE, false);
     }
 
@@ -730,8 +745,7 @@ contract VotingEscrowUpgradeableV1_2 is
         require(unlock_time > block.timestamp, "Can only lock until time in the future");
         require(unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 182 days max");
 
-        ++tokenId;
-        uint _tokenId = tokenId;
+        uint _tokenId = ++tokenId;
         _mint(_to, _tokenId);
 
         _deposit_for(_tokenId, _value, unlock_time, locked[_tokenId], DepositType.CREATE_LOCK_TYPE, isShouldBoosted);
@@ -765,12 +779,17 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @param _lock_duration New number of seconds until tokens unlock
     function increase_unlock_time(uint _tokenId, uint _lock_duration) external nonReentrant {
         assert(_isApprovedOrOwner(msg.sender, _tokenId));
-        _onlyCorrectLock(_tokenId, 1);
 
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        require(!managedNFTManagerCache.isAttachedNFT(_tokenId), "attached");
         LockedBalance memory _locked = locked[_tokenId];
+        require(_locked.amount > 0, "no lock found");
+        require(!_locked.isPermanentLocked, "is permanent lock");
+        require(_locked.end > block.timestamp, "expired lock");
+
         uint unlock_time = ((block.timestamp + _lock_duration) / WEEK) * WEEK; // Locktime is rounded down to weeks
-        require(unlock_time > _locked.end, "Can only increase lock duration");
-        require(unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 182 days max");
+        require(unlock_time > _locked.end, "only increase lock duration");
+        require(unlock_time <= block.timestamp + MAXTIME, "182 days max");
 
         _deposit_for(_tokenId, 0, unlock_time, _locked, DepositType.INCREASE_UNLOCK_TIME, false);
     }
@@ -779,9 +798,11 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @dev Only possible if the lock has expired
     function withdraw(uint _tokenId) external nonReentrant {
         assert(_isApprovedOrOwner(msg.sender, _tokenId));
-        require(attachments[_tokenId] == 0 && !voted[_tokenId], "attached");
+        require(!voted[_tokenId], "attached");
 
         LockedBalance memory _locked = locked[_tokenId];
+        require(!_locked.isPermanentLocked, "is permanent lock");
+
         require(block.timestamp >= _locked.end, "The lock didn't expire");
         uint value = uint(int256(_locked.amount));
 
@@ -789,9 +810,6 @@ contract VotingEscrowUpgradeableV1_2 is
         uint supply_before = supply;
         supply = supply_before - value;
 
-        // old_locked can have either expired <= timestamp or zero end
-        // _locked has only 0 end
-        // Both can have >= 0 amount
         _checkpoint(_tokenId, _locked, LockedBalance(0, 0, false));
 
         assert(IERC20(token).transfer(msg.sender, value));
@@ -807,14 +825,6 @@ contract VotingEscrowUpgradeableV1_2 is
                            GAUGE VOTING STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    // The following ERC20/minime-compatible methods are not real balanceOf and supply!
-    // They measure the weights for the purpose of voting, so they don't represent
-    // real coins.
-
-    /// @notice Binary search to estimate timestamp for block number
-    /// @param _block Block to find
-    /// @param max_epoch Don't go beyond this epoch
-    /// @return Approximate timestamp for block
     function _find_block_epoch(uint _block, uint max_epoch) internal view returns (uint) {
         // Binary search
         uint _min = 0;
@@ -900,7 +910,7 @@ contract VotingEscrowUpgradeableV1_2 is
         uint _epoch = _find_block_epoch(_block, max_epoch);
         Point memory point_0 = point_history[_epoch];
 
-        int128 permanent = permanentPoints[_tokenId][_epoch];
+        int128 permanent = permanentPoints[_tokenId][_min];
         if (permanent > 0) {
             return uint(uint128(permanent));
         }
@@ -1006,7 +1016,7 @@ contract VotingEscrowUpgradeableV1_2 is
     mapping(uint => bool) public voted;
 
     function setVoter(address _voter) external {
-        require(msg.sender == team);
+        _checkOnlyTeamAccess();
         voter = _voter;
     }
 
@@ -1021,7 +1031,7 @@ contract VotingEscrowUpgradeableV1_2 is
     }
 
     function merge(uint _from, uint _to) external {
-        require(attachments[_from] == 0 && !voted[_from], "attached");
+        require(!voted[_from], "attached");
         require(_from != _to);
         require(_isApprovedOrOwner(msg.sender, _from));
         require(_isApprovedOrOwner(msg.sender, _to));
@@ -1030,14 +1040,13 @@ contract VotingEscrowUpgradeableV1_2 is
         _onlyNormalNFT(_to);
 
         LockedBalance memory _locked0 = locked[_from];
+
+        require(!_locked0.isPermanentLocked, "from is permanent lock");
+
         LockedBalance memory _locked1 = locked[_to];
         uint value0 = uint(int256(_locked0.amount));
 
         supply -= value0;
-
-        if (_locked0.isPermanentLocked) {
-            permanentTotalSupply -= value0;
-        }
 
         uint end = _locked0.end >= _locked1.end ? _locked0.end : _locked1.end;
 
@@ -1073,7 +1082,20 @@ contract VotingEscrowUpgradeableV1_2 is
     mapping(uint256 tokenId => mapping(uint256 epoch => int128 permanentBalance)) public permanentPoints;
     mapping(uint256 epoch => uint256 permanentTotalSupply) public permanentTotalSupplyPoints;
 
+    /**
+     * @notice Emitted when a token is permanently locked by a user.
+     * @dev This event is fired to signal that the specified token has been moved to a permanently locked state
+     * @param sender The address of the user who initiated the lock.
+     * @param tokenId The ID of the token that has been permanently locked.
+     */
     event LockPermanent(address indexed sender, uint256 indexed tokenId);
+
+    /**
+     * @notice Emitted when a token is unlocked from a permanent lock state by a user.
+     * @dev This event indicates that the specified token has been released from its permanent lock status
+     * @param sender The address of the user who initiated the unlock.
+     * @param tokenId The ID of the token that has been unlocked from its permanent state.
+     */
     event UnlockPermanent(address indexed sender, uint256 indexed tokenId);
 
     function lockPermanent(uint256 tokenId_) external {
@@ -1083,7 +1105,10 @@ contract VotingEscrowUpgradeableV1_2 is
         LockedBalance memory lockedBalance = locked[tokenId_];
         require(!lockedBalance.isPermanentLocked, "already locked");
 
-        _onlyCorrectLock(tokenId_, 1);
+        require(lockedBalance.amount > 0, "no lock found");
+        if (!lockedBalance.isPermanentLocked) {
+            require(lockedBalance.end > block.timestamp, "expired lock");
+        }
 
         uint256 amount = uint256(int256(lockedBalance.amount));
 
@@ -1104,7 +1129,7 @@ contract VotingEscrowUpgradeableV1_2 is
 
         _onlyNormalNFT(tokenId_);
 
-        require(attachments[tokenId_] == 0 && !voted[tokenId_], "voted");
+        require(!voted[tokenId_], "voted");
 
         LockedBalance memory lockedBalance = locked[tokenId_];
         require(lockedBalance.isPermanentLocked, "no permanent lock");
@@ -1133,8 +1158,7 @@ contract VotingEscrowUpgradeableV1_2 is
      * @param managedNFTManager_ The new Managed NFT Manager address.
      */
     function setManagedNFTManager(address managedNFTManager_) external {
-        require(msg.sender == team);
-
+        _checkOnlyTeamAccess();
         managedNFTManager = managedNFTManager_;
     }
 
@@ -1145,11 +1169,8 @@ contract VotingEscrowUpgradeableV1_2 is
      */
     function createManagedNFT(address recipient_) external nonReentrant returns (uint256 managedNftId) {
         _onlyManagedNFTManager();
-
         managedNftId = ++tokenId;
-
         _mint(recipient_, managedNftId);
-
         _deposit_for(managedNftId, 0, 0, LockedBalance(0, 0, true), DepositType.CREATE_LOCK_TYPE, false);
     }
 
@@ -1162,8 +1183,9 @@ contract VotingEscrowUpgradeableV1_2 is
      */
     function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant returns (uint256) {
         _onlyManagedNFTManager();
-
         _onlyNormalNFT(tokenId_);
+
+        require(!voted[tokenId_], "voted");
 
         require(IManagedNFTManager(managedNFTManager).isManagedNFT(managedTokenId_), "not managed nft");
 
@@ -1177,7 +1199,7 @@ contract VotingEscrowUpgradeableV1_2 is
         }
 
         _checkpoint(tokenId_, locked[tokenId_], LockedBalance(0, 0, false));
-        locked[tokenId] = LockedBalance(0, 0, false);
+        locked[tokenId_] = LockedBalance(0, 0, false);
 
         permanentTotalSupply += cAmount;
 
@@ -1188,7 +1210,7 @@ contract VotingEscrowUpgradeableV1_2 is
 
         locked[managedTokenId_] = newLocked;
 
-        return uint256(int256(amount));
+        return cAmount;
     }
 
     /**
@@ -1239,15 +1261,8 @@ contract VotingEscrowUpgradeableV1_2 is
         return ((block.timestamp + MAXTIME) / WEEK) * WEEK;
     }
 
-    function _onlyCorrectLock(uint256 tokenId_, uint256 value_) internal view {
-        require(value_ > 0); // dev: need non-zero value
-
-        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
-        if (!managedNFTManagerCache.isManagedNFT(tokenId_)) {
-            LockedBalance memory lockedBalance = locked[tokenId_];
-            require(lockedBalance.amount > 0, "no lock found");
-            require(lockedBalance.end > block.timestamp, "expired lock");
-        }
+    function _checkOnlyTeamAccess() internal view {
+        require(msg.sender == team);
     }
 
     /**
@@ -1255,5 +1270,5 @@ contract VotingEscrowUpgradeableV1_2 is
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[49] private __gap;
+    uint256[50] private __gap;
 }

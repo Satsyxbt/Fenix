@@ -874,7 +874,6 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
     function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant {
         require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, tokenId_), "!approved/Owner");
         _voteDelay(tokenId_);
-
         _checkEndVoteWindow();
 
         IManagedNFTManager(managedNFTManager).onAttachToManagedNFT(tokenId_, managedTokenId_);
@@ -892,6 +891,7 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
     function dettachFromManagedNFT(uint256 tokenId_) external nonReentrant {
         require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, tokenId_), "!approved/Owner");
         _voteDelay(tokenId_);
+        _checkEndVoteWindow();
 
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
 
@@ -967,5 +967,5 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[47] private __gap;
+    uint256[50] private __gap;
 }
