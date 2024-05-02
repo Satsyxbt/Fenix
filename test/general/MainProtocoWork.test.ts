@@ -180,10 +180,10 @@ describe('Main', function () {
   it(`users success lock they veFNX tokens`, async () => {
     await fenix.approve(await deployed.votingEscrow.target, ethers.parseEther('200'));
     await deployed.votingEscrow.create_lock(ethers.parseEther('100'), 170 * 86400);
-    user1TokenId = await deployed.votingEscrow.totalTokens();
+    user1TokenId = await deployed.votingEscrow.tokenId();
 
     await deployed.votingEscrow.create_lock_for(ethers.parseEther('50'), 170 * 86400, signers.otherUser1.address);
-    user2TokenId = await deployed.votingEscrow.totalTokens();
+    user2TokenId = await deployed.votingEscrow.tokenId();
   });
 
   it(`user success voters for diff pairs`, async () => {
@@ -427,7 +427,7 @@ describe('Main', function () {
 
     await deployed.votingEscrow.connect(signers.otherUser2).create_lock(ethers.parseEther('100'), 163 * 86400);
 
-    user3TokenId = await deployed.votingEscrow.totalTokens();
+    user3TokenId = await deployed.votingEscrow.tokenId();
 
     await deployed.voter.vote(user1TokenId, [poolV2FenixTk18.target], [1000]); // 100 fnx
     await deployed.voter.connect(signers.otherUser1).vote(user2TokenId, [poolV3FenixTk18.target], [1000]); // 50 fnx

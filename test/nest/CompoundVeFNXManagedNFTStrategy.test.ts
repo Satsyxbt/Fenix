@@ -165,6 +165,7 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
     it('success store user attached nft balance like deposit in virtual rewarder', async () => {
       expect(await deployed.votingEscrow.balanceOfNFT(managedNftId)).to.be.eq(ZERO);
       expect(await virtualRewarder.totalSupply()).to.be.eq(ZERO);
+      expect(await firstStrategy.totalSupply()).to.be.eq(ZERO);
 
       let tx = await deployed.voter.connect(signers.otherUser1).attachToManagedNFT(userNftId, managedNftId);
       await expect(tx).to.be.emit(firstStrategy, 'OnAttach').withArgs(userNftId, ethers.parseEther('1'));
@@ -174,6 +175,8 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
 
       expect(await virtualRewarder.totalSupply()).to.be.eq(ethers.parseEther('1'));
       expect(await virtualRewarder.balanceOf(userNftId)).to.be.eq(ethers.parseEther('1'));
+      expect(await firstStrategy.totalSupply()).to.be.eq(ethers.parseEther('1'));
+      expect(await firstStrategy.balanceOf(userNftId)).to.be.eq(ethers.parseEther('1'));
     });
   });
 
@@ -186,6 +189,8 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
 
       expect(await virtualRewarder.totalSupply()).to.be.eq(ethers.parseEther('1'));
       expect(await virtualRewarder.balanceOf(userNftId)).to.be.eq(ethers.parseEther('1'));
+      expect(await firstStrategy.totalSupply()).to.be.eq(ethers.parseEther('1'));
+      expect(await firstStrategy.balanceOf(userNftId)).to.be.eq(ethers.parseEther('1'));
 
       let tx = await deployed.voter.connect(signers.otherUser1).dettachFromManagedNFT(userNftId);
       await expect(tx).to.be.emit(firstStrategy, 'OnDettach').withArgs(userNftId, ethers.parseEther('1'), ZERO);
@@ -195,6 +200,8 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
 
       expect(await virtualRewarder.totalSupply()).to.be.eq(ZERO);
       expect(await virtualRewarder.balanceOf(userNftId)).to.be.eq(ZERO);
+      expect(await firstStrategy.totalSupply()).to.be.eq(ZERO);
+      expect(await firstStrategy.balanceOf(userNftId)).to.be.eq(ZERO);
     });
 
     it('success remove user balance from virtual rewarder with rewards', async () => {
@@ -204,6 +211,7 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
       expect(await virtualRewarder.balanceOf(userNftId)).to.be.eq(ethers.parseEther('1'));
 
       expect(await virtualRewarder.calculateAvailableRewardsAmount(userNftId)).to.be.eq(ZERO);
+      expect(await firstStrategy.getLockedRewardsBalance(userNftId)).to.be.eq(ZERO);
 
       await time.increaseTo(await nextEpoch());
 
@@ -212,6 +220,7 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
       await firstStrategy.compound();
 
       expect(await virtualRewarder.calculateAvailableRewardsAmount(userNftId)).to.be.eq(ethers.parseEther('22'));
+      expect(await firstStrategy.getLockedRewardsBalance(userNftId)).to.be.eq(ethers.parseEther('22'));
 
       let tx = await deployed.voter.connect(signers.otherUser1).dettachFromManagedNFT(userNftId);
       await expect(tx).to.be.emit(firstStrategy, 'OnDettach').withArgs(userNftId, ethers.parseEther('1'), ethers.parseEther('22'));

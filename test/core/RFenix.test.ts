@@ -1,7 +1,7 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { Fenix, RFenix, RFenix__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import { Fenix, RFenix, RFenix__factory, VotingEscrowUpgradeable, VotingEscrowUpgradeableV1_2 } from '../../typechain-types';
 import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 
@@ -9,7 +9,7 @@ describe('rFNX', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
   let fenix: Fenix;
-  let votingEscrow: VotingEscrowUpgradeable;
+  let votingEscrow: VotingEscrowUpgradeableV1_2;
   let factory: RFenix__factory;
   let instance: RFenix;
 
@@ -155,7 +155,7 @@ describe('rFNX', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
         expect(await votingEscrow.supply()).to.be.eq(ZERO);
-        expect(await votingEscrow.totalTokensMinted()).to.be.eq(ZERO);
+        expect(await votingEscrow.tokenId()).to.be.eq(ZERO);
       });
 
       it('should success burn rFNX from user and change totalSupply', async () => {
@@ -171,7 +171,7 @@ describe('rFNX', function () {
       it('should corect create VeFNX and transfer to recipient', async () => {
         let changeAmount = (ethers.parseEther('5') * ethers.parseEther('0.6')) / ONE_ETHER;
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
-        let startTokenId = await votingEscrow.totalTokens();
+        let startTokenId = await votingEscrow.tokenId();
 
         await instance.connect(signers.otherUser1).convertAll();
 
@@ -232,7 +232,7 @@ describe('rFNX', function () {
 
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('1.8'));
 
-        expect(await votingEscrow.totalTokensMinted()).to.be.eq(ONE);
+        expect(await votingEscrow.tokenId()).to.be.eq(ONE);
 
         await expect(instance.connect(signers.otherUser2).convertAll())
           .to.be.emit(instance, 'Converted')
@@ -240,7 +240,7 @@ describe('rFNX', function () {
 
         expect(await instance.totalSupply()).to.be.eq(ethers.parseEther('2')); // 19 - 3 - 14
 
-        expect(await votingEscrow.totalTokensMinted()).to.be.eq(ONE + ONE);
+        expect(await votingEscrow.tokenId()).to.be.eq(ONE + ONE);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ONE);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ONE);
 
@@ -271,7 +271,7 @@ describe('rFNX', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ONE + ONE);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ONE);
 
-        expect(await votingEscrow.totalTokensMinted()).to.be.eq(ONE + ONE + ONE);
+        expect(await votingEscrow.tokenId()).to.be.eq(ONE + ONE + ONE);
       });
     });
   });

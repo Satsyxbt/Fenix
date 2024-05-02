@@ -2,7 +2,13 @@ import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { Fenix, VeFnxDistributorUpgradeable, VeFnxDistributorUpgradeable__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import {
+  Fenix,
+  VeFnxDistributorUpgradeable,
+  VeFnxDistributorUpgradeable__factory,
+  VotingEscrowUpgradeable,
+  VotingEscrowUpgradeableV1_2,
+} from '../../typechain-types';
 import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
 
@@ -13,7 +19,7 @@ describe('VeFnxDistributorUpgradeable', function () {
   let factory: VeFnxDistributorUpgradeable__factory;
   let fenix: Fenix;
   let veFnxDistributor: VeFnxDistributorUpgradeable;
-  let votingEscrow: VotingEscrowUpgradeable;
+  let votingEscrow: VotingEscrowUpgradeableV1_2;
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
@@ -122,7 +128,7 @@ describe('VeFnxDistributorUpgradeable', function () {
       beforeEach(async () => {
         await fenix.transfer(veFnxDistributor.target, ethers.parseEther('1000'));
         expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ethers.parseEther('1000'));
-        startTokenId = await votingEscrow.totalTokens();
+        startTokenId = await votingEscrow.tokenId();
       });
       it('should corect emit events', async () => {
         let tx = await veFnxDistributor.distributeVeFnx(
