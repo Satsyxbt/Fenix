@@ -10,7 +10,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 import {IVeBoost} from "./interfaces/IVeBoost.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 
 /// @title Voting Escrow
 /// @notice veNFT implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
@@ -25,7 +25,7 @@ contract VotingEscrowUpgradeable is
     IVotes,
     Initializable,
     ReentrancyGuardUpgradeable,
-    BlastGovernorSetup
+    ModeSfsSetup
 {
     enum DepositType {
         DEPOSIT_FOR_TYPE,
@@ -97,10 +97,9 @@ contract VotingEscrowUpgradeable is
     }
 
     /// @notice Contract constructor
-    /// @param token_addr `Fenix` token address
-    function initialize(address governor_, address token_addr, address art_proxy) external initializer {
+    function initialize(address modeSfs_, uint256 sfsAssignTokenId_, address token_addr, address art_proxy) external initializer {
         __ReentrancyGuard_init();
-        __BlastGovernorSetup_init(governor_);
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
 
         token = token_addr;
         voter = msg.sender;
@@ -124,8 +123,8 @@ contract VotingEscrowUpgradeable is
                              METADATA STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    string public constant name = "veFenix";
-    string public constant symbol = "veFNX";
+    string public constant name = "veSolExchange";
+    string public constant symbol = "veSOLEX";
     string public constant version = "1.0.0";
     uint8 public constant decimals = 18;
 
@@ -714,10 +713,10 @@ contract VotingEscrowUpgradeable is
                 deposit_type == DepositType.INCREASE_LOCK_AMOUNT
             ) {
                 uint256 minLockedEndTime = ((block.timestamp + veBoostCached.getMinLockedTimeForBoost()) / WEEK) * WEEK;
-                if (minLockedEndTime <= _locked.end && _value >= veBoostCached.getMinFNXAmountForBoost()) {
-                    uint256 calculatedBoostValue = veBoostCached.calculateBoostFNXAmount(_value);
-                    uint256 availableFNXBoostAmount = veBoostCached.getAvailableBoostFNXAmount();
-                    boostedValue = calculatedBoostValue < availableFNXBoostAmount ? calculatedBoostValue : availableFNXBoostAmount;
+                if (minLockedEndTime <= _locked.end && _value >= veBoostCached.getMinTokenAmountForBoost()) {
+                    uint256 calculatedBoostValue = veBoostCached.calculateBoostTokenAmount(_value);
+                    uint256 availableTokenBoostAmount = veBoostCached.getAvailableBoostTokenAmount();
+                    boostedValue = calculatedBoostValue < availableTokenBoostAmount ? calculatedBoostValue : availableTokenBoostAmount;
                     if (boostedValue > 0) {
                         _locked.amount += int128(int256(boostedValue));
                     }
@@ -740,7 +739,7 @@ contract VotingEscrowUpgradeable is
             assert(IERC20(token).transferFrom(from, address(this), _value));
 
             if (boostedValue > 0) {
-                veBoostCached.beforeFNXBoostPaid(idToOwner[_tokenId], _tokenId, _value, boostedValue);
+                veBoostCached.beforeTokenBoostPaid(idToOwner[_tokenId], _tokenId, _value, boostedValue);
                 assert(IERC20(token).transferFrom(address(veBoostCached), address(this), boostedValue));
             }
         }
