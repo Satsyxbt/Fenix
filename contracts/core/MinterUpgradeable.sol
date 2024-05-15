@@ -5,14 +5,14 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 
 import {IMinter} from "./interfaces/IMinter.sol";
-import {IFenix} from "./interfaces/IFenix.sol";
+import {IERC20Mintable} from "./interfaces/IERC20Mintable.sol";
 import {IVoter} from "./interfaces/IVoter.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 
 // codifies the minting rules as per ve(3,3), abstracted from the token to support any token that allows minting
 
-contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeable {
+contract MinterUpgradeable is IMinter, ModeSfsSetup, Ownable2StepUpgradeable {
     uint256 public constant PRECISION = 10_000; // 10,000 = 100%
     uint256 public constant MAX_TEAM_RATE = 500; // 500 bips =  5%
     uint256 public constant WEEK = 86400 * 7; // allows minting once per week (reset every Thursday 00:00 UTC)
@@ -30,7 +30,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
     uint256 public active_period;
     uint256 public lastInflationPeriod;
 
-    IFenix public fenix;
+    IERC20Mintable public token;
     IVoter public voter;
     IVotingEscrow public ve;
 
@@ -39,11 +39,12 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
     }
 
     function initialize(
-        address blastGovernor_,
+        address modeSfs_,
+        uint256 sfsAssignTokenId_,
         address voter_, // the voting & distribution system
         address ve_
     ) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
         __Ownable2Step_init();
 
         isFirstMint = true;
@@ -54,9 +55,9 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
         inflationPeriodCount = 8;
 
         active_period = ((block.timestamp + (2 * WEEK)) / WEEK) * WEEK;
-        weekly = 225_000 * 1e18; // represents a starting weekly emission of 225,000 Fenix (Fenix has 18 decimals)
+        weekly = 225_000 * 1e18; // represents a starting weekly emission of 225,000 Token (Token has 18 decimals)
 
-        fenix = IFenix(IVotingEscrow(ve_).token());
+        token = IERC20Mintable(IVotingEscrow(ve_).token());
         voter = IVoter(voter_);
         ve = IVotingEscrow(ve_);
     }
@@ -90,7 +91,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
 
     // calculate circulating supply as total token supply - locked supply
     function circulating_supply() public view returns (uint256) {
-        return fenix.totalSupply() - fenix.balanceOf(address(ve));
+        return token.totalSupply() - token.balanceOf(address(ve));
     }
 
     function circulating_emission() public view returns (uint) {
@@ -135,14 +136,14 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
 
             uint256 gauge = weeklyCache - teamEmissions;
 
-            uint256 currentBalance = fenix.balanceOf(address(this));
+            uint256 currentBalance = token.balanceOf(address(this));
             if (currentBalance < weeklyCache) {
-                fenix.mint(address(this), weeklyCache - currentBalance);
+                token.mint(address(this), weeklyCache - currentBalance);
             }
 
-            require(fenix.transfer(owner(), teamEmissions));
+            require(token.transfer(owner(), teamEmissions));
 
-            fenix.approve(address(voter), gauge);
+            token.approve(address(voter), gauge);
             voter.notifyRewardAmount(gauge);
 
             emit Mint(msg.sender, weeklyCache, circulating_supply());
