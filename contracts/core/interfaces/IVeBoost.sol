@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 /**
  * @title Interface for VeBoost
- * @dev Interface for boosting functionality within the Fenix ecosystem.
+ * @dev Interface for boosting functionality within the Mode ecosystem.
  */
 interface IVeBoost {
     /**
@@ -15,10 +15,10 @@ interface IVeBoost {
     event RewardSent(address indexed token, address indexed recipient, uint256 indexed rewardTokenBoostAmount);
 
     /**
-     * @dev Emitted when the FNX boost percentage is updated.
-     * @param fnxBoostPercentage New boost percentage.
+     * @dev Emitted when the Token boost percentage is updated.
+     * @param tokenBoostPercentage New boost percentage.
      */
-    event FNXBoostPercentage(uint256 indexed fnxBoostPercentage);
+    event TokenBoostPercentage(uint256 indexed tokenBoostPercentage);
 
     /**
      * @dev Emitted when the minimum USD amount required for a boost is updated.
@@ -52,7 +52,7 @@ interface IVeBoost {
     event RemoveRewardToken(address indexed token);
 
     /**
-     * @dev Emitted when a new price provider is setted.
+     * @dev Emitted when a new price provider is set.
      * @param priceProvider Address of the new price provider.
      */
     event PriceProvider(address indexed priceProvider);
@@ -65,20 +65,25 @@ interface IVeBoost {
     error InvalidBoostAmount();
 
     /**
-     * @dev Before paying FNX boost, checks if the boost amount is valid and then distributes reward tokens proportionally.
+     * @dev Before paying Token boost, checks if the boost amount is valid and then distributes reward tokens proportionally.
      * Can only be called by the voting escrow contract. Emits `InvalidBoostAmount` error if conditions are not met.
      * @param tokenOwner_ The owner of the tokens to receive the boost.
      * @param tokenId_ The ID of the token to be boosted.
-     * @param depositedFNXAmount_ The amount of FNX that was deposited.
-     * @param paidBoostFNXAmount_ The amount of FNX used for the boost.
+     * @param depositedTokenAmount_ The amount of Token that was deposited.
+     * @param paidBoostTokenAmount_ The amount of Token used for the boost.
      */
-    function beforeFNXBoostPaid(address tokenOwner_, uint256 tokenId_, uint256 depositedFNXAmount_, uint256 paidBoostFNXAmount_) external;
+    function beforeTokenBoostPaid(
+        address tokenOwner_,
+        uint256 tokenId_,
+        uint256 depositedTokenAmount_,
+        uint256 paidBoostTokenAmount_
+    ) external;
 
     /**
-     * @dev Returns the minimum FNX amount required for receiving a boost.
-     * @return The minimum amount of FNX required for a boost.
+     * @dev Returns the minimum Token amount required for receiving a boost.
+     * @return The minimum amount of Token required for a boost.
      */
-    function getMinFNXAmountForBoost() external view returns (uint256);
+    function getMinTokenAmountForBoost() external view returns (uint256);
 
     /**
      * @dev Returns the minimum locked time required to qualify for a boost.
@@ -87,15 +92,15 @@ interface IVeBoost {
     function getMinLockedTimeForBoost() external view returns (uint256);
 
     /**
-     * @dev Calculates the amount of FNX that can be boosted based on the deposited amount.
-     * @param depositedFNXAmount_ The amount of FNX deposited.
-     * @return The amount of FNX that will be boosted.
+     * @dev Calculates the amount of Token that can be boosted based on the deposited amount.
+     * @param depositedTokenAmount_ The amount of Token deposited.
+     * @return The amount of Token that will be boosted.
      */
-    function calculateBoostFNXAmount(uint256 depositedFNXAmount_) external view returns (uint256);
+    function calculateBoostTokenAmount(uint256 depositedTokenAmount_) external view returns (uint256);
 
     /**
-     * @dev Returns the available amount of FNX for boosts, considering both balance and allowance.
-     * @return The available FNX amount for boosts.
+     * @dev Returns the available amount of Token for boosts, considering both balance and allowance.
+     * @return The available Token amount for boosts.
      */
-    function getAvailableBoostFNXAmount() external view returns (uint256);
+    function getAvailableBoostTokenAmount() external view returns (uint256);
 }

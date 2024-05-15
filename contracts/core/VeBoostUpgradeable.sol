@@ -4,16 +4,15 @@ pragma solidity =0.8.19;
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {EnumerableSetUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
-
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 import {IVeBoost} from "./interfaces/IVeBoost.sol";
 import {IPriceProvider} from "../integration/interfaces/IPriceProvider.sol";
 
 /**
  * @title VeBoostUpgradeable
- * @dev Implements boosting functionality within the Fenix ecosystem, allowing users to receive boosts based on locked FNX tokens.
+ * @dev Implements boosting functionality within the Mode ecosystem, allowing users to receive boosts based on locked tokens.
  */
-contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorSetup {
+contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, ModeSfsSetup {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
     using SafeERC20 for IERC20;
 
@@ -25,7 +24,7 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     /**
      * @dev Return precision for token calcualtions
      */
-    uint256 internal constant _FNX_PREICSION = 1e18;
+    uint256 internal constant _TOKEN_PRECISION = 1e18;
 
     /**
      * @dev Return maximum locking time in seconds (about 6 months)
@@ -33,17 +32,17 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     uint256 internal constant _MAXTIME = 182 * 86400;
 
     /**
-     * @dev Return address of FNX token
+     * @dev Return address of protocol token
      */
-    address public fenix;
+    address public token;
 
     /**
-     * @dev Return address of the Voting Escrow contract for Fenix
+     * @dev Return address of the Voting Escrow contract for Token
      */
     address public votingEscrow;
 
     /**
-     * @dev Return address of the price provider contract for USD/FNX conversion
+     * @dev Return address of the price provider contract for USD/Token conversion
      */
     address public priceProvider;
 
@@ -58,9 +57,9 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     uint256 internal _minLockedTime;
 
     /**
-     * @dev Return percentage of FNX boost
+     * @dev Return percentage of Token boost
      */
-    uint256 internal _boostFNXPercentage;
+    uint256 internal _boostTokenPercentage;
 
     /**
      * @dev Stora set of addresses for reward tokens
@@ -76,33 +75,40 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
 
     /**
      * @notice Initializes the VeBoost contract with necessary addresses and settings.
-     * @param blastGovernor_ Address of the Blast Governor.
-     * @param fenix_ Address of the Fenix token.
+     * @param modeSfs_ Address of the Mode SFS contract.
+     * @param sfsAssignTokenId_ The token ID for SFS assignment.
+     * @param token_ Address of the Token.
      * @param votingEscrow_ Address of the Voting Escrow contract.
      * @param priceProvider_ Address of the price provider contract.
      * Initializes contract state and sets up necessary approvals.
      */
-    function initialize(address blastGovernor_, address fenix_, address votingEscrow_, address priceProvider_) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
+    function initialize(
+        address modeSfs_,
+        uint256 sfsAssignTokenId_,
+        address token_,
+        address votingEscrow_,
+        address priceProvider_
+    ) external initializer {
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
         __Ownable2Step_init();
 
-        _checkAddressZero(fenix_);
+        _checkAddressZero(token_);
         _checkAddressZero(votingEscrow_);
         _checkAddressZero(priceProvider_);
 
-        fenix = fenix_;
+        token = token_;
         votingEscrow = votingEscrow_;
         priceProvider = priceProvider_;
 
         minUSDAmount = 10e18; // Initialize minimum USD amount for boost eligibility to $10
         _minLockedTime = 182 * 86400; // Initialize minimum locked time to approximately 6 months
-        _boostFNXPercentage = 1_000; // Initialize FNX boost percentage to 10%
+        _boostTokenPercentage = 1_000; // Initialize Token boost percentage to 10%
 
-        IERC20(fenix).safeApprove(votingEscrow_, type(uint256).max);
+        IERC20(token).safeApprove(votingEscrow_, type(uint256).max);
     }
 
     /**
-     * @notice Sets a new address for the FNX to USD price provider.
+     * @notice Sets a new address for the Token to USD price provider.
      * @param priceProvider_ The address of the new price provider.
      * Only the contract owner can call this function.
      */
@@ -114,18 +120,18 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     }
 
     /**
-     * @notice Sets a new boost percentage for FNX tokens.
-     * @param boostFNXPercentage_ The new boost percentage in basis points.
+     * @notice Sets a new boost percentage for Token tokens.
+     * @param boostTokenPercentage_ The new boost percentage in basis points.
      * Only the contract owner can call this function.
      */
-    function setFNXBoostPercentage(uint256 boostFNXPercentage_) external onlyOwner {
-        _boostFNXPercentage = boostFNXPercentage_;
-        emit FNXBoostPercentage(boostFNXPercentage_);
+    function setTokenBoostPercentage(uint256 boostTokenPercentage_) external onlyOwner {
+        _boostTokenPercentage = boostTokenPercentage_;
+        emit TokenBoostPercentage(boostTokenPercentage_);
     }
 
     /**
      * @notice Sets a new minimum USD amount required to qualify for a boost.
-     * @param minUSDAmount_ The new minimum USD amount in the 18 decimals
+     * @param minUSDAmount_ The new minimum USD amount in the 18 decimals.
      * Only the contract owner can call this function.
      */
     function setMinUSDAmount(uint256 minUSDAmount_) external onlyOwner {
@@ -164,7 +170,7 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     function addRewardToken(address newRewardToken_) external onlyOwner {
         _checkAddressZero(newRewardToken_);
 
-        if (newRewardToken_ == fenix) {
+        if (newRewardToken_ == token) {
             revert RewardTokenExist();
         }
 
@@ -188,41 +194,44 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     }
 
     /**
-     * @notice Distributes boost rewards to the token owner before executing the FNX boost payment.
+     * @notice Distributes boost rewards to the token owner before executing the Token boost payment.
      * Requires the caller to be the Voting Escrow contract.
-     * @dev This function calculates and distributes reward tokens proportionally based on the paid FNX boost amount.
+     * @dev This function calculates and distributes reward tokens proportionally based on the paid Token boost amount.
      * It verifies that the call is made by the Voting Escrow contract, checks if the paid boost amount is within allowed limits,
-     * and then proceeds to distribute reward tokens to the boost recipient. The distribution is proportional to the amount of FNX paid
-     * for the boost relative to the total FNX balance of this contract, ensuring fairness in reward distribution.
+     * and then proceeds to distribute reward tokens to the boost recipient. The distribution is proportional to the amount of Token paid
+     * for the boost relative to the total Token balance of this contract, ensuring fairness in reward distribution.
      *
-     * @param tokenOwner_ The address of the owner receiving the boost rewards. This is typically the holder of locked FNX tokens.
+     * @param tokenOwner_ The address of the owner receiving the boost rewards. This is typically the holder of locked Token tokens.
      * @param tokenId_ The ID of the token receiving the boost. This parameter is not used in the current implementation but is required for interface compliance.
-     * @param depositedFNXAmount_ The total amount of FNX tokens deposited by the token owner for the boost. This is used to calculate the eligibility and amount of the boost.
-     * @param paidBoostFNXAmount_ The amount of FNX tokens paid by the token owner to achieve the boost. Rewards are distributed based on this amount.
+     * @param depositedTokenAmount_ The total amount of Token tokens deposited by the token owner for the boost. This is used to calculate the eligibility and amount of the boost.
+     * @param paidBoostTokenAmount_ The amount of Token tokens paid by the token owner to achieve the boost. Rewards are distributed based on this amount.
      *
      * Reverts with `AccessDenied` if called by any address other than the Voting Escrow contract.
-     * Reverts with `InvalidBoostAmount` if the paid boost amount exceeds the calculated boost amount or the available boost FNX amount.
+     * Reverts with `InvalidBoostAmount` if the paid boost amount exceeds the calculated boost amount or the available boost Token amount.
      */
-    function beforeFNXBoostPaid(
+    function beforeTokenBoostPaid(
         address tokenOwner_,
         uint256 tokenId_,
-        uint256 depositedFNXAmount_,
-        uint256 paidBoostFNXAmount_
+        uint256 depositedTokenAmount_,
+        uint256 paidBoostTokenAmount_
     ) external override {
         if (msg.sender != votingEscrow) {
             revert AccessDenied();
         }
 
-        if (paidBoostFNXAmount_ > calculateBoostFNXAmount(depositedFNXAmount_) || paidBoostFNXAmount_ > getAvailableBoostFNXAmount()) {
+        if (
+            paidBoostTokenAmount_ > calculateBoostTokenAmount(depositedTokenAmount_) ||
+            paidBoostTokenAmount_ > getAvailableBoostTokenAmount()
+        ) {
             revert InvalidBoostAmount();
         }
 
-        if (paidBoostFNXAmount_ > 0) {
-            uint256 fnxBoostToBalanceRation = (paidBoostFNXAmount_ * _FNX_PREICSION) / IERC20(fenix).balanceOf(address(this));
+        if (paidBoostTokenAmount_ > 0) {
+            uint256 tokenBoostToBalanceRatio = (paidBoostTokenAmount_ * _TOKEN_PRECISION) / IERC20(token).balanceOf(address(this));
 
             for (uint256 i; i < _rewardTokens.length(); ) {
                 IERC20 rewardToken = IERC20(_rewardTokens.at(i));
-                uint256 rewardTokenBoostAmount = (fnxBoostToBalanceRation * rewardToken.balanceOf(address(this))) / _FNX_PREICSION;
+                uint256 rewardTokenBoostAmount = (tokenBoostToBalanceRatio * rewardToken.balanceOf(address(this))) / _TOKEN_PRECISION;
 
                 if (rewardTokenBoostAmount > 0) {
                     rewardToken.safeTransfer(tokenOwner_, rewardTokenBoostAmount);
@@ -245,11 +254,11 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     }
 
     /**
-     * @dev Returns the minimum FNX amount required for receiving a boost.
-     * @return The minimum amount of FNX required for a boost.
+     * @dev Returns the minimum Token amount required for receiving a boost.
+     * @return The minimum amount of Token required for a boost.
      */
-    function getMinFNXAmountForBoost() external view override returns (uint256) {
-        return _getMinFNXAmountForBoost();
+    function getMinTokenAmountForBoost() external view override returns (uint256) {
+        return _getMinTokenAmountForBoost();
     }
 
     /**
@@ -261,42 +270,42 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     }
 
     /**
-     * @dev Returns the current FNX boost percentage.
+     * @dev Returns the current Token boost percentage.
      * @return The boost percentage.
      */
-    function getBoostFNXPercentage() external view returns (uint256) {
-        return _boostFNXPercentage;
+    function getBoostTokenPercentage() external view returns (uint256) {
+        return _boostTokenPercentage;
     }
 
     /**
-     * @dev Returns the available amount of FNX for boosts, considering both balance and allowance.
-     * @return The available FNX amount for boosts.
+     * @dev Returns the available amount of Token for boosts, considering both balance and allowance.
+     * @return The available Token amount for boosts.
      */
-    function getAvailableBoostFNXAmount() public view override returns (uint256) {
-        uint256 availableBalance = IERC20(fenix).balanceOf(address(this));
-        uint256 availableAllowance = IERC20(fenix).allowance(address(this), votingEscrow);
+    function getAvailableBoostTokenAmount() public view override returns (uint256) {
+        uint256 availableBalance = IERC20(token).balanceOf(address(this));
+        uint256 availableAllowance = IERC20(token).allowance(address(this), votingEscrow);
 
         return availableAllowance > availableBalance ? availableBalance : availableAllowance;
     }
 
     /**
-     * @dev Calculates the amount of FNX that can be boosted based on the deposited amount.
-     * @param depositedFNXAmount_ The amount of FNX deposited.
-     * @return The amount of FNX that will be boosted.
+     * @dev Calculates the amount of Token that can be boosted based on the deposited amount.
+     * @param depositedTokenAmount_ The amount of Token deposited.
+     * @return The amount of Token that will be boosted.
      */
-    function calculateBoostFNXAmount(uint256 depositedFNXAmount_) public view override returns (uint256) {
-        return depositedFNXAmount_ >= _getMinFNXAmountForBoost() ? (depositedFNXAmount_ * _boostFNXPercentage) / _PRECISION : 0;
+    function calculateBoostTokenAmount(uint256 depositedTokenAmount_) public view override returns (uint256) {
+        return depositedTokenAmount_ >= _getMinTokenAmountForBoost() ? (depositedTokenAmount_ * _boostTokenPercentage) / _PRECISION : 0;
     }
 
     /**
-     * @dev Calculates the minimum amount of FNX tokens required for receiving a boost, based on the USD threshold.
-     * Utilizes the current FNX to USD price from the specified price provider to convert the minimum USD amount
-     * into its equivalent FNX amount. This ensures that the boost mechanism adapts to changes in the FNX token's value,
+     * @dev Calculates the minimum amount of Token required for receiving a boost, based on the USD threshold.
+     * Utilizes the current Token to USD price from the specified price provider to convert the minimum USD amount
+     * into its equivalent Token amount. This ensures that the boost mechanism adapts to changes in the Token's value,
      * maintaining the intended economic threshold for participation.
-     * @return The calculated minimum amount of FNX tokens required for a boost, based on the current FNX to USD price.
+     * @return The calculated minimum amount of Token required for a boost, based on the current Token to USD price.
      */
-    function _getMinFNXAmountForBoost() internal view returns (uint256) {
-        return (IPriceProvider(priceProvider).getUsdToFNXPrice() * minUSDAmount) / _FNX_PREICSION;
+    function _getMinTokenAmountForBoost() internal view returns (uint256) {
+        return (IPriceProvider(priceProvider).getUsdToTokenPrice() * minUSDAmount) / _TOKEN_PRECISION;
     }
 
     /**
