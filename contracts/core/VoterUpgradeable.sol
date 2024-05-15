@@ -8,7 +8,7 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 
 import {IAlgebraFactory} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraFactory.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IBribeFactory} from "../bribes/interfaces/IBribeFactory.sol";
 import {IGauge} from "../gauges/interfaces/IGauge.sol";
@@ -21,17 +21,17 @@ import {IVault} from "./interfaces/IVault.sol";
 import {IVoter} from "./interfaces/IVoter.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 
-contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradeable {
+contract VoterUpgradeable is IVoter, ModeSfsSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bool internal initflag;
 
     address public _ve; // the ve token that governs these contracts
     address[] internal _factories; // Array with all the pair factories
-    address internal base; // $fnx token
+    address internal base; // $protocol token
     address[] internal _gaugeFactories; // array with all the gauge factories
     address public bribefactory; // bribe factory (internal and external)
-    address public minter; // minter mints $fnx each epoch
+    address public minter; // minter mints $protocol token each epoch
     address[] public pools; // all pools viable for incentives
     address public admin;
     address public governance;
@@ -42,7 +42,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     uint256 public constant MAX_VOTE_DELAY = 7 days; // Max vote delay allowed
 
     mapping(address => uint256) internal supplyIndex; // gauge    => index
-    mapping(address => uint256) public claimable; // gauge    => claimable $fnx
+    mapping(address => uint256) public claimable; // gauge    => claimable $protocol token
     mapping(address => address) public gauges; // pool     => gauge
     mapping(address => uint256) public gaugesDistributionTimestmap; // gauge    => last Distribution Time
     mapping(address => address) public poolForGauge; // gauge    => pool
@@ -93,13 +93,14 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     address[] public clPools; // all pools viable for incentives
 
     function initialize(
-        address blastGovernor_,
+        address _modeSfs,
+        uint256 _sfsAssignTokenId,
         address __ve,
         address _pairFactory,
         address _gaugeFactory,
         address _bribes
     ) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
+        __ModeSfsSetup__init(_modeSfs, _sfsAssignTokenId);
         __ReentrancyGuard_init();
 
         admin = msg.sender;
@@ -141,7 +142,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     /// @notice initialize the voter contract
     /// @param  _tokens array of tokens to whitelist
-    /// @param  _minter the minter of $fnx
+    /// @param  _minter the minter of $protocol token
     function _init(address[] memory _tokens, address _minter) external {
         require(msg.sender == admin);
         require(!initflag);
@@ -573,7 +574,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
             feeVault = IPairIntegrationInfo(poolFromFactory).communityVault();
         }
 
-        // gov can create for any pool, even non-Fenix pairs
+        // gov can create for any pool
         if (!(governance == msg.sender)) {
             require(isPair, "!_pool");
             require(isWhitelisted[tokenA] && isWhitelisted[tokenB], "!whitelisted");
@@ -604,10 +605,10 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         }
 
         // create internal and external bribe
-        string memory _type = string.concat("Fenix LP Fees: ", symbol);
+        string memory _type = string.concat("SolExchange LP Fees: ", symbol);
         _internal_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
 
-        _type = string.concat("Fenix Bribes: ", symbol);
+        _type = string.concat("SolExchange Bribes: ", symbol);
         _external_bribe = IBribeFactory(bribefactory).createBribe(tokenA, tokenB, _type);
 
         // create gauge
@@ -622,7 +623,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
             feeVault
         );
 
-        // approve spending for $fnx
+        // approve spending for $protocol token
         IERC20Upgradeable(base).approve(_gauge, type(uint256).max);
 
         // save data
@@ -808,7 +809,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     ----------------------------------------------------------------------------- */
 
     /// @notice update info for gauges
-    /// @dev    this function track the gauge index to emit the correct $fnx amount after the distribution
+    /// @dev    this function track the gauge index to emit the correct $protocol token amount after the distribution
     function _updateForAfterDistribution(address _gauge) private {
         address _pool = poolForGauge[_gauge];
         uint256 _time = _epochTimestamp() - 604800;
