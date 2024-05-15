@@ -7,33 +7,34 @@ import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
-import {IRFenix} from "./interfaces/IRFenix.sol";
+import {IRSolex} from "./interfaces/IRSolex.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 
 /**
- * @title RFenix Token Contract
- * @dev Implementation of the rFNX token, an ERC20 token with convert features.
+ * @title RSolex Token Contract
+ * @dev Implementation of the rSOLEX token, an ERC20 token with convert features.
  *      Inherits functionality from OpenZeppelin's ERC20Burnable and Ownable2Step contracts.
  *      Provides mechanisms for token conversion and owner interaction.
  */
-contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
+contract RSolex is IRSolex, ModeSfsSetup, ERC20Burnable, Ownable2Step {
     using SafeERC20 for IERC20;
 
     uint256 internal constant _PRECISION = 1e18; // Precision for percentage calculations
-    uint256 internal constant _LOCK_DURATION = 182 days; // Lock duration for veFNX tokens
-    uint256 internal constant _TO_TOKEN_PERCENTAGE = 0.4e18; // Percentage of rFNX converted to FNX
+    uint256 internal constant _LOCK_DURATION = 182 days; // Lock duration for veSOLEX tokens
+    uint256 internal constant _TO_TOKEN_PERCENTAGE = 0.4e18; // Percentage of rSOLEX converted to SOLEX
 
-    address public override votingEscrow; // Address of the Voting Escrow contract for veFNX
-    address public override token; // Address of the FNX token
+    address public override votingEscrow; // Address of the Voting Escrow contract for veSOLEX
+    address public override token; // Address of the protocol token
 
     /**
      * @dev Initializes the contract by setting the governance, token, and Voting Escrow addresses.
-     * @param blastGovernor_ Address of the Blast Governor.
+     * @param modeSfs_ Address of the Mode SFS contract.
+     * @param sfsAssignTokenId_ The token ID for SFS assignment.
      * @param votingEscrow_ Address of the Voting Escrow contract.
      */
-    constructor(address blastGovernor_, address votingEscrow_) ERC20("rFNX", "rFNX") {
-        __BlastGovernorSetup_init(blastGovernor_);
+    constructor(address modeSfs_, uint256 sfsAssignTokenId_, address votingEscrow_) ERC20("rSOLEX", "rSOLEX") {
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
 
         _checkAddressZero(votingEscrow_);
 
@@ -46,26 +47,26 @@ contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
     }
 
     /**
-     * @notice Converts all rFNX tokens of the caller to FNX and veFNX tokens.
-     *         Burns rFNX tokens and mints FNX and veFNX tokens proportionally.
+     * @notice Converts all rSOLEX tokens of the caller to SOLEX and veSOLEX tokens.
+     *         Burns rSOLEX tokens and mints SOLEX and veSOLEX tokens proportionally.
      */
     function convertAll() external override {
         _convert(balanceOf(msg.sender));
     }
 
     /**
-     * @notice Converts a specific amount of rFNX tokens of the caller to FNX and veFNX tokens.
-     * @param amount_ The amount of rFNX tokens to convert.
-     *                Burns the specified amount of rFNX tokens and mints FNX and veFNX tokens proportionally.
+     * @notice Converts a specific amount of rSOLEX tokens of the caller to SOLEX and veSOLEX tokens.
+     * @param amount_ The amount of rSOLEX tokens to convert.
+     *                Burns the specified amount of rSOLEX tokens and mints SOLEX and veSOLEX tokens proportionally.
      */
     function convert(uint256 amount_) external override {
         _convert(amount_);
     }
 
     /**
-     * @notice Allows the owner to recover FNX tokens from the contract.
-     * @param amount_ The amount of FNX tokens to be recovered.
-     *                Transfers the specified amount of FNX tokens to the owner's address.
+     * @notice Allows the owner to recover SOLEX tokens from the contract.
+     * @param amount_ The amount of SOLEX tokens to be recovered.
+     *                Transfers the specified amount of SOLEX tokens to the owner's address.
      */
     function recoverToken(uint256 amount_) external onlyOwner {
         IERC20(token).safeTransfer(msg.sender, amount_);
@@ -73,7 +74,7 @@ contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
     }
 
     /**
-     * @notice Mints rFNX tokens to a specified address.
+     * @notice Mints rSOLEX tokens to a specified address.
      * @param to_ The address to receive the minted tokens.
      * @param amount_ The amount of tokens to mint.
      */
@@ -82,8 +83,8 @@ contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
     }
 
     /**
-     * @dev Internal function to handle the conversion of rFNX to FNX and veFNX.
-     * @param amount_ The amount of rFNX to convert.
+     * @dev Internal function to handle the conversion of rSOLEX to SOLEX and veSOLEX.
+     * @param amount_ The amount of rSOLEX to convert.
      */
     function _convert(uint256 amount_) internal {
         if (amount_ == 0) {
