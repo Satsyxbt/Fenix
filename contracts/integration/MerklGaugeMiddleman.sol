@@ -3,11 +3,10 @@ pragma solidity =0.8.19;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
 import {IDistributionCreator, DistributionParameters} from "./interfaces/IDistributionCreator.sol";
 import {IMerklGaugeMiddleman} from "./interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "./interfaces/IPairIntegrationInfo.sol";
-import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "./ModeSfsSetup.sol";
 
 /**
  * @title Merkl Gauge Middleman Contract
@@ -20,7 +19,7 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  *
  * The contract uses OpenZeppelin's Ownable for ownership management and SafeERC20 for safe ERC20 interactions.
  */
-contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownable {
+contract MerklGaugeMiddleman is IMerklGaugeMiddleman, ModeSfsSetup, Ownable {
     using SafeERC20 for IERC20;
 
     // Mapping of each gauge to its reward distribution parameters
@@ -34,8 +33,8 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
 
     // =================================== EVENT ===================================
 
-    constructor(address governor_, address token_, address merklDistributionCreator_) {
-        __BlastGovernorSetup_init(governor_);
+    constructor(address modeSfs_, uint256 sfsAssignTokenId_, address token_, address merklDistributionCreator_) {
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
 
         if (token_ == address(0) || merklDistributionCreator_ == address(0)) {
             revert AddressZero();
@@ -50,12 +49,12 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
     // ============================= EXTERNAL FUNCTIONS ============================
 
     /// @notice Restores the allowance for the token to the `DistributionCreator` contract
-    /// Depending on the token implementation, not needed for Fenix implementations
-    function setFenixAllowance() external {
-        IERC20 fenixCache = token;
+    /// Depending on the token implementation
+    function setTokenAllowance() external {
+        IERC20 tokenCache = token;
         address creator = address(merklDistributionCreator);
-        uint256 currentAllowance = fenixCache.allowance(address(this), creator);
-        if (currentAllowance < type(uint256).max) fenixCache.safeIncreaseAllowance(creator, type(uint256).max - currentAllowance);
+        uint256 currentAllowance = tokenCache.allowance(address(this), creator);
+        if (currentAllowance < type(uint256).max) tokenCache.safeIncreaseAllowance(creator, type(uint256).max - currentAllowance);
     }
 
     /**
