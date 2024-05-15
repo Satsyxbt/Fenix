@@ -10,14 +10,6 @@ interface IBribeFactory {
      */
     event SetVoter(address indexed oldVoter, address indexed newVoter);
 
-    /**
-     * @dev Emitted when the default Blast governor address for new bribes is updated.
-     *
-     * @param oldDefaultBlastGovernor The address of the previous default Blast governor.
-     * @param newDefaultBlastGovernor The address of the new default Blast governor that has been set.
-     */
-    event SetDefaultBlastGovernor(address indexed oldDefaultBlastGovernor, address indexed newDefaultBlastGovernor);
-
     event bribeImplementationChanged(address _oldbribeImplementation, address _newbribeImplementation);
 
     function createBribe(address _token0, address _token1, string memory _type) external returns (address);

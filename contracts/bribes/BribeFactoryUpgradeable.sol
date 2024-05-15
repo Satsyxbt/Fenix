@@ -5,26 +5,25 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {BribeProxy} from "./BribeProxy.sol";
 import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetupFactoryManager} from "../integration/ModeSfsSetupFactoryManager.sol";
 
-contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUpgradeable {
+contract BribeFactoryUpgradeable is IBribeFactory, ModeSfsSetupFactoryManager, OwnableUpgradeable {
     address public last_bribe;
     address public voter;
     address public bribeImplementation;
-    address public defaultBlastGovernor;
     address[] public defaultRewardToken;
 
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(address _blastGovernor, address _voter, address _bribeImplementation) external initializer {
-        __BlastGovernorSetup_init(_blastGovernor);
-        __Ownable_init();
+    function initialize(address _modeSfs, uint256 _sfsAssignTokenId, address _voter, address _bribeImplementation) external initializer {
         _checkAddressZero(_voter);
         _checkAddressZero(_bribeImplementation);
 
-        defaultBlastGovernor = _blastGovernor;
+        __ModeSfsSetupFactoryManager_init(_modeSfs, _sfsAssignTokenId);
+        __Ownable_init();
+
         voter = _voter;
         bribeImplementation = _bribeImplementation;
     }
@@ -34,7 +33,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
 
         address newLastBribe = address(new BribeProxy());
 
-        IBribe(newLastBribe).initialize(defaultBlastGovernor, voter, address(this), _type);
+        IBribe(newLastBribe).initialize(defaultModeSfs, defaultSfsAssignTokenId, voter, address(this), _type);
 
         if (_token0 != address(0)) IBribe(newLastBribe).addRewardToken(_token0);
         if (_token1 != address(0)) IBribe(newLastBribe).addRewardToken(_token1);
@@ -68,18 +67,6 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
 
         emit SetVoter(voter, voter_);
         voter = voter_;
-    }
-
-    /**
-     * @dev Sets the default governor address for new fee vaults. Only callable by the contract owner.
-     *
-     * @param defaultBlastGovernor_ The new default governor address to be set.
-     */
-    function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
-        _checkAddressZero(defaultBlastGovernor_);
-
-        emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
-        defaultBlastGovernor = defaultBlastGovernor_;
     }
 
     function addRewards(address _token, address[] memory _bribes) external onlyOwner {
@@ -122,16 +109,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
         }
     }
 
-    /**
-     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
-     *
-     * @param addr_ The address which will checked on zero
-     */
-    function _checkAddressZero(address addr_) internal pure {
-        if (addr_ == address(0)) {
-            revert AddressZero();
-        }
-    }
+    function _checkAccessForModeSfsSetupFactoryManager() internal virtual override onlyOwner {}
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

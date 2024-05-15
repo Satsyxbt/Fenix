@@ -24,5 +24,5 @@ interface IBribe {
 
     function addRewardTokens(address[] memory) external;
 
-    function initialize(address, address, address, string memory) external;
+    function initialize(address, uint256, address, address, string memory) external;
 }

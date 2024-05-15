@@ -9,9 +9,9 @@ import {IVoter} from "../core/interfaces/IVoter.sol";
 import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetup} from "../integration/ModeSfsSetup.sol";
 
-contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradeable {
+contract BribeUpgradeable is IBribe, ModeSfsSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 public constant WEEK = 7 days; // rewards are released over 7 days
@@ -49,9 +49,15 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _voter, address _bribeFactory, string memory _type) external initializer {
+    function initialize(
+        address _modeSfs,
+        uint256 _sfsAssignTokenId,
+        address _voter,
+        address _bribeFactory,
+        string memory _type
+    ) external initializer {
         __ReentrancyGuard_init();
-        __BlastGovernorSetup_init(governor_);
+        __ModeSfsSetup__init(_modeSfs, _sfsAssignTokenId);
 
         require(_bribeFactory != address(0) && _voter != address(0));
         voter = _voter;
