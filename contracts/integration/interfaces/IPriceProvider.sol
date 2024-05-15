@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 /**
  * @title IPriceProvider Interface
- * @dev Interface for the price provider that defines a function to retrieve the USD to FNX price.
+ * @dev Interface for the price provider that defines a function to retrieve the USD to TOKEN price.
  */
 interface IPriceProvider {
     /**
