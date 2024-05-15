@@ -10,7 +10,6 @@ import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 
 /**
  * @title VeArtProxyUpgradeable Contract
- * @author The Fenix Protocol team
  * @dev This contract provides a `tokenURI` function for generating on-chain art for tokens.
  *      The art is generated as SVG images and encoded in base64 format, making each token
  *      have a unique representation.
@@ -49,7 +48,7 @@ contract VeArtProxyUpgradeable is IVeArtProxyUpgradeable {
                         string.concat(
                             '{"name": "lock #',
                             tokenId_.toString(),
-                            '", "description": "Fenix locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,',
+                            '", "description": "SOLEX locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "data:image/svg+xml;base64,',
                             Base64.encode(bytes(generateSVG(tokenId_, balanceOf_, lockedEnd_))),
                             '"}'
                         )
