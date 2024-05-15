@@ -4,24 +4,23 @@ pragma solidity =0.8.19;
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IAlgebraPool} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraPool.sol";
-import {OracleLibrary} from "@cryptoalgebra/integral-plugin/contracts/libraries/integration/OracleLibrary.sol";
-
 import {IPriceProvider} from "./interfaces/IPriceProvider.sol";
+import {OracleLibrary} from "@cryptoalgebra/integral-plugin/contracts/libraries/integration/OracleLibrary.sol";
 import {ModeSfsSetup} from "./ModeSfsSetup.sol";
 
 /**
  * @title AlgebraTokenPriceProviderUpgradeable-UNSAFE
- * @notice This contract provides the price of the FNX token in USD by querying an Algebra-based pool.
+ * @notice This contract provides the price of the Token in USD by querying an Algebra-based pool.
  *
  * It is marked as UNSAFE because it allows price manipulation through the referenced pool. Users should
- * be aware that the price returned by `getUsdToFNXPrice` can be influenced by actions within the Algebra pool,
+ * be aware that the price returned by `getUsdToTokenPrice` can be influenced by actions within the Algebra pool,
  * potentially leading to inaccurate or manipulated price data.
  *
  * IMPORTANT: The contract is intended for use in places where manipulating the price in the pool is more expensive
- *  than the profit generated. And also where price manipulation is not profitable
+ * than the profit generated. And also where price manipulation is not profitable.
  *
- * @dev Provides price data for FNX token in USD, utilizing an Algebra-based pool for price calculation.
- * Inherits from `BlastGovernorSetup` for integration with blast. Designed to be upgradeable using OpenZeppelin's upgradeable contracts framework.
+ * @dev Provides price data for the Token in USD, utilizing an Algebra-based pool for price calculation.
+ * Inherits from `ModeSfsSetup` for integration with Mode. Designed to be upgradeable using OpenZeppelin's upgradeable contracts framework.
  */
 contract AlgebraTokenPriceProviderUpgradeable is IPriceProvider, Initializable, ModeSfsSetup {
     // errors
@@ -34,7 +33,7 @@ contract AlgebraTokenPriceProviderUpgradeable is IPriceProvider, Initializable, 
     uint256 public ONE_USD;
 
     /**
-     * @dev Return address of the FNX token
+     * @dev Return address of the Token.
      */
     address public TOKEN;
 
@@ -56,12 +55,12 @@ contract AlgebraTokenPriceProviderUpgradeable is IPriceProvider, Initializable, 
     }
 
     /**
-     * @notice Initializes the price provider with the addresses of the Blast Governor, Algebra pool, FNX token, and USD token.
+     * @notice Initializes the price provider with the addresses of the Mode SFS, Algebra pool, Token, and USD token.
      * @dev Stores the necessary addresses for later use and sets ONE_USD based on the USD token's decimals.
-     * @param modeSfs_ Address
-     * @param sfsAssignTokenId_ Address of the Blast Governor.
+     * @param modeSfs_ Address of the Mode SFS contract.
+     * @param sfsAssignTokenId_ The token ID for SFS assignment.
      * @param pool_ Address of the Algebra pool used for price calculations.
-     * @param TOKEN_ Address of the FNX token.
+     * @param TOKEN_ Address of the Token.
      * @param USD_ Address of the USD token.
      */
     function initialize(address modeSfs_, uint256 sfsAssignTokenId_, address pool_, address TOKEN_, address USD_) external initializer {
@@ -79,9 +78,9 @@ contract AlgebraTokenPriceProviderUpgradeable is IPriceProvider, Initializable, 
     }
 
     /**
-     * @notice Retrieves the current price of 1 USD in TOKEN tokens, according to the specified Algebra pool.
+     * @notice Retrieves the current price of 1 USD in Token tokens, according to the specified Algebra pool.
      * @dev Queries the current tick from the Algebra pool to calculate the price. The price can be manipulated through actions within the pool, so it should be used with caution.
-     * @return Price of 1 USD in FNX tokens.
+     * @return Price of 1 USD in Token tokens.
      */
     function getUsdToTokenPrice() external view override returns (uint256) {
         return OracleLibrary.getQuoteAtTick(currentTick(), _toUint128(ONE_USD), USD, TOKEN);
