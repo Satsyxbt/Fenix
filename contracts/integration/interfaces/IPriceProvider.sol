@@ -7,8 +7,8 @@ pragma solidity >=0.8.0;
  */
 interface IPriceProvider {
     /**
-     * @notice Retrieves the current price of 1 USD in FNX tokens
-     * @return Price of 1 USD in FNX tokens.
+     * @notice Retrieves the current price of 1 USD in TOKEN tokens
+     * @return Price of 1 USD in TOKEN tokens.
      */
-    function getUsdToFNXPrice() external view returns (uint256);
+    function getUsdToTokenPrice() external view returns (uint256);
 }
