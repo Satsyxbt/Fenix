@@ -14,7 +14,7 @@ import {IFeesVaultFactory} from "./interfaces/IFeesVaultFactory.sol";
 /**
  * @title Fees Vault Factory
  * @dev Factory contract for creating and managing fees vault instances.
- * Implements access control and integration with BLAST protocol's rebasing mechanism.
+ * Implements access control and integration with Mode SFS.
  */
 contract FeesVaultUpgradeable is IFeesVault, ModeSfsSetup, Initializable {
     using SafeERC20 for IERC20;
@@ -32,8 +32,8 @@ contract FeesVaultUpgradeable is IFeesVault, ModeSfsSetup, Initializable {
 
     /**
      * @notice Initializes the contract with necessary configuration.
-     * @param modeSfs_ Address of the BLAST governor.
-     * @param sfsAssignTokenId_ Address for BLAST points management.
+     * @param modeSfs_ Address of the Mode SFS contract.
+     * @param sfsAssignTokenId_ The token ID for SFS assignment.
      * @param factory_ Factory address for this vault.
      * @param pool_ Address of the liquidity pool.
      */
