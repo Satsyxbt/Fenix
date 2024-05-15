@@ -73,9 +73,10 @@ interface IFeesVault {
     /**
      * @dev Initializes the contract with necessary configuration parameters.
      * Can only be called once by the contract factory during the deployment process.
-     * @param blastGovernor_ Address of the governor contract for authorization checks.
+     * @param modeSfs_ Address of the governor contract for authorization checks.
+     * @param sfsAssignTokenId_ Address of the governor contract for authorization checks.
      * @param factory_ Address of the contract factory for this vault.
      * @param pool_ Address of the liquidity pool associated with this vault.
      */
-    function initialize(address blastGovernor_, address blastPoints, address blastPointsOperator, address factory_, address pool_) external;
+    function initialize(address modeSfs_, uint256 sfsAssignTokenId_, address factory_, address pool_) external;
 }
