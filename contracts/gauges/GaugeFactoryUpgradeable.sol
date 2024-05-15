@@ -6,12 +6,11 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {GaugeProxy} from "./GaugeProxy.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {ModeSfsSetupFactoryManager} from "../integration/ModeSfsSetupFactoryManager.sol";
 
-contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUpgradeable {
+contract GaugeFactoryUpgradeable is IGaugeFactory, ModeSfsSetupFactoryManager, OwnableUpgradeable {
     address public last_gauge;
     address public voter;
-    address public defaultBlastGovernor;
     address public override gaugeImplementation;
     address public override merklGaugeMiddleman;
 
@@ -20,18 +19,18 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
     }
 
     function initialize(
-        address _blastGovernor,
+        address modeSfs_,
+        uint256 sfsAssignTokenId_,
         address _voter,
         address _gaugeImplementation,
         address _merklGaugeMiddleman
     ) external initializer {
-        __BlastGovernorSetup_init(_blastGovernor);
+        __ModeSfsSetupFactoryManager_init(modeSfs_, sfsAssignTokenId_);
         __Ownable_init();
 
         _checkAddressZero(_voter);
         _checkAddressZero(_gaugeImplementation);
 
-        defaultBlastGovernor = _blastGovernor;
         voter = _voter;
         gaugeImplementation = _gaugeImplementation;
         merklGaugeMiddleman = _merklGaugeMiddleman;
@@ -51,7 +50,8 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
 
         address newLastGauge = address(new GaugeProxy());
         IGauge(newLastGauge).initialize(
-            defaultBlastGovernor,
+            defaultModeSfs,
+            defaultSfsAssignTokenId,
             _rewardToken,
             _ve,
             _token,
@@ -68,18 +68,6 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         return newLastGauge;
     }
 
-    /**
-     * @dev Sets the default governor address for new fee vaults. Only callable by the contract owner.
-     *
-     * @param defaultBlastGovernor_ The new default governor address to be set.
-     */
-    function setDefaultBlastGovernor(address defaultBlastGovernor_) external virtual onlyOwner {
-        _checkAddressZero(defaultBlastGovernor_);
-
-        emit SetDefaultBlastGovernor(defaultBlastGovernor, defaultBlastGovernor_);
-        defaultBlastGovernor = defaultBlastGovernor_;
-    }
-
     function gaugeOwner() external view returns (address) {
         return owner();
     }
@@ -94,16 +82,7 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         merklGaugeMiddleman = _newMerklGaugeMiddleman;
     }
 
-    /**
-     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
-     *
-     * @param addr_ The address which will checked on zero
-     */
-    function _checkAddressZero(address addr_) internal pure {
-        if (addr_ == address(0)) {
-            revert AddressZero();
-        }
-    }
+    function _checkAccessForModeSfsSetupFactoryManager() internal virtual override onlyOwner {}
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

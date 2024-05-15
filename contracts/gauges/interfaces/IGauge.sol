@@ -27,7 +27,8 @@ interface IGauge {
     function setFeeVault(address _feeVault) external;
 
     function initialize(
-        address _governor,
+        address modeSfs_,
+        uint256 sfsAssignTokenId_,
         address _rewardToken,
         address _ve,
         address _token,
