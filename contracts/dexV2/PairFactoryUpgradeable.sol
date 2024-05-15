@@ -4,14 +4,12 @@ pragma solidity =0.8.19;
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
-import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20RebasingManage.sol";
-
 import {IPairFactory} from "./interfaces/IPairFactory.sol";
 import {IPair} from "./interfaces/IPair.sol";
 import {IFeesVaultFactory} from "../fees/interfaces/IFeesVaultFactory.sol";
-import {BlastERC20FactoryManager} from "../integration/BlastERC20FactoryManager.sol";
+import {ModeSfsSetupFactoryManager} from "../integration/ModeSfsSetupFactoryManager.sol";
 
-contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, AccessControlUpgradeable {
+contract PairFactoryUpgradeable is IPairFactory, ModeSfsSetupFactoryManager, AccessControlUpgradeable {
     bytes32 public constant override PAIRS_ADMINISTRATOR_ROLE = keccak256("PAIRS_ADMINISTRATOR");
     bytes32 public constant override FEES_MANAGER_ROLE = keccak256("FEES_MANAGER");
     bytes32 public constant override PAIRS_CREATOR_ROLE = keccak256("PAIRS_CREATOR");
@@ -41,16 +39,15 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
     }
 
     function initialize(
-        address blastGovernor_,
-        address blastPoints_,
-        address blastPointsOperator_,
+        address modeSfs_,
+        uint256 sfsAssignTokenId_,
         address implementation_,
         address communityVaultFactory_
     ) external initializer {
         _checkAddressZero(implementation_);
         _checkAddressZero(communityVaultFactory_);
 
-        __BlastERC20FactoryManager_init(blastGovernor_, blastPoints_, blastPointsOperator_);
+        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
         __AccessControl_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -135,27 +132,9 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
 
         address feesVaultForPool = IFeesVaultFactory(communityVaultFactory).createVaultForPool(pair);
 
-        IPair(pair).initialize(
-            defaultBlastGovernor,
-            defaultBlastPoints,
-            defaultBlastPointsOperator,
-            token0,
-            token1,
-            stable,
-            feesVaultForPool
-        );
+        IPair(pair).initialize(defaultModeSfs, defaultSfsAssignTokenId, token0, token1, stable, feesVaultForPool);
 
         IFeesVaultFactory(communityVaultFactory).afterPoolInitialize(pair);
-
-        if (isRebaseToken[token0]) {
-            IBlastERC20RebasingManage(pair).configure(token0, configurationForBlastRebaseTokens[token0]);
-            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token0, configurationForBlastRebaseTokens[token0]);
-        }
-
-        if (isRebaseToken[token1]) {
-            IBlastERC20RebasingManage(pair).configure(token1, configurationForBlastRebaseTokens[token1]);
-            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token1, configurationForBlastRebaseTokens[token1]);
-        }
 
         getPair[token0][token1][stable] = pair;
         getPair[token1][token0][stable] = pair; // populate mapping in the reverse direction
@@ -207,9 +186,7 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
         }
     }
 
-    function _checkAccessForBlastFactoryManager() internal view override {
-        _checkRole(PAIRS_ADMINISTRATOR_ROLE);
-    }
+    function _checkAccessForModeSfsSetupFactoryManager() internal view override onlyRole(PAIRS_ADMINISTRATOR_ROLE) {}
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

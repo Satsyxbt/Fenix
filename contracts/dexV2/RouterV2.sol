@@ -76,10 +76,6 @@ interface IWETH {
     function withdraw(uint) external;
 }
 
-interface IBlast {
-    function configureGovernor(address _governor) external;
-}
-
 // Experimental Extension [ftm.guru/solidly/BaseV1Router02]
 // contract BaseV1Router02 is BaseV1Router01
 // with Support for Fee-on-Transfer Tokens
@@ -104,8 +100,12 @@ contract RouterV2 {
         _;
     }
 
-    constructor(address _blastGovernor, address _factory, address _wETH) {
-        IBlast(0x4300000000000000000000000000000000000002).configureGovernor(_blastGovernor);
+    constructor(address modeSfs_, uint256 sfsAssignTokenId_, address _factory, address _wETH) {
+        assert(modeSfs_ != address(0));
+        assert(sfsAssignTokenId_ > 0);
+        (bool success, ) = modeSfs_.call(abi.encodeWithSignature("assign(uint256)", sfsAssignTokenId_));
+        assert(success);
+
         factory = _factory;
         wETH = IWETH(_wETH);
     }

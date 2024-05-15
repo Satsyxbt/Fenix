@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import {YieldMode, IERC20Rebasing} from "../../integration/interfaces/IERC20Rebasing.sol";
 
 interface IPair {
     function setCommunityVault(address communityVault_) external;
@@ -44,9 +43,8 @@ interface IPair {
     function isStable() external view returns (bool);
 
     function initialize(
-        address blastGovernor,
-        address blastPoints,
-        address blastPointsOperator,
+        address modeSfs,
+        uint256 sfsAssignTokenId,
         address token0,
         address token1,
         bool isStable,
