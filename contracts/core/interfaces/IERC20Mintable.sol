@@ -7,7 +7,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnab
  * @title Interface of the Fenix main ERC20 token
  * @author Fenix Protocol team
  */
-interface IFenix is IERC20 {
+interface IERC20Mintable is IERC20 {
     /**
      * @dev Allows the contract owner to mint new tokens to a specified address.
      * @param to_ The address to receive the minted tokens.
