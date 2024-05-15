@@ -79,8 +79,8 @@ contract GaugeUpgradeable is IGauge, ModeSfsSetup, ReentrancyGuardUpgradeable {
     }
 
     function initialize(
-        address modeSfs_,
-        uint256 sfsAssignTokenId_,
+        address _modeSfs,
+        uint256 _sfsAssignTokenId,
         address _rewardToken,
         address _ve,
         address _token,
@@ -91,7 +91,7 @@ contract GaugeUpgradeable is IGauge, ModeSfsSetup, ReentrancyGuardUpgradeable {
         address _merklGaugeMiddleman,
         address _feeVault
     ) external initializer {
-        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
+        __ModeSfsSetup__init(_modeSfs, _sfsAssignTokenId);
         __ReentrancyGuard_init();
 
         gaugeFactory = msg.sender;

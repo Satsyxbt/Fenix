@@ -33,8 +33,8 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, ModeSfsSetupFactoryMa
 
     /**
      * @notice Initializes the factory with necessary parameters and default configurations.
-     * @param modeSfs_ The governor address for BLAST protocol interaction.
-     * @param sfsAssignTokenId_ The BLAST points address.
+     * @param modeSfs_ The address of the Mode SFS contract.
+     * @param sfsAssignTokenId_ The tokenId of the SFS to which the contract will be assigned.
      * @param voter_ The default voter address for fee vaults.
      * @param feesVaultImplementation_ The default fees vault implementation address.
      * @param defaultDistributionConfig_ The default distribution configuration for fees.
@@ -219,7 +219,14 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, ModeSfsSetupFactoryMa
     }
 
     /**
-     * @dev Overrides `BlastERC20FactoryManager#_checkAccessForBlastFactoryManager` to add custom access control logic.
+     * @dev Overrides `ModeSfsSetupFactoryManager#_checkAccessForModeSfsSetupFactoryManager` to add custom access control logic.
      */
     function _checkAccessForModeSfsSetupFactoryManager() internal view virtual override onlyRole(FEES_VAULT_ADMINISTRATOR_ROLE) {}
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

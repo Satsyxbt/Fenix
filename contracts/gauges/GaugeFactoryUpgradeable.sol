@@ -19,13 +19,13 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, ModeSfsSetupFactoryManager, O
     }
 
     function initialize(
-        address modeSfs_,
-        uint256 sfsAssignTokenId_,
+        address _modeSfs,
+        uint256 _sfsAssignTokenId,
         address _voter,
         address _gaugeImplementation,
         address _merklGaugeMiddleman
     ) external initializer {
-        __ModeSfsSetupFactoryManager_init(modeSfs_, sfsAssignTokenId_);
+        __ModeSfsSetupFactoryManager_init(_modeSfs, _sfsAssignTokenId);
         __Ownable_init();
 
         _checkAddressZero(_voter);

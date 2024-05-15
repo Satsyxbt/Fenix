@@ -47,7 +47,7 @@ contract PairFactoryUpgradeable is IPairFactory, ModeSfsSetupFactoryManager, Acc
         _checkAddressZero(implementation_);
         _checkAddressZero(communityVaultFactory_);
 
-        __ModeSfsSetup__init(modeSfs_, sfsAssignTokenId_);
+        __ModeSfsSetupFactoryManager_init(modeSfs_, sfsAssignTokenId_);
         __AccessControl_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
