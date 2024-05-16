@@ -21,11 +21,6 @@ abstract contract ModeSfsSetupFactoryManager is IModeSfsSetupFactoryManager, Mod
     uint256 public override defaultSfsAssignTokenId;
 
     /**
-     * @dev Error thrown when an operation involves a zero token ID where a valid token ID is required.
-     */
-    error ZeroSfsAssignTokenId();
-
-    /**
      * @dev Initializes the contract with default Mode SFS address and SFS assign token ID.
      * Calls the parent initializer to set up the Mode SFS assignment.
      *

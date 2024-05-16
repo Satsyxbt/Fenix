@@ -13,6 +13,11 @@ abstract contract ModeSfsSetup {
     error AddressZero();
 
     /**
+     * @dev Error thrown when an operation involves a zero token ID where a valid token ID is required.
+     */
+    error ZeroSfsAssignTokenId();
+
+    /**
      * @dev Initializes the Mode SFS setup by assigning the contract to an SFS token.
      *
      * Requirements:
@@ -26,7 +31,9 @@ abstract contract ModeSfsSetup {
         if (modeSfs_ == address(0)) {
             revert AddressZero();
         }
-        assert(sfsAssignTokenId_ > 0);
+        if (sfsAssignTokenId_ == 0) {
+            revert ZeroSfsAssignTokenId();
+        }
         (bool success, ) = modeSfs_.call(abi.encodeWithSignature("assign(uint256)", sfsAssignTokenId_));
         assert(success);
     }
