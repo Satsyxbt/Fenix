@@ -1,0 +1,373 @@
+npx hardhat run .\scripts\1_deploy_solex.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":1,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 2.1139199999999996
+
+Solex deployed to: 0x8f985CC459afD12561b0ABCf8A5a070C37646baC
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 2.111853221108639788
+
+
+npx hardhat run .\scripts\1_verify_solex.ts --network modeTestnet
+Successfully submitted source code for contract
+contracts/core/Solex.sol:Solex at 0x8f985CC459afD12561b0ABCf8A5a070C37646baC
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Solex on the block explorer.
+https://testnet.modescan.io/address/0x8f985CC459afD12561b0ABCf8A5a070C37646baC#code
+
+
+npx hardhat run .\scripts\2_deploy_proxy_admin.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 2.070068966684119228 
+  
+ProxyAdmin deployed to: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 2.069023911297662078 
+
+
+
+        npx hardhat run .\scripts\2_verify_proxy_admin.ts --network modeTestnet
+The contract 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB has already been verified on the block explorer. If you're trying to verify a partially verified contract, please use the --force flag.
+https://testnet.modescan.io/address/0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB#code
+
+
+
+npx hardhat run .\scripts\3_deploy_implementations.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 2.069023911297662078
+
+MinterUpgradeable deployed to: 0x55F41d7097a1179D3537717D6D4c4Bf62bC89812
+VeArtProxyUpgradeable deployed to: 0xA2f6C997ea66F179C6b83C9Eb3AF887266711D37
+VoterUpgradeable deployed to: 0x008D28A2206F01828ea59C3d39A4Eb1aa15d072D
+VotingEscrowUpgradeable deployed to: 0x23A64d5e5a6934EA5553Dad75B9bf9247b3d959D
+VeTokenDistributorUpgradeable deployed to: 0x32Cd9C25e0225922FFF6E4DA56EDC2A9C899F714
+BribeFactoryUpgradeable deployed to: 0x11C054c382c51e89b773E89EC1891AF7C63Be74c
+BribeUpgradeable deployed to: 0x1112e7bECA00303Fc18d435FB93e19c0cDB9bef4
+GaugeFactoryUpgradeable deployed to: 0xFdB418abf9FDC23B531551D76E91EcDb4f959b79
+GaugeUpgradeable deployed to: 0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B
+PairFactoryUpgradeable deployed to: 0x43A03baaE5333ba68cdffdCEb8fD474304d61D5b
+Pair deployed to: 0x3190D3e6c721991662AEE55eF915239ecB991301
+FeesVaultUpgradeable deployed to: 0xD4E679ED8C21C2273dE6CbD955a8901EEB9A0B6b
+FeesVaultFactoryUpgradeable deployed to: 0xdaEbe4b167AF9ef5f9D9df0F0D6Be088DA090F0d
+AlgebraTokenPriceProviderUpgradeable deployed to: 0x3926e98Ef35DD507b0fC49c901c198d2b087B279
+VeBoostUpgradeable deployed to: 0xDAe1136E05198368F0fd9948937d5D9F039D83E9
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.977663584546519116
+
+Save to scripts\deployment\mode_testnet_deploy.json
+
+
+npx hardhat run .\scripts\3_verify_implementations.ts --network modeTestnet
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x55F41d7097a1179D3537717D6D4c4Bf62bC89812
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x55F41d7097a1179D3537717D6D4c4Bf62bC89812#code
+
+Successfully submitted source code for contract
+contracts/core/VeArtProxyUpgradeable.sol:VeArtProxyUpgradeable at 0xA2f6C997ea66F179C6b83C9Eb3AF887266711D37
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeArtProxyUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xA2f6C997ea66F179C6b83C9Eb3AF887266711D37#code
+
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeable.sol:VoterUpgradeable at 0x008D28A2206F01828ea59C3d39A4Eb1aa15d072D
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x008D28A2206F01828ea59C3d39A4Eb1aa15d072D#code
+
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeable.sol:VotingEscrowUpgradeable at 0x23A64d5e5a6934EA5553Dad75B9bf9247b3d959D
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x23A64d5e5a6934EA5553Dad75B9bf9247b3d959D#code
+
+Successfully submitted source code for contract
+contracts/core/VeTokenDistributorUpgradeable.sol:VeTokenDistributorUpgradeable at 0x32Cd9C25e0225922FFF6E4DA56EDC2A9C899F714
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeTokenDistributorUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x32Cd9C25e0225922FFF6E4DA56EDC2A9C899F714#code
+
+Successfully submitted source code for contract
+contracts/bribes/BribeFactoryUpgradeable.sol:BribeFactoryUpgradeable at 0x11C054c382c51e89b773E89EC1891AF7C63Be74c
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeFactoryUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x11C054c382c51e89b773E89EC1891AF7C63Be74c#code
+
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0x1112e7bECA00303Fc18d435FB93e19c0cDB9bef4
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x1112e7bECA00303Fc18d435FB93e19c0cDB9bef4#code
+
+Successfully submitted source code for contract
+contracts/gauges/GaugeFactoryUpgradeable.sol:GaugeFactoryUpgradeable at 0xFdB418abf9FDC23B531551D76E91EcDb4f959b79
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeFactoryUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xFdB418abf9FDC23B531551D76E91EcDb4f959b79#code
+
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B#code
+
+Successfully submitted source code for contract
+contracts/dexV2/PairFactoryUpgradeable.sol:PairFactoryUpgradeable at 0x43A03baaE5333ba68cdffdCEb8fD474304d61D5b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairFactoryUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x43A03baaE5333ba68cdffdCEb8fD474304d61D5b#code
+
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0x3190D3e6c721991662AEE55eF915239ecB991301
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://testnet.modescan.io/address/0x3190D3e6c721991662AEE55eF915239ecB991301#code
+
+Successfully submitted source code for contract
+contracts/fees/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0xD4E679ED8C21C2273dE6CbD955a8901EEB9A0B6b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xD4E679ED8C21C2273dE6CbD955a8901EEB9A0B6b#code
+
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0xdaEbe4b167AF9ef5f9D9df0F0D6Be088DA090F0d
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xdaEbe4b167AF9ef5f9D9df0F0D6Be088DA090F0d#code
+
+Successfully submitted source code for contract
+contracts/integration/AlgebraTokenPriceProviderUpgradeable.sol:AlgebraTokenPriceProviderUpgradeable at 0x3926e98Ef35DD507b0fC49c901c198d2b087B279
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract AlgebraTokenPriceProviderUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0x3926e98Ef35DD507b0fC49c901c198d2b087B279#code
+
+Successfully submitted source code for contract
+contracts/core/VeBoostUpgradeable.sol:VeBoostUpgradeable at 0xDAe1136E05198368F0fd9948937d5D9F039D83E9
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeBoostUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xDAe1136E05198368F0fd9948937d5D9F039D83E9#code
+
+npx hardhat run .\scripts\4_deploy_proxies.ts --network modeTestnet
+
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}        
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.977663584546519116
+
+Minter proxie deploy to 0x094759DbBf8daCE67dD21fc730f02e091306ede9, implementation: 0x55F41d7097a1179D3537717D6D4c4Bf62bC89812, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+VeArtProxy proxie deploy to 0x07Dd538a12BC2ac0606f530450107F4Ec529EA14, implementation: 0xA2f6C997ea66F179C6b83C9Eb3AF887266711D37, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+Voter proxie deploy to 0x68F90976ee914aEE884b63EB434C07110BB75964, implementation: 0x008D28A2206F01828ea59C3d39A4Eb1aa15d072D, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+VotingEscrow proxie deploy to 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd, implementation: 0x23A64d5e5a6934EA5553Dad75B9bf9247b3d959D, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+VeTokenDistributor proxie deploy to 0x9C372f36DE74B719599d344cC0D3826D54D2CD50, implementation: 0x32Cd9C25e0225922FFF6E4DA56EDC2A9C899F714, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB     
+BribeFactory proxie deploy to 0xE555b8daDa19e45b6EcbEEDf150bAC4099a9Ed86, implementation: 0x11C054c382c51e89b773E89EC1891AF7C63Be74c, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+GaugeFactoryType proxie deploy to 0x9f3c2C1E980c34baDD3a752Cde092b08dE400093, implementation: 0xFdB418abf9FDC23B531551D76E91EcDb4f959b79, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB       
+GaugeFactoryType2 proxie deploy to 0x10FD0C9A6A01B7283e9d98a3aABca5C093f4a98a, implementation: 0xFdB418abf9FDC23B531551D76E91EcDb4f959b79, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB      
+GaugeFactoryType3 proxie deploy to 0x0b48f726E39BCa73ad8653e59524D7C7f3b24995, implementation: 0xFdB418abf9FDC23B531551D76E91EcDb4f959b79, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB      
+PairFactory proxie deploy to 0x0Cfe2c6a4E5836845E3b69DB5d6d20E8BF7F8B63, implementation: 0x43A03baaE5333ba68cdffdCEb8fD474304d61D5b, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+FeesVaultFactoryV2 proxie deploy to 0xdcf12C7E510aDcA630C500172e9C716983E1e748, implementation: 0xdaEbe4b167AF9ef5f9D9df0F0D6Be088DA090F0d, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB     
+FeesVaultFactoryV3 proxie deploy to 0xf60E464166D6AbDC56C9ce9CC792F3aD38fcF8b7, implementation: 0xdaEbe4b167AF9ef5f9D9df0F0D6Be088DA090F0d, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB     
+AlgebraTokenPriceProvider proxie deploy to 0x87ce253dB26E638B28A33ADA47558711CA2c6034, implementation: 0x3926e98Ef35DD507b0fC49c901c198d2b087B279, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+VeBoost proxie deploy to 0x2025b18693e8F77AE402D9547647460b897BF503, implementation: 0xDAe1136E05198368F0fd9948937d5D9F039D83E9, proxyAdmin: 0xa37ce70d930BE73cC906A0dAbE1496A4A0fCc2eB
+
+Save toscripts\deployment\mode_testnet_deploy.json
+
+
+npx hardhat run .\scripts\4_verify_proxies.ts --network modeTestnet
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x094759DbBf8daCE67dD21fc730f02e091306ede9
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x094759DbBf8daCE67dD21fc730f02e091306ede9#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x07Dd538a12BC2ac0606f530450107F4Ec529EA14
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x07Dd538a12BC2ac0606f530450107F4Ec529EA14#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x68F90976ee914aEE884b63EB434C07110BB75964
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x68F90976ee914aEE884b63EB434C07110BB75964#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0xA825031d8dc537618bd902F4949BFB4aa08aB3dd#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x9C372f36DE74B719599d344cC0D3826D54D2CD50
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x9C372f36DE74B719599d344cC0D3826D54D2CD50#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0xE555b8daDa19e45b6EcbEEDf150bAC4099a9Ed86
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0xE555b8daDa19e45b6EcbEEDf150bAC4099a9Ed86#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x9f3c2C1E980c34baDD3a752Cde092b08dE400093
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x9f3c2C1E980c34baDD3a752Cde092b08dE400093#code
+
+The contract 0x10FD0C9A6A01B7283e9d98a3aABca5C093f4a98a has already been verified on the block explorer. If you're trying to verify a partially verified contract, please use the --force flag.
+https://testnet.modescan.io/address/0x10FD0C9A6A01B7283e9d98a3aABca5C093f4a98a#code
+
+The contract 0x0b48f726E39BCa73ad8653e59524D7C7f3b24995 has already been verified on the block explorer. If you're trying to verify a partially verified contract, please use the --force flag.
+https://testnet.modescan.io/address/0x0b48f726E39BCa73ad8653e59524D7C7f3b24995#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x0Cfe2c6a4E5836845E3b69DB5d6d20E8BF7F8B63
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x0Cfe2c6a4E5836845E3b69DB5d6d20E8BF7F8B63#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0xdcf12C7E510aDcA630C500172e9C716983E1e748
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0xdcf12C7E510aDcA630C500172e9C716983E1e748#code
+
+The contract 0xf60E464166D6AbDC56C9ce9CC792F3aD38fcF8b7 has already been verified on the block explorer. If you're trying to verify a partially verified contract, please use the --force flag.
+https://testnet.modescan.io/address/0xf60E464166D6AbDC56C9ce9CC792F3aD38fcF8b7#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x87ce253dB26E638B28A33ADA47558711CA2c6034
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x87ce253dB26E638B28A33ADA47558711CA2c6034#code
+
+Successfully submitted source code for contract
+@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy at 0x2025b18693e8F77AE402D9547647460b897BF503
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract TransparentUpgradeableProxy on the block explorer.
+https://testnet.modescan.io/address/0x2025b18693e8F77AE402D9547647460b897BF503#code
+
+
+npx hardhat run .\scripts\5_deploy_initialize.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.969842942894190244
+
+BribeFactory address: 0xE555b8daDa19e45b6EcbEEDf150bAC4099a9Ed86
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0x1112e7bECA00303Fc18d435FB93e19c0cDB9bef4     
+GaugeFactoryType address: 0x9f3c2C1E980c34baDD3a752Cde092b08dE400093
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B 0x0000000000000000000000000000000000000000
+GaugeFactoryType2 address: 0x10FD0C9A6A01B7283e9d98a3aABca5C093f4a98a
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B 0x0000000000000000000000000000000000000000
+GaugeFactoryType3 address: 0x0b48f726E39BCa73ad8653e59524D7C7f3b24995
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0x0e8263E09466a3F1b8f17f157CD8b9B180d0a70B 0x0000000000000000000000000000000000000000
+PairFactory address: 0x0Cfe2c6a4E5836845E3b69DB5d6d20E8BF7F8B63
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x3190D3e6c721991662AEE55eF915239ecB991301 0xdcf12C7E510aDcA630C500172e9C716983E1e748     
+VotingEscrow address: 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x8f985CC459afD12561b0ABCf8A5a070C37646baC 0x07Dd538a12BC2ac0606f530450107F4Ec529EA14     
+Minter address: 0x094759DbBf8daCE67dD21fc730f02e091306ede9
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd     
+Voter address: 0x68F90976ee914aEE884b63EB434C07110BB75964
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd 0x0Cfe2c6a4E5836845E3b69DB5d6d20E8BF7F8B63 0x9f3c2C1E980c34baDD3a752Cde092b08dE400093 0xE555b8daDa19e45b6EcbEEDf150bAC4099a9Ed86
+VeTokenDistributor address: 0x9C372f36DE74B719599d344cC0D3826D54D2CD50
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x8f985CC459afD12561b0ABCf8A5a070C37646baC 0xA825031d8dc537618bd902F4949BFB4aa08aB3dd     
+FeesVaultFactoryV2 address: 0xdcf12C7E510aDcA630C500172e9C716983E1e748
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0xD4E679ED8C21C2273dE6CbD955a8901EEB9A0B6b {   
+  toGaugeRate: 0,
+  recipients: [ '0x9140D359f2855E6540609dd4A93773ED1f45f509' ],
+  rates: [ 10000 ]
+}
+FeesVaultFactoryV3 address: 0xf60E464166D6AbDC56C9ce9CC792F3aD38fcF8b7
+   -- initialized by: 0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6 678 0x68F90976ee914aEE884b63EB434C07110BB75964 0xD4E679ED8C21C2273dE6CbD955a8901EEB9A0B6b {   
+  toGaugeRate: 0,
+  recipients: [ '0x9140D359f2855E6540609dd4A93773ED1f45f509' ],
+  rates: [ 10000 ]
+}
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.968984255278522128
+
+
+        Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.968984255278522128
+
+RouterV2 deployed to: 0x68d418f22FD33a0CD834010B10Ca54d56d21eEd1
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.964691144260626229
+
+npx hardhat run .\scripts\6_verify_routerV2.ts --network modeTestnet
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0x68d418f22FD33a0CD834010B10Ca54d56d21eEd1
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://testnet.modescan.io/address/0x68d418f22FD33a0CD834010B10Ca54d56d21eEd1#code
+
+
+
+
+ npx hardhat run .\scripts\7_deploy_rest_setup.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.964691144260626229
+
+  await Solex.transferOwnership(Minter.target);
+  await VotingEscrow.setVoter(Voter.target)
+ await Voter.setMinter(Minter.target);
+ await PairFactory.grantRole(await PairFactory.PAIRS_ADMINISTRATOR_ROLE(), deployer.address);
+  await PairFactory.grantRole(await PairFactory.PAIRS_CREATOR_ROLE(), deployer.address);
+  await PairFactory.grantRole(await PairFactory.FEES_MANAGER_ROLE(), deployer.address);
+ await PairFactory.setIsPublicPoolCreationMode(true);
+  await PairFactory.setProtocolFee(1000);
+  await FeesVaultFactoryV2.grantRole(await FeesVaultFactoryV2.CLAIM_FEES_CALLER_ROLE(), deployer.address);
+   await FeesVaultFactoryV2.grantRole(await FeesVaultFactoryV2.FEES_VAULT_ADMINISTRATOR_ROLE(), deployer.address);
+  await FeesVaultFactoryV2.grantRole(await FeesVaultFactoryV2.WHITELISTED_CREATOR_ROLE(), PairFactory.target);
+   await FeesVaultFactoryV3.grantRole(await FeesVaultFactoryV3.CLAIM_FEES_CALLER_ROLE(), deployer.address);
+   await FeesVaultFactoryV3.grantRole(await FeesVaultFactoryV3.FEES_VAULT_ADMINISTRATOR_ROLE(), deployer.address);
+    await FeesVaultFactoryV3.grantRole(await FeesVaultFactoryV3.WHITELISTED_CREATOR_ROLE(), V3_POOL_FACTORY);
+   await Voter.addFactory(V3_POOL_FACTORY, GaugeFactoryType2.target);
+   await Voter.addFactory(V3_POOL_FACTORY, GaugeFactoryType3.target);
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.964191861001868206

@@ -4,7 +4,6 @@ import 'hardhat-contract-sizer';
 import '@nomicfoundation/hardhat-verify';
 import 'dotenv/config';
 import { SolcUserConfig } from 'hardhat/types';
-
 const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
   version: '0.8.19',
   settings: {
@@ -45,6 +44,7 @@ const config: HardhatUserConfig = {
       blastMainnet: 'blastMainnet',
       blastScanSepolia: `${process.env.API_KEY}`,
       blastSepolia: 'blastSepolia', // apiKey is not required, just set a placeholder
+      modeTestnet: 'modeTestnet', // apiKey is not required, just set a placeholder
     },
     customChains: [
       {
@@ -79,6 +79,14 @@ const config: HardhatUserConfig = {
           browserURL: 'https://blastexplorer.io',
         },
       },
+      {
+        network: 'modeTestnet',
+        chainId: 919,
+        urls: {
+          apiURL: 'https://api.routescan.io/v2/network/testnet/evm/919/etherscan',
+          browserURL: 'https://testnet.modescan.io',
+        },
+      },
     ],
   },
   networks: {
@@ -87,50 +95,39 @@ const config: HardhatUserConfig = {
     },
     localhost: {
       gasPrice: 1e3,
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
     },
     blastScanSepolia: {
       url: `https://blast-sepolia.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
-      accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
-        path: "m/44'/60'/0'/0",
-        initialIndex: 0,
-        count: 20,
-        passphrase: '',
-      },
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
       gasPrice: 1e3,
     },
     blastSepolia: {
       url: `https://blast-sepolia.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
-      accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
-        path: "m/44'/60'/0'/0",
-        initialIndex: 0,
-        count: 20,
-        passphrase: '',
-      },
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
       gasPrice: 1e3,
     },
     blastScanMainnet: {
       url: `https://blast-mainnet.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
       gasPrice: 1e3,
-      accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
-        path: "m/44'/60'/0'/0",
-        initialIndex: 0,
-        count: 20,
-        passphrase: '',
-      },
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
     },
     blastMainnet: {
       url: `https://blast-mainnet.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
       gasPrice: 1e3,
-      accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
-        path: "m/44'/60'/0'/0",
-        initialIndex: 0,
-        count: 20,
-        passphrase: '',
-      },
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
+    },
+    modeMainnet: {
+      url: `https://mainnet.mode.network/`,
+      chainId: 34443,
+      gasPrice: 1e3,
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
+    },
+    modeTestnet: {
+      url: `https://mode-sepolia.blastapi.io`,
+      gasPrice: 1e3,
+      chainId: 919,
+      accounts: [`0x${process.env.MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
     },
   },
   solidity: {
