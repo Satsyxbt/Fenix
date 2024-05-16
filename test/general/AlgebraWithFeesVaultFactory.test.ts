@@ -18,7 +18,6 @@ describe('AlgebraWithFeesVaultFactory', function () {
   let deployed: CoreFixtureDeployed;
   let signers: {
     deployer: HardhatEthersSigner;
-    blastGovernor: HardhatEthersSigner;
     fenixTeam: HardhatEthersSigner;
     proxyAdmin: HardhatEthersSigner;
     otherUser1: HardhatEthersSigner;
@@ -34,7 +33,7 @@ describe('AlgebraWithFeesVaultFactory', function () {
 
   before('deployed', async () => {
     deployed = await loadFixture(completeFixture);
-    algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
+    algebraCore = await deployAlgebraCore(await deployed.modeSfs.getAddress(), deployed.sfsAssignTokenId);
 
     signers = deployed.signers;
 

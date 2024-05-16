@@ -14,7 +14,6 @@ describe('#2 Adversary can steal all bribe rewards', function () {
   let deployed: CoreFixtureDeployed;
   let signers: {
     deployer: HardhatEthersSigner;
-    blastGovernor: HardhatEthersSigner;
     fenixTeam: HardhatEthersSigner;
     proxyAdmin: HardhatEthersSigner;
     otherUser1: HardhatEthersSigner;
@@ -36,7 +35,7 @@ describe('#2 Adversary can steal all bribe rewards', function () {
     deployed = await loadFixture(completeFixture);
     fenix = deployed.fenix;
 
-    algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
+    algebraCore = await deployAlgebraCore(await deployed.modeSfs.getAddress(), deployed.sfsAssignTokenId);
     signers = deployed.signers;
 
     tokenTK18 = await deployERC20MockToken(deployed.signers.deployer, 'TK18', 'TK18', 18);

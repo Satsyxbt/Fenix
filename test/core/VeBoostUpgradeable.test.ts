@@ -5,9 +5,9 @@ import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  AlgebraFNXPriceProviderUpgradeable,
+  AlgebraTokenPriceProviderUpgradeable,
   ERC20Mock,
-  Fenix,
+  Solex,
   VeBoostUpgradeable,
   VeBoostUpgradeable__factory,
 } from '../../typechain-types';
@@ -28,8 +28,8 @@ describe('VeBoostUpgradeable', function () {
   let factory: VeBoostUpgradeable__factory;
   let veBoostImplementation: VeBoostUpgradeable;
   let veBoost: VeBoostUpgradeable;
-  let priceProvider: AlgebraFNXPriceProviderUpgradeable;
-  let fenix: Fenix;
+  let priceProvider: AlgebraTokenPriceProviderUpgradeable;
+  let fenix: Solex;
   let tokenTR6: ERC20Mock;
   let tokenTR18: ERC20Mock;
   let mockVotingEscrow: HardhatEthersSigner;
@@ -38,14 +38,14 @@ describe('VeBoostUpgradeable', function () {
     usdToken: ERC20Mock,
     usdReserve: bigint,
     fnxReserve: bigint,
-  ): Promise<AlgebraFNXPriceProviderUpgradeable> {
-    let factoryPriceProvider = await ethers.getContractFactory('AlgebraFNXPriceProviderUpgradeable');
+  ): Promise<AlgebraTokenPriceProviderUpgradeable> {
+    let factoryPriceProvider = await ethers.getContractFactory('AlgebraTokenPriceProviderUpgradeable');
     let implementationPriceProvider = await factoryPriceProvider.deploy();
     priceProvider = factoryPriceProvider.attach(
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
-    ) as AlgebraFNXPriceProviderUpgradeable;
+    ) as AlgebraTokenPriceProviderUpgradeable;
 
-    let algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
+    let algebraCore = await deployAlgebraCore(await deployed.modeSfs.getAddress(), deployed.sfsAssignTokenId);
 
     let algebraFactory = algebraCore.factory;
     await algebraFactory.grantRole(await algebraFactory.POOLS_CREATOR_ROLE(), signers.deployer.address);
@@ -61,14 +61,14 @@ describe('VeBoostUpgradeable', function () {
     }
     await pool.initialize(price);
 
-    await priceProvider.initialize(signers.blastGovernor, pool.target, fenix.target, usdToken.target);
+    await priceProvider.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, pool.target, fenix.target, usdToken.target);
     return priceProvider;
   }
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
-    fenix = deployed.fenix;
+    fenix = deployed.solex;
     mockVotingEscrow = signers.otherUser5;
 
     tokenTR6 = await deployERC20MockToken(signers.deployer, 'TR6', 'TR6', 6);
@@ -82,14 +82,15 @@ describe('VeBoostUpgradeable', function () {
       (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await veBoostImplementation.getAddress()))
         .target,
     ) as VeBoostUpgradeable;
-    await veBoost.initialize(signers.blastGovernor.address, fenix.target, mockVotingEscrow.address, pp.target);
+    await veBoost.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, fenix.target, mockVotingEscrow.address, pp.target);
   });
 
   describe('Deployment', function () {
     it('Should fail if try initialize on implementation', async function () {
       await expect(
         veBoostImplementation.initialize(
-          signers.blastGovernor.address,
+          deployed.modeSfs.target,
+          deployed.sfsAssignTokenId,
           await fenix.getAddress(),
           mockVotingEscrow.address,
           priceProvider.target,
@@ -98,7 +99,13 @@ describe('VeBoostUpgradeable', function () {
     });
     it('Should fail if try second time to initialize', async function () {
       await expect(
-        veBoost.initialize(signers.blastGovernor.address, await fenix.getAddress(), mockVotingEscrow.address, priceProvider.target),
+        veBoost.initialize(
+          deployed.modeSfs.target,
+          deployed.sfsAssignTokenId,
+          await fenix.getAddress(),
+          mockVotingEscrow.address,
+          priceProvider.target,
+        ),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should fail if try set zero address', async function () {
@@ -106,29 +113,35 @@ describe('VeBoostUpgradeable', function () {
         await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await veBoostImplementation.getAddress()),
       ) as VeBoostUpgradeable;
       await expect(
-        veB.initialize(ZERO_ADDRESS, await fenix.getAddress(), mockVotingEscrow.address, priceProvider.target),
+        veB.initialize(ZERO_ADDRESS, deployed.sfsAssignTokenId, await fenix.getAddress(), mockVotingEscrow.address, priceProvider.target),
       ).to.be.revertedWithCustomError(veB, 'AddressZero');
       await expect(
-        veB.initialize(signers.blastGovernor.address, ZERO_ADDRESS, mockVotingEscrow.address, priceProvider.target),
+        veB.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, mockVotingEscrow.address, priceProvider.target),
       ).to.be.revertedWithCustomError(veB, 'AddressZero');
       await expect(
-        veB.initialize(signers.blastGovernor.address, await fenix.getAddress(), ZERO_ADDRESS, priceProvider.target),
+        veB.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, await fenix.getAddress(), ZERO_ADDRESS, priceProvider.target),
       ).to.be.revertedWithCustomError(veB, 'AddressZero');
       await expect(
-        veB.initialize(signers.blastGovernor.address, await fenix.getAddress(), mockVotingEscrow.address, ZERO_ADDRESS),
+        veB.initialize(
+          deployed.modeSfs.target,
+          deployed.sfsAssignTokenId,
+          await fenix.getAddress(),
+          mockVotingEscrow.address,
+          ZERO_ADDRESS,
+        ),
       ).to.be.revertedWithCustomError(veB, 'AddressZero');
     });
 
     it('Should corect set initial parameters', async function () {
-      expect(await veBoost.fenix()).to.be.equal(await fenix.getAddress());
+      expect(await veBoost.token()).to.be.equal(await fenix.getAddress());
       expect(await veBoost.votingEscrow()).to.be.equal(mockVotingEscrow.address);
     });
 
     it('Should correct initialzie initial parameters', async () => {
       expect(await veBoost.owner()).to.be.equal(signers.deployer.address);
-      expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
+      expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
       expect(await veBoost.getMinLockedTimeForBoost()).to.be.equal(182 * 86400);
-      expect(await veBoost.getBoostFNXPercentage()).to.be.equal(1000);
+      expect(await veBoost.getBoostTokenPercentage()).to.be.equal(1000);
 
       expect(await fenix.allowance(veBoost.target, mockVotingEscrow.address)).to.be.eq(ethers.MaxUint256);
     });
@@ -148,14 +161,14 @@ describe('VeBoostUpgradeable', function () {
         expect(await veBoost.priceProvider()).to.be.eq(pp);
       });
     });
-    describe('#setFNXBoostPercentage', async () => {
+    describe('#setTokenBoostPercentage', async () => {
       it('should fail if try call from not owner', async () => {
-        await expect(veBoost.connect(signers.otherUser1).setFNXBoostPercentage(50)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+        await expect(veBoost.connect(signers.otherUser1).setTokenBoostPercentage(50)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
       });
       it('should correct call and set parameters', async () => {
-        expect(await veBoost.getBoostFNXPercentage()).to.be.eq(1_000);
-        await expect(veBoost.setFNXBoostPercentage(5678)).to.be.emit(veBoost, 'FNXBoostPercentage').withArgs(5678);
-        expect(await veBoost.getBoostFNXPercentage()).to.be.eq(5678);
+        expect(await veBoost.getBoostTokenPercentage()).to.be.eq(1_000);
+        await expect(veBoost.setTokenBoostPercentage(5678)).to.be.emit(veBoost, 'FNXBoostPercentage').withArgs(5678);
+        expect(await veBoost.getBoostTokenPercentage()).to.be.eq(5678);
       });
     });
     describe('#setMinUSDAmount', async () => {
@@ -163,11 +176,11 @@ describe('VeBoostUpgradeable', function () {
         await expect(veBoost.connect(signers.otherUser1).setMinUSDAmount(0)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
       });
       it('should correct call and set parameters', async () => {
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
         await expect(veBoost.setMinUSDAmount(ethers.parseEther('123.1')))
           .to.be.emit(veBoost, 'MinUSDAmount')
           .withArgs(ethers.parseEther('123.1'));
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(
           ethers.parseEther('123.1'),
           ethers.parseEther('123.1') / BigInt(10000),
         );
@@ -196,7 +209,7 @@ describe('VeBoostUpgradeable', function () {
         await expect(veBoost.connect(signers.otherUser1).addRewardToken(tokenTR18.target)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
       });
       it('should fail if try add fenix like reward token', async () => {
-        await expect(veBoost.addRewardToken(await veBoost.fenix())).to.be.revertedWithCustomError(veBoost, 'RewardTokenExist');
+        await expect(veBoost.addRewardToken(await veBoost.token())).to.be.revertedWithCustomError(veBoost, 'RewardTokenExist');
       });
       it('should fail if try add zero address', async () => {
         await expect(veBoost.addRewardToken(ZERO_ADDRESS)).to.be.revertedWithCustomError(veBoost, 'AddressZero');
@@ -289,93 +302,99 @@ describe('VeBoostUpgradeable', function () {
         expect(await veBoost.rewardTokens()).to.be.deep.eq([]);
       });
     });
-    describe('getMinFNXAmountForBoost', async () => {
+    describe('getMinTokenAmountForBoost', async () => {
       it('Should return current min fnx amount correctly', async () => {
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
       });
       it('Should return current min fnx amount correctly after update', async () => {
         await veBoost.setMinUSDAmount(ethers.parseEther('100'));
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('100'), ethers.parseEther('100') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('100'), ethers.parseEther('100') / BigInt(10000));
       });
       it('Should return current min fnx amount correctly after update price', async () => {
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
 
         let pp = await deployPriceProviderWith(tokenTR6, BigInt(1e6), ONE_ETHER * BigInt(2));
         await veBoost.setPriceProvider(pp);
 
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
 
         pp = await deployPriceProviderWith(tokenTR6, BigInt(1e6), ethers.parseEther('1.25'));
         await veBoost.setPriceProvider(pp);
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('12.5'), ethers.parseEther('12.5') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(
+          ethers.parseEther('12.5'),
+          ethers.parseEther('12.5') / BigInt(10000),
+        );
 
         pp = await deployPriceProviderWith(tokenTR6, BigInt(1e6), ethers.parseEther('0.231'));
         await veBoost.setPriceProvider(pp);
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('2.31'), ethers.parseEther('2.31') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(
+          ethers.parseEther('2.31'),
+          ethers.parseEther('2.31') / BigInt(10000),
+        );
       });
 
       it('Should return current min fnx amount correctly with diff usd token decimals', async () => {
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('10') / BigInt(10000));
 
         let pp = await deployPriceProviderWith(tokenTR6, BigInt(1e6), ONE_ETHER * BigInt(2));
         await veBoost.setPriceProvider(pp);
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
 
         pp = await deployPriceProviderWith(tokenTR18, BigInt(1e18), ONE_ETHER * BigInt(2));
         await veBoost.setPriceProvider(pp);
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
 
         pp = await deployPriceProviderWith(await deployERC20MockToken(signers.deployer, 't', 't', 21), BigInt(1e21), ONE_ETHER * BigInt(2));
         await veBoost.setPriceProvider(pp);
-        expect(await veBoost.getMinFNXAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
+        expect(await veBoost.getMinTokenAmountForBoost()).to.be.closeTo(ethers.parseEther('20'), ethers.parseEther('20') / BigInt(10000));
       });
     });
-    describe('#calculateBoostFNXAmount', async () => {
+    describe('#calculateBoostTokenAmount', async () => {
       it('Should return zero fnx amount less the min FNX amount', async () => {
-        expect(await veBoost.calculateBoostFNXAmount(ZERO)).to.be.eq(ZERO);
-        expect(await veBoost.calculateBoostFNXAmount(ONE)).to.be.eq(ZERO);
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('9.99') - ONE)).to.be.eq(ZERO);
+        expect(await veBoost.calculateBoostTokenAmount(ZERO)).to.be.eq(ZERO);
+        expect(await veBoost.calculateBoostTokenAmount(ONE)).to.be.eq(ZERO);
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('9.99') - ONE)).to.be.eq(ZERO);
       });
       it('Should corect calculate boost fnx amount', async () => {
         let minFNXAmount = ethers.parseEther('50');
-        expect(await veBoost.calculateBoostFNXAmount(minFNXAmount)).to.be.eq(ethers.parseEther('5')); // 10%
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('50.1'))).to.be.eq(ethers.parseEther('5.01')); // 10%
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('1234567.123456'))).to.be.eq(ethers.parseEther('123456.7123456')); // 10%
+        expect(await veBoost.calculateBoostTokenAmount(minFNXAmount)).to.be.eq(ethers.parseEther('5')); // 10%
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('50.1'))).to.be.eq(ethers.parseEther('5.01')); // 10%
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('1234567.123456'))).to.be.eq(ethers.parseEther('123456.7123456')); // 10%
       });
       it('Should corect calculate boost fnx amount after change boostPercentage', async () => {
         let minFNXAmount = ethers.parseEther('50');
-        expect(await veBoost.calculateBoostFNXAmount(minFNXAmount)).to.be.eq(ethers.parseEther('5')); // 10%
+        expect(await veBoost.calculateBoostTokenAmount(minFNXAmount)).to.be.eq(ethers.parseEther('5')); // 10%
 
-        await veBoost.setFNXBoostPercentage(523); // 5.23%
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('50'))).to.be.eq(ethers.parseEther('2.615')); // 10%
+        await veBoost.setTokenBoostPercentage(523); // 5.23%
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('50'))).to.be.eq(ethers.parseEther('2.615')); // 10%
 
-        await veBoost.setFNXBoostPercentage(0); // 5.23%
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('50'))).to.be.eq(ZERO); // 0%
+        await veBoost.setTokenBoostPercentage(0); // 5.23%
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('50'))).to.be.eq(ZERO); // 0%
 
-        await veBoost.setFNXBoostPercentage(10001); // 100.01%
-        expect(await veBoost.calculateBoostFNXAmount(ethers.parseEther('50'))).to.be.eq(ethers.parseEther('50.005')); // 100.01%
+        await veBoost.setTokenBoostPercentage(10001); // 100.01%
+        expect(await veBoost.calculateBoostTokenAmount(ethers.parseEther('50'))).to.be.eq(ethers.parseEther('50.005')); // 100.01%
       });
     });
   });
-  describe('#beforeFNXBoostPaid', async () => {
+  describe('#beforeTokenBoostPaid', async () => {
     it('fail if caller not votingEscrow', async () => {
       await expect(
         veBoost
           .connect(signers.otherUser1)
-          .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10')),
+          .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10')),
       ).to.be.revertedWithCustomError(veBoost, 'AccessDenied');
     });
     it('fail if provide not expected paidBoostFNXAmount', async () => {
       await expect(
         veBoost
           .connect(mockVotingEscrow)
-          .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('49'), ethers.parseEther('1')),
+          .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('49'), ethers.parseEther('1')),
       ).to.be.revertedWithCustomError(veBoost, 'InvalidBoostAmount');
 
       await expect(
         veBoost
           .connect(mockVotingEscrow)
-          .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('50'), ethers.parseEther('5') + ONE),
+          .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('50'), ethers.parseEther('5') + ONE),
       ).to.be.revertedWithCustomError(veBoost, 'InvalidBoostAmount');
     });
     it('votingEscrow can take FNX from veBoost contract', async () => {
@@ -410,7 +429,7 @@ describe('VeBoostUpgradeable', function () {
 
         await veBoost
           .connect(mockVotingEscrow)
-          .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
+          .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
 
         expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
         expect(await fenix.balanceOf(mockVotingEscrow.address)).to.be.eq(ZERO);
@@ -449,7 +468,7 @@ describe('VeBoostUpgradeable', function () {
         it('corect paid additional tokens to token owner', async () => {
           await veBoost
             .connect(mockVotingEscrow)
-            .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
+            .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
 
           // simulate transferFrom like voting escrow
           await fenix.connect(mockVotingEscrow).transferFrom(veBoost.target, mockVotingEscrow.address, ethers.parseEther('10'));
@@ -472,7 +491,7 @@ describe('VeBoostUpgradeable', function () {
 
           await veBoost
             .connect(mockVotingEscrow)
-            .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
+            .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('100'), ethers.parseEther('10'));
 
           // simulate transferFrom like voting escrow
           await fenix.connect(mockVotingEscrow).transferFrom(veBoost.target, mockVotingEscrow.address, ethers.parseEther('10'));
@@ -497,7 +516,7 @@ describe('VeBoostUpgradeable', function () {
 
           await veBoost
             .connect(mockVotingEscrow)
-            .beforeFNXBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('990'), ethers.parseEther('99'));
+            .beforeTokenBoostPaid(signers.otherUser1.address, 1, ethers.parseEther('990'), ethers.parseEther('99'));
 
           // simulate transferFrom like voting escrow
           await fenix.connect(mockVotingEscrow).transferFrom(veBoost.target, mockVotingEscrow.address, ethers.parseEther('99'));
@@ -541,13 +560,13 @@ describe('VeBoostUpgradeable', function () {
           await veBoost.addRewardToken(tokenTR18.target);
         }
 
-        await veBoost.setFNXBoostPercentage(iterator.fnxBoostPercentage);
+        await veBoost.setTokenBoostPercentage(iterator.fnxBoostPercentage);
 
-        let paidBoost = await veBoost.calculateBoostFNXAmount(iterator.depositedFNXAmount || 0);
+        let paidBoost = await veBoost.calculateBoostTokenAmount(iterator.depositedFNXAmount || 0);
 
-        paidBoost = paidBoost > (await veBoost.getAvailableBoostFNXAmount()) ? await veBoost.getAvailableBoostFNXAmount() : paidBoost;
+        paidBoost = paidBoost > (await veBoost.getAvailableBoostTokenAmount()) ? await veBoost.getAvailableBoostTokenAmount() : paidBoost;
 
-        await veBoost.connect(mockVotingEscrow).beforeFNXBoostPaid(signers.otherUser1.address, 1, iterator.depositedFNXAmount, paidBoost);
+        await veBoost.connect(mockVotingEscrow).beforeTokenBoostPaid(signers.otherUser1.address, 1, iterator.depositedFNXAmount, paidBoost);
 
         await fenix.connect(mockVotingEscrow).transferFrom(veBoost.target, mockVotingEscrow.address, paidBoost);
 

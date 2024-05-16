@@ -4,9 +4,9 @@ import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  AlgebraFNXPriceProviderUpgradeable,
+  AlgebraTokenPriceProviderUpgradeable,
   ERC20Mock,
-  Fenix,
+  Solex,
   VeBoostUpgradeable,
   VotingEscrowUpgradeable,
   VotingEscrowUpgradeable__factory,
@@ -29,23 +29,23 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
   let votingEscrow: VotingEscrowUpgradeable;
   let veBoost: VeBoostUpgradeable;
 
-  let fenix: Fenix;
+  let fenix: Solex;
   let tokenTR6: ERC20Mock;
   let tokenTR18: ERC20Mock;
-  let priceProvider: AlgebraFNXPriceProviderUpgradeable;
+  let priceProvider: AlgebraTokenPriceProviderUpgradeable;
 
   async function deployPriceProviderWith(
     usdToken: ERC20Mock,
     usdReserve: bigint,
     fnxReserve: bigint,
-  ): Promise<AlgebraFNXPriceProviderUpgradeable> {
-    let factoryPriceProvider = await ethers.getContractFactory('AlgebraFNXPriceProviderUpgradeable');
+  ): Promise<AlgebraTokenPriceProviderUpgradeable> {
+    let factoryPriceProvider = await ethers.getContractFactory('AlgebraTokenPriceProviderUpgradeable');
     let implementationPriceProvider = await factoryPriceProvider.deploy();
     priceProvider = factoryPriceProvider.attach(
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
-    ) as AlgebraFNXPriceProviderUpgradeable;
+    ) as AlgebraTokenPriceProviderUpgradeable;
 
-    let algebraCore = await deployAlgebraCore(await deployed.blastPoints.getAddress());
+    let algebraCore = await deployAlgebraCore(await deployed.modeSfs.getAddress(), deployed.sfsAssignTokenId);
 
     let algebraFactory = algebraCore.factory;
     await algebraFactory.grantRole(await algebraFactory.POOLS_CREATOR_ROLE(), signers.deployer.address);
@@ -61,14 +61,20 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
     }
     await pool.initialize(price);
 
-    await priceProvider.initialize(signers.blastGovernor, pool.target, fenix.target, usdToken.target);
+    await priceProvider.initialize(
+      await deployed.modeSfs.getAddress(),
+      deployed.sfsAssignTokenId,
+      pool.target,
+      fenix.target,
+      usdToken.target,
+    );
     return priceProvider;
   }
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
-    fenix = deployed.fenix;
+    fenix = deployed.solex;
     veBoost = deployed.veBoost;
 
     tokenTR6 = await deployERC20MockToken(signers.deployer, 'TR6', 'TR6', 6);
@@ -79,7 +85,8 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
 
     votingEscrow = deployed.votingEscrow;
     await veBoost.initialize(
-      signers.blastGovernor.address,
+      deployed.modeSfs.target,
+      deployed.sfsAssignTokenId,
       fenix.target,
       votingEscrow.target,
       (
@@ -91,14 +98,14 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
   describe('Deployment', function () {
     it('Should fail if try initialize on implementation', async function () {
       let t = await factory.deploy();
-      await expect(t.initialize(signers.blastGovernor.address, await fenix.getAddress(), ZERO_ADDRESS)).to.be.revertedWith(
-        ERRORS.Initializable.Initialized,
-      );
+      await expect(
+        t.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, await fenix.getAddress(), ZERO_ADDRESS),
+      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should fail if try second time to initialize', async function () {
-      await expect(votingEscrow.initialize(signers.blastGovernor.address, await fenix.getAddress(), ZERO_ADDRESS)).to.be.revertedWith(
-        ERRORS.Initializable.Initialized,
-      );
+      await expect(
+        votingEscrow.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, await fenix.getAddress(), ZERO_ADDRESS),
+      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should corect set initial parameters', async function () {
       expect(await votingEscrow.token()).to.be.equal(await fenix.getAddress());
@@ -112,7 +119,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
   describe('Interaction with veBoost', async () => {
     describe('setup ve boost', async () => {
       it('fail if try setup from not team address', async () => {
-        await expect(votingEscrow.connect(signers.blastGovernor).setVeBoost(deployed.veBoost.target)).to.be.reverted;
+        await expect(votingEscrow.connect(signers.otherUser1).setVeBoost(deployed.veBoost.target)).to.be.reverted;
         await expect(votingEscrow.setVeBoost(deployed.veBoost.target)).to.be.not.reverted;
       });
       it('success set ve boost address', async () => {

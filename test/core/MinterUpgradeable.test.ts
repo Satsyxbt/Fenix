@@ -1,30 +1,31 @@
-import { setCode, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { BlastMock__factory, Fenix, MinterUpgradeable, VoterEscrowMock, VoterMock } from '../../typechain-types/index';
-import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { Solex, MinterUpgradeable, ModeSfsMock, VoterEscrowMock, VoterMock } from '../../typechain-types/index';
+import { ERRORS, ONE, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { SignersList, deployFenixToken, deployMinter, getSigners } from '../utils/coreFixture';
 
 describe('MinterUpgradeable Contract', function () {
   let minter: MinterUpgradeable;
   let signers: SignersList;
-  let fenix: Fenix;
+  let fenix: Solex;
   let voterMock: VoterMock;
   let voterEscrow: VoterEscrowMock;
 
   const WEEK: bigint = BigInt(86400 * 7);
   const INITIAL_TOKEN_SUPPLY = ethers.parseEther('7500000');
   const WEEKLY = ethers.parseEther('225000');
+  const SFS_ASSIGN_TOKEN_ID = 1;
+  let modeSfs: ModeSfsMock;
 
   async function currentPeriod(): Promise<bigint> {
     return (BigInt(await time.latest()) / WEEK) * WEEK;
   }
 
   beforeEach(async function () {
-    await setCode(BLAST_PREDEPLOYED_ADDRESS, BlastMock__factory.bytecode);
-
+    modeSfs = await ethers.deployContract('ModeSfsMock');
     signers = await getSigners();
-    fenix = await deployFenixToken(signers.deployer, signers.blastGovernor.address, signers.deployer.address);
+    fenix = await deployFenixToken(signers.deployer, await modeSfs.getAddress(), signers.deployer.address);
     voterMock = await ethers.deployContract('VoterMock');
     voterEscrow = await ethers.deployContract('VoterEscrowMock');
 
@@ -34,7 +35,8 @@ describe('MinterUpgradeable Contract', function () {
     minter = await deployMinter(
       signers.deployer,
       signers.proxyAdmin.address,
-      signers.blastGovernor.address,
+      await modeSfs.getAddress(),
+      SFS_ASSIGN_TOKEN_ID,
       await voterMock.getAddress(),
       await voterEscrow.getAddress(),
     );
@@ -46,7 +48,7 @@ describe('MinterUpgradeable Contract', function () {
     it('Should set the right initial parameters', async () => {
       expect(await minter.isStarted()).to.be.false;
       expect(await minter.isFirstMint()).to.be.true;
-      expect(await minter.fenix()).to.be.eq(fenix.target);
+      expect(await minter.token()).to.be.eq(fenix.target);
       expect(await minter.ve()).to.be.eq(voterEscrow.target);
       expect(await minter.voter()).to.be.eq(voterMock.target);
       expect(await minter.inflationRate()).to.be.eq(150);
@@ -69,7 +71,7 @@ describe('MinterUpgradeable Contract', function () {
       expect(await fenix.owner()).to.be.eq(minter.target);
     });
     it('Should fail if try call initialize second time', async () => {
-      await expect(minter.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      await expect(minter.initialize(ZERO_ADDRESS, 0, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
   });
 

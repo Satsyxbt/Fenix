@@ -24,9 +24,9 @@ describe('MerklGaugeMiddleman Contract', function () {
   let poolMockFactory: PoolMock__factory;
   let poolMock: PoolMock;
   let startTime: number;
-
+  let deployed;
   beforeEach(async function () {
-    const deployed = await loadFixture(completeFixture);
+    deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
     fenix = await deployERC20MockToken(signers.deployer, 'FNX', 'FNX', 18);
     agEUR = await deployERC20MockToken(signers.deployer, 'agEur', 'agEur', 18);
@@ -35,7 +35,8 @@ describe('MerklGaugeMiddleman Contract', function () {
     merkleDistributorCreatorMock = await ethers.deployContract('MerkleDistributionCreatorMock');
 
     merklGaugeMiddleman = await merklGaugeMiddlemanFactory.deploy(
-      signers.blastGovernor.address,
+      deployed.modeSfs.target,
+      deployed.sfsAssignTokenId,
       fenix.target,
       merkleDistributorCreatorMock.target,
     );
@@ -80,19 +81,23 @@ describe('MerklGaugeMiddleman Contract', function () {
     });
     it('fails if provide zero governor address', async () => {
       await expect(
-        merklGaugeMiddlemanFactory.connect(signers.deployer).deploy(ZERO_ADDRESS, fenix.target, merkleDistributorCreatorMock.target),
+        merklGaugeMiddlemanFactory
+          .connect(signers.deployer)
+          .deploy(ZERO_ADDRESS, deployed.sfsAssignTokenId, fenix.target, merkleDistributorCreatorMock.target),
       ).to.be.revertedWithCustomError(merklGaugeMiddlemanFactory, 'AddressZero');
     });
     it('fails if provide zero fenix  address', async () => {
       await expect(
         merklGaugeMiddlemanFactory
           .connect(signers.deployer)
-          .deploy(signers.blastGovernor.address, ZERO_ADDRESS, merkleDistributorCreatorMock.target),
+          .deploy(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, merkleDistributorCreatorMock.target),
       ).to.be.revertedWithCustomError(merklGaugeMiddlemanFactory, 'AddressZero');
     });
     it('fails if provide merkleDistributorCreator zero address', async () => {
       await expect(
-        merklGaugeMiddlemanFactory.connect(signers.deployer).deploy(signers.blastGovernor.address, fenix.target, ZERO_ADDRESS),
+        merklGaugeMiddlemanFactory
+          .connect(signers.deployer)
+          .deploy(deployed.modeSfs.target, deployed.sfsAssignTokenId, fenix.target, ZERO_ADDRESS),
       ).to.be.revertedWithCustomError(merklGaugeMiddlemanFactory, 'AddressZero');
     });
     it('corect set MAX_UINT256 allowance in fenix token to merkle distributor creator', async () => {
@@ -110,7 +115,7 @@ describe('MerklGaugeMiddleman Contract', function () {
       // not changed,  because new erc20 implementation
       expect(await fenix.allowance(merklGaugeMiddleman.target, merkleDistributorCreatorMock.target)).to.be.eq(ethers.MaxUint256);
 
-      await merklGaugeMiddleman.connect(signers.otherUser1).setFenixAllowance();
+      await merklGaugeMiddleman.connect(signers.otherUser1).setTokenAllowance();
       expect(await fenix.allowance(merklGaugeMiddleman.target, merkleDistributorCreatorMock.target)).to.be.eq(ethers.MaxUint256);
     });
   });

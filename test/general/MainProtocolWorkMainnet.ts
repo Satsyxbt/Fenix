@@ -125,9 +125,9 @@ describe('Main', function () {
     await signers[0].sendTransaction({ to: Signers.user2.address, value: ethers.parseEther('1000') });
 
     Tokens = {
-      fenix: await ethers.getContractAt('Fenix', addresses.fenix),
-      weth: (await ethers.getContractAt('ERC20RebasingMock', addresses.weth)) as any as ERC20RebasingMock,
-      usdb: (await ethers.getContractAt('ERC20RebasingMock', addresses.usdb)) as any as ERC20RebasingMock,
+      fenix: await ethers.getContractAt('Solex', addresses.fenix),
+      weth: (await ethers.getContractAt('ERC20Mock', addresses.weth)) as any as ERC20RebasingMock,
+      usdb: (await ethers.getContractAt('ERC20Mock', addresses.usdb)) as any as ERC20RebasingMock,
     };
 
     Contracts = {

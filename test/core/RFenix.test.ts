@@ -1,39 +1,51 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { Fenix, RFenix, RFenix__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import { Solex, RSolex, RSolex__factory, VotingEscrowUpgradeable } from '../../typechain-types';
 import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 
 describe('rFNX', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
-  let fenix: Fenix;
+  let fenix: Solex;
   let votingEscrow: VotingEscrowUpgradeable;
-  let factory: RFenix__factory;
-  let instance: RFenix;
+  let factory: RSolex__factory;
+  let instance: RSolex;
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
-    fenix = deployed.fenix;
+    fenix = deployed.solex;
     votingEscrow = deployed.votingEscrow;
     signers = deployed.signers;
 
-    factory = await ethers.getContractFactory('RFenix');
+    factory = await ethers.getContractFactory('RSolex');
 
-    instance = await factory.deploy(signers.blastGovernor.address, votingEscrow.target);
+    instance = await factory.deploy(deployed.modeSfs.target, deployed.sfsAssignTokenId, votingEscrow.target);
   });
 
   describe('Deployment', function () {
-    it('should fail if provide zero blast governor address', async function () {
-      await expect(factory.deploy(ZERO_ADDRESS, votingEscrow.target)).to.be.revertedWithCustomError(factory, 'AddressZero');
+    it('should fail if provide zero modesfs address', async function () {
+      await expect(factory.deploy(ZERO_ADDRESS, deployed.sfsAssignTokenId, votingEscrow.target)).to.be.revertedWithCustomError(
+        factory,
+        'AddressZero',
+      );
+    });
+    it('should fail if provide zero assign token id', async function () {
+      await expect(factory.deploy(deployed.modeSfs.target, 0, votingEscrow.target)).to.be.revertedWithCustomError(
+        factory,
+        'ZeroSfsAssignTokenId',
+      );
     });
     it('should fail if provide zero votingEscrow', async function () {
-      await expect(factory.deploy(signers.blastGovernor.address, ZERO_ADDRESS)).to.be.revertedWithCustomError(factory, 'AddressZero');
+      await expect(factory.deploy(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS)).to.be.revertedWithCustomError(
+        factory,
+        'AddressZero',
+      );
     });
     it('should correct set inital parameters', async () => {
-      expect(await instance.symbol()).to.be.eq('rFNX');
-      expect(await instance.name()).to.be.eq('rFNX');
+      expect(await instance.symbol()).to.be.eq('rSOLEX');
+      expect(await instance.name()).to.be.eq('rSOLEX');
       expect(await instance.totalSupply()).to.be.eq(ZERO);
       expect(await instance.owner()).to.be.eq(signers.deployer.address);
       expect(await instance.token()).to.be.eq(fenix.target);
@@ -99,8 +111,8 @@ describe('rFNX', function () {
 
       expect(await instance.totalSupply()).to.equal(ONE);
 
-      await instance.mint(signers.blastGovernor.address, ONE_ETHER);
-      expect(await instance.balanceOf(signers.blastGovernor.address)).to.equal(ONE_ETHER);
+      await instance.mint(signers.otherUser2.address, ONE_ETHER);
+      expect(await instance.balanceOf(signers.otherUser2.address)).to.equal(ONE_ETHER);
       expect(await instance.totalSupply()).to.equal(ONE_ETHER + ONE);
     });
 

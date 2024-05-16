@@ -28,6 +28,7 @@ describe('PairFactoryUpgradeable Contract', function () {
   let tokenTK6: ERC20Mock;
   let poolAddress: string;
   let poolAddress2: string;
+
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
@@ -68,8 +69,8 @@ describe('PairFactoryUpgradeable Contract', function () {
       expect(await pairFactory.volatileFee()).to.be.eq(18);
       expect(await pairFactory.protocolFee()).to.be.eq(10000);
     });
-    it('should correct set defaultBlastGovernor', async () => {
-      expect(await pairFactory.defaultBlastGovernor()).to.be.eq(signers.blastGovernor.address);
+    it('should correct set defaultModeSfs', async () => {
+      expect(await pairFactory.defaultModeSfs()).to.be.eq(deployed.modeSfs.target);
     });
 
     it('should correct set deployer as DEFAULT_ADMIN_ROLE in contract', async () => {
@@ -79,15 +80,15 @@ describe('PairFactoryUpgradeable Contract', function () {
     it('fails if try initialize on implementations', async () => {
       let newFactory = await pairFactoryFactory.connect(signers.deployer).deploy();
       await expect(
-        newFactory.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, feesVaultFactory.target),
+        newFactory.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, feesVaultFactory.target),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('fails if try initialize second time', async () => {
       await expect(
-        pairFactory.initialize(signers.blastGovernor.address, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, feesVaultFactory.target),
+        pairFactory.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, feesVaultFactory.target),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
-    it('fails if provide zero governor address', async () => {
+    it('fails if provide zero mode sfs address', async () => {
       const implementation = await pairFactoryFactory.deploy();
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
@@ -98,13 +99,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
 
       await expect(
-        attached.initialize(
-          ZERO_ADDRESS,
-          deployed.blastPoints.target,
-          signers.blastGovernor.address,
-          deployed.v2PairImplementation.target,
-          feesVaultFactory.target,
-        ),
+        attached.initialize(ZERO_ADDRESS, deployed.sfsAssignTokenId, deployed.v2PairImplementation.target, feesVaultFactory.target),
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero implementations', async () => {
@@ -118,13 +113,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
 
       await expect(
-        attached.initialize(
-          signers.blastGovernor.address,
-          deployed.blastPoints.target,
-          signers.blastGovernor.address,
-          ZERO_ADDRESS,
-          feesVaultFactory.target,
-        ),
+        attached.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, feesVaultFactory.target),
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero fees vault factory', async () => {
@@ -138,16 +127,10 @@ describe('PairFactoryUpgradeable Contract', function () {
       const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
 
       await expect(
-        attached.initialize(
-          signers.blastGovernor.address,
-          deployed.blastPoints.target,
-          signers.blastGovernor.address,
-          deployed.v2PairImplementation.target,
-          ZERO_ADDRESS,
-        ),
+        attached.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, deployed.v2PairImplementation.target, ZERO_ADDRESS),
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
-    it('fails if provide zero blastPoints', async () => {
+    it('fails if provide zero sfs assign token id', async () => {
       const implementation = await pairFactoryFactory.deploy();
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
@@ -158,55 +141,19 @@ describe('PairFactoryUpgradeable Contract', function () {
       const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
 
       await expect(
-        attached.initialize(
-          signers.blastGovernor.address,
-          ZERO_ADDRESS,
-          signers.blastGovernor.address,
-          deployed.v2PairImplementation.target,
-          feesVaultFactory.target,
-        ),
-      ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
-    });
-    it('fails if provide zero blastPoints operator', async () => {
-      const implementation = await pairFactoryFactory.deploy();
-      const proxy = await deployTransaperntUpgradeableProxy(
-        signers.deployer,
-        signers.proxyAdmin.address,
-
-        await implementation.getAddress(),
-      );
-      const attached = pairFactoryFactory.attach(proxy.target) as any as PairFactoryUpgradeable;
-
-      await expect(
-        attached.initialize(
-          signers.blastGovernor.address,
-          deployed.blastPoints.target,
-          ZERO_ADDRESS,
-          deployed.v2PairImplementation.target,
-          feesVaultFactory.target,
-        ),
-      ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
+        attached.initialize(deployed.modeSfs.target, 0, deployed.v2PairImplementation.target, feesVaultFactory.target),
+      ).to.be.revertedWithCustomError(pairFactoryFactory, 'ZeroSfsAssignTokenId');
     });
   });
 
-  describe('#_checkAccessForBlastFactoryManager ', async () => {
-    it('#setDefaultBlastGovernor fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).setDefaultBlastGovernor(signers.otherUser1.address)).to.be.revertedWith(
+  describe('#_checkAccessForModeSfsSetupFactoryManager ', async () => {
+    it('#setDefaultModeSfs fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
+      await expect(pairFactory.connect(signers.otherUser1).setDefaultModeSfs(signers.otherUser1.address)).to.be.revertedWith(
         getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
       );
     });
-    it('#setConfigurationForRebaseToken fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).setConfigurationForRebaseToken(tokenTK18.target, true, 1)).to.be.revertedWith(
-        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
-      );
-    });
-    it('#setDefaultBlastPoints fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).setDefaultBlastPoints(tokenTK18.target)).to.be.revertedWith(
-        getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
-      );
-    });
-    it('#setDefaultBlastPointsOperator fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).setDefaultBlastPointsOperator(tokenTK18.target)).to.be.revertedWith(
+    it('#setDefaultSfsAssignTokenId fails if caller is not have PAIRS_ADMINISTRATOR_ROLE', async () => {
+      await expect(pairFactory.connect(signers.otherUser1).setDefaultSfsAssignTokenId(2)).to.be.revertedWith(
         getAccessControlError(await pairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.otherUser1.address),
       );
     });
@@ -392,28 +339,27 @@ describe('PairFactoryUpgradeable Contract', function () {
   });
   describe('#createPair', async () => {
     it('fails if caller is not have PAIRS_CREATOR_ROLE', async () => {
-      await expect(pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false)).to.be.revertedWith(
+      await expect(pairFactory.connect(signers.otherUser1).createPair(deployed.solex.target, tokenTK6.target, false)).to.be.revertedWith(
         getAccessControlError(await pairFactory.PAIRS_CREATOR_ROLE(), signers.otherUser1.address),
       );
     });
     it('fails if token address is same', async () => {
-      await expect(pairFactory.createPair(deployed.fenix.target, deployed.fenix.target, false)).to.be.revertedWithCustomError(
+      await expect(pairFactory.createPair(deployed.solex.target, deployed.solex.target, false)).to.be.revertedWithCustomError(
         pairFactory,
         'IdenticalAddress',
       );
     });
     it('fails if try initialzie created Pair second time', async () => {
-      let newPairAddress = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+      let newPairAddress = await pairFactory.createPair.staticCall(deployed.solex.target, tokenTK6.target, false);
 
-      await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
+      await pairFactory.createPair(deployed.solex.target, tokenTK6.target, false);
 
       let p = await ethers.getContractAt('Pair', newPairAddress);
 
       await expect(
         p.initialize(
-          signers.blastGovernor.address,
-          deployed.blastPoints.target,
-          signers.blastGovernor.address,
+          deployed.modeSfs.target,
+          deployed.sfsAssignTokenId,
           tokenTK18.target,
           tokenTK6.target,
           true,
@@ -422,7 +368,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.rejectedWith('Initialized');
     });
     it('fails if token address is zero', async () => {
-      await expect(pairFactory.createPair(deployed.fenix.target, ZERO_ADDRESS, false)).to.be.revertedWithCustomError(
+      await expect(pairFactory.createPair(deployed.solex.target, ZERO_ADDRESS, false)).to.be.revertedWithCustomError(
         pairFactory,
         'AddressZero',
       );
@@ -440,14 +386,14 @@ describe('PairFactoryUpgradeable Contract', function () {
 
       let newPairAddress = await pairFactory
         .connect(signers.otherUser1)
-        .createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+        .createPair.staticCall(deployed.solex.target, tokenTK6.target, false);
       const [token0, token1] =
-        deployed.fenix.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
-          ? [deployed.fenix.target, tokenTK6.target]
-          : [tokenTK6.target, deployed.fenix.target];
+        deployed.solex.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
+          ? [deployed.solex.target, tokenTK6.target]
+          : [tokenTK6.target, deployed.solex.target];
 
-      let tx = await pairFactory.connect(signers.otherUser1).createPair(deployed.fenix.target, tokenTK6.target, false);
-      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let tx = await pairFactory.connect(signers.otherUser1).createPair(deployed.solex.target, tokenTK6.target, false);
+      let pairAddress = await pairFactory.getPair(deployed.solex, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
 
       await expect(tx).to.be.emit(pairFactory, 'PairCreated').withArgs(token0, token1, false, newPairAddress, count);
@@ -463,13 +409,13 @@ describe('PairFactoryUpgradeable Contract', function () {
       let count = (await pairFactory.allPairsLength()) + ONE;
 
       const [token0, token1] =
-        deployed.fenix.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
-          ? [deployed.fenix.target, tokenTK6.target]
-          : [tokenTK6.target, deployed.fenix.target];
+        deployed.solex.target.toString().toLowerCase() < tokenTK6.target.toString().toLowerCase()
+          ? [deployed.solex.target, tokenTK6.target]
+          : [tokenTK6.target, deployed.solex.target];
 
-      let newPairAddress = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
-      let tx = await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
-      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let newPairAddress = await pairFactory.createPair.staticCall(deployed.solex.target, tokenTK6.target, false);
+      let tx = await pairFactory.createPair(deployed.solex.target, tokenTK6.target, false);
+      let pairAddress = await pairFactory.getPair(deployed.solex.target, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
 
       await expect(tx).to.be.emit(pairFactory, 'PairCreated').withArgs(token0, token1, false, newPairAddress, count);
@@ -482,28 +428,26 @@ describe('PairFactoryUpgradeable Contract', function () {
       expect(await pair.factory()).to.be.eq(pairFactory.target);
     });
     it('success create feeVault for pair', async () => {
-      let adr = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
+      let adr = await pairFactory.createPair.staticCall(deployed.solex.target, tokenTK6.target, false);
 
       expect(await feesVaultFactory.getVaultForPool(adr)).to.be.eq(ZERO_ADDRESS);
-      await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
+      await pairFactory.createPair(deployed.solex.target, tokenTK6.target, false);
 
-      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let pairAddress = await pairFactory.getPair(deployed.solex, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
       expect(await feesVaultFactory.getVaultForPool(adr)).to.be.not.eq(ZERO_ADDRESS);
       expect(await feesVaultFactory.getVaultForPool(adr)).to.be.eq(await pair.communityVault());
     });
     it('success create PairFees with correct parameters', async () => {
-      await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
+      await pairFactory.createPair(deployed.solex.target, tokenTK6.target, false);
 
-      let pairAddress = await pairFactory.getPair(deployed.fenix, tokenTK6.target, false);
+      let pairAddress = await pairFactory.getPair(deployed.solex, tokenTK6.target, false);
       let pair = await ethers.getContractAt('Pair', pairAddress);
 
       let pairFeesAddr = await pair.fees();
       let pairFees = (await ethers.getContractAt('PairFees', pairFeesAddr)) as PairFees;
 
       expect(pairFeesAddr).to.be.not.eq(ZERO_ADDRESS);
-      await expect(pairFees.connect(signers.otherUser1).configure(tokenTK6.target, 1)).to.be.revertedWith('ACCESS_DENIED');
-      await expect(pairFees.configure(tokenTK6.target, 1)).to.be.not.revertedWith('ACCESS_DENIED');
     });
   });
 });

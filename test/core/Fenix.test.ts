@@ -1,30 +1,29 @@
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { BlastMock__factory, Fenix } from '../../typechain-types/index';
-import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO } from '../utils/constants';
+import { Solex } from '../../typechain-types/index';
+import { ERRORS, ONE, ONE_ETHER, ZERO } from '../utils/constants';
 
 describe('Fenix Contract', function () {
-  let fenixInstance: Fenix;
+  let fenixInstance: Solex;
   let emissionManager: HardhatEthersSigner;
   let blastGovernor: HardhatEthersSigner;
   let otherUser: HardhatEthersSigner;
   let deployer: HardhatEthersSigner;
 
   let tokenSetting = {
-    name: 'Fenix',
-    symbol: 'FNX',
+    name: 'SolExchange',
+    symbol: 'SOLEX',
     decimals: 18,
     initialTotalSupply: ethers.parseEther('7500000'),
   };
 
   before(async function () {
-    await setCode(BLAST_PREDEPLOYED_ADDRESS, BlastMock__factory.bytecode);
+    const modeSfs = await ethers.deployContract('ModeSfsMock');
 
-    const Fenix = await ethers.getContractFactory('Fenix');
-    [deployer, emissionManager, blastGovernor, otherUser] = await ethers.getSigners();
-    fenixInstance = (await Fenix.deploy(blastGovernor.address, await emissionManager.getAddress())) as Fenix;
+    const Fenix = await ethers.getContractFactory('Solex');
+    [deployer, emissionManager, otherUser] = await ethers.getSigners();
+    fenixInstance = (await Fenix.deploy(modeSfs.target, await emissionManager.getAddress())) as Solex;
   });
 
   describe('Deployment', function () {

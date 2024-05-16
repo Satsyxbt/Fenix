@@ -2,7 +2,12 @@ import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { Fenix, VeFnxDistributorUpgradeable, VeFnxDistributorUpgradeable__factory, VotingEscrowUpgradeable } from '../../typechain-types';
+import {
+  Solex,
+  VeTokenDistributorUpgradeable,
+  VeTokenDistributorUpgradeable__factory,
+  VotingEscrowUpgradeable,
+} from '../../typechain-types';
 import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
 
@@ -10,77 +15,74 @@ describe('VeFnxDistributorUpgradeable', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
 
-  let factory: VeFnxDistributorUpgradeable__factory;
-  let fenix: Fenix;
-  let veFnxDistributor: VeFnxDistributorUpgradeable;
+  let factory: VeTokenDistributorUpgradeable__factory;
+  let fenix: Solex;
+  let veFnxDistributor: VeTokenDistributorUpgradeable;
   let votingEscrow: VotingEscrowUpgradeable;
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
-    fenix = deployed.fenix;
+    fenix = deployed.solex;
 
-    factory = await ethers.getContractFactory('VeFnxDistributorUpgradeable');
-    veFnxDistributor = deployed.veFnxDistributor;
+    factory = await ethers.getContractFactory('VeTokenDistributorUpgradeable');
+    veFnxDistributor = deployed.veTokenDistributor;
     votingEscrow = deployed.votingEscrow;
   });
 
   describe('Deployment', async () => {
     it('Should fail if try initialize on implementation', async function () {
       let implementation = await factory.deploy();
-      await expect(implementation.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target)).to.be.revertedWith(
-        ERRORS.Initializable.Initialized,
-      );
+      await expect(
+        implementation.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, fenix.target, votingEscrow.target),
+      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should fail if try second time initialize', async function () {
-      await expect(veFnxDistributor.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target)).to.be.revertedWith(
-        ERRORS.Initializable.Initialized,
-      );
+      await expect(
+        veFnxDistributor.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, fenix.target, votingEscrow.target),
+      ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('Should fail if try set zero address', async function () {
       let implementation = await factory.deploy();
 
       const distributor = factory.attach(
         await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementation.getAddress()),
-      ) as VeFnxDistributorUpgradeable;
-      await expect(distributor.initialize(ZERO_ADDRESS, fenix.target, votingEscrow.target)).to.be.revertedWithCustomError(
-        distributor,
-        'AddressZero',
-      );
-      await expect(distributor.initialize(signers.blastGovernor.address, ZERO_ADDRESS, votingEscrow.target)).to.be.revertedWithCustomError(
-        distributor,
-        'AddressZero',
-      );
-      await expect(distributor.initialize(signers.blastGovernor.address, fenix.target, ZERO_ADDRESS)).to.be.revertedWithCustomError(
-        distributor,
-        'AddressZero',
-      );
+      ) as VeTokenDistributorUpgradeable;
+      await expect(
+        distributor.initialize(ZERO_ADDRESS, deployed.sfsAssignTokenId, fenix.target, votingEscrow.target),
+      ).to.be.revertedWithCustomError(distributor, 'AddressZero');
+      await expect(
+        distributor.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, ZERO_ADDRESS, votingEscrow.target),
+      ).to.be.revertedWithCustomError(distributor, 'AddressZero');
+      await expect(
+        distributor.initialize(deployed.modeSfs.target, deployed.sfsAssignTokenId, fenix.target, ZERO_ADDRESS),
+      ).to.be.revertedWithCustomError(distributor, 'AddressZero');
     });
 
     it('Should correct setup parameters', async function () {
-      expect(await veFnxDistributor.fenix()).to.be.eq(fenix.target);
+      expect(await veFnxDistributor.token()).to.be.eq(fenix.target);
       expect(await veFnxDistributor.votingEscrow()).to.be.eq(votingEscrow.target);
       expect(await veFnxDistributor.owner()).to.be.eq(signers.deployer.address);
     });
   });
 
-  describe('#distributeVeFnx', async () => {
+  describe('#distributeVeToken', async () => {
     it('Should fail if try call from not owner', async function () {
-      await expect(veFnxDistributor.connect(signers.otherUser1).distributeVeFnx([signers.otherUser1.address], [1])).to.be.revertedWith(
+      await expect(veFnxDistributor.connect(signers.otherUser1).distributeVeToken([signers.otherUser1.address], [1])).to.be.revertedWith(
         ERRORS.Ownable.NotOwner,
       );
     });
 
     it('Should fail if provide incorrect array with different length', async function () {
-      await expect(veFnxDistributor.distributeVeFnx([], [1])).to.be.revertedWithCustomError(veFnxDistributor, 'ArraysLengthMismatch');
-      await expect(veFnxDistributor.distributeVeFnx([signers.otherUser1.address], [])).to.be.revertedWithCustomError(
+      await expect(veFnxDistributor.distributeVeToken([], [1])).to.be.revertedWithCustomError(veFnxDistributor, 'ArraysLengthMismatch');
+      await expect(veFnxDistributor.distributeVeToken([signers.otherUser1.address], [])).to.be.revertedWithCustomError(
         veFnxDistributor,
         'ArraysLengthMismatch',
       );
       await expect(
-        veFnxDistributor.distributeVeFnx([signers.otherUser1.address, signers.otherUser2.address], [1]),
+        veFnxDistributor.distributeVeToken([signers.otherUser1.address, signers.otherUser2.address], [1]),
       ).to.be.revertedWithCustomError(veFnxDistributor, 'ArraysLengthMismatch');
-      await expect(veFnxDistributor.distributeVeFnx([signers.otherUser1.address], [1, 2])).to.be.revertedWithCustomError(
+      await expect(veFnxDistributor.distributeVeToken([signers.otherUser1.address], [1, 2])).to.be.revertedWithCustomError(
         veFnxDistributor,
         'ArraysLengthMismatch',
       );
@@ -89,14 +91,14 @@ describe('VeFnxDistributorUpgradeable', function () {
     it('Should fail if not enought balance on contract for distribute', async function () {
       expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ZERO);
 
-      await expect(veFnxDistributor.distributeVeFnx([signers.otherUser1.address], [1])).to.be.revertedWithCustomError(
+      await expect(veFnxDistributor.distributeVeToken([signers.otherUser1.address], [1])).to.be.revertedWithCustomError(
         veFnxDistributor,
         'InsufficientBalance',
       );
 
       await fenix.transfer(veFnxDistributor.target, 1);
 
-      await expect(veFnxDistributor.distributeVeFnx([signers.otherUser1.address], [1])).to.be.not.revertedWithCustomError(
+      await expect(veFnxDistributor.distributeVeToken([signers.otherUser1.address], [1])).to.be.not.revertedWithCustomError(
         veFnxDistributor,
         'InsufficientBalance',
       );
@@ -106,14 +108,14 @@ describe('VeFnxDistributorUpgradeable', function () {
       await fenix.transfer(veFnxDistributor.target, ONE_ETHER);
 
       await expect(
-        veFnxDistributor.distributeVeFnx(
+        veFnxDistributor.distributeVeToken(
           [signers.otherUser1.address, signers.otherUser2.address, signers.otherUser3.address],
           [ONE_ETHER - ONE, ONE, ONE],
         ),
       ).to.be.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
 
       await expect(
-        veFnxDistributor.distributeVeFnx([signers.otherUser1.address, signers.otherUser2.address], [ONE_ETHER - ONE, ONE]),
+        veFnxDistributor.distributeVeToken([signers.otherUser1.address, signers.otherUser2.address], [ONE_ETHER - ONE, ONE]),
       ).to.be.not.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
     });
 
@@ -125,22 +127,22 @@ describe('VeFnxDistributorUpgradeable', function () {
         startTokenId = await votingEscrow.totalTokens();
       });
       it('should corect emit events', async () => {
-        let tx = await veFnxDistributor.distributeVeFnx(
+        let tx = await veFnxDistributor.distributeVeToken(
           [signers.otherUser1.address, signers.otherUser2.address],
           [ONE_ETHER, ONE_ETHER / BigInt(2)],
         );
         await expect(tx)
-          .to.be.emit(veFnxDistributor, 'AridropVeFnx')
+          .to.be.emit(veFnxDistributor, 'AirdropVeToken')
           .withArgs(signers.otherUser1.address, 1, 182 * 86400, ONE_ETHER);
         await expect(tx)
-          .to.be.emit(veFnxDistributor, 'AridropVeFnx')
+          .to.be.emit(veFnxDistributor, 'AirdropVeToken')
           .withArgs(signers.otherUser2.address, 2, 182 * 86400, ONE_ETHER / BigInt(2));
       });
 
       it('should corect change balacnes', async () => {
         let startVotingEscrowBalance = await fenix.balanceOf(votingEscrow.target);
 
-        await veFnxDistributor.distributeVeFnx(
+        await veFnxDistributor.distributeVeToken(
           [signers.otherUser1.address, signers.otherUser2.address],
           [ONE_ETHER, ONE_ETHER / BigInt(2)],
         );
@@ -150,7 +152,7 @@ describe('VeFnxDistributorUpgradeable', function () {
       });
       it('should clear approve after distribution', async () => {
         expect(await fenix.allowance(veFnxDistributor.target, votingEscrow.target)).to.be.eq(ZERO);
-        await veFnxDistributor.distributeVeFnx(
+        await veFnxDistributor.distributeVeToken(
           [signers.otherUser1.address, signers.otherUser2.address],
           [ONE_ETHER, ONE_ETHER / BigInt(2)],
         );
@@ -162,7 +164,7 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
 
-        let tx = await veFnxDistributor.distributeVeFnx(
+        let tx = await veFnxDistributor.distributeVeToken(
           [signers.otherUser1.address, signers.otherUser2.address],
           [ONE_ETHER, ONE_ETHER / BigInt(2)],
         );

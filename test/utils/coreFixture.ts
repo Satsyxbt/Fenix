@@ -17,7 +17,7 @@ import {
 
 import {
   ERC20Mock,
-  Fenix,
+  Solex,
   PairFactoryUpgradeable,
   TransparentUpgradeableProxy,
   VeArtProxyUpgradeable,
@@ -32,17 +32,14 @@ import {
   BribeFactoryUpgradeable,
   MerklGaugeMiddleman,
   MerkleDistributionCreatorMock,
-  BlastMock__factory,
   MinterUpgradeable,
   Pair,
   VeBoostUpgradeable,
-  VeFnxDistributorUpgradeable,
-  BlastPointsMock,
+  VeTokenDistributorUpgradeable,
   FeesVaultFactoryUpgradeable,
   FeesVaultFactoryUpgradeable__factory,
+  ModeSfsMock,
 } from '../../typechain-types';
-import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from './constants';
 import {
   AlgebraCommunityVault,
   IAlgebraFactory,
@@ -52,7 +49,6 @@ import {
 
 export type SignersList = {
   deployer: HardhatEthersSigner;
-  blastGovernor: HardhatEthersSigner;
   fenixTeam: HardhatEthersSigner;
   proxyAdmin: HardhatEthersSigner;
   otherUser1: HardhatEthersSigner;
@@ -64,7 +60,7 @@ export type SignersList = {
 export type CoreFixtureDeployed = {
   signers: SignersList;
   voter: VoterUpgradeable;
-  fenix: Fenix;
+  solex: Solex;
   minter: MinterUpgradeable;
   veArtProxy: VeArtProxyUpgradeable;
   veArtProxyImplementation: VeArtProxyUpgradeable;
@@ -80,16 +76,12 @@ export type CoreFixtureDeployed = {
   feesVaultImplementation: FeesVaultUpgradeable;
   feesVaultFactory: FeesVaultFactoryUpgradeable;
   veBoost: VeBoostUpgradeable;
-  veFnxDistributor: VeFnxDistributorUpgradeable;
-  blastPoints: BlastPointsMock;
+  veTokenDistributor: VeTokenDistributorUpgradeable;
+  modeSfs: ModeSfsMock;
+  sfsAssignTokenId: 1;
+  fenix: Solex;
 };
 
-export async function mockBlast() {
-  await setCode('0x4300000000000000000000000000000000000002', BlastMock__factory.bytecode);
-  let blastPointsMock = (await ethers.deployContract('BlastPointsMock')) as any as BlastPointsMock;
-
-  return blastPointsMock;
-}
 export async function deployERC20MockToken(
   deployer: HardhatEthersSigner,
   name: string,
@@ -117,7 +109,8 @@ export async function deployTransaperntUpgradeableProxy(
 export async function deployMinter(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   voter: string,
   votingEscrow: string,
 ): Promise<MinterUpgradeable> {
@@ -125,28 +118,29 @@ export async function deployMinter(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as MinterUpgradeable;
-  await attached.initialize(governor, voter, votingEscrow);
+  await attached.initialize(modeSfs, assignTokenId, voter, votingEscrow);
   return attached;
 }
 
 export async function deployVeFnxDistributor(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   fenix: string,
   votingEscrow: string,
-): Promise<VeFnxDistributorUpgradeable> {
-  const factory = await ethers.getContractFactory('VeFnxDistributorUpgradeable');
+): Promise<VeTokenDistributorUpgradeable> {
+  const factory = await ethers.getContractFactory('VeTokenDistributorUpgradeable');
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
-  const attached = factory.attach(proxy.target) as any as VeFnxDistributorUpgradeable;
-  await attached.initialize(governor, fenix, votingEscrow);
+  const attached = factory.attach(proxy.target) as any as VeTokenDistributorUpgradeable;
+  await attached.initialize(modeSfs, assignTokenId, fenix, votingEscrow);
   return attached;
 }
 
-export async function deployFenixToken(deployer: HardhatEthersSigner, governor: string, minter: string): Promise<Fenix> {
-  const factory = await ethers.getContractFactory('Fenix');
-  return await factory.connect(deployer).deploy(governor, minter);
+export async function deployFenixToken(deployer: HardhatEthersSigner, modeSfs: string, minter: string): Promise<Solex> {
+  const factory = await ethers.getContractFactory('Solex');
+  return await factory.connect(deployer).deploy(modeSfs, minter);
 }
 
 export async function deployArtProxy(
@@ -164,7 +158,8 @@ export async function deployArtProxy(
 export async function deployVotingEscrow(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   tokenAddr: string,
   veArtProxy: string,
 ): Promise<VotingEscrowUpgradeable> {
@@ -173,7 +168,7 @@ export async function deployVotingEscrow(
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as VotingEscrowUpgradeable;
 
-  await attached.initialize(governor, tokenAddr, veArtProxy);
+  await attached.initialize(modeSfs, assignTokenId, tokenAddr, veArtProxy);
   return attached;
 }
 
@@ -186,7 +181,8 @@ export async function deployVoterWithoutInitialize(deployer: HardhatEthersSigner
 export async function deployVoter(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   votingEscrow: string,
   v2PairFactory: string,
   v2GaugeFactory: string,
@@ -196,7 +192,7 @@ export async function deployVoter(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as VoterUpgradeable;
-  await attached.initialize(governor, votingEscrow, v2PairFactory, v2GaugeFactory, bribeFactory);
+  await attached.initialize(modeSfs, assignTokenId, votingEscrow, v2PairFactory, v2GaugeFactory, bribeFactory);
 
   return attached;
 }
@@ -209,9 +205,8 @@ export async function deployCommunityVaultFeeImplementation(deployer: HardhatEth
 export async function deployCommunityVaultFeeFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
-  blastPoints: string,
-  blastPointsOperator: string,
+  modeSfs: string,
+  assignTokenId: number,
   voter: string,
   communityFeeVaultImplementation: string,
 ): Promise<FeesVaultFactoryUpgradeable> {
@@ -219,7 +214,7 @@ export async function deployCommunityVaultFeeFactory(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as FeesVaultFactoryUpgradeable;
-  await attached.connect(deployer).initialize(governor, blastPoints, blastPointsOperator, voter, communityFeeVaultImplementation, {
+  await attached.connect(deployer).initialize(modeSfs, assignTokenId, voter, communityFeeVaultImplementation, {
     toGaugeRate: 10000,
     recipients: [],
     rates: [],
@@ -231,9 +226,8 @@ export async function deployCommunityVaultFeeFactory(
 export async function deployV2PairFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
-  blastPoints: string,
-  blastPointsOperator: string,
+  modeSfs: string,
+  assignTokenId: number,
   pairImplementation: string,
   communityVaultFeeFactory: string,
 ): Promise<PairFactoryUpgradeable> {
@@ -241,7 +235,7 @@ export async function deployV2PairFactory(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as PairFactoryUpgradeable;
-  await attached.connect(deployer).initialize(governor, blastPoints, blastPointsOperator, pairImplementation, communityVaultFeeFactory);
+  await attached.connect(deployer).initialize(modeSfs, assignTokenId, pairImplementation, communityVaultFeeFactory);
 
   return attached;
 }
@@ -259,7 +253,8 @@ export async function deployBribeImplementation(deployer: HardhatEthersSigner): 
 export async function deployBribeFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   voter: string,
   bribeImplementation: string,
 ): Promise<BribeFactoryUpgradeable> {
@@ -267,7 +262,7 @@ export async function deployBribeFactory(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as BribeFactoryUpgradeable;
-  await attached.connect(deployer).initialize(governor, voter, bribeImplementation);
+  await attached.connect(deployer).initialize(modeSfs, assignTokenId, voter, bribeImplementation);
   return attached;
 }
 export async function deployV2PairImplementation(deployer: HardhatEthersSigner): Promise<Pair> {
@@ -276,7 +271,8 @@ export async function deployV2PairImplementation(deployer: HardhatEthersSigner):
 export async function deployGaugeFactory(
   deployer: HardhatEthersSigner,
   proxyAdmin: string,
-  governor: string,
+  modeSfs: string,
+  assignTokenId: number,
   voter: string,
   gaugeImplementation: string,
   merklGaugeMiddleman: string,
@@ -285,18 +281,19 @@ export async function deployGaugeFactory(
   const implementation = await factory.connect(deployer).deploy();
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as GaugeFactoryUpgradeable;
-  await attached.connect(deployer).initialize(governor, voter, gaugeImplementation, merklGaugeMiddleman);
+  await attached.connect(deployer).initialize(modeSfs, assignTokenId, voter, gaugeImplementation, merklGaugeMiddleman);
   return attached;
 }
 
 export async function deployMerklGaugeMiddleman(
   deployer: HardhatEthersSigner,
-  governor: string,
-  fenix: string,
+  modeSfs: string,
+  assignTokenId: number,
+  solex: string,
   merklDistributionCreator: string,
 ): Promise<MerklGaugeMiddleman> {
   const factory = await ethers.getContractFactory('MerklGaugeMiddleman');
-  return await factory.connect(deployer).deploy(governor, fenix, merklDistributionCreator);
+  return await factory.connect(deployer).deploy(modeSfs, assignTokenId, solex, merklDistributionCreator);
 }
 
 export async function getSigners() {
@@ -304,14 +301,13 @@ export async function getSigners() {
 
   return {
     deployer: signers[0],
-    blastGovernor: signers[1],
-    fenixTeam: signers[2],
-    proxyAdmin: signers[3],
-    otherUser1: signers[4],
-    otherUser2: signers[5],
-    otherUser3: signers[6],
-    otherUser4: signers[7],
-    otherUser5: signers[8],
+    fenixTeam: signers[1],
+    proxyAdmin: signers[2],
+    otherUser1: signers[3],
+    otherUser2: signers[4],
+    otherUser3: signers[5],
+    otherUser4: signers[6],
+    otherUser5: signers[7],
   };
 }
 
@@ -320,7 +316,7 @@ export interface FactoryFixture {
   vault: AlgebraCommunityVault;
 }
 
-export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFixture> {
+export async function deployAlgebraCore(modeSfs: string, sfsAssignTokenId: number): Promise<FactoryFixture> {
   const signers = await getSigners();
 
   const poolDeployerAddress = getCreateAddress({
@@ -335,26 +331,23 @@ export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFix
       .target,
   ) as any;
 
-  await factory.initialize(signers.blastGovernor.address, blastPoints, signers.blastGovernor.address, poolDeployerAddress);
+  await factory.initialize(modeSfs, sfsAssignTokenId, poolDeployerAddress);
 
   const poolDeployerFactory = await ethers.getContractFactory(POOL_DEPLOYER_ABI, POOL_DEPLOYER_BYTECODE);
-  const poolDeployer = (await poolDeployerFactory.deploy(signers.blastGovernor.address, factory)) as any as AlgebraPoolDeployer;
+  const poolDeployer = (await poolDeployerFactory.deploy(modeSfs, sfsAssignTokenId, factory)) as any as AlgebraPoolDeployer;
 
   const vaultFactory = await ethers.getContractFactory(ALGEBRA_COMMUNITY_VAULT_ABI, ALGEBRA_COMMUNITY_VAULT_BYTECODE);
-  const vault = (await vaultFactory.deploy(
-    signers.blastGovernor.address,
-    factory,
-    signers.deployer.address,
-  )) as any as AlgebraCommunityVault;
+  const vault = (await vaultFactory.deploy(modeSfs, sfsAssignTokenId, factory, signers.deployer.address)) as any as AlgebraCommunityVault;
   return { factory, vault };
 }
 
 export async function completeFixture(): Promise<CoreFixtureDeployed> {
-  let mockBlastPoints = await mockBlast();
-
+  const modeSfs = await ethers.deployContract('ModeSfsMock');
+  const modeSfsAddress = await modeSfs.getAddress();
+  const sfsAssignTokenId = 1;
   const signers = await getSigners();
 
-  const fenix = await deployFenixToken(signers.deployer, signers.blastGovernor.address, signers.deployer.address);
+  const fenix = await deployFenixToken(signers.deployer, modeSfsAddress, signers.deployer.address);
   const resultArtProxy = await deployArtProxy(signers.deployer, signers.proxyAdmin.address);
 
   const voter = await deployVoterWithoutInitialize(signers.deployer, signers.proxyAdmin.address);
@@ -362,7 +355,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const votingEscrow = await deployVotingEscrow(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await fenix.getAddress(),
     await resultArtProxy.instance.getAddress(),
   );
@@ -370,7 +364,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const minter = await deployMinter(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await voter.getAddress(),
     await votingEscrow.getAddress(),
   );
@@ -381,9 +376,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const feesVaultFactory = await deployCommunityVaultFeeFactory(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
-    await mockBlastPoints.getAddress(),
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await voter.getAddress(),
     await communityFeeVaultImplementation.getAddress(),
   );
@@ -393,9 +387,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const v2PairFactory = await deployV2PairFactory(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
-    await mockBlastPoints.getAddress(),
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await v2PairImplementation.getAddress(),
     await feesVaultFactory.getAddress(),
   );
@@ -404,7 +397,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const bribeFactory = await deployBribeFactory(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await voter.getAddress(),
     await bribeImplementation.getAddress(),
   );
@@ -412,7 +406,8 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const merklDistributionCreator = await deployMerklDistributionCreatorMock(signers.deployer);
   const merklGaugeMiddleman = await deployMerklGaugeMiddleman(
     signers.deployer,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await fenix.getAddress(),
     await merklDistributionCreator.getAddress(),
   );
@@ -420,14 +415,16 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const gaugeFactory = await deployGaugeFactory(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await voter.getAddress(),
     await gaugeImplementation.getAddress(),
     await merklGaugeMiddleman.getAddress(),
   );
 
   await voter.initialize(
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await votingEscrow.getAddress(),
     await v2PairFactory.getAddress(),
     await gaugeFactory.getAddress(),
@@ -445,20 +442,22 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
 
   let veBoostImpl = await (await ethers.getContractFactory('VeBoostUpgradeable')).deploy();
   let veBoost = (await ethers.getContractFactory('VeBoostUpgradeable')).attach(
-    await deployTransaperntUpgradeableProxy(signers.blastGovernor, signers.proxyAdmin.address, await veBoostImpl.getAddress()),
+    await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await veBoostImpl.getAddress()),
   ) as VeBoostUpgradeable;
 
   let veFnxDistributor = await deployVeFnxDistributor(
     signers.deployer,
     signers.proxyAdmin.address,
-    signers.blastGovernor.address,
+    modeSfsAddress,
+    sfsAssignTokenId,
     await fenix.getAddress(),
     await votingEscrow.getAddress(),
   );
+
   return {
     signers: signers,
     voter: voter,
-    fenix: fenix,
+    solex: fenix,
     minter: minter,
     veArtProxy: resultArtProxy.instance,
     veArtProxyImplementation: resultArtProxy.implementation,
@@ -474,8 +473,10 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     feesVaultImplementation: communityFeeVaultImplementation,
     feesVaultFactory: feesVaultFactory,
     veBoost: veBoost,
-    veFnxDistributor: veFnxDistributor,
-    blastPoints: mockBlastPoints,
+    veTokenDistributor: veFnxDistributor,
+    modeSfs: modeSfs,
+    sfsAssignTokenId: sfsAssignTokenId,
+    fenix: fenix,
   };
 }
 

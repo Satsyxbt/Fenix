@@ -10,7 +10,7 @@ export function svgImageToBase64(svg: string): string {
 }
 
 export function buildJson(tokenId: string, imgBase64: string): string {
-  return `{"name": "lock #${tokenId}", "description": "Fenix locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "${imgBase64}"}`;
+  return `{"name": "lock #${tokenId}", "description": "SOLEX locks, can be used to boost gauge yields, vote on token emission, and receive bribes", "image": "${imgBase64}"}`;
 }
 
 export function jsonToBase64(json: string): string {
