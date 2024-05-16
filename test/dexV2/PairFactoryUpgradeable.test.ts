@@ -41,7 +41,6 @@ describe('PairFactoryUpgradeable Contract', function () {
     tokenTK6 = await deployERC20MockToken(deployed.signers.deployer, 'TK6', 'TK6', 6);
 
     await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), pairFactory.target);
-
     await pairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, false);
     await pairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, true);
     poolAddress = await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true);

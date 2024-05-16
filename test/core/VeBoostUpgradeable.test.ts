@@ -167,7 +167,7 @@ describe('VeBoostUpgradeable', function () {
       });
       it('should correct call and set parameters', async () => {
         expect(await veBoost.getBoostTokenPercentage()).to.be.eq(1_000);
-        await expect(veBoost.setTokenBoostPercentage(5678)).to.be.emit(veBoost, 'FNXBoostPercentage').withArgs(5678);
+        await expect(veBoost.setTokenBoostPercentage(5678)).to.be.emit(veBoost, 'TokenBoostPercentage').withArgs(5678);
         expect(await veBoost.getBoostTokenPercentage()).to.be.eq(5678);
       });
     });
