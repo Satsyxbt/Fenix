@@ -61,6 +61,13 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
         ve = IVotingEscrow(ve_);
     }
 
+    function patchInitialSupply() external onlyOwner reinitializer(2) {
+        assert(weekly == 225_000e18);
+        assert(fenix.totalSupply() == 7_500_000e18);
+        fenix.mint(msg.sender, 67_500_000e18);
+        weekly = 2_250_000e18;
+    }
+
     function start() external onlyOwner {
         require(!isStarted, "Already started");
         isStarted = true;
