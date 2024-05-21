@@ -33,7 +33,7 @@ Last updated date: **17.05.2024**
 ## Implementations for Proxy
 | Contract Name                  | Address                                    |
 |--------------------------------|--------------------------------------------|
-| MinterImplementation           | `0x55F41d7097a1179D3537717D6D4c4Bf62bC89812` |
+| MinterImplementation           | `0xC3c50C7A212c9320b185d09E790138407a0102cC` |
 | VeArtProxyImplementation       | `0xA2f6C997ea66F179C6b83C9Eb3AF887266711D37` |
 | VoterImplementation            | `0x008D28A2206F01828ea59C3d39A4Eb1aa15d072D` |
 | VotingEscrowImplementation     | `0x23A64d5e5a6934EA5553Dad75B9bf9247b3d959D` |

@@ -425,4 +425,49 @@ describe('MinterUpgradeable Contract', function () {
       }
     });
   });
+  describe('After patch initial supply', async () => {
+    describe('Should eq to spreedsheet * 10', async () => {
+      beforeEach(async () => {
+        await minter.patchInitialSupply();
+      });
+
+      it('fail if call second time', async () => {
+        await expect(minter.patchInitialSupply()).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      });
+      it('fail if try call from not owner', async () => {
+        await expect(minter.connect(signers.otherUser1).patchInitialSupply()).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+      });
+      it('mint additional supply and transfer to owner', async () => {
+        expect(await fenix.totalSupply()).to.be.eq(ethers.parseEther('75000000'));
+        expect(await fenix.balanceOf(signers.deployer.address)).to.be.eq(ethers.parseEther('75000000'));
+      });
+
+      it('change weekly state minter', async () => {
+        expect(await minter.weekly()).to.be.eq(ethers.parseEther('2250000'));
+      });
+
+      it(`check epoch from 0 to 52 basic on spreedsheet`, async () => {
+        expect(await fenix.totalSupply()).to.be.eq(INITIAL_TOKEN_SUPPLY * BigInt(10));
+
+        await minter.start();
+        let emissions = [
+          0, 225000, 228375, 231801, 235278, 238807, 242389, 246025, 249715, 247218, 244746, 242298, 239875, 237477, 235102, 232751, 230423,
+          228119, 225838, 223579, 221344, 219130, 216939, 214770, 212622, 210496, 208391, 206307, 204244, 202201, 200179, 198177, 196196,
+          194234, 192291, 190368, 188465, 186580, 184714, 182867, 181039, 179228, 177436, 175662, 173905, 172166, 170444, 168740, 167052,
+          165382, 163728, 162091, 160470,
+        ];
+        let lastTotalSupply: bigint = await fenix.totalSupply();
+
+        for (let index = 0; index < emissions.length; index++) {
+          lastTotalSupply = await fenix.totalSupply();
+          await minter.update_period();
+          await time.increase(WEEK);
+          let change = (await fenix.totalSupply()) - lastTotalSupply;
+          console.log(`${index} ${ethers.formatEther(await fenix.totalSupply())} ${ethers.formatEther(change)}`);
+          expect(change).to.be.closeTo(ethers.parseEther(emissions[index].toString()) * BigInt(10), ethers.parseEther('10'));
+        }
+        expect(await fenix.totalSupply()).to.be.closeTo(ethers.parseEther('18232672') * BigInt(10), ethers.parseEther('10'));
+      });
+    });
+  });
 });

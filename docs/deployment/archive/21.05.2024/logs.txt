@@ -1,0 +1,23 @@
+npx hardhat run .\scripts\8_deploy_patch_initial_supply.ts --network modeTestnet
+Start deploy script
+        -- with config: {"FILE":"mode_testnet_deploy.json","MODE_SFS":"0xBBd707815a7F7eb6897C7686274AFabd7B579Ff6","SFS_ASSIGN_NFT_ID":678,"WETH":"0xc7b06F55FBCD31cd691504f3DFc4efa9082616B7"}
+        -- chainId: 919
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.935064047760808346
+
+MinterUpgradeable deployed to: 0xC3c50C7A212c9320b185d09E790138407a0102cC
+
+Upgrade Minter 0x094759DbBf8daCE67dD21fc730f02e091306ede9 to new implementation: 0xC3c50C7A212c9320b185d09E790138407a0102cC
+
+Pathched total supply
+
+Finish deploy
+        -- deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509, Native balance: 1.935042826323033528
+
+
+npx hardhat verify 0xC3c50C7A212c9320b185d09E790138407a0102cC --network modeTestnet
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0xC3c50C7A212c9320b185d09E790138407a0102cC
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://testnet.modescan.io/address/0xC3c50C7A212c9320b185d09E790138407a0102cC#code
