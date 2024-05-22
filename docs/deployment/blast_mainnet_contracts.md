@@ -40,7 +40,7 @@ Last updated date: **02.04.2024**
 
 | Contract Name                | Address                                  | Short Description                |
 |------------------------------|------------------------------------------|----------------------------------|
-| MinterImplementation         | `0x014e818AA9C222F9D8e1c2EF6A7da2f6D6bd10b3` | Implementation for minter        |
+| MinterImplementation         | `0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F` | Implementation for minter        |
 | VeArtProxyImplementation     | `0x3eD36254b340B39c5150fBc97e1d96593Aa38770` | Implementation for art proxy     |
 | VoterImplementation          | `0xfCc39698d6FDF7DD53a21e50ae1Af6a221B87DE9` | Implementation for voter         |
 | VotingEscrowImplementation   | `0x77B485433DB4cf314929A36DC3c3601c579091B6` | Implementation for voting escrow |
