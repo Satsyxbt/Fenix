@@ -163,7 +163,7 @@ contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     ///@notice set new internal bribe contract (where to send fees)
     function setInternalBribe(address _int) external onlyOwner {
-        require(_int >= address(0), "zero");
+        require(_int != address(0), "zero");
         internal_bribe = _int;
     }
 
