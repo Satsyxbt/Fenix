@@ -1151,9 +1151,9 @@ contract VotingEscrowUpgradeable is
     //////////////////////////////////////////////////////////////*/
 
     mapping(address => address) private _delegates;
-    mapping(address => mapping(uint32 => Checkpoint)) public checkpoints;
-    mapping(address => uint32) public numCheckpoints;
-    mapping(address => uint) public nonces;
+    mapping(address => mapping(uint32 => Checkpoint)) private checkpoints;
+    mapping(address => uint32) private numCheckpoints;
+    mapping(address => uint) private nonces;
 
     function getPastTotalSupply(uint256 timestamp) external view returns (uint) {
         return totalSupplyAtT(timestamp);
