@@ -746,7 +746,7 @@ contract VotingEscrowUpgradeable is
     }
 
     /// @notice Record global data to checkpoint
-    function checkpoint() external {
+    function checkpoint() external nonReentrant {
         _checkpoint(0, LockedBalance(0, 0), LockedBalance(0, 0));
     }
 
