@@ -40,6 +40,8 @@ interface erc20 {
 
     function balanceOf(address) external view returns (uint);
 
+    function allowance(address, address) external view returns (uint);
+
     function transferFrom(address sender, address recipient, uint amount) external returns (bool);
 
     function approve(address spender, uint value) external returns (bool);
@@ -355,7 +357,7 @@ contract RouterV2 {
         address pair = pairFor(tokenA, tokenB, stable);
         {
             uint value = approveMax ? type(uint).max : liquidity;
-            IBaseV1Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+            _trustlessPermit(pair, msg.sender, address(this), value, deadline, v, r, s);
         }
 
         (amountA, amountB) = removeLiquidity(tokenA, tokenB, stable, liquidity, amountAMin, amountBMin, to, deadline);
@@ -376,7 +378,7 @@ contract RouterV2 {
     ) external returns (uint amountToken, uint amountETH) {
         address pair = pairFor(token, address(wETH), stable);
         uint value = approveMax ? type(uint).max : liquidity;
-        IBaseV1Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+        _trustlessPermit(pair, msg.sender, address(this), value, deadline, v, r, s);
         (amountToken, amountETH) = removeLiquidityETH(token, stable, liquidity, amountTokenMin, amountETHMin, to, deadline);
     }
 
@@ -526,7 +528,7 @@ contract RouterV2 {
     ) external returns (uint amountToken, uint amountETH) {
         address pair = pairFor(token, address(wETH), stable);
         uint value = approveMax ? type(uint).max : liquidity;
-        IBaseV1Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+        _trustlessPermit(pair, msg.sender, address(this), value, deadline, v, r, s);
         (amountToken, amountETH) = removeLiquidityETHSupportingFeeOnTransferTokens(
             token,
             stable,
@@ -611,5 +613,27 @@ contract RouterV2 {
         require(amountOut >= amountOutMin, "BaseV1Router: INSUFFICIENT_OUTPUT_AMOUNT");
         wETH.withdraw(amountOut);
         _safeTransferETH(to, amountOut);
+    }
+
+    function _trustlessPermit(
+        address token,
+        address owner,
+        address spender,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal {
+        // Try permit() before allowance check to advance nonce if possible
+        try IBaseV1Pair(token).permit(owner, spender, value, deadline, v, r, s) {
+            return;
+        } catch {
+            // Permit potentially got frontran. Continue anyways if allowance is sufficient.
+            if (erc20(token).allowance(owner, spender) >= value) {
+                return;
+            }
+        }
+        revert("Permit failure");
     }
 }

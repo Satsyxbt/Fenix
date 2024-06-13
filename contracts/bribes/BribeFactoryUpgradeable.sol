@@ -93,6 +93,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
 
     function addRewards(address[][] memory _token, address[] memory _bribes) external {
         require(msg.sender == voter || msg.sender == owner(), "only voter or owner");
+        require(_token.length == _bribes.length, "arraies length mismatch");
 
         for (uint256 i; i < _bribes.length; ) {
             IBribe(_bribes[i]).addRewardTokens(_token[i]);

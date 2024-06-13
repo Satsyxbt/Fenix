@@ -322,7 +322,12 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
     function killGauge(address _gauge) external Governance {
         require(isAlive[_gauge], "killed");
         isAlive[_gauge] = false;
-        claimable[_gauge] = 0;
+
+        uint256 _claimable = claimable[_gauge];
+        if (_claimable > 0) {
+            IERC20Upgradeable(base).safeTransfer(minter, _claimable);
+            delete claimable[_gauge];
+        }
 
         uint _time = _epochTimestamp();
         totalWeightsPerEpoch[_time] -= weightsPerEpoch[_time][poolForGauge[_gauge]];
@@ -828,6 +833,8 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorSetup, ReentrancyGuardUpgr
                 uint256 _share = (_supplied * _delta) / 1e18; // add accrued difference for each supplied token
                 if (isAlive[_gauge]) {
                     claimable[_gauge] += _share;
+                } else {
+                    IERC20Upgradeable(base).safeTransfer(minter, _share);
                 }
             }
         } else {

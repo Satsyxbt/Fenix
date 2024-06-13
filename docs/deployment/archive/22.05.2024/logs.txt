@@ -1,0 +1,20 @@
+npx hardhat run .\scripts\12_v1.1.1_deploy_new_minter_impl.ts --network blastMainnet
+Start deploy MinterImplementation contract...
+deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Successful deploy MinterImplementation contract: 0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://blastexplorer.io/address/0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F#code
+
+
+npx hardhat verify 0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F --network blastScanMainnet
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://blastscan.io/address/0x2F9cb1AdE5A3c615e3fb346a3137B2A6C21c4A3F#code

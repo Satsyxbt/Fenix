@@ -170,6 +170,15 @@ describe('BribeFactoryUpgradeable Contract', function () {
           .withArgs(await deployed.voter.target, await voter.getAddress());
       });
     });
+    describe('#addRewards', async function () {
+      it('Should fail if provide array with different length', async function () {
+        await expect(bribeFactory['addRewards(address[][],address[])']([], [ZERO_ADDRESS])).to.be.revertedWith('arraies length mismatch');
+        await expect(bribeFactory['addRewards(address[][],address[])']([[ZERO_ADDRESS]], [])).to.be.revertedWith('arraies length mismatch');
+        await expect(bribeFactory['addRewards(address[][],address[])']([[ZERO_ADDRESS]], [ZERO_ADDRESS, ZERO_ADDRESS])).to.be.revertedWith(
+          'arraies length mismatch',
+        );
+      });
+    });
   });
   describe('Check access control', async function () {
     describe('functions for only access from contract Owner', async function () {
@@ -199,7 +208,6 @@ describe('BribeFactoryUpgradeable Contract', function () {
       });
       it('#addRewards - Should success called from owner', async () => {
         await expect(bribeFactory['addRewards(address,address[])'](token18.target, [])).to.be.not.reverted;
-        await expect(bribeFactory['addRewards(address[][],address[])']([[token18.target]], [])).to.be.not.reverted;
       });
       it('#setVoter - Should fail if call from not owner', async () => {
         await expect(bribeFactory.connect(signers.otherUser1).setVoter(signers.otherUser1.address)).to.be.revertedWith(
