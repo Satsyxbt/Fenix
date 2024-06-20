@@ -171,7 +171,7 @@ contract RouterV2 {
         }
     }
 
-    function isPair(address pair) external view returns (bool) {
+    function isPair(address pair) public view returns (bool) {
         return IPairFactory(factory).isPair(pair);
     }
 
@@ -181,7 +181,7 @@ contract RouterV2 {
         bool stable,
         uint amountADesired,
         uint amountBDesired
-    ) external view returns (uint amountA, uint amountB, uint liquidity) {
+    ) public view returns (uint amountA, uint amountB, uint liquidity) {
         // create the pair if it doesn't exist yet
         address _pair = IPairFactory(factory).getPair(tokenA, tokenB, stable);
         (uint reserveA, uint reserveB) = (0, 0);
@@ -211,7 +211,7 @@ contract RouterV2 {
         address tokenB,
         bool stable,
         uint liquidity
-    ) external view returns (uint amountA, uint amountB) {
+    ) public view returns (uint amountA, uint amountB) {
         // create the pair if it doesn't exist yet
         address _pair = IPairFactory(factory).getPair(tokenA, tokenB, stable);
 
@@ -269,7 +269,7 @@ contract RouterV2 {
         uint amountBMin,
         address to,
         uint deadline
-    ) external ensure(deadline) returns (uint amountA, uint amountB, uint liquidity) {
+    ) public ensure(deadline) returns (uint amountA, uint amountB, uint liquidity) {
         (amountA, amountB) = _addLiquidity(tokenA, tokenB, stable, amountADesired, amountBDesired, amountAMin, amountBMin);
         address pair = pairFor(tokenA, tokenB, stable);
         _safeTransferFrom(tokenA, msg.sender, pair, amountA);
@@ -285,7 +285,7 @@ contract RouterV2 {
         uint amountETHMin,
         address to,
         uint deadline
-    ) external payable ensure(deadline) returns (uint amountToken, uint amountETH, uint liquidity) {
+    ) public payable ensure(deadline) returns (uint amountToken, uint amountETH, uint liquidity) {
         (amountToken, amountETH) = _addLiquidity(token, address(wETH), stable, amountTokenDesired, msg.value, amountTokenMin, amountETHMin);
         address pair = pairFor(token, address(wETH), stable);
         _safeTransferFrom(token, msg.sender, pair, amountToken);
@@ -353,7 +353,7 @@ contract RouterV2 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external returns (uint amountA, uint amountB) {
+    ) public returns (uint amountA, uint amountB) {
         address pair = pairFor(tokenA, tokenB, stable);
         {
             uint value = approveMax ? type(uint).max : liquidity;
@@ -375,7 +375,7 @@ contract RouterV2 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external returns (uint amountToken, uint amountETH) {
+    ) public returns (uint amountToken, uint amountETH) {
         address pair = pairFor(token, address(wETH), stable);
         uint value = approveMax ? type(uint).max : liquidity;
         _trustlessPermit(pair, msg.sender, address(this), value, deadline, v, r, s);
@@ -404,7 +404,7 @@ contract RouterV2 {
         bool stable,
         address to,
         uint deadline
-    ) external ensure(deadline) returns (uint[] memory amounts) {
+    ) public ensure(deadline) returns (uint[] memory amounts) {
         route[] memory routes = new route[](1);
         routes[0].from = tokenFrom;
         routes[0].to = tokenTo;
@@ -418,10 +418,10 @@ contract RouterV2 {
     function swapExactTokensForTokens(
         uint amountIn,
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external ensure(deadline) returns (uint[] memory amounts) {
+    ) public ensure(deadline) returns (uint[] memory amounts) {
         amounts = getAmountsOut(amountIn, routes);
         require(amounts[amounts.length - 1] >= amountOutMin, "BaseV1Router: INSUFFICIENT_OUTPUT_AMOUNT");
         _safeTransferFrom(routes[0].from, msg.sender, pairFor(routes[0].from, routes[0].to, routes[0].stable), amounts[0]);
@@ -430,10 +430,10 @@ contract RouterV2 {
 
     function swapExactETHForTokens(
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external payable ensure(deadline) returns (uint[] memory amounts) {
+    ) public payable ensure(deadline) returns (uint[] memory amounts) {
         require(routes[0].from == address(wETH), "BaseV1Router: INVALID_PATH");
         amounts = getAmountsOut(msg.value, routes);
         require(amounts[amounts.length - 1] >= amountOutMin, "BaseV1Router: INSUFFICIENT_OUTPUT_AMOUNT");
@@ -445,10 +445,10 @@ contract RouterV2 {
     function swapExactTokensForETH(
         uint amountIn,
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external ensure(deadline) returns (uint[] memory amounts) {
+    ) public ensure(deadline) returns (uint[] memory amounts) {
         require(routes[routes.length - 1].to == address(wETH), "BaseV1Router: INVALID_PATH");
         amounts = getAmountsOut(amountIn, routes);
         require(amounts[amounts.length - 1] >= amountOutMin, "BaseV1Router: INSUFFICIENT_OUTPUT_AMOUNT");
@@ -460,10 +460,10 @@ contract RouterV2 {
 
     function UNSAFE_swapExactTokensForTokens(
         uint[] memory amounts,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external ensure(deadline) returns (uint[] memory) {
+    ) public ensure(deadline) returns (uint[] memory) {
         _safeTransferFrom(routes[0].from, msg.sender, pairFor(routes[0].from, routes[0].to, routes[0].stable), amounts[0]);
         _swap(amounts, routes, to);
         return amounts;
@@ -525,7 +525,7 @@ contract RouterV2 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external returns (uint amountToken, uint amountETH) {
+    ) public returns (uint amountToken, uint amountETH) {
         address pair = pairFor(token, address(wETH), stable);
         uint value = approveMax ? type(uint).max : liquidity;
         _trustlessPermit(pair, msg.sender, address(this), value, deadline, v, r, s);
@@ -542,7 +542,7 @@ contract RouterV2 {
 
     // **** SWAP (supporting fee-on-transfer tokens) ****
     // requires the initial amount to have already been sent to the first pair
-    function _swapSupportingFeeOnTransferTokens(route[] calldata routes, address _to) internal virtual {
+    function _swapSupportingFeeOnTransferTokens(route[] memory routes, address _to) internal virtual {
         for (uint i; i < routes.length; i++) {
             (address input, address output) = (routes[i].from, routes[i].to);
             (address token0, ) = sortTokens(input, output);
@@ -568,10 +568,10 @@ contract RouterV2 {
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint amountIn,
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external ensure(deadline) {
+    ) public ensure(deadline) {
         _safeTransferFrom(routes[0].from, msg.sender, pairFor(routes[0].from, routes[0].to, routes[0].stable), amountIn);
         uint balanceBefore = erc20(routes[routes.length - 1].to).balanceOf(to);
         _swapSupportingFeeOnTransferTokens(routes, to);
@@ -583,10 +583,10 @@ contract RouterV2 {
 
     function swapExactETHForTokensSupportingFeeOnTransferTokens(
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external payable ensure(deadline) {
+    ) public payable ensure(deadline) {
         require(routes[0].from == address(wETH), "BaseV1Router: INVALID_PATH");
         uint amountIn = msg.value;
         wETH.deposit{value: amountIn}();
@@ -602,10 +602,10 @@ contract RouterV2 {
     function swapExactTokensForETHSupportingFeeOnTransferTokens(
         uint amountIn,
         uint amountOutMin,
-        route[] calldata routes,
+        route[] memory routes,
         address to,
         uint deadline
-    ) external ensure(deadline) {
+    ) public ensure(deadline) {
         require(routes[routes.length - 1].to == address(wETH), "BaseV1Router: INVALID_PATH");
         _safeTransferFrom(routes[0].from, msg.sender, pairFor(routes[0].from, routes[0].to, routes[0].stable), amountIn);
         _swapSupportingFeeOnTransferTokens(routes, address(this));
