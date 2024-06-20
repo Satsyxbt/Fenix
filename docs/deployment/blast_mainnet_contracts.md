@@ -28,7 +28,7 @@ Last updated date: **02.04.2024**
 | VeArtProxy            | `0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8` | Proxy for art tokens           | Upgradeable  |
 | Minter                | `0xa4FF6fe53212e8da028e0a34819006A26615D9f8` | FNX Emission manager           | Upgradeable  |
 | FeesVaultFactory      | `0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB` | Factory for fees vaults        | Default      |
-| RouterV2              | `0x0998bEc51D95EAa75Ffdf465D5deD16aEd2ba2fe` | Router for token swaps         | Default      |
+| RouterV2              | `0x4D6c0FCaadE9546b7238cDe9b03C2Cc3E258A7D2` | Router for token swaps         | Default      |
 | MerklGaugeMiddleman   | `0x0145C48FC4c0BB3034f332B3171124d607D6Bd2C` | Middleman for Merkl integration | Default      |
 | GaugeFactoryType      | `0x0639ecB0B82D7fb625b9598956EE93e1FC4398cE` | Gauge Factory for Gauges Type 0 (v2) | Upgradeable |
 | GaugeFactoryType2     | `0x30d245a690B2E2105bd22Bd475BBa09921D59EAB` | Gauge Factory for Gauges Type 1 (V3) | Upgradeable |
