@@ -35,6 +35,7 @@ External:
 | AlgebraFNXPriceProvider      | `0x968106c45b72eB84A1Abc799CC4AaFf618495c76` | AlgebraFNXPriceProvider              | Upgradeable |
 | VeFnxDistributor | `0x3B23472ad7134508cb24DAB353Cfb7097D33C706` |   FNX Distributor in veFNX NFT | Upgradeable|
 | rFNX | `0x0CBc34cDd5d177c813068fD01D11B419D794eE96` | rFNX with convert to FNX & veFNX | Default |
+| FenixRaise                      | `0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A` | Fenix Raise contract | Upgradeable |
 
 ## Implementations for Proxy
 
@@ -54,6 +55,7 @@ External:
 | FeesVaultImplementation      | `0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707` |
 | VeBoostImplementation        | `0x1EdaC08F0B5a60110Bebab6977afB9ACBe65C0C9` |
 | AlgebraFNXPriceProviderImplementation  | `0x1AE69A793A4e20997dd76a51D909859ca869482C` |
+| FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
 
 ## Settings
 ### Ownership
@@ -74,6 +76,7 @@ External:
 | VeFnxDistributor       | Ownable       | Deployer                                            | 
 | VeBoost       | Ownable       | Deployer                                            | 
 | rFNX       | Ownable2Step       | Deployer                                            | 
+| FenixRaise       | Ownable2Step       | Deployer                                            | 
 
 ### Blast governor
 
@@ -95,6 +98,7 @@ External:
 | AlgebraFNXPriceProvider  | Claimable     | Deployer       |
 | VeFnxDistributor         | Claimable     | Deployer       |
 | rFNX | Claimable | Deployer |
+| FenixRaise | Claimable | Deployer |
 
 ## Setup
 * `0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42` - Mock Merkl Distribution Creator
@@ -128,3 +132,4 @@ External:
 ### Tokens
 - `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` - fnUSDT
 - `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` - fnTOK
+- `0xF80a52151d69D0552d10751D8C4efAF8ADA8dA6c` - fnxUSDB

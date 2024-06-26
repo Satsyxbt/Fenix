@@ -1,0 +1,5 @@
+npx hardhat run .\scripts\13_v1.1.3_deploy_FenixRaise_to_testnet.ts --network blastSepolia
+fnxUSDB deployed 0xF80a52151d69D0552d10751D8C4efAF8ADA8dA6c
+FenixRaiseUpgradeable implementation deployed 0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676
+Proxy FenixRaiseUpgradeable implementation deployed 0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A
+PS E:\Work\Aegas-Fenix\Fenix> npx hardhar verify 0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676 --network blastSepolia
