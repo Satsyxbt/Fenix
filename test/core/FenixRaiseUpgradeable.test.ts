@@ -357,6 +357,9 @@ describe('FenixRaiseUpgradeable Contract', function () {
         expect(await proxy.userDeposited(otherUser.address)).to.be.eq(0);
         expect(await proxy.userDeposited(otherUser2.address)).to.be.eq(0);
         expect(await proxy.userDeposited(blastGovernor.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(otherUser.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(blastGovernor.address)).to.be.eq(0);
         expect(await usdb.balanceOf(proxy.target)).to.be.eq(0);
 
         let proof = getProof(otherUser.address, tree);
@@ -369,6 +372,9 @@ describe('FenixRaiseUpgradeable Contract', function () {
         expect(await usdb.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('0.1'));
         expect(await proxy.userDeposited(otherUser2.address)).to.be.eq(0);
         expect(await proxy.userDeposited(blastGovernor.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(otherUser.address)).to.be.eq(ethers.parseEther('0.1'));
+        expect(await proxy.userDepositsWhitelistPhase(otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(blastGovernor.address)).to.be.eq(0);
 
         proof = getProof(otherUser2.address, tree);
         tx = await proxy.connect(otherUser2).deposit(ethers.parseEther('0.5'), ethers.parseEther('0.5'), proof);
@@ -378,6 +384,9 @@ describe('FenixRaiseUpgradeable Contract', function () {
         expect(await proxy.userDeposited(otherUser.address)).to.be.eq(ethers.parseEther('0.1'));
         expect(await proxy.userDeposited(otherUser2.address)).to.be.eq(ethers.parseEther('0.5'));
         expect(await proxy.userDeposited(blastGovernor.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(otherUser.address)).to.be.eq(ethers.parseEther('0.1'));
+        expect(await proxy.userDepositsWhitelistPhase(otherUser2.address)).to.be.eq(ethers.parseEther('0.5'));
+        expect(await proxy.userDepositsWhitelistPhase(blastGovernor.address)).to.be.eq(0);
         expect(await usdb.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('0.6'));
         await expect(proxy.connect(otherUser2).deposit(1, ethers.parseEther('0.5'), proof)).to.be.revertedWithCustomError(
           proxy,
@@ -398,7 +407,9 @@ describe('FenixRaiseUpgradeable Contract', function () {
         expect(await usdb.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('1.5'));
         expect(await proxy.userDeposited(otherUser2.address)).to.be.eq(ethers.parseEther('0.5'));
         expect(await proxy.userDeposited(blastGovernor.address)).to.be.eq(0);
-
+        expect(await proxy.userDepositsWhitelistPhase(otherUser.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await proxy.userDepositsWhitelistPhase(otherUser2.address)).to.be.eq(ethers.parseEther('0.5'));
+        expect(await proxy.userDepositsWhitelistPhase(blastGovernor.address)).to.be.eq(0);
         proof = getProof(otherUser.address, tree);
         await expect(proxy.connect(otherUser).deposit(1, ethers.parseEther('1'), proof)).to.be.revertedWithCustomError(
           proxy,
@@ -444,6 +455,12 @@ describe('FenixRaiseUpgradeable Contract', function () {
         await time.increaseTo(timeNow + 101);
       });
 
+      afterEach(async () => {
+        expect(await proxy.userDepositsWhitelistPhase(otherUser.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await proxy.userDepositsWhitelistPhase(otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userDepositsWhitelistPhase(blastGovernor.address)).to.be.eq(0);
+      });
+
       it('state after whitelist phase', async () => {
         expect(await usdb.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('1'));
         expect(await proxy.totalDeposited()).to.be.eq(ethers.parseEther('1'));
@@ -478,9 +495,33 @@ describe('FenixRaiseUpgradeable Contract', function () {
         await expect(proxy.connect(blastGovernor).deposit(1, 0, [])).to.be.revertedWithCustomError(proxy, 'TotalDepositCap');
       });
 
-      it('should correct deposits and update values', async () => {
+      it('should use public cap, even if the user deposited during the whitelist', async () => {
+        await expect(proxy.connect(otherUser).deposit(ethers.parseEther('0.26'), 0, [])).to.be.revertedWithCustomError(
+          proxy,
+          'UserDepositCap',
+        );
+        let tx = await proxy.connect(otherUser).deposit(ethers.parseEther('0.24'), 0, []);
+        await expect(tx).to.be.emit(proxy, 'Deposit').withArgs(otherUser.address, ethers.parseEther('0.24'));
+        await expect(tx).to.be.emit(usdb, 'Transfer').withArgs(otherUser.address, proxy.target, ethers.parseEther('0.24'));
+
+        expect(await proxy.userDeposited(otherUser.address)).to.be.eq(ethers.parseEther('1.24'));
+
+        await expect(proxy.connect(otherUser).deposit(ethers.parseEther('0.2'), 0, [])).to.be.revertedWithCustomError(
+          proxy,
+          'UserDepositCap',
+        );
+
+        tx = await proxy.connect(otherUser).deposit(ethers.parseEther('0.01'), 0, []);
+        await expect(tx).to.be.emit(proxy, 'Deposit').withArgs(otherUser.address, ethers.parseEther('0.01'));
+        await expect(tx).to.be.emit(usdb, 'Transfer').withArgs(otherUser.address, proxy.target, ethers.parseEther('0.01'));
+
+        expect(await proxy.userDeposited(otherUser.address)).to.be.eq(ethers.parseEther('1.25'));
+
         await expect(proxy.connect(otherUser).deposit(1, 0, [])).to.be.revertedWithCustomError(proxy, 'UserDepositCap');
 
+        expect(await proxy.userDeposited(otherUser.address)).to.be.eq(ethers.parseEther('1.25'));
+      });
+      it('should correct deposits and update values', async () => {
         let tx = await proxy.connect(otherUser2).deposit(ethers.parseEther('0.25'), 0, []);
         await expect(tx).to.be.emit(proxy, 'Deposit').withArgs(otherUser2.address, ethers.parseEther('0.25'));
         await expect(tx).to.be.emit(usdb, 'Transfer').withArgs(otherUser2.address, proxy.target, ethers.parseEther('0.25'));

@@ -73,6 +73,12 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
     mapping(address => uint256) public override userDeposited;
 
     /**
+     * @notice The amount each user has deposited during whitelist phase
+     * @dev Mapping from user address to the amount deposited
+     */
+    mapping(address => uint256) public override userDepositsWhitelistPhase;
+
+    /**
      * @dev Error thrown when timestamps are incorrect
      */
     error IncorrectTimestamps();
@@ -121,10 +127,11 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
      * @param proof_ The Merkle proof for verifying the user is whitelisted
      */
     function deposit(uint256 amount_, uint256 userCap_, bytes32[] memory proof_) external virtual override {
+        bool isWhitelistPhaseCache = isWhitelistPhase();
         uint256 phaseCap;
 
         if (!isPublicPhase()) {
-            if (isWhitelistPhase()) {
+            if (isWhitelistPhaseCache) {
                 if (!isWhitelisted(_msgSender(), userCap_, proof_)) {
                     revert OnlyForWhitelistedUser();
                 }
@@ -136,7 +143,11 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
             phaseCap = publicPhaseUserCap;
         }
 
-        if (userDeposited[_msgSender()] + amount_ > phaseCap) {
+        uint256 userDepositedCache = isWhitelistPhaseCache
+            ? userDeposited[_msgSender()]
+            : userDeposited[_msgSender()] - userDepositsWhitelistPhase[_msgSender()];
+
+        if (userDepositedCache + amount_ > phaseCap) {
             revert UserDepositCap();
         }
 
@@ -145,6 +156,10 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
         }
 
         IERC20Upgradeable(token).safeTransferFrom(_msgSender(), address(this), amount_);
+
+        if (isWhitelistPhaseCache) {
+            userDepositsWhitelistPhase[_msgSender()] += amount_;
+        }
 
         userDeposited[_msgSender()] += amount_;
 

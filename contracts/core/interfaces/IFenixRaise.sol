@@ -173,4 +173,11 @@ interface IFenixRaise {
      * @return The amount deposited by the user
      */
     function userDeposited(address user_) external view returns (uint256);
+
+    /**
+     * @notice Returns the amount a specific user has deposited during whitelist phase
+     * @param user_ The address of the user
+     * @return The amount deposited by the user
+     */
+    function userDepositsWhitelistPhase(address user_) external view returns (uint256);
 }
