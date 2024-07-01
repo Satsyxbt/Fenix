@@ -1,112 +1,70 @@
 
 ## Project overiew
 
-The `Fenix` protocol is a modified version of `Chronos & Thena`, introducing innovations and changes. More information about the changes can be found in the `CHANGELOG`.
+The `Fenix` protocol is a modified version of `Chronos & Thena`, introducing innovations and changes
 
 At its core, the protocol is based on the `ve(3,3)` concept, with a new set of integrations and a variable set of rules.
 
-Significant changes introduced from the initial implementation by `Chronos & Thena include`:
-
-1. Changes to the emission algorithm, with emissions increasing by **1.5%** for the first 8 epochs and then decreasing by **1%** with each epoch until reaching a minimum emission per epoch.
-2. Support for custom fees for dex v2 Pairs, including the ability to adjust the distribution between the `FeeVault` and lp providers in the pool from **0-100%**.
-3. A change in the fee distribution approach, now distributing fees through an additional `FeeVault` contract.
-4. Support for configuring the `Blast Governor` for all main contracts.
-5. Support for configuring rebase token settings with `Blast` rebase tokens in pairs.
-6. Emission distribution through another protocol, `Merkl`, for gauge types 1 and 2 (`ICHIVault` & `Manual positions`)
-7. Other various changes.
-   
-A key goal of this initiative is to review and validate the changes made, as well as new implementations to support the protocol's deployment within the [Blast L2](https://blast.io/en) network.
-
-## Additional Context
-* This code will be deployed to `Blast L2` at launch, and it is the only blockchain considered to be in scope for this audit.
-* `FeesVaultFactory` is a contract that will create `FeesVault` for both v2 dex and its own `Algebra v3 implementation`.
-
 ### Links
 - [Fenix ve(3,3) Core](https://github.com/Satsyxbt/Fenix)
-- [Fenix Algebra V3 Fork](https://gitlab.com/Satsyxbt/fenix-dex-v3)
 - [Docs](https://docs.fenixfinance.io/)
+- [Previous Fenix hats competition](https://app.hats.finance/audit-competitions/fenix-finance-0x83dbe5aa378f3ce160ed084daf85f621289fb92f/scope)
 
-### List of projects on which Fenix is based:
-- [Thena](https://github.com/ThenafiBNB/THENA-Contracts)
-- [Chronos](https://github.com/ChronosEx/Chronos-ContractsV2)
-- [Algebra](https://github.com/cryptoalgebra/Algebra/tree/master)
-- [Merkl](https://github.com/AngleProtocol/merkl-contracts/)
-- [CHANGELOG](https://github.com/Satsyxbt/Fenix/blob/main/CHANGELOG.md)
-  
-## Audit competition scope
 
-All contract code marked as `[FULL]` is within the scope. The tag `[Only changes and their effect on other parts]` means that only the part that has been changed relative to the implementations from Chronos or Thena is within scope, including any impact these changes may have on other parts of the system. Any vulnerabilities critical to the system leading to loss of funds/blockages are also considered within scope.
+## Automated Findings/Publicly Known Issues
+The 4naly3er report can be found [here](/4naly3er-report.md).
 
-The contracts listed below are partially or fully in the scope
-```
-https://github.com/Satsyxbt/Fenix
-
-|-- contracts/
-    |-- bribes/
-        |-- BribeFactoryUpgradeable.sol [Full]
-        |-- BribeUpgradeable.sol [Only changes and their effect on other parts]
-    |-- gauges/
-        |-- GaugeFactoryUpgradeable.sol [Full]
-        |-- GaugeUpgradeable.sol [Only changes and their effect on other parts]
-    |-- core/
-        |-- Fenix.sol [Full]
-        |-- MinterUpgradeable.sol [Full]
-        |-- VoterUpgradeable.sol [Only changes and their effect on other parts]
-        |-- VotingEscrowUpgradeable.sol [Only changes and their effect on other parts]
-    |-- dexV2/
-        |-- Pair.sol [Only changes and their effect on other parts]
-        |-- PairFactoryUpgradeable.sol [Full]
-        |-- PairFees.sol [Full]
-        |-- RouterV2.sol [Only changes and their effect on other parts]
-    |-- integration/
-        |-- BlastERC20RebasingManage.sol [Full]
-        |-- BlastGovernorSetup.sol [Full]
-        |-- FeesVaultFactory.sol [Full]
-        |-- FeesVaultUpgradeable.sol [Full]
-        |-- MerklGaugeMiddleman.sol [Full]
-```
-
-## Out of scope
-The following contracts are out of scope
-
-```
-|-- contracts/
-    |-- bribes/
-        |-- BribeProxy.sol
-    |-- gauges/
-        |-- GaugeProxy.sol
-    |-- core/
-        |-- VeArtProxyUpgradeable.sol
-        |-- libraries
-            |-- DateTime.sol
-            |-- NumberFormatter.sol
-    |-- mocks/**/*
-```
-
-## Publicly Known Issues
 The following issues are known:
 
 * **Centralized risks** - Potential concentration of accesses on certain addresses.
 * **Initialization front-running** - We see a low chance of this issue, which would at most lead to contract redeployment.
 * **Misconfiguration** - Any possible incorrect parameter settings in authorized methods.
 * **Blast address hardcoded** - According to the documentation, the Blast address will be changeable in the mainnet, so this will also be changed in the code.
-* **Loss of emissions in the event of a period update on the miner** -  Loss of emissions in the absence of calls for update_period or distribution- this event is considered unlikely.
-* **Operation of v2 Pair with rebasing tokens from Blast** - The implementation does not anticipate normal operation with these tokens in terms of configuration with automatic balance increase, so there is a possibility to configure these tokens during pair creation, by default, this will be `Claimable` mode.
+* **Loss of emissions in the event of a period update on the minter** -  Loss of emissions in the absence of calls for update_period or distribution- this event is considered unlikely.
 * **ICHIVault incorrect validation** - The creation of gauge is completely limited, so this problem is currently eliminated. We acknowledge that it is possible to fake a pool in case of public creation
 * **ICHIVault pool incorrect validation** - The creation of gauge is completely limited, so this problem is currently eliminated. We acknowledge that it is possible to fake a pool in case of public creation.
 * **Inability to use gauge for staking when created as type 2**
-  
+* **Not support for tokens that do not comply with the ERC20 standard**
+
+## Scope
+```js
+|-- contracts/
+    |-- nest/libraries
+        |-- VirtualRewarderCheckpoints.sol [40 nSLOC]
+    |-- nest/
+        |-- BaseManagedNFTStrategyUpgradeable.sol [75 nSLOC]
+        |-- CompoundVeFNXManagedNFTStrategyFactoryUpgradeable.sol [72 nSLOC]
+        |-- CompoundVeFNXManagedNFTStrategyUpgradeable.sol [90 nSLOC]
+        |-- ManagedNFTManagerUpgradeable.sol [131 nSLOC]
+        |-- RouterV2PathProviderUpgradeable.so [200 nSLOC]
+        |-- SingelTokenBuybackUpgradeable.sol [90 nSLOC]
+        |-- SingelTokenVirtualRewarderUpgradeable.sol [158 nSLOC]
+    |-- nest/core
+        |-- VoterUpgradeableV1_2.sol [617 nSLOC]
+        |-- VotingEscrowUpgradeableV1_2.sol [742 nSLOC]
+
+Total: 2215 nSLOC
+```
+
+
+**[IMPORTANT]:** For the `VoterUpgradeableV1_2.sol` and `VotingEscrowUpgradeableV1_2.sol` contracts, in the scope includes only the changes made and their impact (you can see the difference in the `/docs/diff/*` files) or Critical vulnerability leading to loss of funds, etc.(in the specified contracts)
+
+
+## Out of scope
+Contracts not listed in `#Scope` are not included in the audit scope. As well as previously known issues in `## Automated Findings/Publicly Known Issues` and previus audits
+
 ## Setup
 ### Getting the code
 Clone this repository
 ```sh
-git clone --recursive -j8  https://github.com/Satsyxbt/Fenix
+git clone --branch 2024-07-hats-audit-nest-functionality --recursive -j8  https://github.com/Satsyxbt/Fenix
 ```
 or
 ```sh
 git clone https://github.com/Satsyxbt/Fenix
 cd fenix
 git submodule update --init --recursive
+git checkout 2024-07-hats-audit-nest-functionality
 ```
 
 Enter into the directory
@@ -114,7 +72,44 @@ Enter into the directory
 cd fenix
 ```
 
+Install dependency
+```sh
+npm install
+```
+
 ### Running basic tests
+To run the existing tests, also need to compile the artifacts of the fenix-dex-v3 library
+```
+sh
+1.
+    cd lib/fenix-dex-v3
+    npm install
+
+2. 
+    cd src/core
+    npm install
+    npx hardhat compile
+3.
+    cd src/periphery
+    npm install
+    npx hardhat compile
+```
+run tests command
 ```sh
 npm run test
 ```
+or
+```sh
+npx hardhat test
+```
+
+## Overview
+The functionality of the nest is designed to create "**Management veNFTs**". The task of which is to provide optimized voting paths for users who attach their veNFT to their favorite Managed veNFT. And not to vote manually, but to rely on various voting optimizers
+- Each **mVeNFT** is assigned to a strategy that provides for a particular behavior
+- Users have the option of attaching or unattaching their **veNFT** from **mVeNFT**
+- **mVeNFT** is a large FNX thresuary, so they have various additional restrictions, such as the impossibility of splitting, merge, etc. to ensure that functionality is not compromised
+- The first factory is Compound, which aims to accumulate **FNX** on the user's **veNFT** balance by selling **mVeNFT** voting rewards and redeeming **FNX** as long as he is connected to **mVeNFT**. 
+  
+Together with the nest functionality, the **Permanent lock** functionality is implemented, which allows the user not to lose voice power over time
+- the user's veNFT is always locked as long as user wants it, which allows to keep user voting power at the maximum level
+- the user has the opportunity to unlock veNFT permanent lockand and  withdraw the balance **after 6 months** (max lock time)
