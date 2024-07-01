@@ -46,8 +46,7 @@ The following issues are known:
 Total: 2215 nSLOC
 ```
 
-
-**[IMPORTANT]:** For the `VoterUpgradeableV1_2.sol` and `VotingEscrowUpgradeableV1_2.sol` contracts, in the scope includes only the changes made and their impact (you can see the difference in the `/docs/diff/*` files) or Critical vulnerability leading to loss of funds, etc.(in the specified contracts)
+**[IMPORTANT]:** For the `VoterUpgradeableV1_2.sol` and `VotingEscrowUpgradeableV1_2.sol` contracts, in the scope includes only the changes made and their impact (includes errors caused from changes in other parts of the contract), (you can see the difference in the `/docs/diff/*` files) or Critical vulnerability leading to loss of funds, etc.(in the specified contracts)
 
 
 ## Out of scope
@@ -113,3 +112,5 @@ The functionality of the nest is designed to create "**Management veNFTs**". The
 Together with the nest functionality, the **Permanent lock** functionality is implemented, which allows the user not to lose voice power over time
 - the user's veNFT is always locked as long as user wants it, which allows to keep user voting power at the maximum level
 - the user has the opportunity to unlock veNFT permanent lockand and  withdraw the balance **after 6 months** (max lock time)
+
+To ensure the functioning of mVeNFT, a window was maintained (one hour before and after the epoch change) to give time for scripts, etc. to perform the necessary actions to support mVeNFT
