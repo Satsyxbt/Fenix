@@ -510,6 +510,36 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     --------------------------------------------------------------------------------
     --------------------------------------------------------------------------------
     ----------------------------------------------------------------------------- */
+
+    function createCustomGauge(
+        address gauge_,
+        address pool_,
+        address tokenA_,
+        address tokenB_,
+        string memory externalBribesName_,
+        string memory internalBribesName_
+    ) external nonReentrant Governance returns (address gauge, address internalBribe, address externalBribe) {
+        gauge = gauge_;
+        internalBribe = IBribeFactory(bribefactory).createBribe(tokenA_, tokenB_, internalBribesName_);
+        externalBribe = IBribeFactory(bribefactory).createBribe(tokenA_, tokenB_, externalBribesName_);
+
+        IERC20Upgradeable(base).approve(gauge, type(uint256).max);
+
+        // save data
+        internal_bribes[gauge] = internalBribe;
+        external_bribes[gauge] = externalBribe;
+        gauges[pool_] = gauge;
+        poolForGauge[gauge] = pool_;
+        isGauge[gauge] = true;
+        isAlive[gauge] = true;
+        pools.push(pool_);
+
+        // update index
+        supplyIndex[gauge] = index; // new gauges are set to the default global state
+
+        emit GaugeCreated(gauge, msg.sender, internalBribe, externalBribe, pool_);
+    }
+
     /// @notice create multiple gauges
     function createGauges(
         address[] memory _pool,
