@@ -120,4 +120,22 @@ contract PerpetualsGaugeUpgradeable is IPerpetualsGauge, BlastGovernorClaimableS
      * @param user_ The address of the account to get the reward for.
      */
     function getReward(address user_) external override {}
+
+    /**
+     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
+     *
+     * @param addr_ The address which will checked on zero
+     */
+    function _checkAddressZero(address addr_) internal pure {
+        if (addr_ == address(0)) {
+            revert AddressZero();
+        }
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

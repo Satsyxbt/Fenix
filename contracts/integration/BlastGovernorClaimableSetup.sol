@@ -22,18 +22,9 @@ abstract contract BlastGovernorClaimableSetup {
      * Must be a non-zero address.
      */
     function __BlastGovernorClaimableSetup_init(address blastGovernor_) internal {
-        _checkAddressZero(blastGovernor_);
-        IBlastFull(0x4300000000000000000000000000000000000002).configure(YieldMode.CLAIMABLE, GasMode.CLAIMABLE, blastGovernor_);
-    }
-
-    /**
-     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
-     *
-     * @param addr_ The address which will checked on zero
-     */
-    function _checkAddressZero(address addr_) internal pure {
-        if (addr_ == address(0)) {
+        if (blastGovernor_ == address(0)) {
             revert AddressZero();
         }
+        IBlastFull(0x4300000000000000000000000000000000000002).configure(YieldMode.CLAIMABLE, GasMode.CLAIMABLE, blastGovernor_);
     }
 }
