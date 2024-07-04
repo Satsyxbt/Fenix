@@ -519,6 +519,9 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         string memory externalBribesName_,
         string memory internalBribesName_
     ) external nonReentrant Governance returns (address gauge, address internalBribe, address externalBribe) {
+        require(!isGauge[gauge_]);
+        require(gauges[pool_] == address(0));
+
         gauge = gauge_;
         internalBribe = IBribeFactory(bribefactory).createBribe(tokenA_, tokenB_, internalBribesName_);
         externalBribe = IBribeFactory(bribefactory).createBribe(tokenA_, tokenB_, externalBribesName_);
