@@ -39,7 +39,8 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactory | `0xA1657A57638694bF2cF777aD534FEd66dA22131F` | Compound strategy factory |Upgradeable |
 | rFNX | `0x0CBc34cDd5d177c813068fD01D11B419D794eE96` | rFNX with convert to FNX & veFNX | Default |
 | FenixRaise                      | `0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A` | Fenix Raise contract | Upgradeable |
-
+| PerpetualsGauge| `0xD484a5AF8F3a55468E311BdD5aEc4634F2d7E8CC` | _ | Upgradeable|
+| PerpetualsTradersRewarder| `0xa7B28975d7eF0fF1D406BE36A7D5E5647Ff469ca` | _ | Upgradeable|
 ## Implementations for Proxy
 
 | Contract Name                | Address                                  |
@@ -65,8 +66,9 @@ External:
 | RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
 | VoterUpgradeableV1_2Implementation  | `0xAF15A0b49D3bc095d9cFa5560144A1B458f81574` |
 | VotingEscrowUpgradeableV1_2Implementation  | `0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F` |
-
 | FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
+| PerpetualsGaugeImplementation  | `0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15` |
+| PerpetualsTradersRewarderImplementation  | `0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776` |
 
 ## Settings
 ### Ownership

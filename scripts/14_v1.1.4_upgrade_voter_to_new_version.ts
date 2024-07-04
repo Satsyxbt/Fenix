@@ -1,7 +1,7 @@
 import { deployBase, getDeployedDataFromDeploys, getDeploysData } from './utils';
 
 async function main() {
-  await deployBase('VoterUpgradeable', 'VoterImplementation');
+  await deployBase('VoterUpgradeableV1_2', 'VoterImplementation');
 
   let deploysData = await getDeployedDataFromDeploys();
   let data = await getDeploysData();

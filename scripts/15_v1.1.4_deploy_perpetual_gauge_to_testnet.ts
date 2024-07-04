@@ -26,7 +26,7 @@ async function main() {
     data['PerpetualsGauge'],
   )) as any as PerpetualsGaugeUpgradeable;
 
-  let Voter = (await ethers.getContractAt('Voter', data['Voter'])) as any as VoterUpgradeable;
+  let Voter = (await ethers.getContractAt('VoterUpgradeableV1_2', data['Voter'])) as any as VoterUpgradeable;
 
   let PerpetualsTradersRewarderUpgradeable = (await ethers.getContractAt(
     'PerpetualsTradersRewarderUpgradeable',

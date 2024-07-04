@@ -1,0 +1,63 @@
+npx hardhat run .\scripts\14_v1.1.4_upgrade_voter_to_new_version.ts --network blastSepolia
+Start deploy VoterImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VoterImplementation contract: 0xC607C6fe4c6F932AF69c22FF4A6962EB3771b967
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV1_2.sol:VoterUpgradeableV1_2 at 0xC607C6fe4c6F932AF69c22FF4A6962EB3771b967
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV1_2 on the block explorer.
+https://testnet.blastscan.io/address/0xC607C6fe4c6F932AF69c22FF4A6962EB3771b967#code
+
+
+npx hardhat run .\scripts\15_v1.1.4_deploy_perpetual_gauge_to_testnet.ts --network blastSepolia
+Start deploy PerpetualsTradersRewarderImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PerpetualsTradersRewarderImplementation contract: 0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/gauges/PerpetualsTradersRewarderUpgradeable.sol:PerpetualsTradersRewarderUpgradeable at 0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PerpetualsTradersRewarderUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776#code
+
+Start deploy PerpetualsGaugeImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy PerpetualsGaugeImplementation contract: 0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/gauges/PerpetualsGaugeUpgradeable.sol:PerpetualsGaugeUpgradeable at 0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PerpetualsGaugeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15#code
+
+Start deploy proxy for PerpetualsGauge contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy PerpetualsGauge contract: 0xD484a5AF8F3a55468E311BdD5aEc4634F2d7E8CC
+Start deploy proxy for PerpetualsTradersRewarder contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy PerpetualsTradersRewarder contract: 0xa7B28975d7eF0fF1D406BE36A7D5E5647Ff469ca
+HardhatError: HH700: Artifact for contract "Voter" not found. Did you mean "IVoter"?
+    at Artifacts._handleWrongArtifactForContractName (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\artifacts.ts:721:11)
+    at Artifacts._getArtifactPathFromFiles (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\artifacts.ts:852:19)
+    at Artifacts._getArtifactPath (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\artifacts.ts:516:21)
+    at async Artifacts.readArtifact (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\artifacts.ts:71:26)
+    at async getContractAt (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-ethers\src\internal\helpers.ts:319:22)
+    at async main (E:\Work\Aegas-Fenix\Fenix\scripts\15_v1.1.4_deploy_perpetual_gauge_to_testnet.ts:29:16)
+
+    npx hardhat run .\scripts\15_v1.1.4_deploy_perpetual_gauge_to_testnet.ts --network blastSepolia
+Start deploy PerpetualsTradersRewarderImplementation contract...
+PerpetualsTradersRewarderImplementation contract already deployed, skip deployment, address: 0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776
+Start deploy PerpetualsGaugeImplementation contract...
+PerpetualsGaugeImplementation contract already deployed, skip deployment, address: 0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15
+Start deploy proxy for PerpetualsGauge contract...
+PerpetualsGauge contract already deployed, skip deployment, address: 0xD484a5AF8F3a55468E311BdD5aEc4634F2d7E8CC
+Start deploy proxy for PerpetualsTradersRewarder contract...
+PerpetualsTradersRewarder contract already deployed, skip deployment, address: 0xa7B28975d7eF0fF1D406BE36A7D5E5647Ff469ca
