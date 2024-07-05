@@ -5,7 +5,7 @@ import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contra
 
 import "./InterfacesAPI.sol";
 
-contract RewardAPI is OwnableUpgradeable {
+contract RewardAPIUpgradeable is OwnableUpgradeable {
     IPairFactory public pairFactory;
     IVoterV3 public voter;
     address public underlyingToken;

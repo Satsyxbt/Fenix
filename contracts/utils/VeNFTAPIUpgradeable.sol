@@ -4,7 +4,7 @@ import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contra
 
 import "./InterfacesAPI.sol";
 
-contract VeNFTAPI is OwnableUpgradeable {
+contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     struct pairVotes {
         address pair;
         uint256 weight;

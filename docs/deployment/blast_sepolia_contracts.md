@@ -41,6 +41,13 @@ External:
 | FenixRaise                      | `0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A` | Fenix Raise contract | Upgradeable |
 | PerpetualsGauge| `0xD484a5AF8F3a55468E311BdD5aEc4634F2d7E8CC` | _ | Upgradeable|
 | PerpetualsTradersRewarder| `0xa7B28975d7eF0fF1D406BE36A7D5E5647Ff469ca` | _ | Upgradeable|
+| VeNFTAPI| `0x73D504CF496CFEE25e035de93C7c7535c90f3528` | _ | Upgradeable|
+| RewardAPI| `0x33Ac4D2ae35299072C7f20d5bBd4F75f6D0aFe89` | _ | Upgradeable|
+| PairAPI| `0x6E96E9e074568151Ee3ECA520849b1FE760d398B` | _ | Upgradeable|
+
+
+
+
 ## Implementations for Proxy
 
 | Contract Name                | Address                                  |
@@ -69,6 +76,10 @@ External:
 | FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
 | PerpetualsGaugeImplementation  | `0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15` |
 | PerpetualsTradersRewarderImplementation  | `0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776` |
+| VeNFTAPIUpgradeableImplementation | `0x44854BA30e75C31e1bF543d4221C181Ee920F8D5` |
+| PairAPIUpgradeableImplementation | `0x74802c4b7739b68378311490d129a733A1d7aBf7` |
+| RewardAPIUpgradeableImplementation | `0x3C4a31cc6987D7f3CEF5319799e2cC9341365A24` |
+| VeNFTAPIUpgradeableImplementation | `0x44854BA30e75C31e1bF543d4221C181Ee920F8D5` |
 
 ## Settings
 ### Ownership

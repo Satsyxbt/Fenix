@@ -6,7 +6,7 @@ import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contra
 
 import "./InterfacesAPI.sol";
 
-contract PairAPI is OwnableUpgradeable {
+contract PairAPIUpgradeable is OwnableUpgradeable {
     struct pairInfo {
         // pair info
         address pair_address; // pair contract address
