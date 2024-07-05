@@ -1,5 +1,7 @@
 pragma solidity =0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+
 import "./InterfacesAPI.sol";
 
 contract VeNFTAPI is OwnableUpgradeable {
@@ -11,7 +13,6 @@ contract VeNFTAPI is OwnableUpgradeable {
     struct veNFT {
         uint8 decimals;
         bool voted;
-        uint256 attachments;
         uint256 id;
         uint128 amount;
         uint256 voting_amount;
@@ -22,6 +23,7 @@ contract VeNFTAPI is OwnableUpgradeable {
         address token;
         string tokenSymbol;
         uint256 tokenDecimals;
+        bool isPermanentLocked;
     }
 
     struct Reward {
@@ -143,18 +145,16 @@ contract VeNFTAPI is OwnableUpgradeable {
         venft.vote_ts = voter.lastVoted(id);
         venft.votes = votes;
         venft.token = ve.token();
-        venft.tokenSymbol = IERC20(ve.token()).symbol();
-        venft.tokenDecimals = IERC20(ve.token()).decimals();
+        venft.tokenSymbol = IERC20MetadataUpgradeable(ve.token()).symbol();
+        venft.tokenDecimals = IERC20MetadataUpgradeable(ve.token()).decimals();
         venft.voted = ve.voted(id);
-        venft.attachments = 0;
+        venft.isPermanentLocked = _lockedBalance.isPermanentLocked;
     }
 
-    function getNFTFromIds(uint[] memory _ids) public view returns (veNFT[] memory veNFTs) {
-        uint len = _ids.length;
-        veNFTs = new veNFT[](len);
-
-        for (uint i = 0; i < len; i++) {
-            veNFTs[i] = _getNFTFromId(_ids[i], ve.ownerOf(_ids[i]));
+    function getNFTFromIds(uint256[] memory ids_) public view returns (veNFT[] memory veNFTs) {
+        veNFTs = new veNFT[](ids_.length);
+        for (uint256 i; i < ids_.length; i++) {
+            veNFTs[i] = _getNFTFromId(ids_[i], ve.ownerOf(ids_[i]));
         }
     }
 }

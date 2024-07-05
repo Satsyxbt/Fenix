@@ -2,6 +2,8 @@
 pragma solidity =0.8.19;
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+
 import "./InterfacesAPI.sol";
 
 contract PairAPI is OwnableUpgradeable {
@@ -14,7 +16,6 @@ contract PairAPI is OwnableUpgradeable {
         bool stable; // pair pool type (stable = false, means it's a variable type of pool)
         uint total_supply; // pair tokens supply
         address clPool;
-        address dysonPool;
         uint feeAmount;
         // token pair info
         address token0; // pair 1st token address
@@ -43,7 +44,6 @@ contract PairAPI is OwnableUpgradeable {
         uint account_gauge_balance; // account pair staked in gauge balance
         uint account_gauge_total_weight; // account pair total Weight of all NFT gauge
         uint account_gauge_earned; // account earned emissions for this pair
-        address dysonStrategy;
         uint _a0Expect;
         uint _a1Expect;
     }
@@ -69,7 +69,6 @@ contract PairAPI is OwnableUpgradeable {
 
     IPairFactory public pairFactory;
     IVoterV3 public voter;
-    IWrappedBribeFactory public wBribeFactory;
 
     address public underlyingToken;
 
@@ -87,8 +86,18 @@ contract PairAPI is OwnableUpgradeable {
         voter = IVoterV3(voter_);
 
         pairFactory = IPairFactory(IVoterV3(voter_).factories()[0]);
-        //clFactory = IPairFactory(voter.factories()[1]);
         underlyingToken = IVotingEscrow(IVoterV3(voter_)._ve()).token();
+    }
+
+    function setVoter(address _voter) external onlyOwner {
+        require(_voter != address(0), "zeroAddr");
+        address _oldVoter = address(voter);
+        voter = IVoterV3(_voter);
+
+        pairFactory = IPairFactory(voter.factories()[0]);
+        underlyingToken = IVotingEscrow(voter._ve()).token();
+
+        emit Voter(_oldVoter, _voter);
     }
 
     function getAllPair(address _user, uint _amounts, uint _offset) external view returns (pairInfo[] memory Pairs) {
@@ -181,20 +190,20 @@ contract PairAPI is OwnableUpgradeable {
 
         // Token0 Info
         _pairInfo.token0 = token_0;
-        _pairInfo.token0_decimals = IERC20(token_0).decimals();
-        _pairInfo.token0_symbol = IERC20(token_0).symbol();
-        _pairInfo.reserve0 = IERC20(token_0).balanceOf(_pair);
+        _pairInfo.token0_decimals = IERC20MetadataUpgradeable(token_0).decimals();
+        _pairInfo.token0_symbol = IERC20MetadataUpgradeable(token_0).symbol();
+        _pairInfo.reserve0 = IERC20Upgradeable(token_0).balanceOf(_pair);
 
         // Token1 Info
         _pairInfo.token1 = token_1;
-        _pairInfo.token1_decimals = IERC20(token_1).decimals();
-        _pairInfo.token1_symbol = IERC20(token_1).symbol();
-        _pairInfo.reserve1 = IERC20(token_1).balanceOf(_pair);
+        _pairInfo.token1_decimals = IERC20MetadataUpgradeable(token_1).decimals();
+        _pairInfo.token1_symbol = IERC20MetadataUpgradeable(token_1).symbol();
+        _pairInfo.reserve1 = IERC20Upgradeable(token_1).balanceOf(_pair);
 
         // Pair's gauge Info
         _pairInfo.gauge = address(_gauge);
         _pairInfo.emissions_token = underlyingToken;
-        _pairInfo.emissions_token_decimals = IERC20(underlyingToken).decimals();
+        _pairInfo.emissions_token_decimals = IERC20MetadataUpgradeable(underlyingToken).decimals();
 
         // external address
         _pairInfo.fee = voter.internal_bribes(address(_gauge));
@@ -202,8 +211,8 @@ contract PairAPI is OwnableUpgradeable {
 
         // Account Info
         _pairInfo.account_lp_balance = 0;
-        _pairInfo.account_token0_balance = IERC20(token_0).balanceOf(_account);
-        _pairInfo.account_token1_balance = IERC20(token_1).balanceOf(_account);
+        _pairInfo.account_token0_balance = IERC20Upgradeable(token_0).balanceOf(_account);
+        _pairInfo.account_token1_balance = IERC20Upgradeable(token_1).balanceOf(_account);
         _pairInfo.account_gauge_balance = accountGaugeLPAmount;
         _pairInfo.account_gauge_total_weight = accountGaugeLPTotalWeight;
         _pairInfo.account_gauge_earned = earned;
@@ -252,34 +261,33 @@ contract PairAPI is OwnableUpgradeable {
         _pairInfo.total_supply = ipair.totalSupply();
 
         _pairInfo.clPool = address(0);
-        _pairInfo.dysonPool = address(0);
         _pairInfo.feeAmount = IPairFactory(ipair.factory()).getFee(_pair, ipair.isStable());
 
         // Token0 Info
         _pairInfo.token0 = token_0;
-        _pairInfo.token0_decimals = IERC20(token_0).decimals();
-        _pairInfo.token0_symbol = IERC20(token_0).symbol();
+        _pairInfo.token0_decimals = IERC20MetadataUpgradeable(token_0).decimals();
+        _pairInfo.token0_symbol = IERC20MetadataUpgradeable(token_0).symbol();
         _pairInfo.claimable0 = ipair.claimable0(_account);
 
         // Token1 Info
         _pairInfo.token1 = token_1;
-        _pairInfo.token1_decimals = IERC20(token_1).decimals();
-        _pairInfo.token1_symbol = IERC20(token_1).symbol();
+        _pairInfo.token1_decimals = IERC20MetadataUpgradeable(token_1).decimals();
+        _pairInfo.token1_symbol = IERC20MetadataUpgradeable(token_1).symbol();
         _pairInfo.claimable1 = ipair.claimable1(_account);
 
         // Pair's gauge Info
         _pairInfo.gauge = address(_gauge);
         _pairInfo.emissions_token = underlyingToken;
-        _pairInfo.emissions_token_decimals = IERC20(underlyingToken).decimals();
+        _pairInfo.emissions_token_decimals = IERC20MetadataUpgradeable(underlyingToken).decimals();
 
         // external address
         _pairInfo.fee = voter.internal_bribes(address(_gauge));
         _pairInfo.bribe = voter.external_bribes(address(_gauge));
 
         // Account Info
-        _pairInfo.account_lp_balance = IERC20(_pair).balanceOf(_account);
-        _pairInfo.account_token0_balance = IERC20(token_0).balanceOf(_account);
-        _pairInfo.account_token1_balance = IERC20(token_1).balanceOf(_account);
+        _pairInfo.account_lp_balance = IERC20Upgradeable(_pair).balanceOf(_account);
+        _pairInfo.account_token0_balance = IERC20Upgradeable(token_0).balanceOf(_account);
+        _pairInfo.account_token1_balance = IERC20Upgradeable(token_1).balanceOf(_account);
         _pairInfo.account_gauge_balance = accountGaugeLPAmount;
         _pairInfo.account_gauge_total_weight = accountGaugeLPTotalWeight;
         _pairInfo.account_gauge_earned = earned;
@@ -330,9 +338,9 @@ contract PairAPI is OwnableUpgradeable {
 
         uint k;
         uint _rewPerEpoch;
-        IERC20 _t;
+        IERC20MetadataUpgradeable _t;
         for (k = 0; k < tokenLen; k++) {
-            _t = IERC20(_wb.rewardTokens(k));
+            _t = IERC20MetadataUpgradeable(_wb.rewardTokens(k));
             if (address(_t) != address(0x0)) {
                 IBribeAPI.Reward memory _reward = _wb.rewardData(address(_t), _ts);
                 _rewPerEpoch = _reward.rewardsPerEpoch;
@@ -354,19 +362,6 @@ contract PairAPI is OwnableUpgradeable {
                 _tb[k].amount = 0;
             }
         }
-    }
-
-    function setVoter(address _voter) external onlyOwner {
-        require(_voter != address(0), "zeroAddr");
-        address _oldVoter = address(voter);
-        voter = IVoterV3(_voter);
-
-        // update variable depending on voter
-        pairFactory = IPairFactory(voter.factories()[0]);
-        //clFactory = IPairFactory(voter.factories()[1]);
-        underlyingToken = IVotingEscrow(voter._ve()).token();
-
-        emit Voter(_oldVoter, _voter);
     }
 
     function left(address _pair, address _token) external view returns (uint256 _rewPerEpoch) {

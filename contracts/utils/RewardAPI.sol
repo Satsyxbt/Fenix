@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+
 import "./InterfacesAPI.sol";
 
 contract RewardAPI is OwnableUpgradeable {
@@ -258,8 +260,8 @@ contract RewardAPI is OwnableUpgradeable {
                 _symbol[i] = "";
                 _decimals[i] = 0;
             } else {
-                _symbol[i] = IERC20(_token).symbol();
-                _decimals[i] = IERC20(_token).decimals();
+                _symbol[i] = IERC20MetadataUpgradeable(_token).symbol();
+                _decimals[i] = IERC20MetadataUpgradeable(_token).decimals();
                 _reward = IBribeAPI(_bribe).rewardData(_token, ts);
                 _amounts[i] = (((_reward.rewardsPerEpoch * 1e18) / _supply) * _balance) / 1e18;
             }
@@ -310,8 +312,8 @@ contract RewardAPI is OwnableUpgradeable {
                 _symbol[i] = "";
                 _decimals[i] = 0;
             } else {
-                _symbol[i] = IERC20(_token).symbol();
-                _decimals[i] = IERC20(_token).decimals();
+                _symbol[i] = IERC20MetadataUpgradeable(_token).symbol();
+                _decimals[i] = IERC20MetadataUpgradeable(_token).decimals();
                 _reward = IBribeAPI(_bribe).rewardData(_token, ts);
                 _amounts[i] = _reward.rewardsPerEpoch;
             }
