@@ -1,0 +1,322 @@
+**V3 USDB-WETH** : 0x1d74611f3ef04e7252f7651526711a937aa1f75e
+  - USDB to claim: 6355.478439191729576613
+  - WETH to claim: 1.160305346951492568
+  - **FeesVault**: 0x942015E51564427B120588F5EDe00c5112b8Fd54
+    - USDB to claim: 0.273036924324487431
+    - WETH to claim: 0.000030496296585979
+
+**V3 USDB-USD+** : 0x6a1de1841c5c3712e3bc7c75ce3d57dedec6915f
+  - USDB to claim: 778.803083748323583706
+  - WETH to claim: 0.0
+  - **FeesVault**: 0x75b69C79C2aAE452b125537CFF134AC2cBf28510
+    - USDB to claim: 0.001987318752858893
+    - WETH to claim: 0.0
+
+**V2 USDB-DOLA** : 0xd49ad1dd6c5eae53abdafeaed1866330c42ccae4
+  - USDB to claim: 128.461943618930584421
+  - WETH to claim: 0.0
+  - **FeesVault**: 0xe4E4f83095c9Bf01c8879204043ad2bcF3045be3
+    - USDB to claim: 0.00305168812216101
+    - WETH to claim: 0.0
+  - **Fees**: 0xaf7773DA4b9E914b3762dcEbd22772d5edEf6559
+    - USDB to claim: 0.027465193123987592
+    - WETH to claim: 0.0
+
+**V3 USDB-USDe** : 0xd0cd894c605a9eedacbc0fa9bd8440627a5d37b1
+  - USDB to claim: 118.729702935381123613
+  - WETH to claim: 0.0
+  - **FeesVault**: 0x1A591185dEDC7F233b31e57Bd8832167AeF39D71
+    - USDB to claim: 0.000077215812762574
+    - WETH to claim: 0.0
+
+**V3 USDB-sFRAX** : 0x28d7de5e9592cbd951dc3b22325fdfa89972f6db
+  - USDB to claim: 44.518635043449494664
+  - WETH to claim: 0.0
+  - **FeesVault**: 0x84E493e925a5298101D69D879F06Ec668CdA01Be
+    - USDB to claim: 0.000132961387651109
+    - WETH to claim: 0.0
+
+**V3 KALA-USDB** : 0x7f7d282846cb4806f9121b0b5ef61afaae64f257
+  - USDB to claim: 16.035805887781422645
+  - WETH to claim: 0.0
+  - **FeesVault**: 0xd0a0fB02c1F96b985887618E79F7eC6dc8fA7ba6
+    - USDB to claim: 0.000000512169381002
+    - WETH to claim: 0.0
+
+**V3 USDB-BLAST** : 0x4c577f4873061003d6c83eaac20e24397ff5b89b
+  - USDB to claim: 15.816361419986193865
+  - WETH to claim: 0.0
+  - **FeesVault**: 0xeA24569BB092ddC5A908fA77E01f9F7577375DAD
+    - USDB to claim: 0.000841946607421753
+    - WETH to claim: 0.0
+
+**V3 USDB-axlUSDC** : 0x1fe38ea700f0b8b013be01e58b02b1da3956379a
+  - USDB to claim: 3.392258306856473783
+  - WETH to claim: 0.0
+  - **FeesVault**: 0x601f9FD805890d4a2c4b46a257652EdD5C466fc5
+    - USDB to claim: 0.000055852854966577
+    - WETH to claim: 0.0
+
+**V2 USDB-WETH** : 0xf4f76fc7ae409862eca9ffdb1767638e7dcd6e8b
+  - USDB to claim: 2.338196033087184114
+  - WETH to claim: 0.000271430675746011
+  - **FeesVault**: 0xc48452A293cbdd741d5359747868645F88afbaB8
+    - USDB to claim: 0.000133077856510055
+    - WETH to claim: 0.000000004017614084
+  - **Fees**: 0x808B627825bA0a47aeFdAf9fbd19e33Fda4D9125
+    - USDB to claim: 0.001197103589144385
+    - WETH to claim: 0.000000036044497447
+
+**V3 DUSD-USDB** : 0xf63e385e854e082c78df0627b411fdb78877faa1
+  - USDB to claim: 0.893080264042592306
+  - WETH to claim: 0.0
+  - **FeesVault**: 0x7420b911b130AD29a0564379c6125fA6479bdfbb
+    - USDB to claim: 0.000848534439343905
+    - WETH to claim: 0.0
+
+**V2 USDB-IBEX** : 0x3c7fd63cab763a10b2754b1464e09d37a9fc79e7
+  - USDB to claim: 0.000135498419525912
+  - WETH to claim: 0.0
+  - **FeesVault**: 0xd28bF68F9E6Ab02BD896784a3CB9F7FB1bCD94E4
+    - USDB to claim: 0.0
+    - WETH to claim: 0.0
+  - **Fees**: 0xD284eCaf7a4692a76CC9A54720efdC6Ea40c16f9
+    - USDB to claim: 0.0
+    - WETH to claim: 0.0
+
+**V2 WETH-IBEX** : 0x8c22d23ec102c9e098c8e0b9ed4ea01aa0b4be35
+  - USDB to claim: 0.0
+  - WETH to claim: 0.00000001500334405
+  - **FeesVault**: 0x9703d2fcC03fdF993d809fD6a57E45E5ee1f1a93
+    - USDB to claim: 0.0
+    - WETH to claim: 0.0
+  - **Fees**: 0x9e8aA5b40Ef1ac9d8Da8006f8F756235229F363c
+    - USDB to claim: 0.0
+    - WETH to claim: 0.0
+
+**V3 WETH-DEUS** : 0x117106000ceb709ba3ec885027d111463204d6b6
+  - USDB to claim: 0.0
+  - WETH to claim: 0.007964871199647837
+  - **FeesVault**: 0x9246b8b74a9e95Edd7fB0Da51142816D1Ccf79F9
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000001423632242534
+
+**V3 PEW-WETH** : 0x24b711e1d32e28a143e1a9cfdfe03a39d1acc771
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000015083365120504
+  - **FeesVault**: 0x82fa130440F06BB00cCFC19F55E94ba0F4Acb0d0
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000185430094542
+
+**V3 WETH-SSS** : 0x047d5d8911d18aa5e64e666e53af2b47b46ab363
+  - USDB to claim: 0.0
+  - WETH to claim: 0.00001616459166475
+  - **FeesVault**: 0xcAd1C88c906c591E2dff228728755381fa3f2032
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000000723875265
+
+**V3 WETH-ESE** : 0x28abbaadfacd46196217c23bc6402a0a458973a5
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000054041147032871
+  - **FeesVault**: 0x989d611C2C1cf6ECABca3EE764D348665e7669A9
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000006059542713
+
+**V3 sfrxETH-WETH** : 0x1eba6f6cfdb86e965040bf9e75d3ded9a3fd22a5
+  - USDB to claim: 0.0
+  - WETH to claim: 0.06628050479580502
+  - **FeesVault**: 0x2329e369943b5ff97C49893339607F5B7F68B19f
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000083980648505
+
+**V3 $WAI-WETH** : 0x21d5d5998c3d0feea70b5980fdac9dd6b8a12761
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000032561439847129
+  - **FeesVault**: 0x7151826988c6C7516Ca751E219ea2b073b404Db6
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000000020114248
+
+**V3 WETH-BEPE** : 0x3acde0b7f51703c2fbf0a382f831123560b742b9
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000025967446814117
+  - **FeesVault**: 0x42406A62eb213276656EDE70A745D73942F5E4e0
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000003501339718
+
+**V3 WETH-BAG** : 0x5083e43b015296c75de0af519917c035309e80e4
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000028553618193051
+  - **FeesVault**: 0x1D4Ea1D9cd429EF4e0bb5b8ab8b86C7e6B2371bA
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000000114689469
+
+**V3 WETH-MCLB** : 0xcf68cdfea89f9e6964d4c2bd8a42eba5da9f945d
+  - USDB to claim: 0.0
+  - WETH to claim: 0.001277689824030003
+  - **FeesVault**: 0x5Af2f048F7051406Cb436439F8B8Ff5B7b81CD26
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000249328995106
+
+**V3 WETH-BAJA** : 0xe3fac59382987466d7f812df56c50739b99a907a
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000161616935673042
+  - **FeesVault**: 0x1D49733E397b26198D00720450C9403f66710b39
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000000297873137
+
+**V3 WETH-PAC** : 0x8e57e61b7524a2f56fd01bbfe5de9bb96ed186b4
+  - USDB to claim: 0.0
+  - WETH to claim: 0.00515357145509069
+  - **FeesVault**: 0xCf5C408a148A62123045ECF9e4b10A7aa0bF13F2
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000517684701471
+
+**V3 WETH-YIELD** : 0xc1fd5e0b3388c66dfad458ded01dcddae68cb03e
+  - USDB to claim: 0.0
+  - WETH to claim: 0.00008490056242699
+  - **FeesVault**: 0xf687d94E86bb2253d054a19aa6f86E1afcdC2987
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000006960915127
+
+**V3 WETH-ANDY** : 0x4a28f50f15efedf44af0d376fdc2e319fa8ccef8
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000039067072810376
+  - **FeesVault**: 0x0a1eCbF7aAF4E62C643E863b69C26C0F42A07269
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000003147281747
+
+**V3 WETH-axlUSDC** : 0x86d1da56fc79accc0daf76ca75668a4d98cb90a7
+  - USDB to claim: 0.0
+  - WETH to claim: 0.001252975890972444
+  - **FeesVault**: 0x247132bdd44CFa4b5833AbC321D19bAcb9E1352E
+    - USDB to claim: 0.0
+    - WETH to claim: 0.00000003041145439
+
+**V3 WETH-pxETH** : 0x3bafe103742da10a4fece8fc5e800df07d645439
+  - USDB to claim: 0.0
+  - WETH to claim: 0.152972812549083915
+  - **FeesVault**: 0xE615e8cc1E7523AE8e8ECe917a1F8328668C7D55
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000166909107895
+
+**V3 WETH-PSTAKE** : 0x8921e94efaca5f39a3a1f7b62e645518082d6a88
+  - USDB to claim: 0.0
+  - WETH to claim: 0.001851783045942925
+  - **FeesVault**: 0x77b266F6277eBDC2BDc7Aaa8A001815059c82bf2
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000023530048803
+
+**V3 WETH-EARLY** : 0x54bb102e85ee68a234fa06ece299346941d68d07
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000167250469619871
+  - **FeesVault**: 0x482AAb22C5A076C6777F3fA2164370b64106Fed7
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000001219642739
+
+**V3 PUMP-WETH** : 0x90f2eaf2db0d8400c9f565aa3c139ddffbe857d0
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000042612618807632
+  - **FeesVault**: 0x0cd5e22bb0D1e20911e21A43D6B21E8a7867fd78
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000028905405394
+
+**V3 DETH-WETH** : 0xf2bb3403e80adc9272c43b386c76e54d5bb604a5
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000812985810715215
+  - **FeesVault**: 0x0eC216BABc00ee8E3C75A0F2B3A88EDA76f2F65E
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000204226152369
+
+**V3 WETH-JUICE** : 0x7113c00b5275b0b9c16686e5ac1164978b505c5d
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000179986272406257
+  - **FeesVault**: 0xD77021662795fEEbd382E960FfB9752Ab7f4E4d1
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000002678525667
+
+**V3 fDAO-WETH** : 0x886369748d1d66747b8f51ab38de00dea13f0101
+  - USDB to claim: 0.0
+  - WETH to claim: 0.019499469647784881
+  - **FeesVault**: 0xD11440169Eacc0EF00e3d9317cD325AD9e7E5ec3
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000313186203596
+
+**V3 WETH-WBTC** : 0xc066a3e5d7c22bd3beaf74d4c0925520b455bb6f
+  - USDB to claim: 0.0
+  - WETH to claim: 0.013349105419559861
+  - **FeesVault**: 0x6f02B0BbBfDe5c63bc857c3A0db75b59Fe390035
+    - USDB to claim: 0.0
+    - WETH to claim: 0.00000057879039491
+
+**V3 WETH-wrsETH** : 0xe53b1da56f90c9529f2db1bb8711c3f1cc6f03bd
+  - USDB to claim: 0.0
+  - WETH to claim: 0.087864566101368822
+  - **FeesVault**: 0xC1CD8385Fe4594Da58dF065bC969fC91A73404d4
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000071336947319
+
+**V3 ankrETH-WETH** : 0xbcf0265f4bd3cb293b709fab0bf5c83c7eeb6b74
+  - USDB to claim: 0.0
+  - WETH to claim: 0.001600728248815201
+  - **FeesVault**: 0x91E755566F9D6D14335207a94E9e009D3EA99549
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000009529153116
+
+**V3 weETH-WETH** : 0x9304ba542df9bc61dd1c97c073ed35f81cab6149
+  - USDB to claim: 0.0
+  - WETH to claim: 0.089463569755879718
+  - **FeesVault**: 0x22Cb8F41F38FA15C3587607Bf25b788dd45b336a
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000665221260695
+
+**V3 KAP-WETH** : 0xb50a80bba0ff07f4bc3434c593e86663fe05abe2
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000132190036004168
+  - **FeesVault**: 0x4f7b543b913215A3c2E9255f3091B6866E07F1eD
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000003395200521
+
+**V3 WETH-BLAST** : 0xc8252c4f9136209ec47534bf1c0781307ec9a86f
+  - USDB to claim: 0.0
+  - WETH to claim: 0.009034120533884387
+  - **FeesVault**: 0x7a5D2b331fE816D3920B3ad419B80f392c54E393
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000002116544809768
+
+**V3 WETH-bWOOL** : 0x9508122abdd654b68c7dbf5bdba329b852e4a512
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000176424698673705
+  - **FeesVault**: 0xa26E5308a7cAF5D85786058530a7Bcfbaaa198de
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000319321618611
+
+**V3 WETH-OLE** : 0x3a8fa7bdbb3bd2a523796b145e5dd23b45019dbe
+  - USDB to claim: 0.0
+  - WETH to claim: 0.000225487041341615
+  - **FeesVault**: 0x505d5A7c7546828F758718c8452992ca18DfCf19
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000029193748957
+
+**V3 WETH-USD+** : 0xc5910a7f3b0119ac1a3ad7a268cce4a62d8c882d
+  - USDB to claim: 0.0
+  - WETH to claim: 0.005713862029982052
+  - **FeesVault**: 0x7297F6AaeEd6c968A06acA8a00352016d2A4f217
+    - USDB to claim: 0.0
+    - WETH to claim: 0.00000052324722987
+
+**V3 ezETH-WETH** : 0x635512a1333ad0822f5ba4fd6479daa1df8b77e1
+  - USDB to claim: 0.0
+  - WETH to claim: 0.091933806724899009
+  - **FeesVault**: 0x8d429949e0457f69A8cA466F3c4c0180BBAeEa30
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000305100622242
+
+**V3 WETH-inETH** : 0x46f2aa2aa7d31ddd237d620e52a33a8d5af2a5ab
+  - USDB to claim: 0.0
+  - WETH to claim: 0.017445408852855417
+  - **FeesVault**: 0xFa798118b9930F700b76C1AE2D4B382e53fECaEb
+    - USDB to claim: 0.0
+    - WETH to claim: 0.000000245339445224
+
+Total USDB to claim: 7464.776470277028431928
+Total WETH to claim: 1.735469187161319282
