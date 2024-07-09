@@ -14,7 +14,12 @@ External:
 - `0xf76Ac08eCd91fa84D7093F52dCD09EF3AE5a5a42` - **Mock** Merkle Distribution Creator
 
 ## Core
-
+[[0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a]
+[0x7e1C73E1FAED242F7E2882323ca2641e17B7F185]
+[0xCE286b104F86733B24c02a5CDA9483176BcE02d6]
+[0x4200000000000000000000000000000000000023]
+[0x4200000000000000000000000000000000000024]
+[0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5]]
 | Contract Name         | Address                                  | Short Description              | Type         |
 |-----------------------|------------------------------------------|--------------------------------|--------------|
 | Fenix                        | `0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6` | Main token contract            | Default      |
@@ -57,8 +62,8 @@ External:
 | VoterImplementation          | `0x24a4f8816e5de9a6840bD4f542f5b55c29CEc3F7` |
 | VotingEscrowImplementation   | `0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C` |
 | VeFnxDistributorImplementation | `0x6CB746214D07a894Dfd4306FD509265B5b64baD7` |
-| BribeFactoryImplementation   | `0xdb83A57274B4D839C363e1C8827518979F7C160e` |
-| BribeImplementation          | `0x2E110B8a6C0a4f6df49344fD3d7b2Bb796E4cF4a` |
+| BribeFactoryImplementation   | `0x2f48645cef79dD3cd54cf1eC7Ee318DC17Bf9cEC` |
+| BribeImplementation          | `0x941d6dcF1Fe7cf08a2cBc8E65b62047a1645E939` |
 | GaugeFactoryImplementation   | `0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0` |
 | GaugeImplementation          | `0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc` |
 | PairFactoryImplementation    | `0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d` |
