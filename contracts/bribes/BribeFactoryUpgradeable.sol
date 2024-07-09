@@ -13,6 +13,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     address public bribeImplementation;
     address public defaultBlastGovernor;
     address[] public defaultRewardToken;
+    mapping(address => bool) public override isDefaultRewardToken;
 
     constructor() {
         _disableInitializers();
@@ -103,10 +104,44 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
         }
     }
 
+    function getDefaultRewardTokens() external view returns (address[] memory) {
+        uint256 length = defaultRewardToken.length;
+        address[] memory tokens = new address[](length);
+        for (uint256 i; i < length; ) {
+            tokens[i] = defaultRewardToken[i];
+            unchecked {
+                i++;
+            }
+        }
+        return tokens;
+    }
+
+    function getBribeRewardTokens(address bribe_) external view returns (address[] memory) {
+        address[] memory bribeRewardsTokens = IBribe(bribe_).getSpecificRewardTokens();
+        uint256 length = defaultRewardToken.length;
+        address[] memory tokens = new address[](length + bribeRewardsTokens.length);
+        for (uint256 i; i < length; ) {
+            tokens[i] = defaultRewardToken[i];
+            unchecked {
+                i++;
+            }
+        }
+        for (uint256 i; i < bribeRewardsTokens.length; ) {
+            tokens[i + length] = bribeRewardsTokens[i];
+            unchecked {
+                i++;
+            }
+        }
+        return tokens;
+    }
+
     /// @notice set the bribe factory permission registry
     function pushDefaultRewardToken(address _token) external onlyOwner {
         _checkAddressZero(_token);
+        require(!isDefaultRewardToken[_token], "already added");
         defaultRewardToken.push(_token);
+        isDefaultRewardToken[_token] = true;
+        emit AddDefaultRewardToken(_token);
     }
 
     /// @notice set the bribe factory permission registry
@@ -118,9 +153,12 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
             if (defaultRewardToken[i] == _token) {
                 defaultRewardToken[i] = defaultRewardToken[defaultRewardToken.length - 1];
                 defaultRewardToken.pop();
-                break;
+                isDefaultRewardToken[_token] = false;
+                emit RemoveDefaultRewardToken(_token);
+                return;
             }
         }
+        revert("not exists");
     }
 
     /**

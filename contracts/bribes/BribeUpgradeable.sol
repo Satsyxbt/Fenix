@@ -9,9 +9,9 @@ import {IVoter} from "../core/interfaces/IVoter.sol";
 import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
-contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradeable {
+contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 public constant WEEK = 7 days; // rewards are released over 7 days
@@ -51,7 +51,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     function initialize(address governor_, address _voter, address _bribeFactory, string memory _type) external initializer {
         __ReentrancyGuard_init();
-        __BlastGovernorSetup_init(governor_);
+        __BlastGovernorClaimableSetup_init(governor_);
 
         require(_bribeFactory != address(0) && _voter != address(0));
         voter = _voter;
@@ -329,7 +329,10 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
     /// @notice Notify a bribe amount
     /// @dev    Rewards are saved into NEXT EPOCH mapping.
     function notifyRewardAmount(address _rewardsToken, uint256 reward) external nonReentrant {
-        require(isRewardToken[_rewardsToken], "reward token not verified");
+        require(
+            isRewardToken[_rewardsToken] || IBribeFactory(bribeFactory).isDefaultRewardToken(_rewardsToken),
+            "reward token not verified"
+        );
         IERC20Upgradeable(_rewardsToken).safeTransferFrom(msg.sender, address(this), reward);
 
         uint256 _startTimestamp = IMinter(minter).active_period(); //period points to the current thursday. Bribes are distributed from next epoch (thursday)
@@ -348,6 +351,22 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
+    function getRewardTokens() external view override returns (address[] memory) {
+        return IBribeFactory(bribeFactory).getBribeRewardTokens(address(this));
+    }
+
+    function getSpecificRewardTokens() external view override returns (address[] memory) {
+        uint256 length = rewardTokens.length;
+        address[] memory tokens = new address[](length);
+        for (uint256 i; i < length; ) {
+            tokens[i] = rewardTokens[i];
+            unchecked {
+                i++;
+            }
+        }
+        return tokens;
+    }
+
     /// @notice add rewards tokens
     function addRewardTokens(address[] memory _rewardsToken) public onlyAllowed {
         uint256 i = 0;
@@ -365,6 +384,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorSetup, ReentrancyGuardUpgradea
         if (!isRewardToken[_rewardsToken]) {
             isRewardToken[_rewardsToken] = true;
             rewardTokens.push(_rewardsToken);
+            emit AddRewardToken(_rewardsToken);
         }
     }
 

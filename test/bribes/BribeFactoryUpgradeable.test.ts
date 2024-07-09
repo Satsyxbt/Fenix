@@ -179,6 +179,107 @@ describe('BribeFactoryUpgradeable Contract', function () {
         );
       });
     });
+    describe('#pushDefaultRewardToken', async () => {
+      it('fail if try call add zero address as reward token', async () => {
+        await expect(bribeFactory.pushDefaultRewardToken(ZERO_ADDRESS)).to.be.revertedWithCustomError(bribeFactory, 'AddressZero');
+      });
+
+      it('fail if try call from not owner', async () => {
+        await expect(bribeFactory.connect(signers.otherUser1).pushDefaultRewardToken(ZERO_ADDRESS)).to.be.revertedWith(
+          ERRORS.Ownable.NotOwner,
+        );
+      });
+      it('fail if try add already added reward token', async () => {
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        await expect(bribeFactory.pushDefaultRewardToken(token18.target)).to.be.revertedWith('already added');
+      });
+      it('success add new default reward token', async () => {
+        expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
+        expect(await bribeFactory.isDefaultRewardToken(token18.target)).to.be.false;
+        await expect(bribeFactory.pushDefaultRewardToken(token18.target))
+          .to.be.emit(bribeFactory, 'AddDefaultRewardToken')
+          .withArgs(token18.target);
+        expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token18.target]);
+        expect(await bribeFactory.isDefaultRewardToken(token18.target)).to.be.true;
+      });
+    });
+    describe('#removeDefaultRewardToken', async () => {
+      it('fail if try call remove zero address as reward token', async () => {
+        await expect(bribeFactory.removeDefaultRewardToken(ZERO_ADDRESS)).to.be.revertedWithCustomError(bribeFactory, 'AddressZero');
+      });
+
+      it('fail if try call from not owner', async () => {
+        await expect(bribeFactory.connect(signers.otherUser1).removeDefaultRewardToken(ZERO_ADDRESS)).to.be.revertedWith(
+          ERRORS.Ownable.NotOwner,
+        );
+      });
+      it('fail if remove not added reward token', async () => {
+        await expect(bribeFactory.removeDefaultRewardToken(token18.target)).to.be.revertedWith('not exists');
+      });
+      it('success remove default reward token', async () => {
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token18.target]);
+        expect(await bribeFactory.isDefaultRewardToken(token18.target)).to.be.true;
+        await expect(bribeFactory.removeDefaultRewardToken(token18.target))
+          .to.be.emit(bribeFactory, 'RemoveDefaultRewardToken')
+          .withArgs(token18.target);
+        expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
+        expect(await bribeFactory.isDefaultRewardToken(token18.target)).to.be.false;
+      });
+    });
+
+    it('#getDefaultRewardTokens() should return correct current default reward tokens list', async () => {
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
+      await bribeFactory.pushDefaultRewardToken(token18.target);
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token18.target]);
+      await bribeFactory.removeDefaultRewardToken(token18.target);
+
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
+      await bribeFactory.pushDefaultRewardToken(token18.target);
+
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token18.target]);
+      await bribeFactory.pushDefaultRewardToken(token6.target);
+
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token18.target, token6.target]);
+      await bribeFactory.removeDefaultRewardToken(token18.target);
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token6.target]);
+      await bribeFactory.pushDefaultRewardToken(token18.target);
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([token6.target, token18.target]);
+      await bribeFactory.removeDefaultRewardToken(token18.target);
+      await bribeFactory.removeDefaultRewardToken(token6.target);
+      expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
+    });
+
+    describe('#getBribeRewardTokens', async () => {
+      it('should return zero list if tokens not present', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        expect(await bribeFactory.getBribeRewardTokens(deployedBribeAddress)).to.be.deep.eq([]);
+      });
+      it('should return only tokens from bribe if not present default tokens', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(token18.target, token6.target, 'Bribe');
+        expect(await bribeFactory.getBribeRewardTokens(deployedBribeAddress)).to.be.deep.eq([token18.target, token6.target]);
+      });
+      it('should return only default tokens', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        expect(await bribeFactory.getBribeRewardTokens(deployedBribeAddress)).to.be.deep.eq([token18.target]);
+      });
+      it('should return correct list default + bribes tokens with duplicates', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(token18.target, token5.target, 'Bribe');
+        await bribeFactory.createBribe(token18.target, token5.target, 'Bribe');
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        await bribeFactory.pushDefaultRewardToken(token9.target);
+        expect(await bribeFactory.getBribeRewardTokens(deployedBribeAddress)).to.be.deep.eq([
+          token18.target,
+          token9.target,
+          token18.target,
+          token5.target,
+        ]);
+      });
+    });
   });
   describe('Check access control', async function () {
     describe('functions for only access from contract Owner', async function () {
@@ -226,6 +327,69 @@ describe('BribeFactoryUpgradeable Contract', function () {
       });
       it('#createBribe - Should success called from owner or vote', async () => {
         await expect(bribeFactory.createBribe(ZERO_ADDRESS, ZERO_ADDRESS, 'Typed')).to.be.not.reverted;
+      });
+    });
+  });
+
+  describe('Bribe functions', async () => {
+    it('add reward token should emit event', async () => {
+      let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+      let tx = await bribeFactory.createBribe(token18.target, ethers.ZeroAddress, 'Bribe');
+      let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+      await expect(tx).to.be.emit(Bribe, 'AddRewardToken').withArgs(token18.target);
+    });
+    describe('notifyReward', async () => {
+      it('should fail if try notify reward without allowerd reward token', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        await expect(Bribe.notifyRewardAmount(token18.target, 0)).to.be.revertedWith('reward token not verified');
+      });
+      it('should not fail with verified error if try add default reward token', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        await expect(Bribe.notifyRewardAmount(token18.target, 0)).to.be.not.revertedWith('reward token not verified');
+      });
+      it('should not fail with verified error if try add reward token from bribe', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(token18.target, ethers.ZeroAddress, 'Bribe');
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        await expect(Bribe.notifyRewardAmount(token18.target, 0)).to.be.not.revertedWith('reward token not verified');
+      });
+    });
+    describe('#getRewardTokens', async () => {
+      it('should return zero list if tokens not present', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        expect(await Bribe.getRewardTokens()).to.be.deep.eq([]);
+        expect(await Bribe.getSpecificRewardTokens()).to.be.deep.eq([]);
+      });
+      it('should return only tokens from bribe if not present default tokens', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(token18.target, token6.target, 'Bribe');
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        expect(await Bribe.getRewardTokens()).to.be.deep.eq([token18.target, token6.target]);
+        expect(await Bribe.getSpecificRewardTokens()).to.be.deep.eq([token18.target, token6.target]);
+      });
+      it('should return only default tokens', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        expect(await Bribe.getRewardTokens()).to.be.deep.eq([token18.target]);
+        expect(await Bribe.getSpecificRewardTokens()).to.be.deep.eq([]);
+      });
+      it('should return correct list default + bribes tokens with duplicates', async () => {
+        let deployedBribeAddress = await bribeFactory.createBribe.staticCall(token18.target, token5.target, 'Bribe');
+        await bribeFactory.createBribe(token18.target, token5.target, 'Bribe');
+        await bribeFactory.pushDefaultRewardToken(token18.target);
+        await bribeFactory.pushDefaultRewardToken(token9.target);
+        let Bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        expect(await Bribe.getRewardTokens()).to.be.deep.eq([token18.target, token9.target, token18.target, token5.target]);
+        expect(await Bribe.getSpecificRewardTokens()).to.be.deep.eq([token18.target, token5.target]);
       });
     });
   });

@@ -9,10 +9,15 @@ interface IBribe {
     event Withdrawn(uint256 indexed tokenId, uint256 amount);
     event RewardPaid(address indexed user, address indexed rewardsToken, uint256 reward);
     event Recovered(address indexed token, uint256 amount);
+    event AddRewardToken(address indexed token);
 
     function deposit(uint amount, uint tokenId) external;
 
     function withdraw(uint amount, uint tokenId) external;
+
+    function getRewardTokens() external view returns (address[] memory);
+
+    function getSpecificRewardTokens() external view returns (address[] memory);
 
     function getRewardForOwner(uint tokenId, address[] memory tokens) external;
 
