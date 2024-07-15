@@ -15,6 +15,10 @@ export function getAccessControlError(role: string, address: string) {
   return `AccessControl: account ${address.toLowerCase()} is missing role ${role.toLowerCase()}`;
 }
 export const ERRORS = {
+  Pausable: {
+    Paused: 'Pausable: paused',
+    NotPaused: 'Pausable: not paused',
+  },
   ERC20: {
     InsufficientBalance: 'ERC20: transfer amount exceeds balance',
     InsufficientAllowance: 'insufficient allowance',
