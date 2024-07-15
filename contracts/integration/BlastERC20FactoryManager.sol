@@ -3,10 +3,10 @@ pragma solidity =0.8.19;
 
 import {YieldMode} from "./interfaces/IBlastERC20RebasingManage.sol";
 import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
-import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "./BlastGovernorClaimableSetup.sol";
 import {IBlastERC20FactoryManager} from "./interfaces/IBlastERC20FactoryManager.sol";
 
-abstract contract BlastERC20FactoryManager is IBlastERC20FactoryManager, BlastGovernorSetup {
+abstract contract BlastERC20FactoryManager is IBlastERC20FactoryManager, BlastGovernorClaimableSetup {
     address public override defaultBlastGovernor;
     address public override defaultBlastPoints;
     address public override defaultBlastPointsOperator;
@@ -18,7 +18,7 @@ abstract contract BlastERC20FactoryManager is IBlastERC20FactoryManager, BlastGo
         _checkAddressZero(blastPoints_);
         _checkAddressZero(blastPointsOperator_);
 
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         defaultBlastGovernor = blastGovernor_;
         defaultBlastPoints = blastPoints_;

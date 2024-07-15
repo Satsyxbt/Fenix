@@ -58,7 +58,8 @@ contract PerpetualsTradersRewarderUpgradeable is
     /**
      * @dev Initializes the contract by disabling initializers.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 

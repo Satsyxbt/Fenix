@@ -9,7 +9,7 @@ import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
 import {IRFenix} from "./interfaces/IRFenix.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
 /**
  * @title RFenix Token Contract
@@ -17,7 +17,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
  *      Inherits functionality from OpenZeppelin's ERC20Burnable and Ownable2Step contracts.
  *      Provides mechanisms for token conversion and owner interaction.
  */
-contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
+contract RFenix is IRFenix, BlastGovernorClaimableSetup, ERC20Burnable, Ownable2Step {
     using SafeERC20 for IERC20;
 
     uint256 internal constant _PRECISION = 1e18; // Precision for percentage calculations
@@ -33,7 +33,7 @@ contract RFenix is IRFenix, BlastGovernorSetup, ERC20Burnable, Ownable2Step {
      * @param votingEscrow_ Address of the Voting Escrow contract.
      */
     constructor(address blastGovernor_, address votingEscrow_) ERC20("rFNX", "rFNX") {
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         _checkAddressZero(votingEscrow_);
 

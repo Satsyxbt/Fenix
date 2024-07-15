@@ -5,7 +5,7 @@ import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/acces
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {EnumerableSetUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {IVeBoost} from "./interfaces/IVeBoost.sol";
 import {IPriceProvider} from "../integration/interfaces/IPriceProvider.sol";
 
@@ -13,7 +13,7 @@ import {IPriceProvider} from "../integration/interfaces/IPriceProvider.sol";
  * @title VeBoostUpgradeable
  * @dev Implements boosting functionality within the Fenix ecosystem, allowing users to receive boosts based on locked FNX tokens.
  */
-contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorSetup {
+contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorClaimableSetup {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
     using SafeERC20 for IERC20;
 
@@ -70,7 +70,8 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
     /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -83,12 +84,12 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorS
      * Initializes contract state and sets up necessary approvals.
      */
     function initialize(address blastGovernor_, address fenix_, address votingEscrow_, address priceProvider_) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
-        __Ownable2Step_init();
-
         _checkAddressZero(fenix_);
         _checkAddressZero(votingEscrow_);
         _checkAddressZero(priceProvider_);
+
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
+        __Ownable2Step_init();
 
         fenix = fenix_;
         votingEscrow = votingEscrow_;

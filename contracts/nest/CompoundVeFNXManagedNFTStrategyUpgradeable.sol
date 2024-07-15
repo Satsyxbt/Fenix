@@ -41,7 +41,8 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
     /**
      * @dev Constructor that disables initialization on implementation.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 

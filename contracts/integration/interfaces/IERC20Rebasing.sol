@@ -18,4 +18,9 @@ interface IERC20Rebasing {
 
     // read the claimable amount for an account
     function getClaimableAmount(address account) external view returns (uint256);
+
+    /// @notice Query an account's configured yield mode.
+    /// @param account Address to query the configuration.
+    /// @return Configured yield mode.
+    function getConfiguration(address account) external view returns (YieldMode);
 }

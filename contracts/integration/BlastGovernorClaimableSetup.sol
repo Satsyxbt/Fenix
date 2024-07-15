@@ -2,6 +2,7 @@
 pragma solidity =0.8.19;
 
 import {IBlastFull, YieldMode, GasMode} from "./interfaces/IBlastFull.sol";
+import {IBlastGovernor} from "./interfaces/IBlastGovernor.sol";
 
 /**
  * @title Blast Governor Claiamble Setup
@@ -26,5 +27,8 @@ abstract contract BlastGovernorClaimableSetup {
             revert AddressZero();
         }
         IBlastFull(0x4300000000000000000000000000000000000002).configure(YieldMode.CLAIMABLE, GasMode.CLAIMABLE, blastGovernor_);
+        if (blastGovernor_.code.length > 0) {
+            IBlastGovernor(blastGovernor_).addGasHolder(address(this));
+        }
     }
 }

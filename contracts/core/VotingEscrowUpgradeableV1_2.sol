@@ -9,7 +9,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 
 import {IVeArtProxyUpgradeable} from "./interfaces/IVeArtProxyUpgradeable.sol";
 import {IVeBoost} from "./interfaces/IVeBoost.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {IVotingEscrowV1_2} from "./interfaces/IVotingEscrowV1_2.sol";
 import {IManagedNFTManager} from "../nest/interfaces/IManagedNFTManager.sol";
 
@@ -26,7 +26,7 @@ contract VotingEscrowUpgradeableV1_2 is
     IERC721MetadataUpgradeable,
     Initializable,
     ReentrancyGuardUpgradeable,
-    BlastGovernorSetup
+    BlastGovernorClaimableSetup
 {
     enum DepositType {
         DEPOSIT_FOR_TYPE,
@@ -85,7 +85,8 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @dev Current count of token
     uint256 public tokenId;
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -93,7 +94,7 @@ contract VotingEscrowUpgradeableV1_2 is
     /// @param token_addr `Fenix` token address
     function initialize(address governor_, address token_addr, address art_proxy) external initializer {
         __ReentrancyGuard_init();
-        __BlastGovernorSetup_init(governor_);
+        __BlastGovernorClaimableSetup_init(governor_);
 
         token = token_addr;
         voter = msg.sender;
@@ -272,6 +273,7 @@ contract VotingEscrowUpgradeableV1_2 is
     ///      Throws if `_from` is not the current owner.
     ///      Throws if `_tokenId` is not a valid NFT.
     function _transferFrom(address _from, address _to, uint _tokenId, address _sender) internal {
+        _onlyNormalNFT(_tokenId);
         require(!voted[_tokenId], "attached");
         // Check requirements
         require(_isApprovedOrOwner(_sender, _tokenId));

@@ -63,6 +63,14 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
     event SetVoter(address indexed oldVoter, address indexed newVoter);
 
     /**
+     * @dev Emitted when the rebasing tokens governor address is set.
+     *
+     * @param oldRebasingTokensGovernor The previous address of the rebasing tokens governor.
+     * @param newRebasingTokensGovernor The new address of the rebasing tokens governor.
+     */
+    event SetRebasingTokensGovernor(address indexed oldRebasingTokensGovernor, address indexed newRebasingTokensGovernor);
+
+    /**
      * @dev Error indicating that a fee vault creation attempt was made for a pool that already has an associated vault.
      */
     error AlreadyCreated();

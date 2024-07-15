@@ -52,7 +52,8 @@ contract PerpetualsGaugeUpgradeable is IPerpetualsGauge, BlastGovernorClaimableS
     /**
      * @dev Initializes the contract and disables initializers.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 

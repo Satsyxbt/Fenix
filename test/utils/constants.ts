@@ -14,6 +14,10 @@ export const BEACON_IMPLEMENTATION_SLOT = '0xa3f0ad74e5423aebfd80d3ef4346578335a
 export function getAccessControlError(role: string, address: string) {
   return `AccessControl: account ${address.toLowerCase()} is missing role ${role.toLowerCase()}`;
 }
+export const GasMode = {
+  VOID: 0,
+  CLAIMABLE: 1,
+};
 export const ERRORS = {
   ERC20: {
     InsufficientBalance: 'ERC20: transfer amount exceeds balance',

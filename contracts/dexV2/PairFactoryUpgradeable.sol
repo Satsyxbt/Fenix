@@ -10,6 +10,7 @@ import {IPairFactory} from "./interfaces/IPairFactory.sol";
 import {IPair} from "./interfaces/IPair.sol";
 import {IFeesVaultFactory} from "../fees/interfaces/IFeesVaultFactory.sol";
 import {BlastERC20FactoryManager} from "../integration/BlastERC20FactoryManager.sol";
+import {IBlastRebasingTokensGovernor} from "../integration/interfaces/IBlastRebasingTokensGovernor.sol";
 
 contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, AccessControlUpgradeable {
     bytes32 public constant override PAIRS_ADMINISTRATOR_ROLE = keccak256("PAIRS_ADMINISTRATOR");
@@ -36,7 +37,13 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
     mapping(address => uint256) internal _customFee;
     mapping(address => uint256) internal _customProtocolFee;
 
-    constructor() {
+    /**
+     * @dev Address of the rebasing tokens governor.
+     */
+    address public rebasingTokensGovernor;
+
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -62,6 +69,20 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
         implementation = implementation_;
 
         communityVaultFactory = communityVaultFactory_;
+    }
+
+    /**
+     * @notice Sets the address of the rebasing tokens governor.
+     * @dev Updates the address of the rebasing tokens governor. Can only be called by an account with the DEFAULT_ADMIN_ROLE.
+     * @param rebasingTokensGovernor_ The new address of the rebasing tokens governor.
+     *
+     * Emits a {SetRebasingTokensGovernor} event.
+     */
+    function setRebasingTokensGovernor(address rebasingTokensGovernor_) external virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        _checkAddressZero(rebasingTokensGovernor_);
+
+        emit SetRebasingTokensGovernor(rebasingTokensGovernor, rebasingTokensGovernor_);
+        rebasingTokensGovernor = rebasingTokensGovernor_;
     }
 
     function setPause(bool _state) external onlyRole(PAIRS_ADMINISTRATOR_ROLE) {
@@ -149,12 +170,20 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
 
         if (isRebaseToken[token0]) {
             IBlastERC20RebasingManage(pair).configure(token0, configurationForBlastRebaseTokens[token0]);
-            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token0, configurationForBlastRebaseTokens[token0]);
+            address pairFees = IPair(pair).fees();
+            IBlastERC20RebasingManage(pairFees).configure(token0, configurationForBlastRebaseTokens[token0]);
+            IBlastRebasingTokensGovernor tokensGovernor = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            tokensGovernor.addTokenHolder(token0, pair);
+            tokensGovernor.addTokenHolder(token0, pairFees);
         }
 
         if (isRebaseToken[token1]) {
             IBlastERC20RebasingManage(pair).configure(token1, configurationForBlastRebaseTokens[token1]);
-            IBlastERC20RebasingManage(IPair(pair).fees()).configure(token1, configurationForBlastRebaseTokens[token1]);
+            address pairFees = IPair(pair).fees();
+            IBlastERC20RebasingManage(pairFees).configure(token1, configurationForBlastRebaseTokens[token1]);
+            IBlastRebasingTokensGovernor tokensGovernor = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            tokensGovernor.addTokenHolder(token1, pair);
+            tokensGovernor.addTokenHolder(token1, pairFees);
         }
 
         getPair[token0][token1][stable] = pair;

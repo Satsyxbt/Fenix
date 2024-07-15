@@ -4,7 +4,7 @@ pragma solidity =0.8.19;
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {IFenixRaise} from "./interfaces/IFenixRaise.sol";
 
 /**
@@ -13,7 +13,7 @@ import {IFenixRaise} from "./interfaces/IFenixRaise.sol";
  *  It utilizes Merkle proof verification for whitelist management and ensures various caps
  *  and limits are adhered to during the raise.
  */
-contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepUpgradeable {
+contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorClaimableSetup, Ownable2StepUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
@@ -116,7 +116,8 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
     /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -179,7 +180,7 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorSetup, Ownable2StepU
         _checkAddressZero(depositsReciever_);
 
         __Ownable2Step_init();
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         token = token_;
         depositsReciever = depositsReciever_;

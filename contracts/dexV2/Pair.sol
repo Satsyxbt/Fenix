@@ -95,7 +95,9 @@ contract Pair is IPair, BlastERC20RebasingManage {
         _unlocked = 1;
     }
 
-    constructor() {}
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
+    }
 
     function initialize(
         address _blastGovernor,

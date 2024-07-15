@@ -10,6 +10,13 @@ interface IPairFactory {
     event SetCustomProtocolFee(address indexed pair, uint256 fee);
     event SetCustomFee(address indexed pair, uint256 fee);
     event SetFee(bool stable, uint256 fee);
+    /**
+     * @dev Emitted when the rebasing tokens governor address is set.
+     *
+     * @param oldRebasingTokensGovernor The previous address of the rebasing tokens governor.
+     * @param newRebasingTokensGovernor The new address of the rebasing tokens governor.
+     */
+    event SetRebasingTokensGovernor(address indexed oldRebasingTokensGovernor, address indexed newRebasingTokensGovernor);
 
     error IncorrcectFee();
     error IncorrectPair();

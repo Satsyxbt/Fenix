@@ -6,16 +6,17 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {GaugeProxy} from "./GaugeProxy.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
-contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUpgradeable {
+contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorClaimableSetup, OwnableUpgradeable {
     address public last_gauge;
     address public voter;
     address public defaultBlastGovernor;
     address public override gaugeImplementation;
     address public override merklGaugeMiddleman;
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -25,11 +26,11 @@ contract GaugeFactoryUpgradeable is IGaugeFactory, BlastGovernorSetup, OwnableUp
         address _gaugeImplementation,
         address _merklGaugeMiddleman
     ) external initializer {
-        __BlastGovernorSetup_init(_blastGovernor);
-        __Ownable_init();
-
         _checkAddressZero(_voter);
         _checkAddressZero(_gaugeImplementation);
+
+        __BlastGovernorClaimableSetup_init(_blastGovernor);
+        __Ownable_init();
 
         defaultBlastGovernor = _blastGovernor;
         voter = _voter;

@@ -7,7 +7,7 @@ import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-u
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
 import {IVeFnxDistributor} from "./interfaces/IVeFnxDistributor.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
 /**
  * @title VeFnx Distributor Upgradeable
@@ -15,7 +15,7 @@ import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
  * and integration with Blast Governor. This contract allows the owner to distribute veFnx tokens by locking FNX tokens
  * in the Voting Escrow contract on behalf of recipients for a fixed duration.
  */
-contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorSetup, Ownable2StepUpgradeable {
+contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorClaimableSetup, Ownable2StepUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 internal constant _LOCK_DURATION = 182 days; // Lock duration for veFnx tokens
@@ -26,7 +26,8 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorSetup, O
     /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -39,11 +40,11 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorSetup, O
      * that they are not zero addresses. Also initializes inherited contracts.
      */
     function initialize(address blastGovernor_, address fenix_, address votingEscrow_) external initializer {
-        __Ownable2Step_init();
-        __BlastGovernorSetup_init(blastGovernor_);
-
         _checkAddressZero(fenix_);
         _checkAddressZero(votingEscrow_);
+
+        __Ownable2Step_init();
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         fenix = fenix_;
         votingEscrow = votingEscrow_;

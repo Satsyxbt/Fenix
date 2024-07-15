@@ -7,7 +7,7 @@ import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {IDistributionCreator, DistributionParameters} from "./interfaces/IDistributionCreator.sol";
 import {IMerklGaugeMiddleman} from "./interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "./interfaces/IPairIntegrationInfo.sol";
-import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "./BlastGovernorClaimableSetup.sol";
 
 /**
  * @title Merkl Gauge Middleman Contract
@@ -20,7 +20,7 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  *
  * The contract uses OpenZeppelin's Ownable for ownership management and SafeERC20 for safe ERC20 interactions.
  */
-contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownable {
+contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorClaimableSetup, Ownable {
     using SafeERC20 for IERC20;
 
     // Mapping of each gauge to its reward distribution parameters
@@ -34,12 +34,11 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorSetup, Ownabl
 
     // =================================== EVENT ===================================
 
-    constructor(address governor_, address token_, address merklDistributionCreator_) {
-        __BlastGovernorSetup_init(governor_);
-
+    constructor(address blastGovernor_, address token_, address merklDistributionCreator_) {
         if (token_ == address(0) || merklDistributionCreator_ == address(0)) {
             revert AddressZero();
         }
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         token = IERC20(token_);
         merklDistributionCreator = IDistributionCreator(merklDistributionCreator_);

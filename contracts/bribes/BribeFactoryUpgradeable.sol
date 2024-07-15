@@ -5,9 +5,9 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {BribeProxy} from "./BribeProxy.sol";
 import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
-contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUpgradeable {
+contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorClaimableSetup, OwnableUpgradeable {
     address public last_bribe;
     address public voter;
     address public bribeImplementation;
@@ -15,15 +15,17 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorSetup, OwnableUp
     address[] public defaultRewardToken;
     mapping(address => bool) public override isDefaultRewardToken;
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
     function initialize(address _blastGovernor, address _voter, address _bribeImplementation) external initializer {
-        __BlastGovernorSetup_init(_blastGovernor);
-        __Ownable_init();
         _checkAddressZero(_voter);
         _checkAddressZero(_bribeImplementation);
+
+        __BlastGovernorClaimableSetup_init(_blastGovernor);
+        __Ownable_init();
 
         defaultBlastGovernor = _blastGovernor;
         voter = _voter;

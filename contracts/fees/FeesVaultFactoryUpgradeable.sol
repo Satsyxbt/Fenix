@@ -10,6 +10,7 @@ import {IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20Re
 
 import {BlastERC20FactoryManager} from "../integration/BlastERC20FactoryManager.sol";
 import {FeesVaultProxy} from "./FeesVaultProxy.sol";
+import {IBlastRebasingTokensGovernor} from "../integration/interfaces/IBlastRebasingTokensGovernor.sol";
 
 contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryManager, AccessControlUpgradeable {
     bytes32 public constant CLAIM_FEES_CALLER_ROLE = keccak256("CLAIM_FEES_CALLER_ROLE");
@@ -26,9 +27,15 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
     mapping(address => DistributionConfig) internal _customDistributionConfigs;
 
     /**
+     * @dev Address of the rebasing tokens governor.
+     */
+    address public rebasingTokensGovernor;
+
+    /**
      * @dev Constructor that disables initialization on implementation.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -85,6 +92,20 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
 
         emit SetVoter(voter, voter_);
         voter = voter_;
+    }
+
+    /**
+     * @notice Sets the address of the rebasing tokens governor.
+     * @dev Updates the address of the rebasing tokens governor. Can only be called by an account with the DEFAULT_ADMIN_ROLE.
+     * @param rebasingTokensGovernor_ The new address of the rebasing tokens governor.
+     *
+     * Emits a {SetRebasingTokensGovernor} event.
+     */
+    function setRebasingTokensGovernor(address rebasingTokensGovernor_) external virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        _checkAddressZero(rebasingTokensGovernor_);
+
+        emit SetRebasingTokensGovernor(rebasingTokensGovernor, rebasingTokensGovernor_);
+        rebasingTokensGovernor = rebasingTokensGovernor_;
     }
 
     /**
@@ -155,10 +176,12 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
 
         if (isRebaseToken[token0]) {
             IBlastERC20RebasingManage(vault).configure(token0, configurationForBlastRebaseTokens[token0]);
+            IBlastRebasingTokensGovernor(rebasingTokensGovernor).addTokenHolder(token0, vault);
         }
 
         if (isRebaseToken[token1]) {
             IBlastERC20RebasingManage(vault).configure(token1, configurationForBlastRebaseTokens[token1]);
+            IBlastRebasingTokensGovernor(rebasingTokensGovernor).addTokenHolder(token1, vault);
         }
     }
 
@@ -240,4 +263,11 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
     function _checkAccessForBlastFactoryManager() internal view virtual override {
         _checkRole(FEES_VAULT_ADMINISTRATOR_ROLE);
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

@@ -8,7 +8,7 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 
 import {IAlgebraFactory} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraFactory.sol";
 
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IBribeFactory} from "../bribes/interfaces/IBribeFactory.sol";
 import {IGauge} from "../gauges/interfaces/IGauge.sol";
@@ -21,7 +21,7 @@ import {IVault} from "./interfaces/IVault.sol";
 import {IVoter} from "./interfaces/IVoter.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 
-contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradeable {
+contract VoterUpgradeable is IVoter, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bool internal initflag;
@@ -86,7 +86,8 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
     event SetGovernance(address indexed oldGovernance, address indexed newGovernance);
     event SetVoterAdmin(address indexed oldAdmin, address indexed newAdmin);
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -99,7 +100,7 @@ contract VoterUpgradeable is IVoter, BlastGovernorSetup, ReentrancyGuardUpgradea
         address _gaugeFactory,
         address _bribes
     ) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         __ReentrancyGuard_init();
 
         admin = msg.sender;

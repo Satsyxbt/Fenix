@@ -3,7 +3,7 @@ pragma solidity =0.8.19;
 
 import {YieldMode, IERC20Rebasing, IBlastERC20RebasingManage} from "./interfaces/IBlastERC20RebasingManage.sol";
 import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
-import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "./BlastGovernorClaimableSetup.sol";
 
 /**
  * @title BlastERC20RebasingManage
@@ -11,7 +11,7 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  * It provides functionalities to configure and claim tokens while ensuring that only authorized
  * entities can perform these operations.
  */
-abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGovernorSetup {
+abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGovernorClaimableSetup {
     /**
      * @dev Initializes the BlastERC20RebasingManage contract. Sets up the initial configuration
      * for managing ERC20 rebasing tokens within the Blast ecosystem. This includes setting the Blast Governor,
@@ -30,7 +30,7 @@ abstract contract BlastERC20RebasingManage is IBlastERC20RebasingManage, BlastGo
         if (blastPoints_ == address(0) || blastPointsOperator_ == address(0)) {
             revert AddressZero();
         }
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         IBlastPoints(blastPoints_).configurePointsOperator(blastPointsOperator_);
     }
 

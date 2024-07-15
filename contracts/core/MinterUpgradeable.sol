@@ -8,11 +8,11 @@ import {IMinter} from "./interfaces/IMinter.sol";
 import {IFenix} from "./interfaces/IFenix.sol";
 import {IVoter} from "./interfaces/IVoter.sol";
 import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
 // codifies the minting rules as per ve(3,3), abstracted from the token to support any token that allows minting
 
-contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeable {
+contract MinterUpgradeable is IMinter, BlastGovernorClaimableSetup, Ownable2StepUpgradeable {
     uint256 public constant PRECISION = 10_000; // 10,000 = 100%
     uint256 public constant MAX_TEAM_RATE = 500; // 500 bips =  5%
     uint256 public constant WEEK = 86400 * 7; // allows minting once per week (reset every Thursday 00:00 UTC)
@@ -34,7 +34,8 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
     IVoter public voter;
     IVotingEscrow public ve;
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -43,7 +44,7 @@ contract MinterUpgradeable is IMinter, BlastGovernorSetup, Ownable2StepUpgradeab
         address voter_, // the voting & distribution system
         address ve_
     ) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         __Ownable2Step_init();
 
         isFirstMint = true;

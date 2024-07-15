@@ -72,7 +72,8 @@ contract RouterV2PathProviderUpgradeable is IRouterV2PathProvider, Ownable2StepU
      * @notice Disables initialization on the implementation to prevent proxy issues.
      * @dev Constructor sets up non-initializable pattern for proxy use.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 

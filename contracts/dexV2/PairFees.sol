@@ -2,13 +2,12 @@
 pragma solidity =0.8.19;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
 import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.sol";
 
 import {IPairFactory} from "./interfaces/IPairFactory.sol";
 
 // Pair Fees contract is used as a 1:1 pair relationship to split out fees, this ensures that the curve does not need to be modified for LP shares
-contract PairFees is BlastGovernorSetup, BlastERC20RebasingManage {
+contract PairFees is BlastERC20RebasingManage {
     address internal immutable pair; // The pair it is bonded to
     address internal immutable token0; // token0 of pair, saved localy and statically for gas optimization
     address internal immutable token1; // Token1 of pair, saved localy and statically for gas optimization

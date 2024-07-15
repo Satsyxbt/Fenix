@@ -45,15 +45,16 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
-    function initialize(address governor_, address _voter, address _bribeFactory, string memory _type) external initializer {
-        __ReentrancyGuard_init();
-        __BlastGovernorClaimableSetup_init(governor_);
-
+    function initialize(address blastGovernor_, address _voter, address _bribeFactory, string memory _type) external initializer {
         require(_bribeFactory != address(0) && _voter != address(0));
+        __ReentrancyGuard_init();
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
+
         voter = _voter;
         bribeFactory = _bribeFactory;
         firstBribeTimestamp = 0;

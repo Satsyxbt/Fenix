@@ -9,14 +9,14 @@ import {IGaugeFactory} from "./interfaces/IGaugeFactory.sol";
 import {IRewarder} from "./interfaces/IRewarder.sol";
 import {IMerklGaugeMiddleman} from "../integration/interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
-import {BlastGovernorSetup} from "../integration/BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 
 import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {IFeesVault} from "../fees/interfaces/IFeesVault.sol";
 
-contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradeable {
+contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20 for IERC20;
 
     bool public isDistributeEmissionToMerkle;
@@ -74,7 +74,8 @@ contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradea
         _;
     }
 
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -90,7 +91,7 @@ contract GaugeUpgradeable is IGauge, BlastGovernorSetup, ReentrancyGuardUpgradea
         address _merklGaugeMiddleman,
         address _feeVault
     ) external initializer {
-        __BlastGovernorSetup_init(_governor);
+        __BlastGovernorClaimableSetup_init(_governor);
         __ReentrancyGuard_init();
 
         gaugeFactory = msg.sender;

@@ -7,7 +7,7 @@ import {IAlgebraPool} from "@cryptoalgebra/integral-core/contracts/interfaces/IA
 import {OracleLibrary} from "@cryptoalgebra/integral-plugin/contracts/libraries/integration/OracleLibrary.sol";
 
 import {IPriceProvider} from "./interfaces/IPriceProvider.sol";
-import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
+import {BlastGovernorClaimableSetup} from "./BlastGovernorClaimableSetup.sol";
 
 /**
  * @title AlgebraFNXPriceProviderUpgradeable-UNSAFE
@@ -21,9 +21,9 @@ import {BlastGovernorSetup} from "./BlastGovernorSetup.sol";
  *  than the profit generated. And also where price manipulation is not profitable
  *
  * @dev Provides price data for FNX token in USD, utilizing an Algebra-based pool for price calculation.
- * Inherits from `BlastGovernorSetup` for integration with blast. Designed to be upgradeable using OpenZeppelin's upgradeable contracts framework.
+ * Inherits from `BlastGovernorClaimableSetup` for integration with blast. Designed to be upgradeable using OpenZeppelin's upgradeable contracts framework.
  */
-contract AlgebraFNXPriceProviderUpgradeable is IPriceProvider, Initializable, BlastGovernorSetup {
+contract AlgebraFNXPriceProviderUpgradeable is IPriceProvider, Initializable, BlastGovernorClaimableSetup {
     // errors
     error PoolIsLocked();
     error UnsafeCast();
@@ -51,7 +51,8 @@ contract AlgebraFNXPriceProviderUpgradeable is IPriceProvider, Initializable, Bl
     /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -64,11 +65,10 @@ contract AlgebraFNXPriceProviderUpgradeable is IPriceProvider, Initializable, Bl
      * @param USD_ Address of the USD token.
      */
     function initialize(address blastGovernor_, address pool_, address FNX_, address USD_) external initializer {
-        __BlastGovernorSetup_init(blastGovernor_);
-
         _checkAddressZero(pool_);
         _checkAddressZero(FNX_);
         _checkAddressZero(USD_);
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
 
         pool = pool_;
         FNX = FNX_;
