@@ -1,0 +1,17 @@
+npx hardhat run .\scripts\18_deploy_veFnx_aidrop_to_testnet.ts --network blastScanSepolia
+Start deploy VeFnxSplitMerklAidropImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VeFnxSplitMerklAidropImplementation contract: 0xC076A5b5aC245631799479E7d80320Cb24f8Ac35
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VeFnxSplitMerklAidropUpgradeable.sol:VeFnxSplitMerklAidropUpgradeable at 0xC076A5b5aC245631799479E7d80320Cb24f8Ac35
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxSplitMerklAidropUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xC076A5b5aC245631799479E7d80320Cb24f8Ac35#code
+
+Start deploy proxy for VeFnxSplitMerklAidrop contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+implementation: 0xC076A5b5aC245631799479E7d80320Cb24f8Ac35
+proxyAdmin: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+Successful deploy VeFnxSplitMerklAidrop contract: 0x4BcC88B000C02075115275d5BB1e4133Ed1BD068
