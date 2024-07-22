@@ -50,7 +50,7 @@ External:
 | RewardAPI| `0x33Ac4D2ae35299072C7f20d5bBd4F75f6D0aFe89` | _ | Upgradeable|
 | PairAPI| `0x6E96E9e074568151Ee3ECA520849b1FE760d398B` | _ | Upgradeable|
 | VeFnxSplitMerklAidrop| `0x4BcC88B000C02075115275d5BB1e4133Ed1BD068` | _ | Upgradeable|
-
+| MDCBlastMock | `0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01` | _ | _ |
 
 
 
@@ -77,7 +77,7 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation  | `0x3b54C14236EB0758888c19966ac1254B796d7577` |
 | ManagedNFTManagerUpgradeableImplementation  | `0x7759097a047e8116603f57260f42037959C12DBE` |
 | RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
-| VoterUpgradeableV1_2Implementation  | `0xAF15A0b49D3bc095d9cFa5560144A1B458f81574` |
+| VoterUpgradeableV1_2Implementation  | `0xcaAC03547438Df0c50353FBe13aB763aBb0B4B28` |
 | VotingEscrowUpgradeableV1_2Implementation  | `0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F` |
 | FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
 | PerpetualsGaugeImplementation  | `0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15` |
