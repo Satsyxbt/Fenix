@@ -28,24 +28,24 @@ To calculate the APR based on the previous week's reward:
 
 #### Weekly Reward Percentage Calculation
 
-\\[
-WeeklyPercentagOfReward = \\frac{RewardAtPreviusEpoch}{TotalSupplyAtCurrentEpoch} \\times 100\\%
-\\]
+```math
+WeeklyPercentagOfReward = \frac{RewardAtPreviusEpoch}{TotalSupplyAtCurrentEpoch} * 100\%
+```
 
 #### Annual APR Calculation
 
-\\[
-YearAPR = WeeklyPercentagOfReward \\times 52\\ epoch
-\\]
+```math
+YearAPR = WeeklyPercentagOfReward * 52\ epoch
+```
 
 ### Compound Interest Formula
 
 To account for the weekly increase in user balance, the compound interest formula is used:
 To take into account the fact that a new reward is added every week and used for accumulation (the so-called compound), you need to use the compound interest formula:
 
-\\[
-A = P \\left(1 + \\frac{r}{n}\\right)^{nt}
-\\]
+```math
+A = P * (1 + \frac{r}{n})^{nt}
+```
 
 Where:
 - \( A \) is the amount of money accumulated after \( n \) weeks, including interest.
@@ -58,15 +58,15 @@ Where:
 
 Considering the user's balance increases weekly, the formula adjusts as follows:
 
-\\[
-\\text{Weekly Increase Balance} = \\left(1 + \\frac{\\text{Week Reward Percent}}{100}\\right)
-\\]
+```math
+Weekly Increase Balance = 1 + \frac{WeekRewardPercent}{100\%}
+```
 
 Over a year (52 weeks), the balance evolves to:
 
-\\[
-\\text{Year End Balance} = P \\times \\left(1 + \\frac{\\text{Week Reward Percent}}{100}\\right)^{52}
-\\]
+```math
+YearEndBalance = P * (1 + \frac{WeekRewardPercent}{100\%})^{52}
+```
 
 Where \( P \) is the initial mVeNFT balance.
 
@@ -75,22 +75,21 @@ Last week, 1000 FNX were distributed as a reward to users in the compound strate
 
 Therefore, the weekly reward was:
 
-\\[
-WeeklyPercentagOfReward = \\frac{1,000\\ FNX}{100,000\\ FNX } \\times 100\\% = 1\\%
-\\]
+```math
+WeeklyPercentagOfReward = \frac{1,000\ FNX}{100,000\ FNX } * 100\\% = 1\\%
+```
 
-\\[
-YearAPR = 1\\% \\times 52\\ epoch = 52\\% APR
-\\]
+```math
+YearAPR = 1\% * 52\ epoch = 52\% APR
+```
 
-\\[
-\\text{Year End Balance} = 100,000\\ FNX \\times \\left(1 + \\frac{\\text{1\\%}}{100\\%}\\right)^{52} = 167,768.892\\ FNX
-\\]
+```math
+Year End Balance = 100,000\ FNX * (1 + \frac{1\%}{100\%})^{52} = 167,768.892\ FNX
+```
 
-\\[
-\\text{Compound Year APR} = (\\frac{167,768.892\\ FNX}{100,000\\ FNX} - 1) \\times 100 = 67.7\\%
-\\]
-
+```math
+Compound Year APR = (\frac{167,768.892\ FNX}{100,000\ FNX} - 1) * 100\% = 67.7\%
+```
 
 ## Contract Code and Methods
 
