@@ -7,39 +7,57 @@ The `aggregateClaim` function in the `VoterUpgradeable` contract allows users to
 
 ## Function signature
 ```solidity
-    /// @notice Aggregates multiple claim calls into a single transaction.
-    /// @param gauges_ The array of gauge addresses to claim rewards from.
-    /// @param bribes_ The parameters for claiming bribes without token ID.
-    /// @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
-    /// @param merkl_ The parameters for claiming Merkl data.
+    /**
+     * @notice Aggregates multiple claim calls into a single transaction.
+     * @param gauges_ The array of gauge addresses to claim rewards from.
+     * @param bribes_ The parameters for claiming bribes without token ID.
+     * @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
+     * @param merkl_ The parameters for claiming Merkl data.
+     * @param splitMerklAidrop_ The parameters for claiming VeFnx Merkl airdrop data.
+     */
     function aggregateClaim(
         address[] calldata gauges_,
         AggregateClaimBribesParams calldata bribes_,
         AggregateClaimBribesByTokenIdParams calldata bribesByTokenId_,
-        AggregateClaimMerklDataParams calldata merkl_
+        AggregateClaimMerklDataParams calldata merkl_,
+        AggregateClaimVeFnxMerklAirdrop calldata splitMerklAidrop_
     ) external;
 ```
 ### Input Types
 ```solidity
-    /// @dev Parameters for claiming bribes using a specific tokenId.
+       /**
+     * @dev Parameters for claiming bribes using a specific tokenId.
+     */
     struct AggregateClaimBribesByTokenIdParams {
         uint256 tokenId; ///< The token ID to claim bribes for.
         address[] bribes; ///< The array of bribe contract addresses.
         address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
     }
 
-    /// @dev Parameters for claiming bribes.
+    /**
+     * @dev Parameters for claiming bribes.
+     */
     struct AggregateClaimBribesParams {
         address[] bribes; ///< The array of bribe contract addresses.
         address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
     }
 
-    /// @dev Parameters for claiming Merkl data.
+    /**
+     * @dev Parameters for claiming Merkl data.
+     */
     struct AggregateClaimMerklDataParams {
         address[] users; ///< The array of user addresses to claim for.
         address[] tokens; ///< The array of token addresses.
         uint256[] amounts; ///< The array of amounts to claim.
         bytes32[][] proofs; ///< The array of arrays containing Merkle proofs.
+    }
+
+    /**
+     * @dev Parameters for claiming VeFnx Merkl airdrop data.
+     */
+    struct AggregateClaimVeFnxMerklAirdrop {
+        uint256 amount; ///< The amount to claim.
+        bytes32[] proofs; ///< The array of Merkle proofs.
     }
 ```
 
@@ -64,6 +82,10 @@ VoterUpgradeableV1_2.aggregateClaim(
         tokens: [tokenE, tokenF],
         amounts: [amount1, amount2],
         proofs: [[proof1], [proof2]]
+    }),
+    AggregateClaimVeFnxMerklAirdrop({
+        amount: amount3,
+        proofs: [proof3]
     })
 );
 ```
@@ -74,6 +96,7 @@ VoterUpgradeableV1_2.aggregateClaim(
 2. **Claim Bribes without Token ID**: It then claims bribes from the specified bribe contracts without using a token ID via the `claimBribes` method.
 3. **Claim Bribes with Token ID**: Next, it claims bribes using the specified token ID by calling `claimBribes` with the token ID.
 4. **Claim Merkl Data**: Finally, it claims rewards based on Merkle proofs by calling the `claim` method on the `MerklDistributor` contract.
+5. **Claim VeFnx Merkl Airdrop**: Claims the VeFnx Merkl airdrop by calling the claimFor method on the VeFnxSplitMerklAidrop contract.
 
 This comprehensive aggregation allows users to perform multiple reward and bribe claims efficiently within a single transaction, reducing the overall gas cost and simplifying the claiming process.
 
@@ -121,6 +144,13 @@ This comprehensive aggregation allows users to perform multiple reward and bribe
 - **Requirements**: 
     1. Parameter `address[] users` must contain only the caller's addresses. 
     2. **Set the Voter contract as an operator in the MerklDistributor contract from user** (Like ERC20 approve)
+
+### `splitMerklAidrop_`
+- **Type**: `AggregateClaimVeFnxMerklAirdrop`
+    - `uint256 amount`: The amount to claim.
+    - `bytes32[] proofs`: The array of Merkle proofs.
+- **Equivalent Call**: `IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claim(amount, proofs)`
+- **Details**: This parameter is used to claim the VeFnx Merkl airdrop.
 
 ## Enabling Aggregate Claims with Voter Contract
 To use the `aggregateClaim` function effectively, users must first enable the Voter contract to act on their behalf by using the `toggleOperator` function. This is essential for the Voter contract to manage claims, especially when interacting with the `MerklDistributor` contract.

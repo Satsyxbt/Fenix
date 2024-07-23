@@ -23,6 +23,7 @@ import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationIn
 import {IManagedNFTManager} from "../nest/interfaces/IManagedNFTManager.sol";
 import {IVotingEscrowV1_2} from "./interfaces/IVotingEscrowV1_2.sol";
 import {IMerklDistributor} from "../integration/interfaces/IMerklDistributor.sol";
+import {IVeFnxSplitMerklAidrop} from "./interfaces/IVeFnxSplitMerklAidrop.sol";
 
 contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -1008,20 +1009,26 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
                     Aggregation Claim 
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Parameters for claiming bribes using a specific tokenId.
+    /**
+     * @dev Parameters for claiming bribes using a specific tokenId.
+     */
     struct AggregateClaimBribesByTokenIdParams {
         uint256 tokenId; ///< The token ID to claim bribes for.
         address[] bribes; ///< The array of bribe contract addresses.
         address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
     }
 
-    /// @dev Parameters for claiming bribes.
+    /**
+     * @dev Parameters for claiming bribes.
+     */
     struct AggregateClaimBribesParams {
         address[] bribes; ///< The array of bribe contract addresses.
         address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
     }
 
-    /// @dev Parameters for claiming Merkl data.
+    /**
+     * @dev Parameters for claiming Merkl data.
+     */
     struct AggregateClaimMerklDataParams {
         address[] users; ///< The array of user addresses to claim for.
         address[] tokens; ///< The array of token addresses.
@@ -1029,28 +1036,68 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
         bytes32[][] proofs; ///< The array of arrays containing Merkle proofs.
     }
 
-    /// @dev Event emitted when the Merkl Distributor address is set.
+    /**
+     * @dev Parameters for claiming VeFnx Merkl airdrop data.
+     */
+    struct AggregateClaimVeFnxMerklAirdrop {
+        uint256 amount; ///< The amount to claim.
+        bytes32[] proofs; ///< The array of Merkle proofs.
+    }
+
+    /**
+     * @dev Event emitted when the Merkl Distributor address is set.
+     * @param merklDistributor_ The new address of the Merkl Distributor.
+     */
     event SetMerklDistributor(address indexed merklDistributor_);
 
+    /**
+     * @dev Event emitted when the VeFnx Split Merkl Aidrop address is set.
+     * @param veFnxMerklAidrop_ The new address of the VeFnxSplitMerklAidrop.
+     */
+    event SetVeFnxMerklAidrop(address indexed veFnxMerklAidrop_);
+
+    /**
+     * @notice The address of the Merkl Distributor contract.
+     */
     address public merklDistributor;
 
-    /// @notice Sets the Merkl Distributor address.
-    /// @param merklDistributor_ The new address of the Merkl Distributor.
+    /**
+     * @notice The address of the VeFnx Split Merkl Airdrop contract.
+     */
+    address public veFnxMerklAidrop;
+
+    /**
+     * @notice Sets the Merkl Distributor address.
+     * @param merklDistributor_ The new address of the Merkl Distributor.
+     */
     function setMerklDistributor(address merklDistributor_) external VoterAdmin {
         merklDistributor = merklDistributor_;
         emit SetMerklDistributor(merklDistributor_);
     }
 
-    /// @notice Aggregates multiple claim calls into a single transaction.
-    /// @param gauges_ The array of gauge addresses to claim rewards from.
-    /// @param bribes_ The parameters for claiming bribes without token ID.
-    /// @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
-    /// @param merkl_ The parameters for claiming Merkl data.
+    /**
+     * @notice Sets the VeFnx Split Merkl Aidrop address.
+     * @param veFnxMerklAidrop_ The new address of the VeFnxSplitMerklAidrop.
+     */
+    function setVeFnxMerklAidrop(address veFnxMerklAidrop_) external VoterAdmin {
+        veFnxMerklAidrop = veFnxMerklAidrop_;
+        emit SetVeFnxMerklAidrop(veFnxMerklAidrop_);
+    }
+
+    /**
+     * @notice Aggregates multiple claim calls into a single transaction.
+     * @param gauges_ The array of gauge addresses to claim rewards from.
+     * @param bribes_ The parameters for claiming bribes without token ID.
+     * @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
+     * @param merkl_ The parameters for claiming Merkl data.
+     * @param splitMerklAidrop_ The parameters for claiming VeFnx Merkl airdrop data.
+     */
     function aggregateClaim(
         address[] calldata gauges_,
         AggregateClaimBribesParams calldata bribes_,
         AggregateClaimBribesByTokenIdParams calldata bribesByTokenId_,
-        AggregateClaimMerklDataParams calldata merkl_
+        AggregateClaimMerklDataParams calldata merkl_,
+        AggregateClaimVeFnxMerklAirdrop calldata splitMerklAidrop_
     ) external {
         if (gauges_.length > 0) {
             claimRewards(gauges_);
@@ -1069,6 +1116,9 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
                 }
             }
             IMerklDistributor(merklDistributor).claim(merkl_.users, merkl_.tokens, merkl_.amounts, merkl_.proofs);
+        }
+        if (splitMerklAidrop_.amount > 0) {
+            IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claimFor(msg.sender, splitMerklAidrop_.amount, splitMerklAidrop_.proofs);
         }
     }
 
