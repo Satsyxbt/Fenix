@@ -78,7 +78,7 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation  | `0x3b54C14236EB0758888c19966ac1254B796d7577` |
 | ManagedNFTManagerUpgradeableImplementation  | `0x7759097a047e8116603f57260f42037959C12DBE` |
 | RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
-| VoterUpgradeableV1_2Implementation  | `0xcaAC03547438Df0c50353FBe13aB763aBb0B4B28` |
+| VoterUpgradeableV1_2Implementation  | `0x9740704ea45740D2c50b2FBC3D7FfeBBDF1dd117` |
 | VotingEscrowUpgradeableV1_2Implementation  | `0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F` |
 | FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
 | PerpetualsGaugeImplementation  | `0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15` |
@@ -88,7 +88,7 @@ External:
 | RewardAPIUpgradeableImplementation | `0x3C4a31cc6987D7f3CEF5319799e2cC9341365A24` |
 | VeNFTAPIUpgradeableImplementation | `0x44854BA30e75C31e1bF543d4221C181Ee920F8D5` |
 | BlastGovernorImplementation | `0xbb71F88B3B5EC69E465a07B5D53e41D14f883EAe` |
-| VeFnxSplitMerklAidropImplementation | `0xC076A5b5aC245631799479E7d80320Cb24f8Ac35` |
+| VeFnxSplitMerklAidropImplementation | `0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5` |
 
 ## Settings
 ### Ownership

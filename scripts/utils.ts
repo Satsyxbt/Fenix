@@ -47,7 +47,7 @@ export async function deployBase(contractFactoryName: string, name: string, args
     try {
       await hre.run('verify:verify', {
         address: deploysData[NAME],
-        constructorArguments: [],
+        constructorArguments: args || [],
       });
     } catch (e) {
       console.warn('Error with verification proccess', e);

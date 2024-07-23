@@ -1,0 +1,51 @@
+npx hardhat run .\scripts\21_update_veFnx_aidrop_to_last_implementation.ts --network blastSepolia
+Start deploy VeFnxSplitMerklAidropImplementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VeFnxSplitMerklAidropImplementation contract: 0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5
+Wait before start veriy, for indexed from explorer
+Error with verification proccess ABIArgumentLengthError: The constructor for contracts/core/VeFnxSplitMerklAidropUpgradeable.sol:VeFnxSplitMerklAidropUpgradeable has 1 parameters
+but 0 arguments were provided instead.
+    at encodeArguments (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\internal\utilities.ts:236:13)
+    at async SimpleTaskDefinition.action (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:146:41)
+    at async Environment._runTaskDefinition (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+    at async Environment.run (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+    at async SimpleTaskDefinition.action (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:284:9)
+    at async Environment._runTaskDefinition (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+    at async Environment.run (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+    at async deployBase (E:\Work\Aegas-Fenix\Fenix\scripts\utils.ts:48:7)
+    at async main (E:\Work\Aegas-Fenix\Fenix\scripts\21_update_veFnx_aidrop_to_last_implementation.ts:8:3)
+
+    Caused by: Error: types/values length mismatch (count={"types":1,"values":0}, value={"types":[{"name":"blastGovernor_","type":"address","indexed":null,"components":null,"arrayLength":null,"arrayChildren":null,"baseType":"address","_isParamType":true}],"values":[]}, code=INVALID_ARGUMENT, version=abi/5.7.0)
+        at Logger.makeError (E:\Work\Aegas-Fenix\Fenix\node_modules\@ethersproject\logger\src.ts\index.ts:269:28)
+        at Logger.throwError (E:\Work\Aegas-Fenix\Fenix\node_modules\@ethersproject\logger\src.ts\index.ts:281:20)
+        at AbiCoder.encode (E:\Work\Aegas-Fenix\Fenix\node_modules\@ethersproject\abi\src.ts\abi-coder.ts:101:20)
+        at Interface._encodeParams (E:\Work\Aegas-Fenix\Fenix\node_modules\@ethersproject\abi\src.ts\interface.ts:323:31)
+        at Interface.encodeDeploy (E:\Work\Aegas-Fenix\Fenix\node_modules\@ethersproject\abi\src.ts\interface.ts:327:21)
+        at encodeArguments (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\internal\utilities.ts:232:8)
+        at async SimpleTaskDefinition.action (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\internal\tasks\etherscan.ts:146:41)
+        at async Environment._runTaskDefinition (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:359:14)
+        at async Environment.run (E:\Work\Aegas-Fenix\Fenix\node_modules\hardhat\src\internal\core\runtime-environment.ts:192:14)
+        at async SimpleTaskDefinition.action (E:\Work\Aegas-Fenix\Fenix\node_modules\@nomicfoundation\hardhat-verify\src\index.ts:284:9)
+npx hardhat verify 0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5 --network blastSepolia 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successfully submitted source code for contract
+contracts/core/VeFnxSplitMerklAidropUpgradeable.sol:VeFnxSplitMerklAidropUpgradeable at 0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxSplitMerklAidropUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5#code
+
+
+npx hardhat run .\scripts\22_update_voter_to_new_impl.ts --network blastSepolia
+22_update_voter_to_new_impl -- started
+Start deploy VoterUpgradeableV1_2Implementation contract...
+deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Successful deploy VoterUpgradeableV1_2Implementation contract: 0x9740704ea45740D2c50b2FBC3D7FfeBBDF1dd117
+Wait before start veriy, for indexed from explorer
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV1_2.sol:VoterUpgradeableV1_2 at 0x9740704ea45740D2c50b2FBC3D7FfeBBDF1dd117
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV1_2 on the block explorer.
+https://sepolia.blastscan.io/address/0x9740704ea45740D2c50b2FBC3D7FfeBBDF1dd117#code
+
+22_update_voter_to_new_impl -- finished
