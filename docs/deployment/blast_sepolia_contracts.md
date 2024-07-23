@@ -49,12 +49,9 @@ External:
 | VeNFTAPI| `0x73D504CF496CFEE25e035de93C7c7535c90f3528` | _ | Upgradeable|
 | RewardAPI| `0x33Ac4D2ae35299072C7f20d5bBd4F75f6D0aFe89` | _ | Upgradeable|
 | PairAPI| `0x6E96E9e074568151Ee3ECA520849b1FE760d398B` | _ | Upgradeable|
-<<<<<<< HEAD
 | BlastGovernor| `0xDecA6B7277356F37f0aF44609F8D82DEabD444dB` | _ | Upgradeable|
-=======
 | VeFnxSplitMerklAidrop| `0x4BcC88B000C02075115275d5BB1e4133Ed1BD068` | _ | Upgradeable|
 | MDCBlastMock | `0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01` | _ | _ |
->>>>>>> main
 
 
 
@@ -90,11 +87,8 @@ External:
 | PairAPIUpgradeableImplementation | `0x74802c4b7739b68378311490d129a733A1d7aBf7` |
 | RewardAPIUpgradeableImplementation | `0x3C4a31cc6987D7f3CEF5319799e2cC9341365A24` |
 | VeNFTAPIUpgradeableImplementation | `0x44854BA30e75C31e1bF543d4221C181Ee920F8D5` |
-<<<<<<< HEAD
 | BlastGovernorImplementation | `0xbb71F88B3B5EC69E465a07B5D53e41D14f883EAe` |
-=======
 | VeFnxSplitMerklAidropImplementation | `0xC076A5b5aC245631799479E7d80320Cb24f8Ac35` |
->>>>>>> main
 
 ## Settings
 ### Ownership
