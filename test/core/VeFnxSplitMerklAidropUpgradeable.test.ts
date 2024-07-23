@@ -41,7 +41,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
     signers = deployed.signers;
     fenix = deployed.fenix;
 
-    implementation = await ethers.deployContract('VeFnxSplitMerklAidropUpgradeable');
+    implementation = await ethers.deployContract('VeFnxSplitMerklAidropUpgradeable', [signers.blastGovernor.address]);
     proxy = await ethers.getContractAt(
       'VeFnxSplitMerklAidropUpgradeable',
       (

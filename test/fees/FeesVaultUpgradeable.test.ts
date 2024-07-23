@@ -186,7 +186,7 @@ describe('FeesVault Contract', function () {
       ).to.be.revertedWithCustomError(vault, 'AddressZero');
     });
     it('initialize disabled on implementation', async () => {
-      let vault = await (await ethers.getContractFactory('FeesVaultUpgradeable')).deploy();
+      let vault = await (await ethers.getContractFactory('FeesVaultUpgradeable')).deploy(signers.deployer.address);
       await expect(
         vault.initialize(
           signers.blastGovernor.address,

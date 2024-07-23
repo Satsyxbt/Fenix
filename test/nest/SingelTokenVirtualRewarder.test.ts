@@ -34,7 +34,7 @@ describe('SingelTokenVirtualRewarder Contract', function () {
     strategy = signers.fenixTeam;
 
     factory = await ethers.getContractFactory('SingelTokenVirtualRewarderUpgradeable');
-    rewarderImpl = await factory.deploy();
+    rewarderImpl = await factory.deploy(signers.deployer.address);
 
     rewarder = factory.attach(
       (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await rewarderImpl.getAddress())).target,

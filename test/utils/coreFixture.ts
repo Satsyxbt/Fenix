@@ -123,7 +123,7 @@ export async function deployTransaperntUpgradeableProxy(
 
 export async function deployVirtualRewarderWithoutInitialize(deployer: HardhatEthersSigner, proxyAdmin: string) {
   const factory = await ethers.getContractFactory('SingelTokenVirtualRewarderUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as SingelTokenVirtualRewarderUpgradeable;
   return attached;
@@ -131,7 +131,7 @@ export async function deployVirtualRewarderWithoutInitialize(deployer: HardhatEt
 
 export async function deployCompoundStrategyWithoutInitialize(deployer: HardhatEthersSigner, proxyAdmin: string) {
   const factory = await ethers.getContractFactory('CompoundVeFNXManagedNFTStrategyUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as CompoundVeFNXManagedNFTStrategyUpgradeable;
   return attached;
@@ -145,7 +145,7 @@ export async function deployMinter(
   votingEscrow: string,
 ): Promise<MinterUpgradeable> {
   const factory = await ethers.getContractFactory('MinterUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as MinterUpgradeable;
   await attached.initialize(governor, voter, votingEscrow);
@@ -160,7 +160,7 @@ export async function deployVeFnxDistributor(
   votingEscrow: string,
 ): Promise<VeFnxDistributorUpgradeable> {
   const factory = await ethers.getContractFactory('VeFnxDistributorUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as VeFnxDistributorUpgradeable;
   await attached.initialize(governor, fenix, votingEscrow);
@@ -192,7 +192,7 @@ export async function deployVotingEscrow(
   veArtProxy: string,
 ): Promise<VotingEscrowUpgradeableV1_2> {
   const factory = await ethers.getContractFactory('VotingEscrowUpgradeableV1_2');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as VotingEscrowUpgradeableV1_2;
 
@@ -202,7 +202,7 @@ export async function deployVotingEscrow(
 
 export async function deployVoterWithoutInitialize(deployer: HardhatEthersSigner, proxyAdmin: string): Promise<VoterUpgradeableV1_2> {
   const factory = (await ethers.getContractFactory('VoterUpgradeableV1_2')) as VoterUpgradeableV1_2__factory;
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   return factory.attach(proxy.target) as any as VoterUpgradeableV1_2;
 }
@@ -216,7 +216,7 @@ export async function deployVoter(
   bribeFactory: string,
 ): Promise<VoterUpgradeableV1_2> {
   const factory = (await ethers.getContractFactory('VoterUpgradeableV1_2')) as VoterUpgradeableV1_2__factory;
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as VoterUpgradeableV1_2;
   await attached.initialize(governor, votingEscrow, v2PairFactory, v2GaugeFactory, bribeFactory);
@@ -226,7 +226,7 @@ export async function deployVoter(
 
 export async function deployCommunityVaultFeeImplementation(deployer: HardhatEthersSigner): Promise<FeesVaultUpgradeable> {
   const factory = await ethers.getContractFactory('FeesVaultUpgradeable');
-  return await factory.connect(deployer).deploy();
+  return await factory.connect(deployer).deploy(deployer.address);
 }
 
 export async function deployCommunityVaultFeeFactory(
@@ -239,7 +239,7 @@ export async function deployCommunityVaultFeeFactory(
   communityFeeVaultImplementation: string,
 ): Promise<FeesVaultFactoryUpgradeable> {
   const factory = (await ethers.getContractFactory('FeesVaultFactoryUpgradeable')) as FeesVaultFactoryUpgradeable__factory;
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as FeesVaultFactoryUpgradeable;
   await attached.connect(deployer).initialize(governor, blastPoints, blastPointsOperator, voter, communityFeeVaultImplementation, {
@@ -261,7 +261,7 @@ export async function deployV2PairFactory(
   communityVaultFeeFactory: string,
 ): Promise<PairFactoryUpgradeable> {
   const factory = (await ethers.getContractFactory('PairFactoryUpgradeable')) as PairFactoryUpgradeable__factory;
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as PairFactoryUpgradeable;
   await attached.connect(deployer).initialize(governor, blastPoints, blastPointsOperator, pairImplementation, communityVaultFeeFactory);
@@ -271,12 +271,12 @@ export async function deployV2PairFactory(
 
 export async function deployGaugeImplementation(deployer: HardhatEthersSigner): Promise<GaugeUpgradeable> {
   const factory = await ethers.getContractFactory('GaugeUpgradeable');
-  return await factory.connect(deployer).deploy();
+  return await factory.connect(deployer).deploy(deployer.address);
 }
 
 export async function deployBribeImplementation(deployer: HardhatEthersSigner): Promise<BribeUpgradeable> {
   const factory = await ethers.getContractFactory('BribeUpgradeable');
-  return await factory.connect(deployer).deploy();
+  return await factory.connect(deployer).deploy(deployer.address);
 }
 
 export async function deployManagedNFTManager(
@@ -287,7 +287,7 @@ export async function deployManagedNFTManager(
   voter: string,
 ) {
   const factory = await ethers.getContractFactory('ManagedNFTManagerUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as ManagedNFTManagerUpgradeable;
   await attached.connect(deployer).initialize(governor, votingEscrow, voter);
@@ -301,14 +301,14 @@ export async function deployBribeFactory(
   bribeImplementation: string,
 ): Promise<BribeFactoryUpgradeable> {
   const factory = await ethers.getContractFactory('BribeFactoryUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as BribeFactoryUpgradeable;
   await attached.connect(deployer).initialize(governor, voter, bribeImplementation);
   return attached;
 }
 export async function deployV2PairImplementation(deployer: HardhatEthersSigner): Promise<Pair> {
-  return await ethers.deployContract('Pair');
+  return await ethers.deployContract('Pair', [deployer.address]);
 }
 export async function deployGaugeFactory(
   deployer: HardhatEthersSigner,
@@ -319,7 +319,7 @@ export async function deployGaugeFactory(
   merklGaugeMiddleman: string,
 ): Promise<GaugeFactoryUpgradeable> {
   const factory = await ethers.getContractFactory('GaugeFactoryUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
+  const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
   const attached = factory.attach(proxy.target) as any as GaugeFactoryUpgradeable;
   await attached.connect(deployer).initialize(governor, voter, gaugeImplementation, merklGaugeMiddleman);
@@ -480,7 +480,7 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   await v2PairFactory.grantRole(await v2PairFactory.PAIRS_ADMINISTRATOR_ROLE(), signers.deployer.address);
   await v2PairFactory.grantRole(await v2PairFactory.FEES_MANAGER_ROLE(), signers.deployer.address);
 
-  let veBoostImpl = await (await ethers.getContractFactory('VeBoostUpgradeable')).deploy();
+  let veBoostImpl = await (await ethers.getContractFactory('VeBoostUpgradeable')).deploy(signers.blastGovernor.address);
   let veBoost = (await ethers.getContractFactory('VeBoostUpgradeable')).attach(
     await deployTransaperntUpgradeableProxy(signers.blastGovernor, signers.proxyAdmin.address, await veBoostImpl.getAddress()),
   ) as VeBoostUpgradeable;

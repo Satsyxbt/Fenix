@@ -40,7 +40,7 @@ describe('RouterV2PathProviderUpgradeable Contract', function () {
     FENIX = await deployERC20MockToken(signers.deployer, 'FENIX', 'FNX', 18);
 
     factory = await ethers.getContractFactory('RouterV2PathProviderUpgradeable');
-    pathProviderImpl = await factory.deploy();
+    pathProviderImpl = await factory.deploy(signers.deployer.address);
 
     pathProvider = factory.attach(
       (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await pathProviderImpl.getAddress())).target,

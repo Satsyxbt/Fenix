@@ -32,7 +32,7 @@ describe('FeesVaultFactory Contract', function () {
     feesVaultImplementation = deployed.feesVaultImplementation;
     factory = await ethers.getContractFactory('FeesVaultFactoryUpgradeable');
 
-    implementation = await factory.deploy();
+    implementation = await factory.deploy(signers.deployer.address);
 
     await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), creator.address);
   });

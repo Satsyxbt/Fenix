@@ -27,7 +27,7 @@ describe('BribeFactoryUpgradeable Contract', function () {
 
   async function deployBribeFactory(deployer: HardhatEthersSigner, proxyAdmin: string): Promise<BribeFactoryUpgradeable> {
     const factory = await ethers.getContractFactory('BribeFactoryUpgradeable');
-    const implementation = await factory.connect(deployer).deploy();
+    const implementation = await factory.connect(deployer).deploy(deployer.address);
     const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
     const attached = factory.attach(proxy.target) as BribeFactoryUpgradeable;
     return attached;
@@ -50,7 +50,7 @@ describe('BribeFactoryUpgradeable Contract', function () {
 
   describe('Deployment', async function () {
     it('Should fail if try call initialize on implementation', async function () {
-      let implementation = await bribeFactoryUpgradeableFactory.deploy();
+      let implementation = await bribeFactoryUpgradeableFactory.deploy(signers.deployer.address);
       await expect(
         implementation.initialize(signers.blastGovernor.address, deployed.voter.target, deployed.bribeImplementation.target),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);

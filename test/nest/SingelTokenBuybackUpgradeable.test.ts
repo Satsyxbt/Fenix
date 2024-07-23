@@ -82,7 +82,7 @@ describe('SingelTokenBuybackUpgradeable Contract', function () {
     FENIX = await deployERC20MockToken(signers.deployer, 'FENIX', 'FNX', 18);
 
     let pathProviderFactory = await ethers.getContractFactory('RouterV2PathProviderUpgradeable');
-    let pathProviderImpl = await pathProviderFactory.deploy();
+    let pathProviderImpl = await pathProviderFactory.deploy(signers.deployer.address);
 
     pathProvider = pathProviderFactory.attach(
       (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await pathProviderImpl.getAddress())).target,

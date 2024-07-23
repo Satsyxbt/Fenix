@@ -76,7 +76,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
     tokenTR18 = await deployERC20MockToken(signers.deployer, 'TR18', 'TR18', 18);
 
     factory = (await ethers.getContractFactory('VotingEscrowUpgradeable')) as VotingEscrowUpgradeable__factory;
-    votingEscrowImplementation = await factory.deploy();
+    votingEscrowImplementation = await factory.deploy(signers.deployer.address);
 
     votingEscrow = deployed.votingEscrow;
     await veBoost.initialize(

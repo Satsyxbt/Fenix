@@ -33,7 +33,7 @@ describe('VeFnxDistributorUpgradeable', function () {
 
   describe('Deployment', async () => {
     it('Should fail if try initialize on implementation', async function () {
-      let implementation = await factory.deploy();
+      let implementation = await factory.deploy(signers.deployer.address);
       await expect(implementation.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
       );
@@ -44,7 +44,7 @@ describe('VeFnxDistributorUpgradeable', function () {
       );
     });
     it('Should fail if try set zero address', async function () {
-      let implementation = await factory.deploy();
+      let implementation = await factory.deploy(signers.deployer.address);
 
       const distributor = factory.attach(
         await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementation.getAddress()),

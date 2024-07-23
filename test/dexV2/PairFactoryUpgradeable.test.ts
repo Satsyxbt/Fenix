@@ -77,7 +77,7 @@ describe('PairFactoryUpgradeable Contract', function () {
     });
 
     it('fails if try initialize on implementations', async () => {
-      let newFactory = await pairFactoryFactory.connect(signers.deployer).deploy();
+      let newFactory = await pairFactoryFactory.connect(signers.deployer).deploy(signers.deployer.address);
       await expect(
         newFactory.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, feesVaultFactory.target),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
@@ -88,7 +88,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('fails if provide zero governor address', async () => {
-      const implementation = await pairFactoryFactory.deploy();
+      const implementation = await pairFactoryFactory.deploy(signers.deployer.address);
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,
@@ -108,7 +108,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero implementations', async () => {
-      const implementation = await pairFactoryFactory.deploy();
+      const implementation = await pairFactoryFactory.deploy(signers.deployer.address);
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,
@@ -128,7 +128,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero fees vault factory', async () => {
-      const implementation = await pairFactoryFactory.deploy();
+      const implementation = await pairFactoryFactory.deploy(signers.deployer.address);
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,
@@ -148,7 +148,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero blastPoints', async () => {
-      const implementation = await pairFactoryFactory.deploy();
+      const implementation = await pairFactoryFactory.deploy(signers.deployer.address);
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,
@@ -168,7 +168,7 @@ describe('PairFactoryUpgradeable Contract', function () {
       ).to.be.revertedWithCustomError(pairFactoryFactory, 'AddressZero');
     });
     it('fails if provide zero blastPoints operator', async () => {
-      const implementation = await pairFactoryFactory.deploy();
+      const implementation = await pairFactoryFactory.deploy(signers.deployer.address);
       const proxy = await deployTransaperntUpgradeableProxy(
         signers.deployer,
         signers.proxyAdmin.address,

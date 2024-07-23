@@ -48,7 +48,7 @@ describe('AlgebraFNXPriceProvider', function () {
     poolMock = await ethers.deployContract('PoolMock');
 
     factory = await ethers.getContractFactory('AlgebraFNXPriceProviderUpgradeable');
-    implementation = await factory.deploy();
+    implementation = await factory.deploy(signers.deployer.address);
     priceProvider = factory.attach(
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementation.getAddress()),
     ) as AlgebraFNXPriceProviderUpgradeable;

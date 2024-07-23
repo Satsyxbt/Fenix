@@ -40,7 +40,7 @@ describe('VeBoostUpgradeable', function () {
     fnxReserve: bigint,
   ): Promise<AlgebraFNXPriceProviderUpgradeable> {
     let factoryPriceProvider = await ethers.getContractFactory('AlgebraFNXPriceProviderUpgradeable');
-    let implementationPriceProvider = await factoryPriceProvider.deploy();
+    let implementationPriceProvider = await factoryPriceProvider.deploy(signers.deployer.address);
     priceProvider = factoryPriceProvider.attach(
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
     ) as AlgebraFNXPriceProviderUpgradeable;
@@ -77,7 +77,7 @@ describe('VeBoostUpgradeable', function () {
     let pp = await deployPriceProviderWith(tokenTR6, BigInt(1e6), ONE_ETHER);
 
     factory = await ethers.getContractFactory('VeBoostUpgradeable');
-    veBoostImplementation = await factory.deploy();
+    veBoostImplementation = await factory.deploy(signers.deployer.address);
     veBoost = factory.attach(
       (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await veBoostImplementation.getAddress()))
         .target,
