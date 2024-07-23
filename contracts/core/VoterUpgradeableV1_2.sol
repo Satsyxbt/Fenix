@@ -22,6 +22,7 @@ import {IVoter} from "./interfaces/IVoter.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 import {IManagedNFTManager} from "../nest/interfaces/IManagedNFTManager.sol";
 import {IVotingEscrowV1_2} from "./interfaces/IVotingEscrowV1_2.sol";
+import {IMerklDistributor} from "../integration/interfaces/IMerklDistributor.sol";
 
 contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -467,14 +468,14 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
     }
 
     /// @notice claim LP gauge rewards
-    function claimRewards(address[] memory _gauges) external {
+    function claimRewards(address[] memory _gauges) public {
         for (uint256 i = 0; i < _gauges.length; i++) {
             IGauge(_gauges[i]).getReward(msg.sender);
         }
     }
 
     /// @notice claim bribes rewards given a TokenID
-    function claimBribes(address[] memory _bribes, address[][] memory _tokens, uint256 _tokenId) external {
+    function claimBribes(address[] memory _bribes, address[][] memory _tokens, uint256 _tokenId) public {
         require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
         for (uint256 i = 0; i < _bribes.length; i++) {
             IBribe(_bribes[i]).getRewardForOwner(_tokenId, _tokens[i]);
@@ -482,7 +483,7 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
     }
 
     /// @notice claim fees rewards given a TokenID
-    function claimFees(address[] memory _fees, address[][] memory _tokens, uint256 _tokenId) external {
+    function claimFees(address[] memory _fees, address[][] memory _tokens, uint256 _tokenId) public {
         require(IVotingEscrow(_ve).isApprovedOrOwner(msg.sender, _tokenId), "!approved/Owner");
         for (uint256 i = 0; i < _fees.length; i++) {
             IBribe(_fees[i]).getRewardForOwner(_tokenId, _tokens[i]);
@@ -490,14 +491,14 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
     }
 
     /// @notice claim bribes rewards given an address
-    function claimBribes(address[] memory _bribes, address[][] memory _tokens) external {
+    function claimBribes(address[] memory _bribes, address[][] memory _tokens) public {
         for (uint256 i = 0; i < _bribes.length; i++) {
             IBribe(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
         }
     }
 
     /// @notice claim fees rewards given an address
-    function claimFees(address[] memory _bribes, address[][] memory _tokens) external {
+    function claimFees(address[] memory _bribes, address[][] memory _tokens) public {
         for (uint256 i = 0; i < _bribes.length; i++) {
             IBribe(_bribes[i]).getRewardForAddress(msg.sender, _tokens[i]);
         }
@@ -1001,6 +1002,74 @@ contract VoterUpgradeableV1_2 is IVoter, BlastGovernorClaimableSetup, Reentrancy
      */
     function _checkEndVoteWindow() internal view {
         require(block.timestamp < (block.timestamp - (block.timestamp % _WEEK) + _WEEK - distributionWindowDuration), "distribute window");
+    }
+
+    /*///////////////////////////////////////////////////////////////
+                    Aggregation Claim 
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Parameters for claiming bribes using a specific tokenId.
+    struct AggregateClaimBribesByTokenIdParams {
+        uint256 tokenId; ///< The token ID to claim bribes for.
+        address[] bribes; ///< The array of bribe contract addresses.
+        address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
+    }
+
+    /// @dev Parameters for claiming bribes.
+    struct AggregateClaimBribesParams {
+        address[] bribes; ///< The array of bribe contract addresses.
+        address[][] tokens; ///< The array of arrays containing token addresses for each bribe.
+    }
+
+    /// @dev Parameters for claiming Merkl data.
+    struct AggregateClaimMerklDataParams {
+        address[] users; ///< The array of user addresses to claim for.
+        address[] tokens; ///< The array of token addresses.
+        uint256[] amounts; ///< The array of amounts to claim.
+        bytes32[][] proofs; ///< The array of arrays containing Merkle proofs.
+    }
+
+    /// @dev Event emitted when the Merkl Distributor address is set.
+    event SetMerklDistributor(address indexed merklDistributor_);
+
+    address public merklDistributor;
+
+    /// @notice Sets the Merkl Distributor address.
+    /// @param merklDistributor_ The new address of the Merkl Distributor.
+    function setMerklDistributor(address merklDistributor_) external VoterAdmin {
+        merklDistributor = merklDistributor_;
+        emit SetMerklDistributor(merklDistributor_);
+    }
+
+    /// @notice Aggregates multiple claim calls into a single transaction.
+    /// @param gauges_ The array of gauge addresses to claim rewards from.
+    /// @param bribes_ The parameters for claiming bribes without token ID.
+    /// @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
+    /// @param merkl_ The parameters for claiming Merkl data.
+    function aggregateClaim(
+        address[] calldata gauges_,
+        AggregateClaimBribesParams calldata bribes_,
+        AggregateClaimBribesByTokenIdParams calldata bribesByTokenId_,
+        AggregateClaimMerklDataParams calldata merkl_
+    ) external {
+        if (gauges_.length > 0) {
+            claimRewards(gauges_);
+        }
+        if (bribes_.bribes.length > 0) {
+            claimBribes(bribes_.bribes, bribes_.tokens);
+        }
+        if (bribesByTokenId_.bribes.length > 0) {
+            claimBribes(bribesByTokenId_.bribes, bribesByTokenId_.tokens, bribesByTokenId_.tokenId);
+        }
+        if (merkl_.users.length > 0) {
+            for (uint256 i; i < merkl_.users.length; ) {
+                require(merkl_.users[i] == msg.sender, "users containes no only caller");
+                unchecked {
+                    i++;
+                }
+            }
+            IMerklDistributor(merklDistributor).claim(merkl_.users, merkl_.tokens, merkl_.amounts, merkl_.proofs);
+        }
     }
 
     /**

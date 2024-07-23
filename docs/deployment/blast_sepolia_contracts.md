@@ -49,7 +49,12 @@ External:
 | VeNFTAPI| `0x73D504CF496CFEE25e035de93C7c7535c90f3528` | _ | Upgradeable|
 | RewardAPI| `0x33Ac4D2ae35299072C7f20d5bBd4F75f6D0aFe89` | _ | Upgradeable|
 | PairAPI| `0x6E96E9e074568151Ee3ECA520849b1FE760d398B` | _ | Upgradeable|
+<<<<<<< HEAD
 | BlastGovernor| `0xDecA6B7277356F37f0aF44609F8D82DEabD444dB` | _ | Upgradeable|
+=======
+| VeFnxSplitMerklAidrop| `0x4BcC88B000C02075115275d5BB1e4133Ed1BD068` | _ | Upgradeable|
+| MDCBlastMock | `0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01` | _ | _ |
+>>>>>>> main
 
 
 
@@ -76,7 +81,7 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeableImplementation  | `0x3b54C14236EB0758888c19966ac1254B796d7577` |
 | ManagedNFTManagerUpgradeableImplementation  | `0x7759097a047e8116603f57260f42037959C12DBE` |
 | RouterV2PathProviderUpgradeableImplementation  | `0xAe3cEB9cCCedE499940AD8B01ca57D08F65FeD1D` |
-| VoterUpgradeableV1_2Implementation  | `0xAF15A0b49D3bc095d9cFa5560144A1B458f81574` |
+| VoterUpgradeableV1_2Implementation  | `0xcaAC03547438Df0c50353FBe13aB763aBb0B4B28` |
 | VotingEscrowUpgradeableV1_2Implementation  | `0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F` |
 | FenixRaiseUpgradeableImplementation  | `0x8E6B23Ce25454CFc88a27babac4e7F82Db8dd676` |
 | PerpetualsGaugeImplementation  | `0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15` |
@@ -85,7 +90,11 @@ External:
 | PairAPIUpgradeableImplementation | `0x74802c4b7739b68378311490d129a733A1d7aBf7` |
 | RewardAPIUpgradeableImplementation | `0x3C4a31cc6987D7f3CEF5319799e2cC9341365A24` |
 | VeNFTAPIUpgradeableImplementation | `0x44854BA30e75C31e1bF543d4221C181Ee920F8D5` |
+<<<<<<< HEAD
 | BlastGovernorImplementation | `0xbb71F88B3B5EC69E465a07B5D53e41D14f883EAe` |
+=======
+| VeFnxSplitMerklAidropImplementation | `0xC076A5b5aC245631799479E7d80320Cb24f8Ac35` |
+>>>>>>> main
 
 ## Settings
 ### Ownership

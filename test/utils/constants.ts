@@ -19,6 +19,10 @@ export const GasMode = {
   CLAIMABLE: 1,
 };
 export const ERRORS = {
+  Pausable: {
+    Paused: 'Pausable: paused',
+    NotPaused: 'Pausable: not paused',
+  },
   ERC20: {
     InsufficientBalance: 'ERC20: transfer amount exceeds balance',
     InsufficientAllowance: 'insufficient allowance',
