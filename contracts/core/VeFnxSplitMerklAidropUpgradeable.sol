@@ -58,6 +58,11 @@ contract VeFnxSplitMerklAidropUpgradeable is
     mapping(address => uint256) public override userClaimed;
 
     /**
+     * @dev Mapping to check if an address is an allowed claim operator.
+     */
+    mapping(address => bool) public override isAllowedClaimOperator;
+
+    /**
      * @dev Error thrown when the `toVeFnxPercentage` is incorrect (i.e., greater than 1e18).
      */
     error IncorrectToVeFnxPercentage();
@@ -73,9 +78,15 @@ contract VeFnxSplitMerklAidropUpgradeable is
     error ZeroAmount();
 
     /**
+     * @dev Error thrown when a caller is not an allowed claim operator.
+     */
+    error NotAllowedClaimOperator();
+
+    /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
      */
-    constructor() {
+    constructor(address blastGovernor_) {
+        __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
     }
 
@@ -118,33 +129,23 @@ contract VeFnxSplitMerklAidropUpgradeable is
      * @notice Emits a {Claim} event.
      */
     function claim(uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
-        if (!isValidProof(_msgSender(), amount_, proof_)) {
-            revert InvalidProof();
+        _claim(_msgSender(), amount_, proof_);
+    }
+
+    /**
+     * @dev Allows a claim operator to claim tokens on behalf of a target address.
+     * @param target_ The address of the user on whose behalf tokens are being claimed.
+     * @param amount_ The total amount of tokens to claim.
+     * @param proof_ The Merkle proof verifying the user's claim.
+     * @notice This function can only be called when the contract is not paused.
+     * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
+     * @notice Emits a {Claim} event.
+     */
+    function claimFor(address target_, uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
+        if (!isAllowedClaimOperator[_msgSender()]) {
+            revert NotAllowedClaimOperator();
         }
-        uint256 claimAmount = amount_ - userClaimed[_msgSender()];
-
-        if (claimAmount == 0) {
-            revert ZeroAmount();
-        }
-
-        userClaimed[_msgSender()] = amount_;
-
-        IERC20Upgradeable tokenCache = IERC20Upgradeable(token);
-        uint256 toVeNFTAmount = (claimAmount * toVeFnxPercentage) / _PRECISION;
-        uint256 toTokenAmount = claimAmount - toVeNFTAmount;
-
-        uint256 tokenId;
-        if (toVeNFTAmount > 0) {
-            IVotingEscrow veCache = IVotingEscrow(votingEscrow);
-            tokenCache.safeApprove(address(veCache), toVeNFTAmount);
-            tokenId = veCache.create_lock_for_without_boost(toVeNFTAmount, _LOCK_DURATION, _msgSender());
-        }
-
-        if (toTokenAmount > 0) {
-            tokenCache.safeTransfer(_msgSender(), toTokenAmount);
-        }
-
-        emit Claim(_msgSender(), claimAmount, toTokenAmount, toVeNFTAmount, tokenId);
+        _claim(target_, amount_, proof_);
     }
 
     /**
@@ -164,6 +165,18 @@ contract VeFnxSplitMerklAidropUpgradeable is
 
     function unpause() external virtual override onlyOwner {
         _unpause();
+    }
+
+    /**
+     * @dev Sets whether an address is allowed to operate claims on behalf of others.
+     * Can only be called by the owner.
+     * @param operator_ The address of the operator to set.
+     * @param isAllowed_ A boolean indicating whether the operator is allowed.
+     * @notice Emits a {SetIsAllowedClaimOperator} event.
+     */
+    function setIsAllowedClaimOperator(address operator_, bool isAllowed_) external virtual override onlyOwner {
+        isAllowedClaimOperator[operator_] = isAllowed_;
+        emit SetIsAllowedClaimOperator(operator_, isAllowed_);
     }
 
     /**
@@ -214,6 +227,45 @@ contract VeFnxSplitMerklAidropUpgradeable is
         }
 
         return MerkleProofUpgradeable.verify(proof_, root, keccak256(bytes.concat(keccak256(abi.encode(user_, amount_)))));
+    }
+
+    /**
+     * @dev Internal function to handle the claiming process.
+     * @param target_ The address of the user making the claim.
+     * @param amount_ The total amount of tokens the user can claim.
+     * @param proof_ The Merkle proof verifying the user's claim.
+     * @notice Reverts with `InvalidProof` if the provided proof is not valid.
+     * @notice Reverts with `ZeroAmount` if the claim amount is zero.
+     * @notice Emits a {Claim} event.
+     */
+    function _claim(address target_, uint256 amount_, bytes32[] memory proof_) internal virtual {
+        if (!isValidProof(target_, amount_, proof_)) {
+            revert InvalidProof();
+        }
+        uint256 claimAmount = amount_ - userClaimed[target_];
+
+        if (claimAmount == 0) {
+            revert ZeroAmount();
+        }
+
+        userClaimed[target_] = amount_;
+
+        IERC20Upgradeable tokenCache = IERC20Upgradeable(token);
+        uint256 toVeNFTAmount = (claimAmount * toVeFnxPercentage) / _PRECISION;
+        uint256 toTokenAmount = claimAmount - toVeNFTAmount;
+
+        uint256 tokenId;
+        if (toVeNFTAmount > 0) {
+            IVotingEscrow veCache = IVotingEscrow(votingEscrow);
+            tokenCache.safeApprove(address(veCache), toVeNFTAmount);
+            tokenId = veCache.create_lock_for_without_boost(toVeNFTAmount, _LOCK_DURATION, target_);
+        }
+
+        if (toTokenAmount > 0) {
+            tokenCache.safeTransfer(target_, toTokenAmount);
+        }
+
+        emit Claim(target_, claimAmount, toTokenAmount, toVeNFTAmount, tokenId);
     }
 
     /**

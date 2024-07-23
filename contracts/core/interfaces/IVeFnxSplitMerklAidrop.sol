@@ -27,6 +27,12 @@ interface IVeFnxSplitMerklAidrop {
      * @param toVeFnxPercentage The new percentage of tokens to be locked as veFNX.
      */
     event SetToVeFnxPercentage(uint256 toVeFnxPercentage);
+    /**
+     * @dev Emitted when the allowed status of a claim operator is set or changed.
+     * @param operator The address of the claim operator.
+     * @param isAllowed A boolean indicating whether the operator is allowed.
+     */
+    event SetIsAllowedClaimOperator(address indexed operator, bool indexed isAllowed);
 
     /**
      * @dev Emitted when FNX tokens are recovered from the contract.
@@ -41,6 +47,26 @@ interface IVeFnxSplitMerklAidrop {
      * @param proof_ The Merkle proof verifying the user's claim.
      */
     function claim(uint256 amount_, bytes32[] memory proof_) external;
+
+    /**
+     * @dev Allows a claim operator to claim tokens on behalf of a target address.
+     * @param target_ The address of the user on whose behalf tokens are being claimed.
+     * @param amount_ The total amount of tokens to claim.
+     * @param proof_ The Merkle proof verifying the user's claim.
+     * @notice This function can only be called when the contract is not paused.
+     * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
+     * @notice Emits a {Claim} event.
+     */
+    function claimFor(address target_, uint256 amount_, bytes32[] memory proof_) external;
+
+    /**
+     * @dev Sets whether an address is allowed to operate claims on behalf of others.
+     * Can only be called by the owner.
+     * @param operator_ The address of the operator to set.
+     * @param isAllowed_ A boolean indicating whether the operator is allowed.
+     * @notice Emits a {SetIsAllowedClaimOperator} event.
+     */
+    function setIsAllowedClaimOperator(address operator_, bool isAllowed_) external;
 
     /**
      * @dev Pauses the contract, preventing any further claims.
@@ -110,4 +136,11 @@ interface IVeFnxSplitMerklAidrop {
      * @return The amount of tokens claimed by the user.
      */
     function userClaimed(address user) external view returns (uint256);
+
+    /**
+     * @dev Checks if an address is an allowed claim operator.
+     * @param operator_ The address to check.
+     * @return true if the operator is allowed, false otherwise.
+     */
+    function isAllowedClaimOperator(address operator_) external view returns (bool);
 }
