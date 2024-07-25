@@ -73,7 +73,7 @@ export async function logTx(contract: BaseContract, transaction: Promise<any>) {
   const tx = await transaction;
   await tx.wait();
 
-  let logMessage = `Successful transaction`;
+  let logMessage = `\tSuccessful transaction`;
   let decodedData;
 
   try {
@@ -90,11 +90,11 @@ export async function logTx(contract: BaseContract, transaction: Promise<any>) {
         return `${argName}: ${JSON.stringify(arg)}`;
       })
       .join(', ');
-    logMessage = `Called ${contract.constructor.name}(${await contract.getAddress()}).${methodName}(${args})`;
+    logMessage = `\tCalled ${contract.constructor.name}(${await contract.getAddress()}).${methodName}(${args})`;
   }
 
   console.log(logMessage);
-  console.log(`Transaction hash: ${tx.hash}`);
+  console.log(`\tTransaction hash: ${tx.hash}`);
 }
 
 export async function logTransaction(transaction: Promise<any>, methodName: string) {

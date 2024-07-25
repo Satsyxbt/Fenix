@@ -64,6 +64,9 @@ export enum AliasDeployedContracts {
   MDCBlastMock = 'MDCBlastMock',
 }
 
+enum ThirdPart {
+  Blast = 'IBlastFull',
+}
 enum ContractsInstanceName {
   ProxyAdmin = 'ProxyAdmin',
   BribeUpgradeable = 'BribeUpgradeable',
@@ -107,6 +110,7 @@ enum ContractsInstanceName {
 
 export const InstanceName = {
   ...ContractsInstanceName,
+  ...ThirdPart,
 };
 
 export type InstanceName = ContractsInstanceName;
