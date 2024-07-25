@@ -25,6 +25,16 @@ interface TransparentProxyDeployOptions {
   saveAlias: string;
 }
 
+interface DeployAndUpgradeOptions {
+  deployer: HardhatEthersSigner;
+  implementationName: InstanceName;
+  implementationSaveAlias?: string;
+  implementationConstructorArguments?: any[];
+  proxyAddress: string;
+  proxyAdmin: string;
+  verify?: boolean;
+}
+
 export const getDeployedContractsAddressList = async () => {
   return utils.getDeployedContractsAddressList(hre);
 };
@@ -57,6 +67,38 @@ export const saveToDeployedContractsAddressList = async (name: string, address: 
   deployData[name] = address;
   fs.writeFileSync(deployDataPath, JSON.stringify(deployData, null, 2), 'utf-8');
   return deployData;
+};
+
+async function logTransaction(transaction: Promise<any>, methodName: string) {
+  try {
+    console.log(`Calling ${methodName}...`);
+    const tx = await transaction;
+    await tx.wait();
+    console.log(`${methodName} transaction hash: ${tx.hash}`);
+  } catch (error) {
+    console.error(`Error calling ${methodName}:`, error);
+  }
+}
+
+export const upgradeProxy = async (deployer: HardhatEthersSigner, proxyAdmin: string, proxy: string, newLogic: string) => {
+  const ProxyAdmin = await ethers.getContractAt(InstanceName.ProxyAdmin, proxyAdmin);
+  console.log(`Upgrading proxy at ${proxy} to new logic at ${newLogic} using ProxyAdmin at ${proxyAdmin}...`);
+  await logTransaction(ProxyAdmin.connect(deployer).upgrade(proxy, newLogic), `ProxyAdmin.upgrade(proxy: ${proxy}, newLogic: ${newLogic})`);
+};
+
+export const deployNewImplementationAndUpgradeProxy = async (options: DeployAndUpgradeOptions) => {
+  console.log(`Start deploy new impelmentations...`);
+
+  const implementation = await deploy({
+    deployer: options.deployer,
+    name: options.implementationName,
+    constructorArguments: options.implementationConstructorArguments,
+    verify: options.verify,
+    saveAlias: options.implementationSaveAlias,
+  });
+  console.log(`Start deploy new impelmentations...`);
+
+  await upgradeProxy(options.deployer, options.proxyAdmin, options.proxyAddress, await implementation.getAddress());
 };
 
 export const deploy = async (options: BaseDeployOptions) => {
