@@ -61,7 +61,7 @@ describe('VeBoostUpgradeable', function () {
     }
     await pool.initialize(price);
 
-    await priceProvider.initialize(signers.blastGovernor, pool.target, fenix.target, usdToken.target);
+    await priceProvider.initialize(signers.blastGovernor.address, pool.target, fenix.target, usdToken.target);
     return priceProvider;
   }
 

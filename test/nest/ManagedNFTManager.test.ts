@@ -58,7 +58,9 @@ describe('ManagedNFTManager Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable')).getAddress(),
+          await (
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+          ).getAddress(),
         )
       ).target,
     )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
@@ -68,7 +70,7 @@ describe('ManagedNFTManager Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('RouterV2PathProviderUpgradeable')).getAddress(),
+          await (await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address])).getAddress(),
         )
       ).target,
     ) as RouterV2PathProviderUpgradeable;
@@ -84,10 +86,10 @@ describe('ManagedNFTManager Contract', function () {
     await strategyFactory.initialize(
       signers.blastGovernor.address,
       (
-        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable')
+        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
       ).target,
       (
-        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable')
+        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
       ).target,
       managedNFTManager.target,
       routerV2PathProvider.target,
@@ -96,7 +98,7 @@ describe('ManagedNFTManager Contract', function () {
 
   describe('Deployment', async () => {
     it('fail if try initialize on implementatrion', async () => {
-      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable');
+      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable', [signers.blastGovernor.address]);
       await expect(impl.initialize(signers.blastGovernor.address, deployed.votingEscrow.target, deployed.voter.target)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
       );
@@ -109,7 +111,7 @@ describe('ManagedNFTManager Contract', function () {
     });
 
     it('fail if `blastGovernor` is zero address', async () => {
-      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable');
+      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable', [signers.blastGovernor.address]);
 
       let newManager = factory.attach(
         (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await impl.getAddress())).target,
@@ -122,7 +124,7 @@ describe('ManagedNFTManager Contract', function () {
     });
 
     it('fail if `votingEscrow` is zero address', async () => {
-      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable');
+      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable', [signers.blastGovernor.address]);
 
       let newManager = factory.attach(
         (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await impl.getAddress())).target,
@@ -135,7 +137,7 @@ describe('ManagedNFTManager Contract', function () {
     });
 
     it('fail if `voter` is zero address', async () => {
-      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable');
+      let impl = await ethers.deployContract('ManagedNFTManagerUpgradeable', [signers.blastGovernor.address]);
 
       let newManager = factory.attach(
         (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await impl.getAddress())).target,
@@ -335,7 +337,9 @@ describe('ManagedNFTManager Contract', function () {
             await deployTransaperntUpgradeableProxy(
               signers.deployer,
               signers.proxyAdmin.address,
-              await (await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable')).getAddress(),
+              await (
+                await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+              ).getAddress(),
             )
           ).target,
         )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
@@ -343,10 +347,10 @@ describe('ManagedNFTManager Contract', function () {
         await strategyFactory.initialize(
           signers.blastGovernor.address,
           (
-            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable')
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
           ).target,
           (
-            await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable')
+            await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
           ).target,
           managedNFTManager.target,
           routerV2PathProvider.target,

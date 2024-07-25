@@ -22,7 +22,7 @@ describe('PerpetualsGaugeUpgradeable', function () {
     Fenix = deployed.fenix;
     voter = signers.otherUser5;
 
-    let implementation = (await ethers.deployContract('PerpetualsTradersRewarderUpgradeable')) as any;
+    let implementation = (await ethers.deployContract('PerpetualsTradersRewarderUpgradeable', [signers.blastGovernor.address])) as any;
     PerpetualsTradersRewarderUpgradeable = (await ethers.getContractAt(
       'PerpetualsTradersRewarderUpgradeable',
       (
@@ -30,7 +30,7 @@ describe('PerpetualsGaugeUpgradeable', function () {
       ).target,
     )) as any as PerpetualsTradersRewarderUpgradeable;
 
-    implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable');
+    implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable', [signers.blastGovernor.address]);
     PerpetualsGaugeUpgradeable = (await ethers.getContractAt(
       'PerpetualsGaugeUpgradeable',
       (
@@ -48,7 +48,7 @@ describe('PerpetualsGaugeUpgradeable', function () {
 
   describe('Deployment', async () => {
     it('fail if try initialize on implementation', async () => {
-      let implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable');
+      let implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable', [signers.blastGovernor.address]);
       await implementation.waitForDeployment();
       await expect(
         implementation.initialize(

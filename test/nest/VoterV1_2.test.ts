@@ -22,7 +22,7 @@ import completeFixture, {
 } from '../utils/coreFixture';
 import { tokensFixture } from '../../lib/fenix-dex-v3/src/plugin/test/shared/externalFixtures';
 
-describe('VoterUpgradeableV1_2 Contract', function () {
+describe('VoterV1_2 Contract', function () {
   let signers: SignersList;
 
   let voter: VoterUpgradeableV1_2;
@@ -74,7 +74,9 @@ describe('VoterUpgradeableV1_2 Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable')).getAddress(),
+          await (
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+          ).getAddress(),
         )
       ).target,
     )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
@@ -83,7 +85,7 @@ describe('VoterUpgradeableV1_2 Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('RouterV2PathProviderUpgradeable')).getAddress(),
+          await (await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address])).getAddress(),
         )
       ).target,
     ) as RouterV2PathProviderUpgradeable;
@@ -99,10 +101,10 @@ describe('VoterUpgradeableV1_2 Contract', function () {
     await strategyFactory.initialize(
       signers.blastGovernor.address,
       (
-        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable')
+        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
       ).target,
       (
-        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable')
+        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
       ).target,
       managedNFTManager.target,
       routerV2PathProvider.target,

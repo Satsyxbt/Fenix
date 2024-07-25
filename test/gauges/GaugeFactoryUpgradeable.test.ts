@@ -31,7 +31,7 @@ describe('GaugeFactoryUpgradeable', function () {
 
   describe('Deployment', function () {
     it('Should fail if try initialize on implementation', async function () {
-      let t = await factory.deploy();
+      let t = await factory.deploy(signers.blastGovernor.address);
       await expect(t.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
       );

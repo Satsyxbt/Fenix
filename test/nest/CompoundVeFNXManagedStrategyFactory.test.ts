@@ -42,7 +42,7 @@ describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
     proxyAdmin: string,
   ): Promise<CompoundVeFNXManagedNFTStrategyFactoryUpgradeable> {
     const factory = await ethers.getContractFactory('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable');
-    const implementation = await factory.connect(deployer).deploy();
+    const implementation = await factory.connect(deployer).deploy(deployer.address);
     const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
     const attached = factory.attach(proxy.target) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
     return attached;
@@ -53,7 +53,7 @@ describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
     signers = deployed.signers;
     managedNFTManager = deployed.managedNFTManager;
 
-    let routerV2Impl = await ethers.deployContract('RouterV2PathProviderUpgradeable');
+    let routerV2Impl = await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address]);
     const proxy = await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await routerV2Impl.getAddress());
     routerV2PathProvider = (await ethers.getContractFactory('RouterV2PathProviderUpgradeable')).attach(
       proxy.target,
@@ -64,8 +64,8 @@ describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
     )) as any as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable__factory;
     strategyFactory = await deployStrategy(signers.deployer, signers.proxyAdmin.address);
 
-    strategyImplementation = await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable');
-    virtualRewarderImplementation = await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable');
+    strategyImplementation = await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address]);
+    virtualRewarderImplementation = await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address]);
 
     await strategyFactory.initialize(
       signers.blastGovernor.address,
@@ -78,7 +78,7 @@ describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
 
   describe('Deployment', async function () {
     it('Should fail if try call initialize on implementation', async function () {
-      let impl = await factory.deploy();
+      let impl = await factory.deploy(signers.blastGovernor.address);
       await expect(
         impl.initialize(
           signers.blastGovernor.address,

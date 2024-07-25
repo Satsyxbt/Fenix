@@ -72,7 +72,7 @@ describe('FeesVaultFactory Contract', function () {
       expect(await feesVaultFactory.hasRole(await feesVaultFactory.DEFAULT_ADMIN_ROLE(), signers.deployer.address)).to.be.true;
     });
     it('fail if try initialize on implementation', async () => {
-      let implementation = await factory.deploy();
+      let implementation = await factory.deploy(signers.blastGovernor.address);
       await expect(
         implementation.initialize(
           signers.blastGovernor.address,

@@ -41,7 +41,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
     fnxReserve: bigint,
   ): Promise<AlgebraFNXPriceProviderUpgradeable> {
     let factoryPriceProvider = await ethers.getContractFactory('AlgebraFNXPriceProviderUpgradeable');
-    let implementationPriceProvider = await factoryPriceProvider.deploy();
+    let implementationPriceProvider = await factoryPriceProvider.deploy(signers.blastGovernor.address);
     priceProvider = factoryPriceProvider.attach(
       await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await implementationPriceProvider.getAddress()),
     ) as AlgebraFNXPriceProviderUpgradeable;
@@ -62,7 +62,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
     }
     await pool.initialize(price);
 
-    await priceProvider.initialize(signers.blastGovernor, pool.target, fenix.target, usdToken.target);
+    await priceProvider.initialize(signers.blastGovernor.address, pool.target, fenix.target, usdToken.target);
     return priceProvider;
   }
 
@@ -91,7 +91,7 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
 
   describe('Deployment', function () {
     it('Should fail if try initialize on implementation', async function () {
-      let t = await factory.deploy();
+      let t = await factory.deploy(signers.blastGovernor.address);
       await expect(t.initialize(signers.blastGovernor.address, await fenix.getAddress(), ZERO_ADDRESS)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
       );

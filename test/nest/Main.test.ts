@@ -90,7 +90,9 @@ describe('Nest Main Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable')).getAddress(),
+          await (
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+          ).getAddress(),
         )
       ).target,
     )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
@@ -99,7 +101,7 @@ describe('Nest Main Contract', function () {
         await deployTransaperntUpgradeableProxy(
           signers.deployer,
           signers.proxyAdmin.address,
-          await (await ethers.deployContract('RouterV2PathProviderUpgradeable')).getAddress(),
+          await (await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address])).getAddress(),
         )
       ).target,
     ) as RouterV2PathProviderUpgradeable;
@@ -115,10 +117,10 @@ describe('Nest Main Contract', function () {
     await strategyFactory.initialize(
       signers.blastGovernor.address,
       (
-        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable')
+        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
       ).target,
       (
-        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable')
+        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
       ).target,
       managedNFTManager.target,
       routerV2PathProvider.target,

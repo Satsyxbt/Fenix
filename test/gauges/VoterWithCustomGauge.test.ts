@@ -7,7 +7,7 @@ import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-help
 import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 import { Fenix, PerpetualsTradersRewarderUpgradeable, PerpetualsGaugeUpgradeable, VoterUpgradeable } from '../../typechain-types';
 
-describe('PerpetualsGaugeUpgradeable', function () {
+describe('VoterWithCustomGauge', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
   let voter: VoterUpgradeable;
@@ -21,7 +21,7 @@ describe('PerpetualsGaugeUpgradeable', function () {
     Fenix = deployed.fenix;
     voter = deployed.voter;
 
-    let implementation = (await ethers.deployContract('PerpetualsTradersRewarderUpgradeable')) as any;
+    let implementation = (await ethers.deployContract('PerpetualsTradersRewarderUpgradeable', [signers.blastGovernor.address])) as any;
     PerpetualsTradersRewarderUpgradeable = (await ethers.getContractAt(
       'PerpetualsTradersRewarderUpgradeable',
       (
@@ -29,7 +29,7 @@ describe('PerpetualsGaugeUpgradeable', function () {
       ).target,
     )) as any as PerpetualsTradersRewarderUpgradeable;
 
-    implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable');
+    implementation = await ethers.deployContract('PerpetualsGaugeUpgradeable', [signers.blastGovernor.address]);
     PerpetualsGaugeUpgradeable = (await ethers.getContractAt(
       'PerpetualsGaugeUpgradeable',
       (
@@ -75,9 +75,9 @@ describe('PerpetualsGaugeUpgradeable', function () {
     let epochTimestamp = await voter._epochTimestamp();
     await voter.vote(1, [PerpetualsGaugeUpgradeable.target], [ethers.parseEther('10000')]);
     expect(await voter.poolVote(1, 0)).to.be.eq(PerpetualsGaugeUpgradeable.target);
-    expect(await voter.votes(1, PerpetualsGaugeUpgradeable.target)).to.be.closeTo(ethers.parseEther('10000'), ethers.parseEther('400'));
+    expect(await voter.votes(1, PerpetualsGaugeUpgradeable.target)).to.be.closeTo(ethers.parseEther('9900'), ethers.parseEther('400'));
     expect(await voter.weightsPerEpoch(epochTimestamp, PerpetualsGaugeUpgradeable.target)).to.be.closeTo(
-      ethers.parseEther('10000'),
+      ethers.parseEther('9900'),
       ethers.parseEther('400'),
     );
   });

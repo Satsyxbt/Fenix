@@ -56,7 +56,7 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
     proxyAdmin: string,
   ): Promise<CompoundVeFNXManagedNFTStrategyFactoryUpgradeable> {
     const factory = await ethers.getContractFactory('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable');
-    const implementation = await factory.connect(deployer).deploy();
+    const implementation = await factory.connect(deployer).deploy(deployer.address);
     const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
     const attached = factory.attach(proxy.target) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
     return attached;
@@ -67,7 +67,7 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
     signers = deployed.signers;
     managedNFTManager = deployed.managedNFTManager;
 
-    let routerV2Impl = await ethers.deployContract('RouterV2PathProviderUpgradeable');
+    let routerV2Impl = await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address]);
     const proxy = await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await routerV2Impl.getAddress());
     routerV2PathProvider = (await ethers.getContractFactory('RouterV2PathProviderUpgradeable')).attach(
       proxy.target,
@@ -78,8 +78,8 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
     )) as any as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable__factory;
     strategyFactory = await deployStrategyFactory(signers.deployer, signers.proxyAdmin.address);
 
-    strategyImplementation = await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable');
-    virtualRewarderImplementation = await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable');
+    strategyImplementation = await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address]);
+    virtualRewarderImplementation = await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address]);
     routerV2 = await ethers.deployContract('RouterV2', [
       signers.blastGovernor.address,
       deployed.v2PairFactory.target,

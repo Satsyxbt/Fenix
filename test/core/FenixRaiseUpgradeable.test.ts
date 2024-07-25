@@ -35,7 +35,7 @@ describe('FenixRaiseUpgradeable Contract', function () {
 
     [deployer, proxyAdmin, depositsReciever, blastGovernor, otherUser, otherUser2] = await ethers.getSigners();
 
-    implementation = await ethers.deployContract('FenixRaiseUpgradeable');
+    implementation = await ethers.deployContract('FenixRaiseUpgradeable', [blastGovernor.address]);
     proxy = await ethers.getContractAt(
       'FenixRaiseUpgradeable',
       (

@@ -42,7 +42,7 @@ describe('PerpetualsTradersRewarderUpgradeable', function () {
     Fenix = deployed.fenix;
     gauge = signers.otherUser5;
 
-    let implementation = await ethers.deployContract('PerpetualsTradersRewarderUpgradeable');
+    let implementation = await ethers.deployContract('PerpetualsTradersRewarderUpgradeable', [signers.blastGovernor.address]);
     PerpetualsTradersRewarderUpgradeable = (await ethers.getContractAt(
       'PerpetualsTradersRewarderUpgradeable',
       (
@@ -53,7 +53,7 @@ describe('PerpetualsTradersRewarderUpgradeable', function () {
 
   describe('Deployment', async () => {
     it('fail if try initialize on implementation', async () => {
-      let implementation = await ethers.deployContract('PerpetualsTradersRewarderUpgradeable');
+      let implementation = await ethers.deployContract('PerpetualsTradersRewarderUpgradeable', [signers.blastGovernor.address]);
       await implementation.waitForDeployment();
       await expect(implementation.initialize(signers.blastGovernor.address, gauge.address, Fenix.target, ZERO_ADDRESS)).to.be.revertedWith(
         ERRORS.Initializable.Initialized,
