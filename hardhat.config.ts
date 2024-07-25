@@ -1,10 +1,11 @@
-import { HardhatUserConfig } from 'hardhat/config';
+import { HardhatUserConfig, task } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import 'hardhat-contract-sizer';
 import '@nomicfoundation/hardhat-verify';
 import 'dotenv/config';
 import { SolcUserConfig } from 'hardhat/types';
 import 'hardhat-tracer';
+import './tasks';
 
 const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
   version: '0.8.19',
