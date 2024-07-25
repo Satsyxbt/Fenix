@@ -176,12 +176,18 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
 
         if (isRebaseToken[token0]) {
             IBlastERC20RebasingManage(vault).configure(token0, configurationForBlastRebaseTokens[token0]);
-            IBlastRebasingTokensGovernor(rebasingTokensGovernor).addTokenHolder(token0, vault);
+            IBlastRebasingTokensGovernor rebasingTokensGovernorCache = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            if (address(rebasingTokensGovernorCache) != address(0)) {
+                rebasingTokensGovernorCache.addTokenHolder(token0, vault);
+            }
         }
 
         if (isRebaseToken[token1]) {
             IBlastERC20RebasingManage(vault).configure(token1, configurationForBlastRebaseTokens[token1]);
-            IBlastRebasingTokensGovernor(rebasingTokensGovernor).addTokenHolder(token1, vault);
+            IBlastRebasingTokensGovernor rebasingTokensGovernorCache = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            if (address(rebasingTokensGovernorCache) != address(0)) {
+                rebasingTokensGovernorCache.addTokenHolder(token1, vault);
+            }
         }
     }
 

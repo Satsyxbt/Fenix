@@ -172,18 +172,22 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
             IBlastERC20RebasingManage(pair).configure(token0, configurationForBlastRebaseTokens[token0]);
             address pairFees = IPair(pair).fees();
             IBlastERC20RebasingManage(pairFees).configure(token0, configurationForBlastRebaseTokens[token0]);
-            IBlastRebasingTokensGovernor tokensGovernor = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
-            tokensGovernor.addTokenHolder(token0, pair);
-            tokensGovernor.addTokenHolder(token0, pairFees);
+            IBlastRebasingTokensGovernor rebasingTokensGovernorCache = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            if (address(rebasingTokensGovernorCache) != address(0)) {
+                rebasingTokensGovernorCache.addTokenHolder(token0, pair);
+                rebasingTokensGovernorCache.addTokenHolder(token0, pairFees);
+            }
         }
 
         if (isRebaseToken[token1]) {
             IBlastERC20RebasingManage(pair).configure(token1, configurationForBlastRebaseTokens[token1]);
             address pairFees = IPair(pair).fees();
             IBlastERC20RebasingManage(pairFees).configure(token1, configurationForBlastRebaseTokens[token1]);
-            IBlastRebasingTokensGovernor tokensGovernor = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
-            tokensGovernor.addTokenHolder(token1, pair);
-            tokensGovernor.addTokenHolder(token1, pairFees);
+            IBlastRebasingTokensGovernor rebasingTokensGovernorCache = IBlastRebasingTokensGovernor(rebasingTokensGovernor);
+            if (address(rebasingTokensGovernorCache) != address(0)) {
+                rebasingTokensGovernorCache.addTokenHolder(token1, pair);
+                rebasingTokensGovernorCache.addTokenHolder(token1, pairFees);
+            }
         }
 
         getPair[token0][token1][stable] = pair;
