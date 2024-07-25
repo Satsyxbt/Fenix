@@ -5,6 +5,8 @@ import fs from 'fs';
 import { verify } from './Verify';
 import { AliasDeployedContracts, InstanceName } from './Names';
 import * as utils from './Utils';
+import chalk from 'chalk';
+import { TypedContractMethod } from '../typechain-types/common';
 
 interface BaseDeployOptions {
   deployer: HardhatEthersSigner;
@@ -27,6 +29,14 @@ export const getDeployedContractsAddressList = async () => {
   return utils.getDeployedContractsAddressList(hre);
 };
 
+export const getProxyAdminAddress = async () => {
+  return await getDeployedContractAddress(AliasDeployedContracts.ProxyAdmin);
+};
+
+export const getBlastGovernorAddress = async () => {
+  return await getDeployedContractAddress(AliasDeployedContracts.BlastGovernorUpgradeable_Proxy);
+};
+
 export const getDeployedContractAddress = async (name: AliasDeployedContracts | string) => {
   return (await getDeployedContractsAddressList())[name];
 };
@@ -35,6 +45,15 @@ export const saveToDeployedContractsAddressList = async (name: string, address: 
   console.log(`Save to deploys.json deployed address of ${name}:${address}`);
   const deployDataPath = utils.getDeploysDataPath(hre);
   let deployData = JSON.parse(fs.readFileSync(deployDataPath, 'utf8'));
+
+  if (deployData[name]) {
+    const existingAddress = deployData[name];
+    if (existingAddress.toLowerCase() !== address.toLowerCase()) {
+      console.warn(chalk.yellow(`Warning: Address for ${name} is already in the list. It will be replaced.`));
+      console.warn(chalk.yellow(`\tExisting address: ${existingAddress}`));
+      console.warn(chalk.yellow(`\tNew address: ${address}`));
+    }
+  }
   deployData[name] = address;
   fs.writeFileSync(deployDataPath, JSON.stringify(deployData, null, 2), 'utf-8');
   return deployData;
@@ -95,4 +114,5 @@ export const deployProxy = async (options: TransparentProxyDeployOptions) => {
 
   return instance;
 };
+
 export { AliasDeployedContracts };

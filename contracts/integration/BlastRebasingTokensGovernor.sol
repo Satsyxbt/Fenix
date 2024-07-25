@@ -9,16 +9,16 @@ import {IBlastRebasingTokensGovernor} from "./interfaces/IBlastRebasingTokensGov
 import {IERC20Rebasing, YieldMode} from "./interfaces/IERC20Rebasing.sol";
 
 /**
- * @title BlastRebasingTokensGovernor
+ * @title BlastRebasingTokensGovernorUpgradeable
  * @dev Manages rebasing token holders and allows claiming tokens in various ways.
  */
-contract BlastRebasingTokensGovernor is IBlastRebasingTokensGovernor, BlastGovernorClaimableSetup, AccessControlUpgradeable {
+contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor, BlastGovernorClaimableSetup, AccessControlUpgradeable {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
 
     /**
      * @dev Role identifier for adding token holders.
      */
-    bytes32 public constant TOKEN_HOLDER_ADDER_ROLE = keccak256("TOKEN_HOLDER_ADDER");
+    bytes32 public constant TOKEN_HOLDER_ADDER_ROLE = keccak256("TOKEN_HOLDER_ADDER_ROLE");
 
     /**
      * @dev Role identifier for withdrawing tokens.
