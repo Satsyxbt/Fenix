@@ -1,0 +1,90 @@
+npx hardhat run .\deploy\blastSepolia\001-BlastGovernor-deploy.ts --network blastSepolia
+Starting deployment of BlastGovernorUpgradeable...
+        Constructor arguments: ["0x9140D359f2855E6540609dd4A93773ED1f45f509"]
+BlastGovernorUpgradeable deployed at 0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177
+Save to deploys.json deployed address of BlastGovernorUpgradeable_Implementation:0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177
+Warning: Address for BlastGovernorUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xbb71F88B3B5EC69E465a07B5D53e41D14f883EAe
+        New address: 0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177
+Verifying TransparentUpgradeableProxy at 0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177...
+The contract 0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177#code
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0x5BeF6fA1c3Aca46e4624f7c76B4eA395Cbcb9177
+        Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228
+Save to deploys.json deployed address of BlastGovernorUpgradeable_Proxy:0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228
+Warning: Address for BlastGovernorUpgradeable_Proxy is already in the list. It will be replaced.
+        Existing address: 0xDecA6B7277356F37f0aF44609F8D82DEabD444dB
+        New address: 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228
+Verifying TransparentUpgradeableProxy at 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228...
+The contract 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228#code
+
+
+npx hardhat run .\deploy\blastSepolia\002-BlastRebasingTokensGovernor-deploy.ts --network blastSepolia
+Starting deployment of BlastRebasingTokensGovernorUpgradeable...
+        Constructor arguments: ["0x9140D359f2855E6540609dd4A93773ED1f45f509"]
+BlastRebasingTokensGovernorUpgradeable deployed at 0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Implementation:0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f
+Verifying TransparentUpgradeableProxy at 0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/BlastRebasingTokensGovernor.sol:BlastRebasingTokensGovernorUpgradeable at 0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastRebasingTokensGovernorUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f
+        Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x76da5656DEa3D8A8111aB749042f98103198332F
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Proxy:0x76da5656DEa3D8A8111aB749042f98103198332F
+Verifying TransparentUpgradeableProxy at 0x76da5656DEa3D8A8111aB749042f98103198332F...
+Timeout for 10s before verify proccess...
+The contract 0x76da5656DEa3D8A8111aB749042f98103198332F has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x76da5656DEa3D8A8111aB749042f98103198332F#code
+
+npx hardhat run .\deploy\blastSepolia\003-UpgradeAllContractsToSupportCentralizedGovernors-upgrade.ts --network blastSepolia > deploy.txt
+Warning: Address for BribeFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x2f48645cef79dD3cd54cf1eC7Ee318DC17Bf9cEC
+        New address: 0xaF7A155FbCa2744CE9774E5D3AE3636Fce6e9613
+Warning: Address for FenixRaiseUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x8e6b23ce25454cfc88a27babac4e7f82db8dd676
+        New address: 0xB0F73131E14a3fE2c7dB85f36E5c4C8906D6e3bF
+Warning: Address for MinterUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x30448e49743c55af3C83d2A7011df36E0438F0Ae
+        New address: 0x35C0Acd310BeDdA85F9dee90CD640f97Bb1886FC
+Warning: Address for VeBoostUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x1EdaC08F0B5a60110Bebab6977afB9ACBe65C0C9
+        New address: 0x92f6F70eAB10a8c273EA7Bd2AcE3Fe9FE575AaCd
+Warning: Address for VeFnxDistributorUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x6CB746214D07a894Dfd4306FD509265B5b64baD7
+        New address: 0x77Da2FB30566F688276C87AAFC315fCC08C1E454
+Warning: Address for VeFnxSplitMerklAidropUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x4E8cd2a8f3097decB85Faa0Ca97263f90758b7C5
+        New address: 0x506b1F4398671BA5383f2909Efb947AdC43D6950
+Warning: Address for VoterUpgradeableV1_2_Implementation is already in the list. It will be replaced.
+        Existing address: 0x9740704ea45740D2c50b2FBC3D7FfeBBDF1dd117
+        New address: 0x4121Bb0d785BaA10c230cF5Dd0c4bB858C1B56EC
+Warning: Address for VotingEscrowUpgradeableV1_2_Implementation is already in the list. It will be replaced.
+        Existing address: 0x9B7d50fc5e8e5866182ec4DbdcCc1933F889F68F
+        New address: 0x9631b1Ee096B8De95b7f449EE758CfB347002fd2
+Warning: Address for PairFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xb99EBAcaED6C0B5292E31653f5470F033bB28e1d
+        New address: 0x3CCC9914E88c7E79b3b32a1a782BFB37148a68d4
+Warning: Address for FeesVaultFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xB40FB324F9448bb4eff37063BbE051d27e39CAd5
+        New address: 0xCB1270476D62E2cF1062f53Cd3F919bC23616618
+Warning: Address for PerpetualsGaugeUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x1eBac806eEEc7Dd2940FdaD74BFFA078Ca3CaE15
+        New address: 0x88d8aE0B24fcB16845788810a298131CfD12f45f
+Warning: Address for PerpetualsTradersRewarderUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x4b5F9CD6BAaa585D5dbd4A4F0069FaC4Fc048776
+        New address: 0xaa4e8563C477907a410B871b2e27056Dc3d4aD32
+Warning: Address for AlgebraFNXPriceProviderUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x1AE69A793A4e20997dd76a51D909859ca869482C
+        New address: 0x9Ac737DB1768272C8711B168560a41e989A6f77A
