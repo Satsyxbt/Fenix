@@ -74,7 +74,7 @@ contract VotingEscrowUpgradeableV1_2 is
     address public token;
     address public voter;
     address public team;
-    address public artProxy;
+    address internal artProxy;
     address public veBoost;
 
     mapping(uint => Point) public point_history; // epoch -> unsigned point
