@@ -71,6 +71,10 @@ contract PairFactoryUpgradeable is IPairFactory, BlastERC20FactoryManager, Acces
         communityVaultFactory = communityVaultFactory_;
     }
 
+    function upgradePairImplementation(address implementation_) external onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
+        implementation = implementation_;
+    }
+
     /**
      * @notice Sets the address of the rebasing tokens governor.
      * @dev Updates the address of the rebasing tokens governor. Can only be called by an account with the DEFAULT_ADMIN_ROLE.

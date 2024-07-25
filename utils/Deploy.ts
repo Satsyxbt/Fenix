@@ -6,7 +6,7 @@ import { verify } from './Verify';
 import { AliasDeployedContracts, InstanceName } from './Names';
 import * as utils from './Utils';
 import chalk from 'chalk';
-import { TypedContractMethod } from '../typechain-types/common';
+import { BaseContract, ContractTransactionResponse } from 'ethers';
 
 interface BaseDeployOptions {
   deployer: HardhatEthersSigner;
@@ -69,15 +69,39 @@ export const saveToDeployedContractsAddressList = async (name: string, address: 
   return deployData;
 };
 
-async function logTransaction(transaction: Promise<any>, methodName: string) {
+export async function logTx(contract: BaseContract, transaction: Promise<any>) {
+  const tx = await transaction;
+  await tx.wait();
+
+  let logMessage = `Successful transaction`;
+  let decodedData;
+
   try {
-    console.log(`Calling ${methodName}...`);
-    const tx = await transaction;
-    await tx.wait();
-    console.log(`${methodName} transaction hash: ${tx.hash}`);
+    decodedData = contract.interface.parseTransaction({ data: tx.data, value: tx.value });
   } catch (error) {
-    console.error(`Error calling ${methodName}:`, error);
+    console.error(`Error decoding transaction:`, error);
   }
+
+  if (decodedData) {
+    const methodName = decodedData.name;
+    const args = decodedData.args
+      .map((arg: any, index: number) => {
+        const argName = decodedData.fragment.inputs[index]?.name || `arg${index}`;
+        return `${argName}: ${JSON.stringify(arg)}`;
+      })
+      .join(', ');
+    logMessage = `Called ${contract.constructor.name}(${await contract.getAddress()}).${methodName}(${args})`;
+  }
+
+  console.log(logMessage);
+  console.log(`Transaction hash: ${tx.hash}`);
+}
+
+export async function logTransaction(transaction: Promise<any>, methodName: string) {
+  console.log(`Calling ${methodName}...`);
+  const tx = await transaction;
+  await tx.wait();
+  console.log(`${methodName} transaction hash: ${tx.hash}`);
 }
 
 export const upgradeProxy = async (deployer: HardhatEthersSigner, proxyAdmin: string, proxy: string, newLogic: string) => {

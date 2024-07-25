@@ -88,3 +88,120 @@ Warning: Address for PerpetualsTradersRewarderUpgradeable_Implementation is alre
 Warning: Address for AlgebraFNXPriceProviderUpgradeable_Implementation is already in the list. It will be replaced.
         Existing address: 0x1AE69A793A4e20997dd76a51D909859ca869482C
         New address: 0x9Ac737DB1768272C8711B168560a41e989A6f77A
+
+Starting deployment of PairFactoryUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+PairFactoryUpgradeable deployed at 0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d
+Save to deploys.json deployed address of PairFactoryUpgradeable_Implementation:0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d
+Verifying TransparentUpgradeableProxy at 0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d...
+Timeout for 10s before verify proccess...
+
+
+Warning: Address for GaugeFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xF69C1f4D10B1016F3519C8514b86080d84e7f5A0
+        New address: 0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d
+
+Starting deployment of PairFactoryUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+PairFactoryUpgradeable deployed at 0xbdaf5fc15D03FE670C974a2083a3892d21762449
+Save to deploys.json deployed address of PairFactoryUpgradeable_Implementation:0xbdaf5fc15D03FE670C974a2083a3892d21762449
+Verifying TransparentUpgradeableProxy at 0xbdaf5fc15D03FE670C974a2083a3892d21762449...
+Timeout for 10s before verify proccess...
+
+Warning: Address for PairFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x3CCC9914E88c7E79b3b32a1a782BFB37148a68d4
+        New address: 0xbdaf5fc15D03FE670C974a2083a3892d21762449
+
+
+
+Starting deployment of Pair...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+Pair deployed at 0x71F9683e343309d7D7A235199f891a254CeC9eF7
+Save to deploys.json deployed address of Pair_Implementation:0x71F9683e343309d7D7A235199f891a254CeC9eF7
+Verifying TransparentUpgradeableProxy at 0x71F9683e343309d7D7A235199f891a254CeC9eF7...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/dexV2/Pair.sol:Pair at 0x71F9683e343309d7D7A235199f891a254CeC9eF7
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Pair on the block explorer.
+https://sepolia.blastscan.io/address/0x71F9683e343309d7D7A235199f891a254CeC9eF7#code
+
+Starting deployment of BribeUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+BribeUpgradeable deployed at 0x4FAf534988aD812C4d2054219861ac47a45bA3dD
+Save to deploys.json deployed address of BribeUpgradeable_Implementation:0x4FAf534988aD812C4d2054219861ac47a45bA3dD
+Verifying TransparentUpgradeableProxy at 0x4FAf534988aD812C4d2054219861ac47a45bA3dD...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0x4FAf534988aD812C4d2054219861ac47a45bA3dD
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x4FAf534988aD812C4d2054219861ac47a45bA3dD#code
+
+Starting deployment of FeesVaultUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+FeesVaultUpgradeable deployed at 0x95586219CC6C58BAb392d3230CF508cE0a14EB95
+Save to deploys.json deployed address of FeesVaultUpgradeable_Implementation:0x95586219CC6C58BAb392d3230CF508cE0a14EB95
+Verifying TransparentUpgradeableProxy at 0x95586219CC6C58BAb392d3230CF508cE0a14EB95...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/fees/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0x95586219CC6C58BAb392d3230CF508cE0a14EB95
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x95586219CC6C58BAb392d3230CF508cE0a14EB95#code
+
+Starting deployment of GaugeUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+GaugeUpgradeable deployed at 0x97C5375776c0a24447D96251AeF9077b03a85D14
+Save to deploys.json deployed address of GaugeUpgradeable_Implementation:0x97C5375776c0a24447D96251AeF9077b03a85D14
+Verifying TransparentUpgradeableProxy at 0x97C5375776c0a24447D96251AeF9077b03a85D14...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x97C5375776c0a24447D96251AeF9077b03a85D14
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x97C5375776c0a24447D96251AeF9077b03a85D14#code
+
+
+
+Warning: Address for Pair_Implementation is already in the list. It will be replaced.
+        Existing address: 0x9AF9988701d106CB576D36B4c36C72519214a7Ac
+        New address: 0x71F9683e343309d7D7A235199f891a254CeC9eF7
+Warning: Address for BribeUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x941d6dcF1Fe7cf08a2cBc8E65b62047a1645E939
+        New address: 0x4FAf534988aD812C4d2054219861ac47a45bA3dD
+Warning: Address for FeesVaultUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xC27CaC5A9e874b7E8dBE32Bc7b9bFc8451420707
+        New address: 0x95586219CC6C58BAb392d3230CF508cE0a14EB95
+Warning: Address for GaugeUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x1c3795CbF09ff0eE0b5bA5Aa160ed3c23028e2Bc
+        New address: 0x97C5375776c0a24447D96251AeF9077b03a85D14
+
+
+
+Called Contract(0x4044d19418d30FFE4eE6900C2AD83F57225fE387).changeImplementation(_implementation: "0x4FAf534988aD812C4d2054219861ac47a45bA3dD")
+Transaction hash: 0x2793b190e24d7688544ad2291fc61289d1bcfa7485798d887f990e4d7b38a81c
+Called Contract(0x4044d19418d30FFE4eE6900C2AD83F57225fE387).setDefaultBlastGovernor(defaultBlastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228")
+Transaction hash: 0xc0b09225485a0d5aa599af1c0de736a322f929da7978fbbba05142e8ae7713c4
+Called Contract(0x1abD24d6ea95BC2ea78e5BE16608B8068F0324D8).changeImplementation(_implementation: "0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d")
+Transaction hash: 0x5f052574632f0a34e1abad0cd6a578b230fd82af5c9b5c633161874908693ff3
+Called Contract(0x1abD24d6ea95BC2ea78e5BE16608B8068F0324D8).setDefaultBlastGovernor(defaultBlastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228")
+Transaction hash: 0x656b9ed00875827ee6f21b79bdda603997d52dddbf4196fbda095d7531dbb9b5
+Called Contract(0x0cC86Eb2dFB324cd7bFcAdA7F7819Ad72a059F0A).changeImplementation(_implementation: "0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d")
+Transaction hash: 0x9b67157f59a6ecd8df3ad3b4ec324bc0686d8e22b6bc0e09222dad5a9898d6b5
+Called Contract(0x0cC86Eb2dFB324cd7bFcAdA7F7819Ad72a059F0A).setDefaultBlastGovernor(defaultBlastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228")
+Transaction hash: 0x0f6f59af042b4fb49184ebec3a3ee40d4863414d28b07a776b6b7c1582a249ef
+Called Contract(0xD6Fe1FCb8f8F231Ce6dBF332e697E798bEC6fa79).changeImplementation(_implementation: "0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d")
+Transaction hash: 0x0e2c534e0e28dc2bd9a2b280db351e2061a55521e82ffec087c396665201a628
+Called Contract(0xD6Fe1FCb8f8F231Ce6dBF332e697E798bEC6fa79).setDefaultBlastGovernor(defaultBlastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228")
+Transaction hash: 0x8b397c264e41c5e4ca57e7ba26655fe9a5c23343ecac42199d1405316c63736c
+Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).changeImplementation(implementation_: "0x95586219CC6C58BAb392d3230CF508cE0a14EB95")
+Transaction hash: 0xc5fbaed6d98d427aa6ec0dc46e9db5484723ea0ff0d07111f2d9f9243e2196be
+Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).setDefaultBlastGovernor(defaultBlastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228")
+Transaction hash: 0x88e8056ca252fbaa2d32821969f244a4b5510942c8dac9671bd810b099576d05
+Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).setRebasingTokensGovernor(rebasingTokensGovernor_: "0x76da5656DEa3D8A8111aB749042f98103198332F")
+Transaction hash: 0x0518683d6fde39770ffd3f4395d59d93da5ffd340c64cfb272171e5a7e0815f9
