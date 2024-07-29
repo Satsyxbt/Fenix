@@ -10,13 +10,14 @@ import {BlastERC20RebasingManage} from "../integration/BlastERC20RebasingManage.
 import {IVoter} from "../core/interfaces/IVoter.sol";
 import {IFeesVault} from "./interfaces/IFeesVault.sol";
 import {IFeesVaultFactory} from "./interfaces/IFeesVaultFactory.sol";
+import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
 /**
  * @title Fees Vault Factory
  * @dev Factory contract for creating and managing fees vault instances.
  * Implements access control and integration with BLAST protocol's rebasing mechanism.
  */
-contract FeesVaultUpgradeable is IFeesVault, BlastERC20RebasingManage, Initializable {
+contract FeesVaultUpgradeable is IFeesVault, BlastERC20RebasingManage, Initializable, UpgradeCall {
     using SafeERC20 for IERC20;
     uint256 internal constant _PRECISION = 10000; // 100%
 

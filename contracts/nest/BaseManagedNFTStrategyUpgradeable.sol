@@ -7,13 +7,14 @@ import {IVoterV1_2} from "../core/interfaces/IVoterV1_2.sol";
 import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IManagedNFTManager} from "./interfaces/IManagedNFTManager.sol";
 import {IManagedNFTStrategy} from "./interfaces/IManagedNFTStrategy.sol";
+import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
 /**
  * @title Base Managed NFT Strategy Upgradeable
  * @dev Abstract base contract for strategies managing NFTs with voting and reward capabilities.
  * This contract serves as a foundation for specific managed NFT strategies, incorporating initializable patterns for upgradeability.
  */
-abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Initializable, BlastGovernorClaimableSetup {
+abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Initializable, BlastGovernorClaimableSetup, UpgradeCall {
     /// @notice The name of the strategy for identification purposes.
     string public override name;
 

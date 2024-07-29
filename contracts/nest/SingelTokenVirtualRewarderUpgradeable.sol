@@ -5,13 +5,14 @@ import {ISingelTokenVirtualRewarder} from "./interfaces/ISingelTokenVirtualRewar
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {VirtualRewarderCheckpoints} from "./libraries/VirtualRewarderCheckpoints.sol";
+import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
 /**
  * @title Single Token Virtual Rewarder Upgradeable
  * @dev An upgradeable contract for managing token rewards based on virtual balances and epochs. It supports functionalities
  * like deposits, withdrawals, and reward calculations based on checkpoints.
  */
-contract SingelTokenVirtualRewarderUpgradeable is ISingelTokenVirtualRewarder, BlastGovernorClaimableSetup, Initializable {
+contract SingelTokenVirtualRewarderUpgradeable is ISingelTokenVirtualRewarder, BlastGovernorClaimableSetup, Initializable, UpgradeCall {
     /**
      * @title Struct for managing token information within a virtual reward system
      * @notice Holds all pertinent data related to individual tokens within the reward system.
