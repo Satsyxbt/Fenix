@@ -1,4 +1,6 @@
 export enum AliasDeployedContracts {
+  UtilsUpgradeable_Proxy = 'UtilsUpgradeable_Proxy',
+  UtilsUpgradeable_Implementation = 'UtilsUpgradeable_Implementation',
   ProxyAdmin = 'ProxyAdmin',
   BribeUpgradeable_Implementation = 'BribeUpgradeable_Implementation',
   VotingEscrowUpgradeableV1_2_Implementation = 'VotingEscrowUpgradeableV1_2_Implementation',
@@ -68,6 +70,7 @@ enum ThirdPart {
   Blast = 'IBlastFull',
 }
 enum ContractsInstanceName {
+  UtilsUpgradeable = 'UtilsUpgradeable',
   ProxyAdmin = 'ProxyAdmin',
   BribeUpgradeable = 'BribeUpgradeable',
   VotingEscrowUpgradeableV1_2 = 'VotingEscrowUpgradeableV1_2',

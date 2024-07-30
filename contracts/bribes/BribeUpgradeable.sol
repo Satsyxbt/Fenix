@@ -10,8 +10,9 @@ import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IBribe} from "./interfaces/IBribe.sol";
 import {IBribeFactory} from "./interfaces/IBribeFactory.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
+import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
-contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
+contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable, UpgradeCall {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 public constant WEEK = 7 days; // rewards are released over 7 days

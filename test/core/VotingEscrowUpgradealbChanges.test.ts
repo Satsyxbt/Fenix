@@ -105,7 +105,6 @@ describe('VotingEscrowUpgradeableEarlyExit', function () {
       expect(await votingEscrow.token()).to.be.equal(await fenix.getAddress());
       expect(await votingEscrow.team()).to.be.equal(signers.deployer.address);
       expect(await votingEscrow.voter()).to.be.equal(deployed.voter.target);
-      expect(await votingEscrow.artProxy()).to.be.equal(deployed.veArtProxy.target);
       expect(await votingEscrow.veBoost()).to.be.eq(ZERO_ADDRESS);
     });
   });

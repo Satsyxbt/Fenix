@@ -15,8 +15,9 @@ import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {IFeesVault} from "../fees/interfaces/IFeesVault.sol";
+import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
-contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
+contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable, UpgradeCall {
     using SafeERC20 for IERC20;
 
     bool public isDistributeEmissionToMerkle;
