@@ -4,6 +4,7 @@ import 'hardhat-contract-sizer';
 import '@nomicfoundation/hardhat-verify';
 import 'dotenv/config';
 import { SolcUserConfig } from 'hardhat/types';
+import 'hardhat-ignore-warnings';
 import 'hardhat-tracer';
 import './tasks';
 
@@ -97,6 +98,11 @@ const config: HardhatUserConfig = {
     compilers: [DEFAULT_COMPILER_SETTINGS],
     overrides: {
       'contracts/core/VotingEscrowUpgradeable.sol': SPECIFIC_COMPILER_SETTINGS,
+    },
+  },
+  warnings: {
+    'contracts/mocks/**/*': {
+      default: 'off',
     },
   },
 };
