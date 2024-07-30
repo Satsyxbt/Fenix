@@ -37,7 +37,7 @@ External:
 | RouterV2PathProviderUpgradeable_Proxy | `0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648` | Route provider for buyback functionality | Upgradeable |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy | `0xA1657A57638694bF2cF777aD534FEd66dA22131F` | Compound strategy factory | Upgradeable |
 | RFenix                      | `0x0CBc34cDd5d177c813068fD01D11B419D794eE96` | rFNX with convert to FNX & veFNX | Default |
-| FenixRaiseUpgradeable_Proxy | `0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A` | Fenix Raise contract | Upgradeable |
+| FenixRaiseUpgradeable_Proxy | `0xf10B062258EB1650Cf244fd4B4593EBAB7273D67` | Fenix Raise contract | Upgradeable |
 | PerpetualsGaugeUpgradeable_Proxy | `0xD484a5AF8F3a55468E311BdD5aEc4634F2d7E8CC` | Perpetuals Gauge | Upgradeable |
 | PerpetualsTradersRewarderUpgradeable_Proxy | `0xa7B28975d7eF0fF1D406BE36A7D5E5647Ff469ca` | Perpetuals Traders Rewarder | Upgradeable |
 | VeNFTAPIUpgradeable_Proxy   | `0x73D504CF496CFEE25e035de93C7c7535c90f3528` | VeNFTAPI | Upgradeable |
@@ -83,7 +83,7 @@ External:
 | BlastGovernorUpgradeable_Implementation              | `0xA4c6a46f64d7D403Ddd89BA20D697B774E3E328a` |
 | VoterUpgradeableV1_2_Implementation                  | `0x4121Bb0d785BaA10c230cF5Dd0c4bB858C1B56EC` |
 | BlastRebasingTokensGovernorUpgradeable_Implementation | `0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f` |
-| FenixRaiseUpgradeable_Implementation                 | `0xB0F73131E14a3fE2c7dB85f36E5c4C8906D6e3bF` |
+| FenixRaiseUpgradeable_Implementation                 | `0xf10B062258EB1650Cf244fd4B4593EBAB7273D67` |
 
 
 ## Setup

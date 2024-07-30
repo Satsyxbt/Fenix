@@ -87,7 +87,7 @@ export async function logTx(contract: BaseContract, transaction: Promise<any>) {
     const args = decodedData.args
       .map((arg: any, index: number) => {
         const argName = decodedData.fragment.inputs[index]?.name || `arg${index}`;
-        return `${argName}: ${JSON.stringify(arg)}`;
+        return `${argName}: ${JSON.stringify(arg.toString())}`;
       })
       .join(', ');
     logMessage = `\tCalled ${contract.constructor.name}(${await contract.getAddress()}).${methodName}(${args})`;

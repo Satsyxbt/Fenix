@@ -59,8 +59,8 @@
   "VoterUpgradeableV1_2_Implementation": "0x4121Bb0d785BaA10c230cF5Dd0c4bB858C1B56EC",
   "BlastRebasingTokensGovernorUpgradeable_Implementation": "0x7057449c5D7E2E872d29913CD7d9eeECDCb9695f",
   "BlastRebasingTokensGovernorUpgradeable_Proxy": "0x76da5656DEa3D8A8111aB749042f98103198332F",
-  "FenixRaiseUpgradeable_Proxy": "0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A",
-  "FenixRaiseUpgradeable_Implementation": "0xB0F73131E14a3fE2c7dB85f36E5c4C8906D6e3bF",
+  "FenixRaiseUpgradeable_Proxy": "0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb",
+  "FenixRaiseUpgradeable_Implementation": "0xf10B062258EB1650Cf244fd4B4593EBAB7273D67",
   "UtilsUpgradeable_Implementation": "0x7A2A229bB0FC58628448437Cc94db06FF1730550",
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225"
 }

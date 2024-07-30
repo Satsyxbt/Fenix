@@ -1,0 +1,46 @@
+npx hardhat run .\deploy\blastSepolia\012-FenixRaise-deploy.ts --network blastSepolia
+Starting deployment of FenixRaiseUpgradeable...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+FenixRaiseUpgradeable deployed at 0xf10B062258EB1650Cf244fd4B4593EBAB7273D67
+Save to deploys.json deployed address of FenixRaiseUpgradeable_Implementation:0xf10B062258EB1650Cf244fd4B4593EBAB7273D67
+Warning: Address for FenixRaiseUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xB0F73131E14a3fE2c7dB85f36E5c4C8906D6e3bF
+        New address: 0xf10B062258EB1650Cf244fd4B4593EBAB7273D67
+Verifying TransparentUpgradeableProxy at 0xf10B062258EB1650Cf244fd4B4593EBAB7273D67...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/FenixRaiseUpgradeable.sol:FenixRaiseUpgradeable at 0xf10B062258EB1650Cf244fd4B4593EBAB7273D67
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FenixRaiseUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xf10B062258EB1650Cf244fd4B4593EBAB7273D67#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xf10B062258EB1650Cf244fd4B4593EBAB7273D67
+        Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb
+Save to deploys.json deployed address of FenixRaiseUpgradeable_Proxy:0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb
+Warning: Address for FenixRaiseUpgradeable_Proxy is already in the list. It will be replaced.
+        Existing address: 0x1e3c17b0195fE019C46b62ED293Ad8F431bf676A
+        New address: 0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb
+Verifying TransparentUpgradeableProxy at 0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb...
+Timeout for 10s before verify proccess...
+The contract 0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb#code
+TypeError: Do not know how to serialize a BigInt
+    at JSON.stringify (<anonymous>)
+    at E:\Work\Aegas-Fenix\Fenix\utils\Deploy.ts:90:36
+    at Result.map (E:\Work\Aegas-Fenix\Fenix\node_modules\ethers\src.ts\abi\coders\abstract-coder.ts:225:34)
+    at Proxy.<anonymous> (E:\Work\Aegas-Fenix\Fenix\node_modules\ethers\src.ts\abi\coders\abstract-coder.ts:118:42)
+    at logTx (E:\Work\Aegas-Fenix\Fenix\utils\Deploy.ts:88:8)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async main (E:\Work\Aegas-Fenix\Fenix\deploy\blastSepolia\012-FenixRaise-deploy.ts:37:3)
+
+
+
+     npx hardhat run .\deploy\blastSepolia\012-FenixRaise-deploy.ts --network blastSepolia
+        Called Contract(0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb).setTimestamps(startWhitelistPhaseTimestamp_: "1719450107", startPublicPhaseTimestamp_: "1719490107", endPublicPhaseTimestamp_: "1719990107", startClaimPhaseTimestamp_: "1722440334")
+        Transaction hash: 0x05d7d6d3f2b8ebc44c0a68c0a2007a93f7eab768ddb12663ca4f26502f286bc7
+        Called Contract(0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb).setWhitelistRoot(root_: "0x7fabd917d4afd47860601e28ab3309a02ba5a497ad59cd00ffec0346b1a32b7e")
+        Transaction hash: 0x9cb2880ee05846bcb4a4f2bcfb6b29351639846d143ccf5aa69cf110167e5403
