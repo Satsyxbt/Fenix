@@ -3,7 +3,8 @@ pragma solidity >=0.8.0;
 
 /**
  * @title IFenixRaise
- * @dev This interfaces for contract manages a token raise with both whitelist and public phases. It utilizes Merkle proof verification for whitelist management and ensures various caps and limits are adhered to during the raise.
+ * @dev This interfaces for contract manages a token raise with both whitelist and public phases.
+ *  It utilizes Merkle proof verification for whitelist management and ensures various caps and limits are adhered to during the raise.
  */
 interface IFenixRaise {
     /**
@@ -18,12 +19,24 @@ interface IFenixRaise {
      * @param startWhitelistPhaseTimestamp The new timestamp for the start of the whitelist phase
      * @param startPublicPhaseTimestamp The new timestamp for the start of the public phase
      * @param endPublicPhaseTimestamp The new timestamp for the end of the public phase
+     * @param startClaimPhaseTimestamp The new timestamp for the start of the claim phase
      */
     event UpdateTimestamps(
         uint256 indexed startWhitelistPhaseTimestamp,
         uint256 indexed startPublicPhaseTimestamp,
-        uint256 indexed endPublicPhaseTimestamp
+        uint256 indexed endPublicPhaseTimestamp,
+        uint256 startClaimPhaseTimestamp
     );
+
+    /**
+     * @dev Emitted when a user claims their tokens.
+     * @param user The address of the user.
+     * @param claimAmount The total amount of tokens claimed.
+     * @param toTokenAmount The amount of tokens transferred directly to the user.
+     * @param toVeNFTAmount The amount of tokens locked as veNft.
+     * @param tokenId The ID of the veNft lock created.
+     */
+    event Claim(address indexed user, uint256 claimAmount, uint256 toTokenAmount, uint256 toVeNFTAmount, uint256 tokenId);
 
     /**
      * @notice Emitted when deposit caps are updated
@@ -48,6 +61,23 @@ interface IFenixRaise {
     event WithdrawDeposits(address indexed caller, address indexed depositsReciever, uint256 indexed amount);
 
     /**
+     * @notice Emitted when excessive rewards are withdrawn
+     * @param caller The address of the caller withdrawing the excessive rewards
+     * @param tokensReciever The address receiving the excessive rewards
+     * @param amount The amount of rewards tokens withdrawn
+     */
+    event WithdrawExcessiveRewardTokens(address indexed caller, address indexed tokensReciever, uint256 indexed amount);
+
+    /**
+     * @notice Claim tokens after the raise
+     * @dev Users can claim their reward tokens and veNFTs based on their deposited amount.
+     *      If the user has already claimed, it reverts with `AlreadyClaimed`.
+     *      If the deposited amount is zero, it reverts with `ZeroAmount`.
+     *      If the claim phase not started, it reverts with `ClaimPhaseNotStarted`.
+     */
+    function claim() external;
+
+    /**
      * @notice Allows users to deposit tokens during the raise
      * @param amount_ The amount of tokens to deposit
      * @param userCap_ The cap for the user (used for whitelist verification)
@@ -59,6 +89,11 @@ interface IFenixRaise {
      * @notice Withdraws the deposits after the raise is finished
      */
     function whithdrawDeposits() external;
+
+    /**
+     * @notice Withdraws the excessive rewards after the raise is finished
+     */
+    function withdrawExcessiveRewardTokens() external;
 
     /**
      * @notice Sets the deposit caps
@@ -79,11 +114,13 @@ interface IFenixRaise {
      * @param startWhitelistPhaseTimestamp_ The timestamp for the start of the whitelist phase
      * @param startPublicPhaseTimestamp_ The timestamp for the start of the public phase
      * @param endPublicPhaseTimestamp_ The timestamp for the end of the public phase
+     * @param startClaimPhaseTimestamp_ The timestamp for the start of the claim phase
      */
     function setTimestamps(
         uint256 startWhitelistPhaseTimestamp_,
         uint256 startPublicPhaseTimestamp_,
-        uint256 endPublicPhaseTimestamp_
+        uint256 endPublicPhaseTimestamp_,
+        uint256 startClaimPhaseTimestamp_
     ) external;
 
     /**
@@ -108,10 +145,55 @@ interface IFenixRaise {
     function isPublicPhase() external view returns (bool);
 
     /**
+     * @notice Checks if the claim phase is active
+     * @return True if the claim phase is active, false otherwise
+     */
+    function isClaimPhase() external view returns (bool);
+
+    /**
+     * @notice Gets the reward amounts out based on the deposit amount
+     * @param depositAmount_ The amount of tokens deposited
+     * @return toRewardTokenAmount The amount of reward tokens
+     * @return toVeNftAmount The amount to veNFT token
+     */
+    function getRewardsAmountOut(uint256 depositAmount_) external view returns (uint256 toRewardTokenAmount, uint256 toVeNftAmount);
+
+    /**
+     * @notice Returns whether a user has claimed their tokens
+     * @param user_ The address of the user
+     * @return True if the user has claimed their tokens, false otherwise
+     */
+    function isUserClaimed(address user_) external view returns (bool);
+
+    /**
      * @notice Returns the address of the token being raised
      * @return The address of the token
      */
     function token() external view returns (address);
+
+    /**
+     * @notice Returns the address of the reward token
+     * @return The address of the reward token
+     */
+    function rewardToken() external view returns (address);
+
+    /**
+     * @notice Returns the amount of reward tokens per deposit token
+     * @return The amount of reward tokens per deposit token
+     */
+    function amountOfRewardTokenPerDepositToken() external view returns (uint256);
+
+    /**
+     * @notice Returns percentage of the claimed amount to be locked as veNFT
+     * @return Percentage of the claimed amount to be locked as veNFT
+     */
+    function toVeNftPercentage() external view returns (uint256);
+
+    /**
+     * @notice Returns the address of the voting escrow
+     * @return The address of the voting escrow
+     */
+    function votingEscrow() external view returns (address);
 
     /**
      * @notice Returns the address that will receive the deposits
@@ -144,6 +226,12 @@ interface IFenixRaise {
     function endPublicPhaseTimestamp() external view returns (uint256);
 
     /**
+     * @notice Returns the timestamp for the start of the claim phase
+     * @return The timestamp for the start of the claim phase
+     */
+    function startClaimPhaseTimestamp() external view returns (uint256);
+
+    /**
      * @notice Returns the maximum amount a user can deposit during the whitelist phase
      * @return The user cap for the whitelist phase
      */
@@ -166,6 +254,12 @@ interface IFenixRaise {
      * @return The total amount deposited
      */
     function totalDeposited() external view returns (uint256);
+
+    /**
+     * @notice Returns the total amount claimed so far
+     * @return The total amount claimed
+     */
+    function totalClaimed() external view returns (uint256);
 
     /**
      * @notice Returns the amount a specific user has deposited
