@@ -630,12 +630,18 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
     });
 
-    describe('fail if', async () => {
-      it('call from not allowed operator', async () => {
-        await expect(
-          proxy.connect(signers.otherUser3).claimFor(user, ethers.parseEther('100'), getProof(user, tree)),
-        ).to.be.revertedWithCustomError(proxy, 'NotAllowedClaimOperator');
-      });
+    it('fail if call from not allowed operator', async () => {
+      await expect(
+        proxy.connect(signers.otherUser3).claimFor(user, ethers.parseEther('100'), getProof(user, tree)),
+      ).to.be.revertedWithCustomError(proxy, 'NotAllowedClaimOperator');
+    });
+
+    it('success call for the himself', async () => {
+      await expect(
+        proxy
+          .connect(signers.otherUser1)
+          .claimFor(signers.otherUser1, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+      ).to.be.not.reverted;
     });
 
     describe('success claim', async () => {

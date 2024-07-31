@@ -134,6 +134,7 @@ contract VeFnxSplitMerklAidropUpgradeable is
 
     /**
      * @dev Allows a claim operator to claim tokens on behalf of a target address.
+     * Also, the user can claim for himself without the operator permissions
      * @param target_ The address of the user on whose behalf tokens are being claimed.
      * @param amount_ The total amount of tokens to claim.
      * @param proof_ The Merkle proof verifying the user's claim.
@@ -142,7 +143,7 @@ contract VeFnxSplitMerklAidropUpgradeable is
      * @notice Emits a {Claim} event.
      */
     function claimFor(address target_, uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
-        if (!isAllowedClaimOperator[_msgSender()]) {
+        if (target_ != _msgSender() && !isAllowedClaimOperator[_msgSender()]) {
             revert NotAllowedClaimOperator();
         }
         _claim(target_, amount_, proof_);

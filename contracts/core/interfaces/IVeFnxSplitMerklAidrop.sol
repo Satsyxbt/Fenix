@@ -50,6 +50,7 @@ interface IVeFnxSplitMerklAidrop {
 
     /**
      * @dev Allows a claim operator to claim tokens on behalf of a target address.
+     * Also, the user can claim for himself without the operator permissions
      * @param target_ The address of the user on whose behalf tokens are being claimed.
      * @param amount_ The total amount of tokens to claim.
      * @param proof_ The Merkle proof verifying the user's claim.
