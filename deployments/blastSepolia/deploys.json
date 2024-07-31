@@ -2,7 +2,7 @@
   "MinterUpgradeable_Implementation": "0x35C0Acd310BeDdA85F9dee90CD640f97Bb1886FC",
   "VeArtProxyUpgradeable_Implementation": "0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD",
   "VotingEscrowUpgradeable_Implementation": "0x68fd5aD741597ccCd510BFb526E0ef3f03787F9C",
-  "VeFnxDistributorUpgradeable_Implementation": "0x77Da2FB30566F688276C87AAFC315fCC08C1E454",
+  "VeFnxDistributorUpgradeable_Implementation": "0x5E2f616444b98895DF8E57105Dca9B0774B86b99",
   "GaugeFactoryUpgradeable_Implementation": "0x9aBB395fB296Ec3322e39aA3699fbd7cfc88285d",
   "GaugeUpgradeable_Implementation": "0x1a385E81B10637edab4239928Cd38CcB759f06d7",
   "ProxyAdmin": "0x9502993595815b1Fa674C5133F42C3919a696bEc",
