@@ -4,6 +4,7 @@ import {
   getBlastGovernorAddress,
   getDeployedContractsAddressList,
   getProxyAdminAddress,
+  upgradeProxy,
 } from '../../utils/Deploy';
 import { ethers } from 'hardhat';
 import { InstanceName } from '../../utils/Names';
@@ -17,8 +18,8 @@ async function main() {
     implementationName: InstanceName.VeFnxSplitMerklAidropUpgradeable,
     deployer: deployer,
     implementationConstructorArguments: [BlastGovernor],
-    implementationSaveAlias: AliasDeployedContracts.VeFnxDistributorUpgradeable_Implementation,
-    proxyAddress: DeployedContracts[AliasDeployedContracts.VeFnxDistributorUpgradeable_Proxy],
+    implementationSaveAlias: AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Implementation,
+    proxyAddress: DeployedContracts[AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Proxy],
     proxyAdmin: await getProxyAdminAddress(),
     verify: true,
   });
