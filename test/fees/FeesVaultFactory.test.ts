@@ -722,7 +722,7 @@ describe('FeesVaultFactory Contract', function () {
           rates: [4000],
         });
         expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.true;
-        expect(await feesVaultFactory.customDistributionConfigs(signers.blastGovernor.address)).to.be.deep.eq([
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
           6000,
           [signers.blastGovernor.address],
           [4000],
@@ -734,7 +734,7 @@ describe('FeesVaultFactory Contract', function () {
           rates: [],
         });
         expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.false;
-        expect(await feesVaultFactory.customDistributionConfigs(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
       });
       it('should correct set custom config', async () => {
         await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
@@ -748,7 +748,7 @@ describe('FeesVaultFactory Contract', function () {
         ).to.be.emit(feesVaultFactory, 'CustomDistributionConfig');
 
         expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.true;
-        expect(await feesVaultFactory.customDistributionConfigs(signers.blastGovernor.address)).to.be.deep.eq([
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
           6000,
           [signers.blastGovernor.address],
           [4000],
@@ -773,6 +773,196 @@ describe('FeesVaultFactory Contract', function () {
         expect(res.rates).to.be.deep.equal([1, 2]);
       });
     });
+    describe('#setDistributionConfigForCreator', async () => {
+      it('fail if try set inncorect configs when array length mismatch', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [],
+            rates: [1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'ArraysLengthMismatch');
+      });
+      it('fail if try set inncorect rates', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 9999,
+            recipients: [],
+            rates: [],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10001,
+            recipients: [],
+            rates: [],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [],
+            rates: [],
+          }),
+        ).to.be.not.reverted;
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 9999,
+            recipients: [signers.blastGovernor.address],
+            rates: [1],
+          }),
+        ).to.be.not.reverted;
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [10001],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [9999],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [10000],
+          }),
+        ).to.be.not.reverted;
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [5000, 50001],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 1,
+            recipients: [],
+            rates: [],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [5000, 5000],
+          }),
+        ).to.be.not.reverted;
+      });
+      it('fail if try set zero recipient or with zero rates', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 0,
+            recipients: [signers.blastGovernor.address],
+            rates: [0],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 10000,
+            recipients: [signers.blastGovernor.address],
+            rates: [0],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 9999,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [0, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'IncorrectRates');
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 9998,
+            recipients: [signers.blastGovernor.address, ZERO_ADDRESS],
+            rates: [1, 1],
+          }),
+        ).to.be.revertedWithCustomError(feesVaultFactory, 'AddressZero');
+      });
+      it('should clear custom config for address if set clear config', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+          toGaugeRate: 6000,
+          recipients: [signers.blastGovernor.address],
+          rates: [4000],
+        });
+        expect(await feesVaultFactory.creatorDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
+          6000,
+          [signers.blastGovernor.address],
+          [4000],
+        ]);
+        await feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+          toGaugeRate: 0,
+          recipients: [],
+          rates: [],
+        });
+        expect(await feesVaultFactory.creatorDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
+      });
+      it('should correct set custom config', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 6000,
+            recipients: [signers.blastGovernor.address],
+            rates: [4000],
+          }),
+        ).to.be.emit(feesVaultFactory, 'CreatorDistributionConfig');
+        expect(await feesVaultFactory.creatorDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
+          6000,
+          [signers.blastGovernor.address],
+          [4000],
+        ]);
+        await expect(
+          feesVaultFactory.setDistributionConfigForCreator(signers.blastGovernor.address, {
+            toGaugeRate: 9997,
+            recipients: [signers.blastGovernor.address, signers.deployer.address],
+            rates: [1, 2],
+          }),
+        ).to.be.emit(feesVaultFactory, 'CreatorDistributionConfig');
+        let res = await feesVaultFactory.creatorDistributionConfig(signers.blastGovernor.address);
+        expect(res.toGaugeRate).to.be.equal(9997);
+        expect(res.recipients).to.be.deep.equal([signers.blastGovernor.address, signers.deployer.address]);
+        expect(res.rates).to.be.deep.equal([1, 2]);
+      });
+    });
+
     describe('#getDistributionConfig', async () => {
       it('should return default config for address without custom config', async () => {
         expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.false;
@@ -781,10 +971,34 @@ describe('FeesVaultFactory Contract', function () {
           DEFAULT_DISTRIBUTION_CONFIG.recipients,
           DEFAULT_DISTRIBUTION_CONFIG.rates,
         ]);
-        expect(await feesVaultFactory.customDistributionConfigs(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
       });
-      it('should return custom config for address with custom config', async () => {
+
+      it('should return creator config if setup for address without custom config', async () => {
         await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await feesVaultFactory.setDistributionConfigForCreator(creator.address, {
+          toGaugeRate: 6000,
+          recipients: [signers.blastGovernor.address],
+          rates: [4000],
+        });
+        await feesVaultFactory.changeCreatorForFeesVaults(creator.address, [signers.blastGovernor.address]);
+        expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.false;
+        expect(await feesVaultFactory.getDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
+          6000,
+          [signers.blastGovernor.address],
+          [4000],
+        ]);
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([0, [], []]);
+      });
+
+      it('should return custom config for address with custom config and creator config', async () => {
+        await feesVaultFactory.grantRole(await feesVaultFactory.FEES_VAULT_ADMINISTRATOR_ROLE(), signers.deployer.address);
+        await feesVaultFactory.setDistributionConfigForCreator(creator.address, {
+          toGaugeRate: 8000,
+          recipients: [signers.blastGovernor.address],
+          rates: [2000],
+        });
+        await feesVaultFactory.changeCreatorForFeesVaults(creator.address, [signers.blastGovernor.address]);
         await feesVaultFactory.setCustomDistributionConfig(signers.blastGovernor.address, {
           toGaugeRate: 6000,
           recipients: [signers.blastGovernor.address],
@@ -797,10 +1011,21 @@ describe('FeesVaultFactory Contract', function () {
           [signers.blastGovernor.address],
           [4000],
         ]);
-        expect(await feesVaultFactory.customDistributionConfigs(signers.blastGovernor.address)).to.be.deep.eq([
+        expect(await feesVaultFactory.customDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
           6000,
           [signers.blastGovernor.address],
           [4000],
+        ]);
+        await feesVaultFactory.setCustomDistributionConfig(signers.blastGovernor.address, {
+          toGaugeRate: 0,
+          recipients: [],
+          rates: [],
+        });
+        expect(await feesVaultFactory.isCustomConfig(signers.blastGovernor.address)).to.be.false;
+        expect(await feesVaultFactory.getDistributionConfig(signers.blastGovernor.address)).to.be.deep.eq([
+          8000,
+          [signers.blastGovernor.address],
+          [2000],
         ]);
       });
     });
@@ -819,6 +1044,16 @@ describe('FeesVaultFactory Contract', function () {
       );
     });
     describe('sucess create vault for pool', async () => {
+      it('setup creator for fees vault', async () => {
+        let newFeesVaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress1);
+        await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress1);
+        expect(await feesVaultFactory.getFeesVaultCreator(newFeesVaultAddress)).to.be.eq(creator.address);
+        await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), signers.deployer.address);
+        let newFeesVaultAddress2 = await feesVaultFactory.connect(signers.deployer).createVaultForPool.staticCall(mockPoolAddress2);
+        await feesVaultFactory.connect(signers.deployer).createVaultForPool(mockPoolAddress2);
+        expect(await feesVaultFactory.getFeesVaultCreator(newFeesVaultAddress)).to.be.eq(creator.address);
+        expect(await feesVaultFactory.getFeesVaultCreator(newFeesVaultAddress2)).to.be.eq(signers.deployer.address);
+      });
       it('create end emit event', async () => {
         let newFeesVaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress1);
         await expect(feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress1))
@@ -928,6 +1163,49 @@ describe('FeesVaultFactory Contract', function () {
 
       expect(await token0.getConfiguration(vaultAddress)).to.be.eq(1);
       expect(await token1.getConfiguration(vaultAddress)).to.be.eq(2);
+    });
+  });
+  describe('#changeCreatorForFeesVaults', async () => {
+    it('fails if caller not DEFAULT_ADMIN_ROLE', async () => {
+      await expect(
+        feesVaultFactory.connect(signers.otherUser1).changeCreatorForFeesVaults(signers.otherUser1.address, []),
+      ).to.be.revertedWith(getAccessControlError(await feesVaultFactory.DEFAULT_ADMIN_ROLE(), signers.otherUser1.address));
+    });
+    it('#1 success change creator for fees vaults', async () => {
+      let vaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress1);
+      await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress1);
+      let vaultAddress2 = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress2);
+      await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress2);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(creator.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(creator.address);
+      await expect(feesVaultFactory.changeCreatorForFeesVaults(signers.deployer.address, [vaultAddress, vaultAddress2]))
+        .to.be.emit(feesVaultFactory, 'ChangeCreatorForFeesVaults')
+        .withArgs(signers.deployer.address, [vaultAddress, vaultAddress2]);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(signers.deployer.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(signers.deployer.address);
+    });
+    it('#2 success change creator for fees vaults', async () => {
+      let vaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress1);
+      await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress1);
+      let vaultAddress2 = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPoolAddress2);
+      await feesVaultFactory.connect(creator).createVaultForPool(mockPoolAddress2);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(creator.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(creator.address);
+      await expect(feesVaultFactory.changeCreatorForFeesVaults(signers.deployer.address, [vaultAddress2]))
+        .to.be.emit(feesVaultFactory, 'ChangeCreatorForFeesVaults')
+        .withArgs(signers.deployer.address, [vaultAddress2]);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(creator.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(signers.deployer.address);
+      await expect(feesVaultFactory.changeCreatorForFeesVaults(signers.deployer.address, [vaultAddress]))
+        .to.be.emit(feesVaultFactory, 'ChangeCreatorForFeesVaults')
+        .withArgs(signers.deployer.address, [vaultAddress]);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(signers.deployer.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(signers.deployer.address);
+      await expect(feesVaultFactory.changeCreatorForFeesVaults(creator.address, [vaultAddress2, vaultAddress]))
+        .to.be.emit(feesVaultFactory, 'ChangeCreatorForFeesVaults')
+        .withArgs(creator.address, [vaultAddress2, vaultAddress]);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress)).to.be.eq(creator.address);
+      expect(await feesVaultFactory.getFeesVaultCreator(vaultAddress2)).to.be.eq(creator.address);
     });
   });
 });

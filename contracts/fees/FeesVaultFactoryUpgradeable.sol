@@ -31,6 +31,9 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
      */
     address public rebasingTokensGovernor;
 
+    mapping(address creator => DistributionConfig) internal _creatorDistributionConfigs;
+    mapping(address feesVault => address creator) internal _feesVaultCreator;
+
     /**
      * @dev Constructor that disables initialization on implementation.
      */
@@ -144,6 +147,43 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
     }
 
     /**
+     * @notice Changes the creator for multiple fees vaults.
+     * @param creator_ The new creator address.
+     * @param feesVaults_ The array of fees vault addresses.
+     */
+    function changeCreatorForFeesVaults(
+        address creator_,
+        address[] calldata feesVaults_
+    ) external virtual override onlyRole(DEFAULT_ADMIN_ROLE) {
+        for (uint256 i; i < feesVaults_.length; ) {
+            _feesVaultCreator[feesVaults_[i]] = creator_;
+            unchecked {
+                i++;
+            }
+        }
+        emit ChangeCreatorForFeesVaults(creator_, feesVaults_);
+    }
+
+    /**
+     * @notice Sets a distribution configuration for a specific creator.
+     * @param creator_ The address of the creator of fees vaults.
+     * @param config_ The distribution configuration to apply.
+     */
+    function setDistributionConfigForCreator(
+        address creator_,
+        DistributionConfig memory config_
+    ) external virtual override onlyRole(FEES_VAULT_ADMINISTRATOR_ROLE) {
+        if (config_.toGaugeRate == 0 && config_.recipients.length == 0 && config_.rates.length == 0) {
+            delete _creatorDistributionConfigs[creator_];
+        } else {
+            _checkDistributionConfig(config_);
+            _creatorDistributionConfigs[creator_] = config_;
+        }
+
+        emit CreatorDistributionConfig(creator_, config_);
+    }
+
+    /**
      * @dev Creates a new fee vault for a given pool if it hasn't been created yet. Only callable by whitelisted creators.
      *
      * @param pool_ The address of the pool for which the fee vault is to be created.
@@ -159,6 +199,7 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
         IFeesVault(newFeesVault).initialize(defaultBlastGovernor, defaultBlastPoints, defaultBlastPointsOperator, address(this), pool_);
 
         getVaultForPool[pool_] = newFeesVault;
+        _feesVaultCreator[newFeesVault] = _msgSender();
 
         emit FeesVaultCreated(pool_, newFeesVault);
         return newFeesVault;
@@ -201,7 +242,41 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
     function getDistributionConfig(
         address feesVault_
     ) external view virtual override returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates) {
-        DistributionConfig memory config = isCustomConfig[feesVault_] ? _customDistributionConfigs[feesVault_] : _defaultDistributionConfig;
+        DistributionConfig memory config;
+        if (isCustomConfig[feesVault_]) {
+            config = _customDistributionConfigs[feesVault_];
+        } else {
+            address creator = _feesVaultCreator[feesVault_];
+            DistributionConfig memory creatorConfig = _creatorDistributionConfigs[creator];
+            if (creator != address(0) && (creatorConfig.toGaugeRate > 0 || creatorConfig.recipients.length > 0)) {
+                config = creatorConfig;
+            } else {
+                config = _defaultDistributionConfig;
+            }
+        }
+        return (config.toGaugeRate, config.recipients, config.rates);
+    }
+
+    /**
+     * @notice Retrieves the creator address for a specific fees vault.
+     * @param feesVault_ The address of the fees vault.
+     * @return The address of the creator associated with the specified fees vault.
+     */
+    function getFeesVaultCreator(address feesVault_) external view returns (address) {
+        return _feesVaultCreator[feesVault_];
+    }
+
+    /**
+     * @notice Retrieves the distribution configuration for a specific creator.
+     * @param creator_ The address of the creator.
+     * @return toGaugeRate The rate at which fees are distributed to the gauge.
+     * @return recipients The addresses of the recipients.
+     * @return rates The rates at which fees are distributed to the recipients.
+     */
+    function creatorDistributionConfig(
+        address creator_
+    ) external view virtual override returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates) {
+        DistributionConfig memory config = _creatorDistributionConfigs[creator_];
         return (config.toGaugeRate, config.recipients, config.rates);
     }
 
@@ -229,7 +304,7 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
      * @return recipients The addresses of the recipients.
      * @return rates The rates at which fees are distributed to the recipients.
      */
-    function customDistributionConfigs(
+    function customDistributionConfig(
         address feesVault_
     ) external view virtual override returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates) {
         DistributionConfig memory config = _customDistributionConfigs[feesVault_];
@@ -275,5 +350,5 @@ contract FeesVaultFactoryUpgradeable is IFeesVaultFactory, BlastERC20FactoryMana
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[41] private __gap;
 }

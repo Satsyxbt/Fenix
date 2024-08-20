@@ -71,6 +71,20 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
     event SetRebasingTokensGovernor(address indexed oldRebasingTokensGovernor, address indexed newRebasingTokensGovernor);
 
     /**
+     * @dev Emitted when a custom distribution configuration is set for a creator.
+     * @param creator The address of the creator for which the configuration is set.
+     * @param config The custom distribution configuration applied to the fees vault created by creator.
+     */
+    event CreatorDistributionConfig(address indexed creator, DistributionConfig config);
+
+    /**
+     * @dev Emitted when the creator for multiple fees vaults is changed.
+     * @param creator_ The new creator address associated with the fees vaults.
+     * @param feesVaults The array of fees vault addresses that had their creator changed.
+     */
+    event ChangeCreatorForFeesVaults(address indexed creator_, address[] feesVaults);
+
+    /**
      * @dev Error indicating that a fee vault creation attempt was made for a pool that already has an associated vault.
      */
     error AlreadyCreated();
@@ -120,6 +134,17 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
     ) external view returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates);
 
     /**
+     * @notice Retrieves the distribution configuration for a specific creator.
+     * @param creator_ The address of the creator.
+     * @return toGaugeRate The rate at which fees are distributed to the gauge.
+     * @return recipients The addresses of the recipients.
+     * @return rates The rates at which fees are distributed to the recipients.
+     */
+    function creatorDistributionConfig(
+        address creator_
+    ) external view returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates);
+
+    /**
      * @notice Returns the default distribution configuration used by the factory.
      * @return toGaugeRate The default rate at which fees are distributed to the gauge.
      * @return recipients The default addresses of the recipients.
@@ -134,7 +159,7 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
      * @return recipients The addresses of the recipients.
      * @return rates The rates at which fees are distributed to the recipients.
      */
-    function customDistributionConfigs(
+    function customDistributionConfig(
         address feesVault_
     ) external view returns (uint256 toGaugeRate, address[] memory recipients, uint256[] memory rates);
 
@@ -164,6 +189,13 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
     function changeImplementation(address implementation_) external;
 
     /**
+     * @notice Retrieves the creator address for a specific fees vault.
+     * @param feesVault_ The address of the fees vault.
+     * @return The address of the creator associated with the specified fees vault.
+     */
+    function getFeesVaultCreator(address feesVault_) external view returns (address);
+
+    /**
      * @dev Sets the address used for voting in the fee vaults. Only callable by the contract owner.
      *
      * @param voter_ The new voter address to be set.
@@ -182,4 +214,18 @@ interface IFeesVaultFactory is IAlgebraVaultFactory, IAccessControlUpgradeable {
      * @param config_ The distribution configuration to apply.
      */
     function setDefaultDistributionConfig(DistributionConfig memory config_) external;
+
+    /**
+     * @notice Sets a custom distribution configuration for a specific creator.
+     * @param creator_ The address of the creator of fees vaults.
+     * @param config_ The custom distribution configuration to apply.
+     */
+    function setDistributionConfigForCreator(address creator_, DistributionConfig memory config_) external;
+
+    /**
+     * @notice Changes the creator for multiple fees vaults.
+     * @param creator_ The new creator address.
+     * @param feesVaults_ The array of fees vault addresses.
+     */
+    function changeCreatorForFeesVaults(address creator_, address[] calldata feesVaults_) external;
 }
