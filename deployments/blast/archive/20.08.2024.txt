@@ -73,3 +73,9 @@ for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
 https://blastscan.io/address/0x17409D1648422596B447BC3FcEE92a5f291e4604#code
+
+npx hardhat run .\deploy\blast\004-AddBlastGovernorImplToCentalizedBlastGovernor.ts --network blast
+        Called Contract(0x4300000000000000000000000000000000000002).configureGovernorOnBehalf(_newGovernor: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", contractAddress: "0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f")
+        Transaction hash: 0x783c6604a0c9c1befcbd0da01996bc637162857abf2f8aafb67a5e0aafb4abe2
+        Called Contract(0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1).addGasHolder(contractAddress_: "0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f")
+        Transaction hash: 0xfc50da3538f5cfcf93e170d5d903fe743ab2d4d19d5253707764e14bc08d280b
