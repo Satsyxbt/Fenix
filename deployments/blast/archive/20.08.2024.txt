@@ -1,0 +1,75 @@
+Starting deployment of BlastGovernorUpgradeable...
+        Constructor arguments: ["0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30"]
+BlastGovernorUpgradeable deployed at 0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f
+
+Successfully submitted source code for contract
+contracts/integration/BlastGovernorUpgradeable.sol:BlastGovernorUpgradeable at 0xd8da36a27a745a1f9ffa356a7ec7f730fc8ede6f
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastGovernorUpgradeable on the block explorer.
+https://blastscan.io/address/0xd8da36a27a745a1f9ffa356a7ec7f730fc8ede6f#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f
+        Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+        Data: 0x
+
+TransparentUpgradeableProxy deployed at 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1
+Save to deploys.json deployed address of BlastGovernorUpgradeable_Proxy:0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1
+Verifying TransparentUpgradeableProxy at 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1...
+Timeout for 10s before verify proccess...
+The contract 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1 has already been verified on Etherscan.
+https://blastscan.io/address/0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1#code
+        Called Contract(0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1).initialize()
+        Transaction hash: 0x1c9377e4785257bf7319f1310a73f2aada1a8cd8ff9f13dc269ba1050523b859
+        Called Contract(0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1).grantRole(role: "0xb02835ed23866236aee0427e99946731326ed8467586213250ac98c7b9cae230", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+        Transaction hash: 0xba67a3a18d97ea2f40822c67c272de30fc8c94c15426a7f4057235ef2204a534
+        Called Contract(0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1).grantRole(role: "0xe562760eaa817d85ec1bf58364c4d65adb65d99d113c6785ef9aa66567076c95", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+        Transaction hash: 0xde79bfbeb91ae74027b2b89c016201abf8238797ea6a985ce72e904d194e0cb9
+
+
+Starting deployment of BlastRebasingTokensGovernorUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BlastRebasingTokensGovernorUpgradeable deployed at 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Implementation:0xEe9220Cb20e9f7848f22BF7117412A54766D5F72       
+Verifying TransparentUpgradeableProxy at 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/BlastRebasingTokensGovernor.sol:BlastRebasingTokensGovernorUpgradeable at 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72      
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastRebasingTokensGovernorUpgradeable on the block explorer.
+https://blastscan.io/address/0xEe9220Cb20e9f7848f22BF7117412A54766D5F72#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72
+        Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Proxy:0x71B83044626c8F6Ef38F051673562Fe025F8ec1F
+Verifying TransparentUpgradeableProxy at 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F...
+Timeout for 10s before verify proccess...
+The contract 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F has already been verified on Etherscan.
+https://blastscan.io/address/0x71B83044626c8F6Ef38F051673562Fe025F8ec1F#code
+        Called Contract(0x71B83044626c8F6Ef38F051673562Fe025F8ec1F).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1")
+        Transaction hash: 0x8579bf17f7c2a7668a9c8712b5f17af72f379cecf7a6d71bf94c9edaa6571dfe
+        Called Contract(0x71B83044626c8F6Ef38F051673562Fe025F8ec1F).grantRole(role: "0x96f93e547c9c0f4da199cc643fe402efb93b3a591722ad8b3cb9231b9fb18873", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+        Transaction hash: 0x8b8f5d1aced49654e92948d7a4dd3049a760665aefa431f9fcb0e32f5e97efe1
+        Called Contract(0x71B83044626c8F6Ef38F051673562Fe025F8ec1F).grantRole(role: "0x13c917b27f9272fd324bebe12db2b6900472b7e73f0c1eb5742a6a9b7b741eeb", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+        Transaction hash: 0x8ea603213eae49fc4500b7fa4b09685f0a9ee74de34cc879797c274520f05fc0
+
+
+
+npx hardhat run .\deploy\blast\003-FeesVaultFactoryImplementation-deploy.ts --network blast
+Starting deployment of FeesVaultFactoryUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+FeesVaultFactoryUpgradeable deployed at 0x17409D1648422596B447BC3FcEE92a5f291e4604
+Save to deploys.json deployed address of FeesVaultFactoryUpgradeable_Implementation:0x17409D1648422596B447BC3FcEE92a5f291e4604
+Verifying TransparentUpgradeableProxy at 0x17409D1648422596B447BC3FcEE92a5f291e4604...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/fees/FeesVaultFactoryUpgradeable.sol:FeesVaultFactoryUpgradeable at 0x17409D1648422596B447BC3FcEE92a5f291e4604
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0x17409D1648422596B447BC3FcEE92a5f291e4604#code

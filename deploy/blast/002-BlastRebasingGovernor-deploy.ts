@@ -5,6 +5,7 @@ import {
   getBlastGovernorAddress,
   getDeployedContractAddress,
   getProxyAdminAddress,
+  logTx,
 } from '../../utils/Deploy';
 import { ethers } from 'hardhat';
 import { BlastGovernorUpgradeable, BlastRebasingTokensGovernorUpgradeable } from '../../typechain-types';
@@ -37,16 +38,19 @@ async function main() {
     Proxy.target,
   );
 
-  await BlastRebasingTokensGovernorUpgradeable.initialize(BlastGovernor);
+  await logTx(BlastRebasingTokensGovernorUpgradeable, BlastRebasingTokensGovernorUpgradeable.initialize(BlastGovernor));
 
-  await BlastRebasingTokensGovernorUpgradeable.grantRole(
-    Roles.BlastRebasingTokensGovernorUpgradeable.TOKEN_HOLDER_ADDER_ROLE,
-    deployer.address,
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.grantRole(
+      Roles.BlastRebasingTokensGovernorUpgradeable.TOKEN_HOLDER_ADDER_ROLE,
+      deployer.address,
+    ),
   );
 
-  await BlastRebasingTokensGovernorUpgradeable.grantRole(
-    Roles.BlastRebasingTokensGovernorUpgradeable.TOKEN_WITHDRAWER_ROLE,
-    deployer.address,
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.grantRole(Roles.BlastRebasingTokensGovernorUpgradeable.TOKEN_WITHDRAWER_ROLE, deployer.address),
   );
 }
 main()

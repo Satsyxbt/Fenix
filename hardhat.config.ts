@@ -44,7 +44,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      blastMainnet: `${process.env.API_KEY}`,
+      blast: `${process.env.API_KEY}`,
       blastSepolia: `${process.env.API_KEY}`,
     },
     customChains: [
@@ -57,7 +57,7 @@ const config: HardhatUserConfig = {
         },
       },
       {
-        network: 'blastMainnet',
+        network: 'blast',
         chainId: 81457,
         urls: {
           apiURL: 'https://api.blastscan.io/api',
@@ -70,7 +70,6 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
-
     blastSepolia: {
       url: `${process.env.RPC_BLAST_SEPOLIA || 'https://sepolia.blast.io'}`,
       accounts: {
@@ -81,7 +80,7 @@ const config: HardhatUserConfig = {
         passphrase: '',
       },
     },
-    blastMainnet: {
+    blast: {
       url: `${process.env.RPC_BLAST || 'https://rpc.blast.io'}`,
       accounts: {
         mnemonic: `${process.env.BLAST_MNEMONIC}`,

@@ -1,4 +1,4 @@
-import { AliasDeployedContracts, deploy, deployProxy, getDeployedContractAddress } from '../../utils/Deploy';
+import { AliasDeployedContracts, deploy, deployProxy, getDeployedContractAddress, logTx } from '../../utils/Deploy';
 import { ethers } from 'hardhat';
 import { BlastGovernorUpgradeable } from '../../typechain-types';
 import { InstanceName } from '../../utils/Names';
@@ -25,10 +25,17 @@ async function main() {
 
   const BlastGovernorUpgradeable = await ethers.getContractAt(InstanceName.BlastGovernorUpgradeable, Proxy.target);
 
-  await BlastGovernorUpgradeable.initialize();
+  await logTx(BlastGovernorUpgradeable, BlastGovernorUpgradeable.initialize());
 
-  await BlastGovernorUpgradeable.grantRole(Roles.BlastGovernorUpgradeable.GAS_HOLDER_ADDER_ROLE, deployer.address);
-  await BlastGovernorUpgradeable.grantRole(Roles.BlastGovernorUpgradeable.GAS_WITHDRAWER_ROLE, deployer.address);
+  await logTx(
+    BlastGovernorUpgradeable,
+    BlastGovernorUpgradeable.grantRole(Roles.BlastGovernorUpgradeable.GAS_HOLDER_ADDER_ROLE, deployer.address),
+  );
+
+  await logTx(
+    BlastGovernorUpgradeable,
+    BlastGovernorUpgradeable.grantRole(Roles.BlastGovernorUpgradeable.GAS_WITHDRAWER_ROLE, deployer.address),
+  );
 }
 main()
   .then(() => process.exit(0))
