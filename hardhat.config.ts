@@ -68,7 +68,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      allowUnlimitedContractSize: true,
+      allowUnlimitedContractSize: false,
     },
 
     blastSepolia: {
@@ -80,13 +80,11 @@ const config: HardhatUserConfig = {
         count: 20,
         passphrase: '',
       },
-      gasPrice: 1e3,
     },
     blastMainnet: {
-      url: `https://blast-mainnet.infura.io/v3/${process.env.INFURA_ID_PROJECT}`,
-      gasPrice: 1e3,
+      url: `${process.env.RPC_BLAST || 'https://rpc.blast.io'}`,
       accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
+        mnemonic: `${process.env.BLAST_MNEMONIC}`,
         path: "m/44'/60'/0'/0",
         initialIndex: 0,
         count: 20,
