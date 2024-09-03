@@ -1,18 +1,12 @@
-import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  BaseManagedNFTStrategyUpgradeableMock,
-  BaseManagedNFTStrategyUpgradeableMock__factory,
-  BaseManagedNFTStrategyUpgradeable__factory,
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable,
-  CompoundVeFNXManagedNFTStrategyUpgradeable,
   ManagedNFTManagerUpgradeable,
   ManagedNFTManagerUpgradeable__factory,
   RouterV2,
   RouterV2PathProviderUpgradeable,
-  SingelTokenVirtualRewarderUpgradeable,
-  SingelTokenVirtualRewarderUpgradeable__factory,
 } from '../../typechain-types';
 import { ERRORS, ONE, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS, getAccessControlError } from '../utils/constants';
 import completeFixture, {
@@ -20,11 +14,8 @@ import completeFixture, {
   SignersList,
   deployManagedNFTManager,
   deployTransaperntUpgradeableProxy,
-  deployVirtualRewarderWithoutInitialize,
   getSigners,
-  mockBlast,
 } from '../utils/coreFixture';
-import { time, loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('ManagedNFTManager Contract', function () {
   let signers: SignersList;
@@ -171,7 +162,7 @@ describe('ManagedNFTManager Contract', function () {
 
     it('success toggle disable nft', async () => {
       let strategy = await newStrategy();
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);
 
       expect(await managedNFTManager.isDisabledNFT(tokenId)).to.be.false;
@@ -219,7 +210,7 @@ describe('ManagedNFTManager Contract', function () {
       );
       await strategyFactory.createStrategy('VeMax');
 
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
       expect(await strategy.managedTokenId()).to.be.eq(ZERO);
 
       await expect(managedNFTManager.createManagedNFT(strategy.target))
@@ -247,7 +238,7 @@ describe('ManagedNFTManager Contract', function () {
 
     it('success setup new authorized user', async () => {
       let strategy = await newStrategy();
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);
       expect((await managedNFTManager.managedTokensInfo(tokenId)).authorizedUser).to.be.eq(ZERO_ADDRESS);
       await expect(managedNFTManager.setAuthorizedUser(tokenId, signers.otherUser1.address))
@@ -276,7 +267,7 @@ describe('ManagedNFTManager Contract', function () {
   describe('view functionality', async () => {
     it('#isDisabledNFT', async () => {
       let strategy = await newStrategy();
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);
       expect(await managedNFTManager.managedTokensInfo(tokenId)).to.be.deep.eq([true, false, ZERO_ADDRESS]);
       expect(await managedNFTManager.isDisabledNFT(tokenId)).to.be.false;
@@ -288,7 +279,7 @@ describe('ManagedNFTManager Contract', function () {
     });
     it('#isManagedNFT', async () => {
       let strategy = await newStrategy();
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
 
       expect(await managedNFTManager.managedTokensInfo(tokenId)).to.be.deep.eq([false, false, ZERO_ADDRESS]);
 
@@ -299,7 +290,7 @@ describe('ManagedNFTManager Contract', function () {
     });
     it('#isAuthorized', async () => {
       let strategy = await newStrategy();
-      let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+      let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
 
       expect(await managedNFTManager.isAuthorized(tokenId, signers.otherUser1.address)).to.be.false;
 
@@ -329,8 +320,8 @@ describe('ManagedNFTManager Contract', function () {
           await deployed.votingEscrow.getAddress(),
           signers.fenixTeam.address,
         );
-        await deployed.votingEscrow.setManagedNFTManager(managedNFTManager.target);
-        await deployed.voter.setManagedNFTManager(managedNFTManager.target);
+        await deployed.votingEscrow.updateAddress('managedNFTManager', managedNFTManager.target);
+        await deployed.voter.updateAddress('managedNFTManager', managedNFTManager.target);
         strategyFactory = (await ethers.getContractAt(
           'CompoundVeFNXManagedNFTStrategyFactoryUpgradeable',
           (
@@ -360,7 +351,7 @@ describe('ManagedNFTManager Contract', function () {
       describe('onAttachToManagedNFT', async () => {
         it('success attach user nft to managed nft id', async () => {
           let strategy = await newStrategy();
-          let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(strategy.target);
 
           let userTokenId = tokenId + ONE;
@@ -372,7 +363,7 @@ describe('ManagedNFTManager Contract', function () {
         });
         it('fail if user nft already attached', async () => {
           let strategy = await newStrategy();
-          let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(strategy.target);
 
           let userTokenId = tokenId + ONE;
@@ -399,7 +390,7 @@ describe('ManagedNFTManager Contract', function () {
         });
         it('fail if managed token is disabled', async () => {
           let strategy = await newStrategy();
-          let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(strategy.target);
 
           await managedNFTManager.toggleDisableManagedNFT(tokenId);
@@ -411,11 +402,11 @@ describe('ManagedNFTManager Contract', function () {
         });
         it('fail if user token id is managed nft', async () => {
           let strategy = await newStrategy();
-          let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(strategy.target);
 
           let secondStrategy = await newStrategy();
-          let secondTokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let secondTokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(secondStrategy.target);
 
           await expect(
@@ -433,7 +424,7 @@ describe('ManagedNFTManager Contract', function () {
 
         it('fail if user nft not attached', async () => {
           let strategy = await newStrategy();
-          let tokenId = (await deployed.votingEscrow.tokenId()) + ONE;
+          let tokenId = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
           await managedNFTManager.createManagedNFT(strategy.target);
 
           let userTokenId = tokenId + ONE;
@@ -447,11 +438,11 @@ describe('ManagedNFTManager Contract', function () {
       });
       it('short main flow', async () => {
         let strategy = await newStrategy();
-        let managedTokenIdFirst = (await deployed.votingEscrow.tokenId()) + ONE;
+        let managedTokenIdFirst = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
         await managedNFTManager.createManagedNFT(strategy.target);
 
         let secondStrategy = await newStrategy();
-        let managedTokenIdSecond = (await deployed.votingEscrow.tokenId()) + ONE;
+        let managedTokenIdSecond = (await deployed.votingEscrow.lastMintedTokenId()) + ONE;
         await managedNFTManager.createManagedNFT(secondStrategy.target);
 
         await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('100'));

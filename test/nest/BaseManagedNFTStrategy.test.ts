@@ -6,7 +6,7 @@ import {
   BaseManagedNFTStrategyUpgradeableMock__factory,
   ManagedNFTManagerUpgradeable,
 } from '../../typechain-types';
-import { ERRORS, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { ERRORS, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy, getSigners } from '../utils/coreFixture';
 
 describe('BaseManagedNFTStrategy Contract', function () {

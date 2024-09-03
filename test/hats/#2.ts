@@ -74,16 +74,16 @@ describe('#2 Adversary can steal all bribe rewards', function () {
   });
 
   it(`Adversary can steal all bribe rewards`, async () => {
-    let res = await deployed.voter.connect(signers.deployer).createGauge.staticCall(poolV2FenixTk18.target, 0);
+    let res = await deployed.voter.connect(signers.deployer).createV2Gauge.staticCall(poolV2FenixTk18.target);
 
-    await deployed.voter.connect(signers.deployer).createGauge(poolV2FenixTk18.target, 0);
+    await deployed.voter.connect(signers.deployer).createV2Gauge(poolV2FenixTk18.target);
 
     await fenix.approve(deployed.votingEscrow.target, ethers.parseEther('200'));
-    await deployed.votingEscrow.create_lock(1e9, 182 * 86400);
-    user1TokenId = await deployed.votingEscrow.tokenId();
+    await deployed.votingEscrow.create_lock_for(1e9, 182 * 86400, signers.deployer.address);
+    user1TokenId = await deployed.votingEscrow.lastMintedTokenId();
 
-    await deployed.votingEscrow.create_lock(ethers.parseEther('10'), 182 * 86400);
-    user2TokenId = await deployed.votingEscrow.tokenId();
+    await deployed.votingEscrow.create_lock_for(ethers.parseEther('10'), 182 * 86400, signers.deployer.address);
+    user2TokenId = await deployed.votingEscrow.lastMintedTokenId();
 
     console.log('user voter power, nft 1', await deployed.votingEscrow.balanceOfNFT(user1TokenId));
     console.log('user voter power, nft 2', await deployed.votingEscrow.balanceOfNFT(user2TokenId));
@@ -95,7 +95,7 @@ describe('#2 Adversary can steal all bribe rewards', function () {
       'deployed.voter.votes(user2TokenId, poolV2FenixTk18.target)',
       await deployed.voter.votes(user2TokenId, poolV2FenixTk18.target),
     );
-    let bribe = await ethers.getContractAt('BribeUpgradeable', res._internal_bribe);
+    let bribe = await ethers.getContractAt('BribeUpgradeable', res.internalBribe);
 
     console.log('Balance Before vote user1TokenId', await bribe.totalSupply());
 

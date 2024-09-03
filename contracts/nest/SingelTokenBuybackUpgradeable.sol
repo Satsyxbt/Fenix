@@ -2,8 +2,7 @@
 pragma solidity =0.8.19;
 
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 import {IRouterV2} from "../dexV2/interfaces/IRouterV2.sol";
 import {IRouterV2PathProvider} from "./interfaces/IRouterV2PathProvider.sol";
@@ -15,7 +14,7 @@ import {ISingelTokenBuyback} from "./interfaces/ISingelTokenBuyback.sol";
  * @dev This contract uses an upgradeable pattern along with the SafeERC20 library for token interactions.
  */
 abstract contract SingelTokenBuybackUpgradeable is ISingelTokenBuyback, Initializable {
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
      *  @dev Emitted when the input token for a buyback operation is the same as the target token.
@@ -119,7 +118,7 @@ abstract contract SingelTokenBuybackUpgradeable is ISingelTokenBuyback, Initiali
     ) external virtual override onlyCorrectInputToken(inputToken_) onlyCorrectSlippage(slippage_) returns (uint256 outputAmount) {
         _checkBuybackSwapPermissions();
 
-        IERC20 inputTokenCache = IERC20(inputToken_);
+        IERC20Upgradeable inputTokenCache = IERC20Upgradeable(inputToken_);
 
         uint256 amountIn = inputTokenCache.balanceOf(address(this));
         if (amountIn == 0) {
@@ -166,13 +165,13 @@ abstract contract SingelTokenBuybackUpgradeable is ISingelTokenBuyback, Initiali
         IRouterV2 router = IRouterV2(routerV2PathProviderCache.router());
         inputTokenCache.safeApprove(address(router), amountIn);
 
-        uint256 balanceBefore = IERC20(targetToken).balanceOf(address(this));
+        uint256 balanceBefore = IERC20Upgradeable(targetToken).balanceOf(address(this));
 
         uint256[] memory amountsOut = router.swapExactTokensForTokens(amountIn, amountOutQuote, optimalRoute, address(this), deadline_);
 
         uint256 amountOut = amountsOut[amountsOut.length - 1];
 
-        assert(IERC20(targetToken).balanceOf(address(this)) - balanceBefore == amountOut);
+        assert(IERC20Upgradeable(targetToken).balanceOf(address(this)) - balanceBefore == amountOut);
         assert(amountOut > 0);
 
         emit BuybackTokenByV2(msg.sender, inputToken_, targetToken, optimalRoute, amountIn, amountOut);

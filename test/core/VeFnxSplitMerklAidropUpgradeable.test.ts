@@ -2,14 +2,7 @@ import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { setCode, time, mine, loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import {
-  BlastMock__factory,
-  ERC20Mock,
-  Fenix,
-  FenixRaiseUpgradeable,
-  VeFnxSplitMerklAidropUpgradeable,
-  VotingEscrowUpgradeableV1_2,
-} from '../../typechain-types/index';
+import { Fenix, VeFnxSplitMerklAidropUpgradeable, VotingEscrowUpgradeableV2 } from '../../typechain-types/index';
 import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { deployERC20MockToken, SignersList } from '../utils/coreFixture';
 import { deploy } from '@openzeppelin/hardhat-upgrades/dist/utils';
@@ -32,7 +25,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
   let implementation: VeFnxSplitMerklAidropUpgradeable;
   let proxy: VeFnxSplitMerklAidropUpgradeable;
   let fenix: Fenix;
-  let votingEscrow: VotingEscrowUpgradeableV1_2;
+  let votingEscrow: VotingEscrowUpgradeableV2;
   let signers: SignersList;
 
   beforeEach(async function () {
@@ -418,7 +411,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(0);
         expect(await votingEscrow.supply()).to.be.eq(0);
-        expect(await votingEscrow.tokenId()).to.be.eq(0);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
       });
       it('test', async () => {
         let tx = await proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
@@ -437,7 +430,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('40'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('40'));
-        expect(await votingEscrow.tokenId()).to.be.eq(1);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
 
@@ -461,7 +454,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.2'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.tokenId()).to.be.eq(2);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
@@ -509,7 +502,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(4);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
@@ -552,7 +545,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(4);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
@@ -589,7 +582,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('20'));
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('70.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(5);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(5);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
@@ -655,7 +648,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(0);
         expect(await votingEscrow.supply()).to.be.eq(0);
-        expect(await votingEscrow.tokenId()).to.be.eq(0);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
       });
       it('test', async () => {
         let tx = await proxy
@@ -676,7 +669,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('40'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('40'));
-        expect(await votingEscrow.tokenId()).to.be.eq(1);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
 
@@ -704,7 +697,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.2'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.tokenId()).to.be.eq(2);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
@@ -760,7 +753,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(4);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
@@ -807,7 +800,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(4);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
@@ -846,7 +839,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('20'));
         expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('70.8'));
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.tokenId()).to.be.eq(5);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(5);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);

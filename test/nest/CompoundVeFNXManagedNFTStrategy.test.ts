@@ -1,8 +1,7 @@
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { ERRORS, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import {
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable,
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable__factory,
@@ -12,6 +11,7 @@ import {
   RouterV2PathProviderUpgradeable,
   SingelTokenVirtualRewarderUpgradeable,
 } from '../../typechain-types';
+import { ERRORS, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
@@ -222,7 +222,10 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
       expect(await virtualRewarder.calculateAvailableRewardsAmount(userNftId)).to.be.eq(ethers.parseEther('22'));
       expect(await firstStrategy.getLockedRewardsBalance(userNftId)).to.be.eq(ethers.parseEther('22'));
 
+      await time.increase(3600);
+
       let tx = await deployed.voter.connect(signers.otherUser1).dettachFromManagedNFT(userNftId);
+      await time.increase(3600);
       await expect(tx).to.be.emit(firstStrategy, 'OnDettach').withArgs(userNftId, ethers.parseEther('1'), ethers.parseEther('22'));
       await expect(tx)
         .to.be.emit(virtualRewarder, 'Withdraw')

@@ -2,8 +2,6 @@ import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-help
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  BaseManagedNFTStrategyUpgradeableMock,
-  BaseManagedNFTStrategyUpgradeableMock__factory,
   BribeUpgradeable,
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable,
   CompoundVeFNXManagedNFTStrategyUpgradeable,
@@ -12,10 +10,10 @@ import {
   ManagedNFTManagerUpgradeable,
   RouterV2,
   RouterV2PathProviderUpgradeable,
-  VoterUpgradeableV1_2,
-  VotingEscrowUpgradeableV1_2,
+  VoterUpgradeableV2,
+  VotingEscrowUpgradeableV2,
 } from '../../typechain-types';
-import { ERRORS, ONE, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { WETH_PREDEPLOYED_ADDRESS, ZERO } from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   SignersList,
@@ -27,8 +25,8 @@ import completeFixture, {
 describe('Nest Main Contract', function () {
   let signers: SignersList;
 
-  let voter: VoterUpgradeableV1_2;
-  let votingEscrow: VotingEscrowUpgradeableV1_2;
+  let voter: VoterUpgradeableV2;
+  let votingEscrow: VotingEscrowUpgradeableV2;
 
   let managedNFTManager: ManagedNFTManagerUpgradeable;
   let deployed: CoreFixtureDeployed;
@@ -131,10 +129,10 @@ describe('Nest Main Contract', function () {
     await deployed.v2PairFactory.createPair(FENIX.target, WETH.target, false);
 
     USDT_WETH_PAIR = await deployed.v2PairFactory.getPair(USDT.target, WETH.target, false);
-    await voter.createGauge(USDT_WETH_PAIR, 0);
+    await voter.createV2Gauge(USDT_WETH_PAIR);
 
     WETH_FENIX_PAIR = await deployed.v2PairFactory.getPair(WETH.target, FENIX.target, false);
-    await voter.createGauge(WETH_FENIX_PAIR, 0);
+    await voter.createV2Gauge(WETH_FENIX_PAIR);
 
     secondStrategy = await newStrategy();
     firstStrategy = await newStrategy();
@@ -147,14 +145,14 @@ describe('Nest Main Contract', function () {
     await votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address);
     await managedNFTManager.createManagedNFT(secondStrategy.target);
 
-    gauge = await voter.gauges(USDT_WETH_PAIR);
-    bribe = await ethers.getContractAt('BribeUpgradeable', await voter.external_bribes(gauge));
+    gauge = await voter.poolToGauge(USDT_WETH_PAIR);
+    bribe = await ethers.getContractAt('BribeUpgradeable', (await voter.gaugesState(gauge)).externalBribe);
   });
 
   it('check state before', async () => {
-    expect(await votingEscrow.tokenId()).to.be.eq(5);
+    expect(await votingEscrow.lastMintedTokenId()).to.be.eq(5);
     expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('6'));
-    expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
+    expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
     expect(await votingEscrow.balanceOfNFT(managedNftId)).to.be.eq(ZERO);
     expect(await votingEscrow.balanceOfNFT(managedNftId2)).to.be.eq(ZERO);
     expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
@@ -171,13 +169,16 @@ describe('Nest Main Contract', function () {
 
   it('first user vote for WETH_FENIX pool', async () => {
     await voter.connect(signers.otherUser1).vote(nftToken1, [WETH_FENIX_PAIR], [1000]);
-    expect(await votingEscrow.voted(nftToken1)).to.be.true;
+    expect((await votingEscrow.nftStates(nftToken1)).isVoted).to.be.true;
     expect(await voter.poolVote(nftToken1, 0)).to.be.eq(WETH_FENIX_PAIR);
     expect(await voter.votes(nftToken1, WETH_FENIX_PAIR)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('0.1'));
   });
 
   it('fail if user try attach to managed nft', async () => {
-    await expect(voter.connect(signers.otherUser1).attachToManagedNFT(nftToken1, managedNftId)).to.be.revertedWith('voted');
+    await expect(voter.connect(signers.otherUser1).attachToManagedNFT(nftToken1, managedNftId)).to.be.revertedWithCustomError(
+      votingEscrow,
+      'TokenVoted',
+    );
   });
 
   it('state before attach', async () => {
@@ -192,7 +193,7 @@ describe('Nest Main Contract', function () {
 
   it('state after attach', async () => {
     expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('6'));
-    expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
+    expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
     expect(await votingEscrow.balanceOfNFT(managedNftId)).to.be.eq(ethers.parseEther('2'));
     expect(await votingEscrow.balanceOfNFT(managedNftId2)).to.be.eq(ZERO);
     expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('2'));
@@ -212,14 +213,14 @@ describe('Nest Main Contract', function () {
   });
 
   it('authorized user vote by managed nft vote power', async () => {
-    expect(await votingEscrow.voted(managedNftId)).to.be.false;
+    expect((await votingEscrow.nftStates(managedNftId)).isVoted).to.be.false;
     expect(await voter.votes(managedNftId, WETH_FENIX_PAIR)).to.be.eq(ZERO);
 
     await managedNFTManager.setAuthorizedUser(managedNftId, signers.deployer.address);
 
     await firstStrategy.vote([WETH_FENIX_PAIR, USDT_WETH_PAIR], [500, 500]);
 
-    expect(await votingEscrow.voted(managedNftId)).to.be.true;
+    expect((await votingEscrow.nftStates(managedNftId)).isVoted).to.be.true;
     expect(await voter.votes(managedNftId, WETH_FENIX_PAIR)).to.be.eq(ethers.parseEther('1'));
     expect(await voter.votes(managedNftId, USDT_WETH_PAIR)).to.be.eq(ethers.parseEther('1'));
   });
@@ -232,7 +233,7 @@ describe('Nest Main Contract', function () {
 
   it('state after attach', async () => {
     expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('6'));
-    expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
+    expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('6'), ethers.parseEther('0.6'));
     expect(await votingEscrow.balanceOfNFT(managedNftId)).to.be.eq(ethers.parseEther('5'));
     expect(await votingEscrow.balanceOfNFT(managedNftId2)).to.be.eq(ZERO);
     expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('5'));
@@ -255,7 +256,7 @@ describe('Nest Main Contract', function () {
   });
 
   it('check update managed nft votes power', async () => {
-    expect(await votingEscrow.voted(managedNftId)).to.be.true;
+    expect((await votingEscrow.nftStates(managedNftId)).isVoted).to.be.true;
     expect(await voter.votes(managedNftId, WETH_FENIX_PAIR)).to.be.eq(ethers.parseEther('2.5'));
     expect(await voter.votes(managedNftId, USDT_WETH_PAIR)).to.be.eq(ethers.parseEther('2.5'));
   });
@@ -345,12 +346,12 @@ describe('Nest Main Contract', function () {
   });
 
   it('check update managed nft votes power', async () => {
-    expect(await votingEscrow.voted(managedNftId)).to.be.true;
+    expect((await votingEscrow.nftStates(managedNftId)).isVoted).to.be.true;
     expect(await voter.votes(managedNftId, WETH_FENIX_PAIR)).to.be.eq(ethers.parseEther('34.5'));
     expect(await voter.votes(managedNftId, USDT_WETH_PAIR)).to.be.eq(ethers.parseEther('34.5'));
     await voter.connect(signers.otherUser3).dettachFromManagedNFT(nftToken3);
 
-    expect(await votingEscrow.voted(managedNftId)).to.be.true;
+    expect((await votingEscrow.nftStates(managedNftId)).isVoted).to.be.true;
     expect(await voter.votes(managedNftId, WETH_FENIX_PAIR)).to.be.eq(ZERO);
     expect(await voter.votes(managedNftId, USDT_WETH_PAIR)).to.be.eq(ZERO);
   });

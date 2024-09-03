@@ -11,7 +11,7 @@ interface IManagedNFTStrategy {
      * @dev Emitted when the name of the strategy is changed.
      * @param newName The new name that has been set for the strategy.
      */
-    event SetName(string indexed newName);
+    event SetName(string newName);
 
     /**
      * @dev Emitted when a new managed NFT is successfully attached to the strategy.

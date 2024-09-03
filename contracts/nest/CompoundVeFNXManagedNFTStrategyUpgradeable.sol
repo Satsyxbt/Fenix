@@ -3,9 +3,8 @@ pragma solidity =0.8.19;
 
 import {BaseManagedNFTStrategyUpgradeable, IManagedNFTManager} from "./BaseManagedNFTStrategyUpgradeable.sol";
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IVotingEscrowV1_2} from "../core/interfaces/IVotingEscrowV1_2.sol";
 
 import {ISingelTokenVirtualRewarder} from "./interfaces/ISingelTokenVirtualRewarder.sol";
@@ -23,7 +22,7 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
     BaseManagedNFTStrategyUpgradeable,
     SingelTokenBuybackUpgradeable
 {
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
     /**
      * @dev Emitted when an attempt is made to recover tokens that should not be recovered.
      * This error typically occurs when a function tries to withdraw reserved or integral tokens
@@ -128,7 +127,7 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      * @dev Calls the Voting Escrow contract to lock up harvested FENIX tokens, thereby compounding the rewards.
      */
     function compound() external {
-        IERC20 fenixCache = IERC20(fenix);
+        IERC20Upgradeable fenixCache = IERC20Upgradeable(fenix);
         uint256 currentBalance = fenixCache.balanceOf(address(this));
         if (currentBalance > 0) {
             address votingEscrowCache = votingEscrow;
@@ -163,8 +162,8 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
             revert IncorrectRecoverToken();
         }
 
-        uint256 amount = IERC20(token_).balanceOf(address(this));
-        IERC20(token_).safeTransfer(recipient_, amount);
+        uint256 amount = IERC20Upgradeable(token_).balanceOf(address(this));
+        IERC20Upgradeable(token_).safeTransfer(recipient_, amount);
         emit Erc20Recover(msg.sender, recipient_, token_, amount);
     }
 

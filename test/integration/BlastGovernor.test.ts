@@ -1,12 +1,10 @@
+import { BlastMock } from '@cryptoalgebra/integral-core/typechain';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { mockBlast } from '../utils/coreFixture';
-import { BlastGovernorMock, BlastGovernorUpgradeable, BlastMock__factory } from '../../typechain-types';
-import { proxy } from '@cryptoalgebra/integral-core/typechain/@openzeppelin/contracts';
-import { ERRORS, getAccessControlError, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS } from '../utils/constants';
-import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { BlastMock } from '@cryptoalgebra/integral-core/typechain';
+import { BlastGovernorMock, BlastMock__factory } from '../../typechain-types';
+import { ERRORS, getAccessControlError } from '../utils/constants';
 
 describe('BlastGovernorClaimableSetup Contract', function () {
   let deployer: HardhatEthersSigner;

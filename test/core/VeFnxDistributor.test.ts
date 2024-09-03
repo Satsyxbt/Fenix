@@ -2,13 +2,7 @@ import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import {
-  Fenix,
-  VeFnxDistributorUpgradeable,
-  VeFnxDistributorUpgradeable__factory,
-  VotingEscrowUpgradeable,
-  VotingEscrowUpgradeableV1_2,
-} from '../../typechain-types';
+import { Fenix, VeFnxDistributorUpgradeable, VeFnxDistributorUpgradeable__factory, VotingEscrowUpgradeableV2 } from '../../typechain-types';
 import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
 
@@ -19,7 +13,7 @@ describe('VeFnxDistributorUpgradeable', function () {
   let factory: VeFnxDistributorUpgradeable__factory;
   let fenix: Fenix;
   let veFnxDistributor: VeFnxDistributorUpgradeable;
-  let votingEscrow: VotingEscrowUpgradeableV1_2;
+  let votingEscrow: VotingEscrowUpgradeableV2;
 
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
@@ -128,7 +122,7 @@ describe('VeFnxDistributorUpgradeable', function () {
       beforeEach(async () => {
         await fenix.transfer(veFnxDistributor.target, ethers.parseEther('1000'));
         expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ethers.parseEther('1000'));
-        startTokenId = await votingEscrow.tokenId();
+        startTokenId = await votingEscrow.lastMintedTokenId();
       });
       it('should corect emit events', async () => {
         let tx = await veFnxDistributor.distributeVeFnx(
@@ -185,16 +179,16 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(await votingEscrow.ownerOf(startTokenId + ONE)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.ownerOf(startTokenId + ONE + ONE)).to.be.eq(signers.otherUser2.address);
         expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('1.5'));
-        expect(await votingEscrow.totalSupply()).to.be.closeTo(ethers.parseEther('1.5'), ethers.parseEther('0.1'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('1.5'), ethers.parseEther('0.1'));
 
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
-        let locked1 = await votingEscrow.locked(startTokenId + ONE);
+        let locked1 = (await votingEscrow.nftStates(startTokenId + ONE)).locked;
         expect(locked1.end).to.be.eq(calcEpoch);
         expect(locked1.amount).to.be.eq(ONE_ETHER);
 
-        let locked2 = await votingEscrow.locked(startTokenId + ONE + ONE);
+        let locked2 = (await votingEscrow.nftStates(startTokenId + ONE + ONE)).locked;
         expect(locked2.end).to.be.eq(calcEpoch);
         expect(locked2.amount).to.be.eq(ethers.parseEther('0.5'));
       });

@@ -1,18 +1,17 @@
-import { expect } from 'chai';
-import { ethers } from 'hardhat';
-import { BlastMock__factory, ERC20Mock, MerklGaugeMiddleman, MerkleDistributionCreatorMock } from '../../typechain-types';
-import { ZERO, ZERO_ADDRESS } from '../utils/constants';
 import {
   SnapshotRestorer,
   getStorageAt,
   loadFixture,
+  setCode,
   setStorageAt,
   takeSnapshot,
   time,
 } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { BlastMock__factory, ERC20Mock, MerklGaugeMiddleman, MerkleDistributionCreatorMock } from '../../typechain-types';
+import { BLAST_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployERC20MockToken, getSigners } from '../utils/coreFixture';
-import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { BLAST_PREDEPLOYED_ADDRESS } from '../utils/constants';
 
 describe('GnosisWithMerkl Contract', function () {
   if (process.env.GNOSIS_FORK === 'true') {
@@ -105,7 +104,7 @@ describe('GnosisWithMerkl Contract', function () {
       let gauge = await ethers.getContractAt('GaugeUpgradeable', gaugeV2);
       await gauge.setMerklGaugeMiddleman(merklMiddleman.target);
       await gauge.setIsDistributeEmissionToMerkle(true);
-      await deployed.votingEscrow.create_lock(ethers.parseEther('1'), 60 * 86400);
+      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 60 * 86400, signers.deployer.address);
     });
     it('check balance Fenix for addresses before emission distribution', async () => {
       let gauge = await ethers.getContractAt('GaugeUpgradeable', gaugeV2);

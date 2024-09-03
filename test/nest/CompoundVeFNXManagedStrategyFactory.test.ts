@@ -5,26 +5,16 @@ import { ERRORS, ZERO_ADDRESS, getAccessControlError } from '../utils/constants'
 
 import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import {
-  BribeFactoryUpgradeable,
-  BribeFactoryUpgradeable__factory,
-  BribeUpgradeable,
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable,
   CompoundVeFNXManagedNFTStrategyFactoryUpgradeable__factory,
   CompoundVeFNXManagedNFTStrategyUpgradeable,
-  ERC20Mock,
   ICompoundVeFNXManagedNFTStrategy,
   ISingelTokenVirtualRewarder,
   ManagedNFTManagerUpgradeable,
   RouterV2PathProviderUpgradeable,
   SingelTokenVirtualRewarderUpgradeable,
 } from '../../typechain-types';
-import completeFixture, {
-  CoreFixtureDeployed,
-  SignersList,
-  deployERC20MockToken,
-  deployTransaperntUpgradeableProxy,
-  deployVoter,
-} from '../utils/coreFixture';
+import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
 
 describe('CompoundVeFNXManagedStrategyFactory Contract', function () {
   let signers: SignersList;

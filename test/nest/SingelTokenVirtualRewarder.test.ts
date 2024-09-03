@@ -1,10 +1,10 @@
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
+import { time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { SingelTokenVirtualRewarderUpgradeable, SingelTokenVirtualRewarderUpgradeable__factory } from '../../typechain-types';
 import { ERRORS, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { SignersList, deployTransaperntUpgradeableProxy, getSigners, mockBlast } from '../utils/coreFixture';
-import { time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('SingelTokenVirtualRewarder Contract', function () {
   let signers: SignersList;

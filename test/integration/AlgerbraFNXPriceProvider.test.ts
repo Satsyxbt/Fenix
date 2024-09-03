@@ -1,14 +1,15 @@
-import { expect } from 'chai';
-import { ERRORS, ONE_ETHER, ZERO_ADDRESS } from '../utils/constants';
-import { ethers } from 'hardhat';
 import { abi as POOL_ABI } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { ERRORS, ONE_ETHER, ZERO_ADDRESS } from '../utils/constants';
 
+import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
 import {
   AlgebraFNXPriceProviderUpgradeable,
   AlgebraFNXPriceProviderUpgradeable__factory,
   ERC20Mock,
-  PoolMock,
   Fenix,
+  PoolMock,
 } from '../../typechain-types';
 import {
   FactoryFixture,
@@ -20,7 +21,6 @@ import {
   getSigners,
   mockBlast,
 } from '../utils/coreFixture';
-import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
 
 describe('AlgebraFNXPriceProvider', function () {
   let signers: SignersList;

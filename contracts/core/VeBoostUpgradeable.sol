@@ -2,7 +2,7 @@
 pragma solidity =0.8.19;
 
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
-import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {EnumerableSetUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
@@ -15,7 +15,7 @@ import {IPriceProvider} from "../integration/interfaces/IPriceProvider.sol";
  */
 contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorClaimableSetup {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
      * @dev Return precision for boost calculations
@@ -99,7 +99,7 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorC
         _minLockedTime = 182 * 86400; // Initialize minimum locked time to approximately 6 months
         _boostFNXPercentage = 1_000; // Initialize FNX boost percentage to 10%
 
-        IERC20(fenix).safeApprove(votingEscrow_, type(uint256).max);
+        IERC20Upgradeable(fenix).safeApprove(votingEscrow_, type(uint256).max);
     }
 
     /**
@@ -153,7 +153,7 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorC
      * @param recoverAmount_ Amount of the token to recover.
      */
     function recoverTokens(address token_, uint256 recoverAmount_) external onlyOwner {
-        IERC20(token_).safeTransfer(msg.sender, recoverAmount_);
+        IERC20Upgradeable(token_).safeTransfer(msg.sender, recoverAmount_);
         emit RecoverToken(token_, recoverAmount_);
     }
 
@@ -219,10 +219,10 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorC
         }
 
         if (paidBoostFNXAmount_ > 0) {
-            uint256 fnxBoostToBalanceRation = (paidBoostFNXAmount_ * _FNX_PREICSION) / IERC20(fenix).balanceOf(address(this));
+            uint256 fnxBoostToBalanceRation = (paidBoostFNXAmount_ * _FNX_PREICSION) / IERC20Upgradeable(fenix).balanceOf(address(this));
 
             for (uint256 i; i < _rewardTokens.length(); ) {
-                IERC20 rewardToken = IERC20(_rewardTokens.at(i));
+                IERC20Upgradeable rewardToken = IERC20Upgradeable(_rewardTokens.at(i));
                 uint256 rewardTokenBoostAmount = (fnxBoostToBalanceRation * rewardToken.balanceOf(address(this))) / _FNX_PREICSION;
 
                 if (rewardTokenBoostAmount > 0) {
@@ -274,8 +274,8 @@ contract VeBoostUpgradeable is IVeBoost, Ownable2StepUpgradeable, BlastGovernorC
      * @return The available FNX amount for boosts.
      */
     function getAvailableBoostFNXAmount() public view override returns (uint256) {
-        uint256 availableBalance = IERC20(fenix).balanceOf(address(this));
-        uint256 availableAllowance = IERC20(fenix).allowance(address(this), votingEscrow);
+        uint256 availableBalance = IERC20Upgradeable(fenix).balanceOf(address(this));
+        uint256 availableAllowance = IERC20Upgradeable(fenix).allowance(address(this), votingEscrow);
 
         return availableAllowance > availableBalance ? availableBalance : availableAllowance;
     }

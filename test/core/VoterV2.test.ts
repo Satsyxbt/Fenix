@@ -1,6 +1,6 @@
 import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
-import { VeFnxSplitMerklAidropUpgradeable, VoterUpgradeable, VoterUpgradeableV1_2 } from '../../typechain-types';
+import { VeFnxSplitMerklAidropUpgradeable, VoterUpgradeable, VoterUpgradeableV2 } from '../../typechain-types';
 import completeFixture, { CoreFixtureDeployed, SignersList } from '../utils/coreFixture';
 import { ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
@@ -9,7 +9,7 @@ import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 describe('Voter change governance/admin functionality', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
-  let voter: VoterUpgradeableV1_2;
+  let voter: VoterUpgradeableV2;
   let VeFnxSplitMerklAidropUpgradeable: VeFnxSplitMerklAidropUpgradeable;
 
   before(async function () {
@@ -35,44 +35,6 @@ describe('Voter change governance/admin functionality', function () {
     await VeFnxSplitMerklAidropUpgradeable.setIsAllowedClaimOperator(voter.target, true);
   });
 
-  describe('#setMerklDistributor', async () => {
-    it('correct merklDistributor before change', async () => {
-      expect(await voter.merklDistributor()).to.be.eq(ZERO_ADDRESS);
-    });
-    it('fail if try call from not VoterAdmin', async () => {
-      await expect(voter.connect(signers.otherUser1).setMerklDistributor(signers.otherUser1.address)).to.be.revertedWith('VOTER_ADMIN');
-    });
-    it('correct change merklDistributor address and emit event ', async () => {
-      expect(await voter.merklDistributor()).to.be.eq(ZERO_ADDRESS);
-
-      await expect(voter.connect(signers.deployer).setMerklDistributor(signers.otherUser1.address))
-        .to.be.emit(voter, 'SetMerklDistributor')
-        .withArgs(signers.otherUser1.address);
-
-      expect(await voter.merklDistributor()).to.be.not.eq(signers.deployer.address);
-      expect(await voter.merklDistributor()).to.be.eq(signers.otherUser1.address);
-    });
-  });
-
-  describe('#setVeFnxMerklAidrop', async () => {
-    it('correct veFnxMerklAidrop before change', async () => {
-      expect(await voter.veFnxMerklAidrop()).to.be.eq(ZERO_ADDRESS);
-    });
-    it('fail if try call from not VoterAdmin', async () => {
-      await expect(voter.connect(signers.otherUser1).setVeFnxMerklAidrop(signers.otherUser1.address)).to.be.revertedWith('VOTER_ADMIN');
-    });
-    it('correct change veFnxMerklAidrop address and emit event ', async () => {
-      expect(await voter.veFnxMerklAidrop()).to.be.eq(ZERO_ADDRESS);
-
-      await expect(voter.connect(signers.deployer).setVeFnxMerklAidrop(signers.otherUser1.address))
-        .to.be.emit(voter, 'SetVeFnxMerklAidrop')
-        .withArgs(signers.otherUser1.address);
-
-      expect(await voter.veFnxMerklAidrop()).to.be.not.eq(signers.deployer.address);
-      expect(await voter.veFnxMerklAidrop()).to.be.eq(signers.otherUser1.address);
-    });
-  });
-
   describe('#aggregateClaim', async () => {
     it('not fail if all params is empty', async () => {
       await expect(
@@ -85,7 +47,7 @@ describe('Voter change governance/admin functionality', function () {
         ),
       ).to.be.not.reverted;
     });
-    it('fail if in AggregateClaimBribesByTokenIdParams set not user token id', async () => {
+    it('fail if in AggregateClaimBribesByTokenIdParams set not exist token id', async () => {
       await expect(
         voter.aggregateClaim(
           [],
@@ -94,7 +56,7 @@ describe('Voter change governance/admin functionality', function () {
           { users: [], proofs: [], tokens: [], amounts: [] },
           { amount: 0, proofs: [] },
         ),
-      ).to.be.revertedWith('!approved/Owner');
+      ).to.be.revertedWith('ERC721: invalid token ID');
     });
     it('fail if in AggregateClaimMerklDataParams users containes not only caller address', async () => {
       await expect(
@@ -117,7 +79,7 @@ describe('Voter change governance/admin functionality', function () {
       ).to.be.revertedWith('users containes no only caller');
     });
     it('success claim merkl aidrop', async () => {
-      await voter.setVeFnxMerklAidrop(VeFnxSplitMerklAidropUpgradeable.target);
+      await voter.updateAddress('veFnxMerklAidrop', VeFnxSplitMerklAidropUpgradeable.target);
 
       const tree = StandardMerkleTree.of(
         [
@@ -138,7 +100,7 @@ describe('Voter change governance/admin functionality', function () {
       expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
       expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(0);
       expect(await deployed.votingEscrow.supply()).to.be.eq(0);
-      expect(await deployed.votingEscrow.tokenId()).to.be.eq(0);
+      expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(0);
 
       let tx = await voter
         .connect(signers.otherUser1)
@@ -169,7 +131,7 @@ describe('Voter change governance/admin functionality', function () {
       expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
       expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(ethers.parseEther('0.4'));
       expect(await deployed.votingEscrow.supply()).to.be.eq(ethers.parseEther('0.4'));
-      expect(await deployed.votingEscrow.tokenId()).to.be.eq(1);
+      expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(1);
       expect(await deployed.votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
       expect(await deployed.votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
     });

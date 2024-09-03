@@ -61,14 +61,13 @@ describe('VoterWithCustomGauge', function () {
       'EON internal bribes',
     );
     await Fenix.approve(deployed.votingEscrow.target, ethers.parseEther('10000'));
-    await deployed.votingEscrow.create_lock(ethers.parseEther('10000'), 6 * 30 * 86400);
+    await deployed.votingEscrow.create_lock_for(ethers.parseEther('10000'), 6 * 30 * 86400, signers.deployer.address);
   });
 
   it('success register new gauge in Voter', async () => {
-    expect(await voter.gauges(PerpetualsGaugeUpgradeable.target)).to.be.eq(PerpetualsGaugeUpgradeable.target);
-    expect(await voter.isGauge(PerpetualsGaugeUpgradeable.target)).to.be.true;
-    expect(await voter.poolForGauge(PerpetualsGaugeUpgradeable.target)).to.be.eq(PerpetualsGaugeUpgradeable.target);
-    expect(await voter.isAlive(PerpetualsGaugeUpgradeable.target)).to.be.true;
+    expect((await voter.gaugesState(PerpetualsGaugeUpgradeable.target)).isGauge).to.be.true;
+    expect(await voter.poolToGauge(PerpetualsGaugeUpgradeable.target)).to.be.eq(PerpetualsGaugeUpgradeable.target);
+    expect((await voter.gaugesState(PerpetualsGaugeUpgradeable.target)).isAlive).to.be.true;
   });
 
   it('can be vote for new gauge', async () => {

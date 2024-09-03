@@ -2,14 +2,7 @@ import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
 import { setCode, time, mine, loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import {
-  BlastMock__factory,
-  ERC20Mock,
-  Fenix,
-  FenixRaiseUpgradeable,
-  VotingEscrowUpgradeable,
-  VotingEscrowUpgradeableV1_2,
-} from '../../typechain-types/index';
+import { ERC20Mock, FenixRaiseUpgradeable, VotingEscrowUpgradeableV2 } from '../../typechain-types/index';
 import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, deployERC20MockToken } from '../utils/coreFixture';
 import { deploy } from '@openzeppelin/hardhat-upgrades/dist/utils';
@@ -38,7 +31,7 @@ describe('FenixRaiseUpgradeable Contract', function () {
   let depositsReciever: HardhatEthersSigner;
   let usdb: ERC20Mock;
   let Fenix: ERC20Mock;
-  let votingEscrow: VotingEscrowUpgradeableV1_2;
+  let votingEscrow: VotingEscrowUpgradeableV2;
   let deployed: CoreFixtureDeployed;
 
   async function getInstance(

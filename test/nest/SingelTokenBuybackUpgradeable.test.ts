@@ -8,7 +8,6 @@ import {
   Pair,
   RouterV2,
   RouterV2PathProviderUpgradeable,
-  RouterV2PathProviderUpgradeable__factory,
   SingelTokenBuybackUpgradeableMock,
   SingelTokenBuybackUpgradeableMock__factory,
 } from '../../typechain-types';

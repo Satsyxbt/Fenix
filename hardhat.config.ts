@@ -95,6 +95,7 @@ const config: HardhatUserConfig = {
     compilers: [DEFAULT_COMPILER_SETTINGS],
     overrides: {
       'contracts/core/VotingEscrowUpgradeable.sol': SPECIFIC_COMPILER_SETTINGS,
+      'contracts/core/VotingEscrowUpgradeableV2.sol': SPECIFIC_COMPILER_SETTINGS,
     },
   },
   warnings: {

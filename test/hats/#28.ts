@@ -74,21 +74,10 @@ describe('Pair Contract', function () {
     for (let index = 0; index < 10; index++) {
       await dai.transfer(pairStable.target, 10000000);
       await frax.transfer(pairStable.target, 10000000);
-      let liqudity = await pairStable.mint.staticCall(signers.deployer.address);
-
-      await pairStable.mint(signers.deployer.address);
-
-      console.log('pair:', pairStable.target, 'liquidity:', liqudity);
-      console.log('total liq:', await pairStable.balanceOf(signers.deployer.address));
-      console.log('frax balance:', await frax.balanceOf(pairStable.target));
-      console.log('dai balance:', await dai.balanceOf(pairStable.target));
-
-      await drainPair(pairStable, await frax.balanceOf(pairStable.target), await dai.balanceOf(pairStable.target));
-      console.log('frax balance:', await frax.balanceOf(pairStable.target));
-      console.log('dai balance:', await dai.balanceOf(pairStable.target));
-
-      expect(await frax.balanceOf(pairStable.target)).to.be.eq(2);
-      expect(await dai.balanceOf(pairStable.target)).to.be.eq(1);
+      await expect(pairStable.mint.staticCall(signers.deployer.address)).to.be.rejectedWith(
+        'Pair: stable deposits must be above minimum k',
+      );
+      return;
     }
     await frax.transfer(pairStable.target, ethers.parseEther('1'));
     await dai.transfer(pairStable.target, ethers.parseEther('1'));

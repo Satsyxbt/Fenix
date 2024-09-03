@@ -21,7 +21,7 @@ import {
   PairFactoryUpgradeable,
   TransparentUpgradeableProxy,
   VeArtProxyUpgradeable,
-  VoterUpgradeable,
+  VotingEscrowUpgradeableV2,
   VoterUpgradeable__factory,
   VotingEscrowUpgradeable,
   PairFactoryUpgradeable__factory,
@@ -41,9 +41,8 @@ import {
   FeesVaultFactoryUpgradeable,
   FeesVaultFactoryUpgradeable__factory,
   ManagedNFTManagerUpgradeable,
-  VotingEscrowUpgradeableV1_2,
-  VoterUpgradeableV1_2,
-  VoterUpgradeableV1_2__factory,
+  VoterUpgradeableV2,
+  VoterUpgradeableV2__factory,
   CompoundVeFNXManagedNFTStrategyUpgradeable,
   SingelTokenVirtualRewarderUpgradeable,
 } from '../../typechain-types';
@@ -69,12 +68,12 @@ export type SignersList = {
 };
 export type CoreFixtureDeployed = {
   signers: SignersList;
-  voter: VoterUpgradeableV1_2;
+  voter: VoterUpgradeableV2;
   fenix: Fenix;
   minter: MinterUpgradeable;
   veArtProxy: VeArtProxyUpgradeable;
   veArtProxyImplementation: VeArtProxyUpgradeable;
-  votingEscrow: VotingEscrowUpgradeableV1_2;
+  votingEscrow: VotingEscrowUpgradeableV2;
   v2PairFactory: PairFactoryUpgradeable;
   v2PairImplementation: Pair;
   gaugeFactory: GaugeFactoryUpgradeable;
@@ -190,21 +189,22 @@ export async function deployVotingEscrow(
   governor: string,
   tokenAddr: string,
   veArtProxy: string,
-): Promise<VotingEscrowUpgradeableV1_2> {
-  const factory = await ethers.getContractFactory('VotingEscrowUpgradeableV1_2');
+): Promise<VotingEscrowUpgradeableV2> {
+  const factory = await ethers.getContractFactory('VotingEscrowUpgradeableV2');
   const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
-  const attached = factory.attach(proxy.target) as any as VotingEscrowUpgradeableV1_2;
+  const attached = factory.attach(proxy.target) as any as VotingEscrowUpgradeableV2;
 
-  await attached.initialize(governor, tokenAddr, veArtProxy);
+  await attached.initialize(governor, tokenAddr);
+  await attached.updateAddress('artProxy', veArtProxy);
   return attached;
 }
 
-export async function deployVoterWithoutInitialize(deployer: HardhatEthersSigner, proxyAdmin: string): Promise<VoterUpgradeableV1_2> {
-  const factory = (await ethers.getContractFactory('VoterUpgradeableV1_2')) as VoterUpgradeableV1_2__factory;
+export async function deployVoterWithoutInitialize(deployer: HardhatEthersSigner, proxyAdmin: string): Promise<VoterUpgradeableV2> {
+  const factory = (await ethers.getContractFactory('VoterUpgradeableV2')) as VoterUpgradeableV2__factory;
   const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
-  return factory.attach(proxy.target) as any as VoterUpgradeableV1_2;
+  return factory.attach(proxy.target) as any as VoterUpgradeableV2;
 }
 export async function deployVoter(
   deployer: HardhatEthersSigner,
@@ -214,12 +214,17 @@ export async function deployVoter(
   v2PairFactory: string,
   v2GaugeFactory: string,
   bribeFactory: string,
-): Promise<VoterUpgradeableV1_2> {
-  const factory = (await ethers.getContractFactory('VoterUpgradeableV1_2')) as VoterUpgradeableV1_2__factory;
+): Promise<VoterUpgradeableV2> {
+  const factory = (await ethers.getContractFactory('VoterUpgradeableV2')) as VoterUpgradeableV2__factory;
   const implementation = await factory.connect(deployer).deploy(deployer.address);
   const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
-  const attached = factory.attach(proxy.target) as any as VoterUpgradeableV1_2;
-  await attached.initialize(governor, votingEscrow, v2PairFactory, v2GaugeFactory, bribeFactory);
+  const attached = factory.attach(proxy.target) as any as VoterUpgradeableV2;
+  await attached.initialize(governor, votingEscrow);
+  await attached.grantRole(ethers.id('GOVERNANCE_ROLE'), deployer.address);
+  await attached.grantRole(ethers.id('VOTER_ADMIN_ROLE'), deployer.address);
+  await attached.updateAddress('v2PoolFactory', v2PairFactory);
+  await attached.updateAddress('v2GaugeFactory', v2GaugeFactory);
+  await attached.updateAddress('bribeFactory', bribeFactory);
 
   return attached;
 }
@@ -411,7 +416,7 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     await voter.getAddress(),
     await votingEscrow.getAddress(),
   );
-  await votingEscrow.setVoter(voter.target);
+  await votingEscrow.updateAddress('voter', voter.target);
 
   const communityFeeVaultImplementation = await deployCommunityVaultFeeImplementation(signers.deployer);
 
@@ -462,16 +467,15 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     await gaugeImplementation.getAddress(),
     await merklGaugeMiddleman.getAddress(),
   );
+  await voter.connect(signers.deployer).initialize(signers.blastGovernor.address, await votingEscrow.getAddress());
+  await voter.grantRole(await voter.DEFAULT_ADMIN_ROLE(), signers.deployer.address);
+  await voter.grantRole(ethers.id('GOVERNANCE_ROLE'), signers.deployer.address);
+  await voter.grantRole(ethers.id('VOTER_ADMIN_ROLE'), signers.deployer.address);
+  await voter.updateAddress('v2PoolFactory', v2PairFactory.target);
+  await voter.updateAddress('v2GaugeFactory', gaugeFactory.target);
+  await voter.updateAddress('bribeFactory', bribeFactory.target);
+  await voter.updateAddress('minter', minter.target);
 
-  await voter.initialize(
-    signers.blastGovernor.address,
-    await votingEscrow.getAddress(),
-    await v2PairFactory.getAddress(),
-    await gaugeFactory.getAddress(),
-    await bribeFactory.getAddress(),
-  );
-
-  await voter.setMinter(minter.target);
   await minter.start();
   await fenix.transferOwnership(minter.target);
   await feesVaultFactory.grantRole(await feesVaultFactory.WHITELISTED_CREATOR_ROLE(), v2PairFactory.target);
@@ -501,9 +505,9 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     await voter.getAddress(),
   );
 
-  await votingEscrow.setManagedNFTManager(managedNFTManager);
+  await votingEscrow.updateAddress('managedNFTManager', managedNFTManager);
 
-  await voter.setManagedNFTManager(managedNFTManager);
+  await voter.updateAddress('managedNFTManager', managedNFTManager);
 
   return {
     signers: signers,

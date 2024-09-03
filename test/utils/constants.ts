@@ -18,6 +18,12 @@ export const GasMode = {
   VOID: 0,
   CLAIMABLE: 1,
 };
+export const VotingEscrowDepositType = {
+  DEPOSIT_FOR_TYPE: 0,
+  CREATE_LOCK_TYPE: 1,
+  INCREASE_UNLOCK_TIME: 2,
+  MERGE_TYPE: 3,
+};
 export const ERRORS = {
   Pausable: {
     Paused: 'Pausable: paused',
@@ -25,7 +31,7 @@ export const ERRORS = {
   },
   ERC20: {
     InsufficientBalance: 'ERC20: transfer amount exceeds balance',
-    InsufficientAllowance: 'insufficient allowance',
+    InsufficientAllowance: 'ERC20: insufficient allowance',
   },
   Initializable: {
     Initialized: 'Initializable: contract is already initialized',
