@@ -14,14 +14,14 @@ At its core, the protocol is based on the `ve(3,3)` concept, with a new set of i
 ### Getting the code
 Clone this repository
 ```sh
-git clone --branch code4arena-04-09-2024 --recursive -j8  https://github.com/Satsyxbt/Fenix
+git clone --branch code4arena-09-2024 --recursive -j8  https://github.com/Satsyxbt/Fenix
 ```
 or
 ```sh
 git clone https://github.com/Satsyxbt/Fenix
 cd fenix
 git submodule update --init --recursive
-git checkout code4arena-04-09-2024
+git checkout code4arena-09-2024
 ```
 
 Enter into the directory
