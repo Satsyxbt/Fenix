@@ -28,13 +28,32 @@ describe('Pair Contract', function () {
     await deployed.v2PairFactory.connect(signers.deployer).createPair(deployed.fenix.target, tokenTK6.target, true);
     await deployed.v2PairFactory.connect(signers.deployer).createPair(tokenTK18.target, tokenTK6.target, false);
   });
-  describe('RouterV2 pairFor should always return the same precompiled address', async () => {
+  it('RouterV2 should return zero address if pair not create', async () => {
     it('tokenTK18.target, tokenTK6.target, true', async () => {
       expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true)).to.be.eq(ZERO_ADDRESS);
-      let fromRouter = await router.pairFor(tokenTK18.target, tokenTK6.target, true);
+      expect(await router.pairFor(tokenTK18.target, tokenTK6.target, true)).to.be.eq(ZERO_ADDRESS);
+      await pairFactory.createPair(tokenTK18.target, tokenTK6.target, true);
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true)).to.be.not.eq(ZERO_ADDRESS);
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true)).to.be.eq(
+        await router.pairFor(tokenTK18.target, tokenTK6.target, true),
+      );
+    });
+    it('tokenTK18.target, tokenTK6.target, false', async () => {
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, false)).to.be.eq(ZERO_ADDRESS);
+      expect(await router.pairFor(tokenTK18.target, tokenTK6.target, false)).to.be.eq(ZERO_ADDRESS);
+      await pairFactory.createPair(tokenTK18.target, tokenTK6.target, false);
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, false)).to.be.not.eq(ZERO_ADDRESS);
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, false)).to.be.eq(
+        await router.pairFor(tokenTK18.target, tokenTK6.target, false),
+      );
+    });
+  });
+  describe('RouterV2 pairFor should always return the same address ', async () => {
+    it('tokenTK18.target, tokenTK6.target, true', async () => {
+      expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true)).to.be.eq(ZERO_ADDRESS);
       let factAddress = await pairFactory.createPair.staticCall(tokenTK18.target, tokenTK6.target, true);
       await pairFactory.createPair(tokenTK18.target, tokenTK6.target, true);
-
+      let fromRouter = await router.pairFor(tokenTK18.target, tokenTK6.target, true);
       expect(fromRouter).to.be.eq(factAddress);
       expect(await pairFactory.getPair(tokenTK18.target, tokenTK6.target, true)).to.be.not.eq(ZERO_ADDRESS);
       expect(await pairFactory.getPair(tokenTK6.target, tokenTK18.target, true)).to.be.eq(factAddress);
@@ -42,10 +61,9 @@ describe('Pair Contract', function () {
     });
     it('fenix.target, tokenTK6.target, false', async () => {
       expect(await pairFactory.getPair(deployed.fenix.target, tokenTK6.target, false)).to.be.eq(ZERO_ADDRESS);
-      let fromRouter = await router.pairFor(deployed.fenix.target, tokenTK6.target, false);
       let factAddress = await pairFactory.createPair.staticCall(deployed.fenix.target, tokenTK6.target, false);
       await pairFactory.createPair(deployed.fenix.target, tokenTK6.target, false);
-
+      let fromRouter = await router.pairFor(deployed.fenix.target, tokenTK6.target, false);
       expect(fromRouter).to.be.eq(factAddress);
       expect(await pairFactory.getPair(deployed.fenix.target, tokenTK6.target, false)).to.be.not.eq(ZERO_ADDRESS);
       expect(await pairFactory.getPair(tokenTK6.target, deployed.fenix.target, false)).to.be.eq(factAddress);

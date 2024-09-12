@@ -1,0 +1,42 @@
+npx hardhat run .\deploy\blastSepolia\014-RoutersAfterFix-deploy.ts --network blastSepolia
+Starting deployment of RouterV2...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228","0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3","0x4200000000000000000000000000000000000023"]
+RouterV2 deployed at 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6
+Save to deploys.json deployed address of RouterV2:0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6
+Warning: Address for RouterV2 is already in the list. It will be replaced.
+        Existing address: 0xAC0D01f49798426d2cDff417835a3feA80B9e698
+        New address: 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6
+Verifying TransparentUpgradeableProxy at 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://sepolia.blastscan.io/address/0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6#code
+
+Starting deployment of UniswapV2PartialRouter...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228","0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3","0x4200000000000000000000000000000000000023"]
+UniswapV2PartialRouter deployed at 0x252EdC6eDd61f87a43466D53456807a5AF9377c9
+Save to deploys.json deployed address of UniswapV2PartialRouter:0x252EdC6eDd61f87a43466D53456807a5AF9377c9
+Verifying TransparentUpgradeableProxy at 0x252EdC6eDd61f87a43466D53456807a5AF9377c9...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/dexV2/UniswapV2PartialRouter.sol:UniswapV2PartialRouter at 0x252EdC6eDd61f87a43466D53456807a5AF9377c9
+for verification on the block explorer. Waiting for verification result...
+
+UnexpectedError: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: An unexpected error occurred during the verification process.
+Please report this issue to the Hardhat team.
+Error Details: The Etherscan API responded with a failure status.
+The verification may still succeed but should be checked manually.
+Reason: Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.

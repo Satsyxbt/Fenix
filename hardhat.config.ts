@@ -73,7 +73,7 @@ const config: HardhatUserConfig = {
     blastSepolia: {
       url: `${process.env.RPC_BLAST_SEPOLIA || 'https://sepolia.blast.io'}`,
       accounts: {
-        mnemonic: `${process.env.MNEMONIC}`,
+        mnemonic: `${process.env.BLAST_SEPOLIA_MNEMONIC}`,
         path: "m/44'/60'/0'/0",
         initialIndex: 0,
         count: 20,

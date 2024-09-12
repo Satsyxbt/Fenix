@@ -28,7 +28,7 @@
   "GaugeFactoryUpgradeable_Proxy_2": "0x0cC86Eb2dFB324cd7bFcAdA7F7819Ad72a059F0A",
   "GaugeFactoryUpgradeable_Proxy_3": "0xD6Fe1FCb8f8F231Ce6dBF332e697E798bEC6fa79",
   "AlgebraFNXPriceProviderUpgradeable_Proxy": "0x968106c45b72eB84A1Abc799CC4AaFf618495c76",
-  "RouterV2": "0xAC0D01f49798426d2cDff417835a3feA80B9e698",
+  "RouterV2": "0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6",
   "CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation": "0x7c896bcd8696156388fCf610CF4B0E9005287E01",
   "CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation": "0x721d34963213A17030C918793179aEE63A474eC6",
   "ManagedNFTManagerUpgradeable_Implementation": "0x25Ad042f4f810e56e53C62228c6549e50A8CE159",
@@ -62,5 +62,6 @@
   "FenixRaiseUpgradeable_Proxy": "0x9b277C211462F5E06a46A2Cfb7821Bf2143a28eb",
   "FenixRaiseUpgradeable_Implementation": "0xf10B062258EB1650Cf244fd4B4593EBAB7273D67",
   "UtilsUpgradeable_Implementation": "0x7A2A229bB0FC58628448437Cc94db06FF1730550",
-  "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225"
+  "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
+  "UniswapV2PartialRouter": "0x4330c2A25eb6d1fcd0c5A6769f447CeC37A6209c"
 }

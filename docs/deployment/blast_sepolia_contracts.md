@@ -25,7 +25,7 @@ External:
 | VeArtProxyUpgradeable_Proxy  | `0xF959E9af422217796CdF3BAc405e38AA1C922143` | Proxy for art tokens           | Upgradeable  |
 | MinterUpgradeable_Proxy      | `0xDA283872Fc205f56cE5b0268D719373dc33e35dA` | FNX Emission manager           | Upgradeable  |
 | FeesVaultFactoryUpgradeable_Proxy | `0xa3103248290399cc2655b68f0038ce590ce8639E` | Factory for fees vaults        | Upgradeable  |
-| RouterV2                     | `0xAC0D01f49798426d2cDff417835a3feA80B9e698` | Router for token swaps         | Default      |
+| RouterV2                     | `0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6` | Router for token swaps         | Default      |
 | MerklGaugeMiddleman          | `0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85` | Middleman for Merkl integration | Default      |
 | GaugeFactoryUpgradeable_Proxy_1 | `0x1abD24d6ea95BC2ea78e5BE16608B8068F0324D8` | Gauge Factory for Gauges Type 1 (v2) | Upgradeable |
 | GaugeFactoryUpgradeable_Proxy_2 | `0x0cC86Eb2dFB324cd7bFcAdA7F7819Ad72a059F0A` | Gauge Factory for Gauges Type 2 (ICHI) | Upgradeable |
@@ -46,7 +46,6 @@ External:
 | BlastGovernorUpgradeable_Proxy | `0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228` | BlastGovernor | Upgradeable |
 | VeFnxSplitMerklAidropUpgradeable_Proxy | `0x4BcC88B000C02075115275d5BB1e4133Ed1BD068` | VeFnx Split Merkl Aidrop | Upgradeable |
 | MDCBlastMock                | `0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01` | Mock Blast | Default |
-
 
 ## Implementations for Proxy
 
