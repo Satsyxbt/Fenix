@@ -1,0 +1,25 @@
+Starting deployment of MinimalLinearVestingUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+MinimalLinearVestingUpgradeable deployed at 0x6F6B1F213fe196711139076dd41b30cD0DcC4910
+Save to deploys.json deployed address of MinimalLinearVestingUpgradeable_Implementation:0x6F6B1F213fe196711139076dd41b30cD0DcC4910
+Verifying TransparentUpgradeableProxy at 0x6F6B1F213fe196711139076dd41b30cD0DcC4910...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/vesting/MinimalLinearVestingUpgradeable.sol:MinimalLinearVestingUpgradeable at 0x6F6B1F213fe196711139076dd41b30cD0DcC4910
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinimalLinearVestingUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x6F6B1F213fe196711139076dd41b30cD0DcC4910#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x6F6B1F213fe196711139076dd41b30cD0DcC4910
+	Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F
+Save to deploys.json deployed address of MinimalLinearVestingUpgradeable_Proxy:0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F
+Verifying TransparentUpgradeableProxy at 0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F...
+Timeout for 10s before verify proccess...
+The contract 0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F#code
+	Called Contract(0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", token_: "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6", startTimestamp_: "1727357850", duration_: "15724800")
+	Transaction hash: 0x334ad1b335054c84c63ccbf9b0bfa4750ab4de3e6a21a5a2a5e66758cca7790d

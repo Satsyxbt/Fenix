@@ -64,6 +64,8 @@ export enum AliasDeployedContracts {
   BlastGovernorUpgradeable_Implementation = 'BlastGovernorUpgradeable_Implementation',
   BlastGovernorUpgradeable_Proxy = 'BlastGovernorUpgradeable_Proxy',
   MDCBlastMock = 'MDCBlastMock',
+  MinimalLinearVestingUpgradeable_Proxy = 'MinimalLinearVestingUpgradeable_Proxy',
+  MinimalLinearVestingUpgradeable_Implementation = 'MinimalLinearVestingUpgradeable_Implementation',
 }
 
 enum ThirdPart {
@@ -109,6 +111,7 @@ enum ContractsInstanceName {
   Fenix = 'Fenix',
   TransparentUpgradeableProxy = 'TransparentUpgradeableProxy',
   BlastGovernorUpgradeable = 'BlastGovernorUpgradeable',
+  MinimalLinearVestingUpgradeable = 'MinimalLinearVestingUpgradeable',
 }
 
 export const InstanceName = {

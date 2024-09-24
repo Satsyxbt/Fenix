@@ -63,5 +63,7 @@
   "FenixRaiseUpgradeable_Implementation": "0xf10B062258EB1650Cf244fd4B4593EBAB7273D67",
   "UtilsUpgradeable_Implementation": "0x7A2A229bB0FC58628448437Cc94db06FF1730550",
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
-  "UniswapV2PartialRouter": "0x4330c2A25eb6d1fcd0c5A6769f447CeC37A6209c"
+  "UniswapV2PartialRouter": "0x4330c2A25eb6d1fcd0c5A6769f447CeC37A6209c",
+  "MinimalLinearVestingUpgradeable_Implementation": "0x6F6B1F213fe196711139076dd41b30cD0DcC4910",
+  "MinimalLinearVestingUpgradeable_Proxy": "0x1BA906b0b7B5d15d7C96c4B3c9Cc80e0e3E4C42F"
 }
