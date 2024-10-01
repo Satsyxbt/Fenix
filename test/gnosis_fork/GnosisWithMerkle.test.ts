@@ -104,7 +104,7 @@ describe('GnosisWithMerkl Contract', function () {
       let gauge = await ethers.getContractAt('GaugeUpgradeable', gaugeV2);
       await gauge.setMerklGaugeMiddleman(merklMiddleman.target);
       await gauge.setIsDistributeEmissionToMerkle(true);
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 60 * 86400, signers.deployer.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 60 * 86400, signers.deployer.address, true, false, 0);
     });
     it('check balance Fenix for addresses before emission distribution', async () => {
       let gauge = await ethers.getContractAt('GaugeUpgradeable', gaugeV2);
@@ -122,7 +122,7 @@ describe('GnosisWithMerkl Contract', function () {
       emissionAmount = await deployed.minter.weekly();
       emissionAmount = emissionAmount - (emissionAmount * (await deployed.minter.teamRate())) / (await deployed.minter.PRECISION());
 
-      let id = await deployed.votingEscrow.totalTokens();
+      let id = await deployed.votingEscrow.lastMintedTokenId();
       await deployed.voter.vote(id, [v2Pool], [ethers.parseEther('1')]);
 
       await time.increase(7 * 86400);

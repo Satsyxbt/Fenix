@@ -8,18 +8,18 @@ import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/tok
 import {IAlgebraFactory} from "@cryptoalgebra/integral-core/contracts/interfaces/IAlgebraFactory.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
-import {IVotingEscrowV2} from "./interfaces/IVotingEscrowV2.sol";
+import {IVotingEscrow} from "./interfaces/IVotingEscrow.sol";
 import {IPairFactory} from "../dexV2/interfaces/IPairFactory.sol";
 import {IGaugeFactory} from "../gauges/interfaces/IGaugeFactory.sol";
 import {IBribeFactory} from "../bribes/interfaces/IBribeFactory.sol";
 import {IMinter} from "./interfaces/IMinter.sol";
-import {IVoterV2} from "./interfaces/IVoterV2.sol";
 import {IVeFnxSplitMerklAidrop} from "./interfaces/IVeFnxSplitMerklAidrop.sol";
 import {IMerklDistributor} from "../integration/interfaces/IMerklDistributor.sol";
 import {IManagedNFTManager} from "../nest/interfaces/IManagedNFTManager.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "../gauges/interfaces/IGauge.sol";
 import "./libraries/LibVoterErrors.sol";
+import "./interfaces/IVoter.sol";
 
 /**
  * @title VoterUpgradeableV2
@@ -30,7 +30,7 @@ import "./libraries/LibVoterErrors.sol";
  * @custom:security ReentrancyGuardUpgradeable to prevent reentrancy attacks.
  * @custom:security AccessControlUpgradeable for role-based access control.
  */
-contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
+contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// @notice Role identifier for governance operations.
@@ -44,9 +44,6 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
 
     /// @notice Address of the Voting Escrow contract.
     address public votingEscrow;
-
-    /// @notice Alias for the Voting Escrow address, used within the contract.
-    address public _ve;
 
     /// @notice Address of the main ERC20 token used in the protocol.
     address public token;
@@ -125,7 +122,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @param tokenId_ The ID of the NFT to check.
      */
     modifier onlyNftApprovedOrOwner(uint256 tokenId_) {
-        if (!IVotingEscrowV2(votingEscrow).isApprovedOrOwner(_msgSender(), tokenId_)) {
+        if (!IVotingEscrow(votingEscrow).isApprovedOrOwner(_msgSender(), tokenId_)) {
             revert AccessDenied();
         }
         _;
@@ -152,8 +149,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         votingEscrow = votingEscrow_;
-        _ve = votingEscrow_;
-        token = IVotingEscrowV2(votingEscrow_).token();
+        token = IVotingEscrow(votingEscrow_).token();
         distributionWindowDuration = 3600;
     }
 
@@ -234,9 +230,6 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             IERC20Upgradeable(token).safeTransfer(minter, state.claimable);
             delete gaugesState[gauge_].claimable;
         }
-
-        uint256 epochTimestamp = _epochTimestamp();
-        totalWeightsPerEpoch[epochTimestamp] -= weightsPerEpoch[epochTimestamp][state.pool];
         emit GaugeKilled(gauge_);
     }
 
@@ -293,6 +286,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         );
         _registerCreatedGauge(gauge, pool_, internalBribe, externalBribe);
         v2Pools.push(pool_);
+        emit GaugeCreatedType(gauge, 0);
     }
 
     /**
@@ -321,7 +315,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         IBribeFactory bribeFactoryCache = IBribeFactory(bribeFactory);
         internalBribe = IBribeFactory(bribeFactoryCache).createBribe(token0, token1, string.concat("Fenix LP Fees: ", symbol));
         externalBribe = IBribeFactory(bribeFactoryCache).createBribe(token0, token1, string.concat("Fenix Bribes: ", symbol));
-        gauge = IGaugeFactory(v2GaugeFactory).createGauge(
+        gauge = IGaugeFactory(v3GaugeFactory).createGauge(
             token,
             votingEscrow,
             pool_,
@@ -333,6 +327,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         );
         _registerCreatedGauge(gauge, pool_, internalBribe, externalBribe);
         v3Pools.push(pool_);
+        emit GaugeCreatedType(gauge, 1);
     }
 
     /**
@@ -366,6 +361,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         externalBribe = bribeFactoryCache.createBribe(tokenA_, tokenB_, externalBribesName_);
         internalBribe = bribeFactoryCache.createBribe(tokenA_, tokenB_, internalBribesName_);
         _registerCreatedGauge(gauge_, pool_, internalBribe, externalBribe);
+        emit GaugeCreatedType(gauge, 2);
     }
 
     /**
@@ -381,7 +377,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             revert AccessDenied();
         }
         IERC20Upgradeable(token).safeTransferFrom(_msgSender(), address(this), amount_);
-        uint256 weightAt = totalWeightsPerEpoch[_epochTimestamp() - _WEEK]; // minter call notify after updates active_period, loads votes - 1 week
+        uint256 weightAt = totalWeightsPerEpoch[epochTimestamp() - _WEEK]; // minter call notify after updates active_period, loads votes - 1 week
         if (weightAt > 0) {
             index += (amount_ * 1e18) / weightAt;
         }
@@ -448,8 +444,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         _reset(tokenId_);
-        IVotingEscrowV2(votingEscrow).votingHook(tokenId_, false);
-        _updateLastVotedTimestamp(tokenId_);
+        IVotingEscrow(votingEscrow).votingHook(tokenId_, false);
     }
 
     /**
@@ -458,7 +453,14 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @param tokenId_ The token ID for which to update voting preferences.
      */
     function poke(uint256 tokenId_) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        _checkVoteWindow();
+        _checkStartVoteWindow();
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        if (managedNFTManagerCache.isDisabledNFT(tokenId_)) {
+            revert DisabledManagedNft();
+        }
+        if (!managedNFTManagerCache.isWhitelistedNFT(tokenId_)) {
+            _checkEndVoteWindow();
+        }
         _poke(tokenId_);
     }
 
@@ -482,7 +484,6 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         if (poolsVotes_.length != weights_.length) {
             revert ArrayLengthMismatch();
         }
-        _checkVoteDelay(tokenId_);
         _checkStartVoteWindow();
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
         if (managedNFTManagerCache.isDisabledNFT(tokenId_)) {
@@ -490,6 +491,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         }
         if (!managedNFTManagerCache.isWhitelistedNFT(tokenId_)) {
             _checkEndVoteWindow();
+            _checkVoteDelay(tokenId_);
         }
         _vote(tokenId_, poolsVotes_, weights_);
         _updateLastVotedTimestamp(tokenId_);
@@ -536,11 +538,18 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @param managedTokenId_ The managed tokenId to attach to.
      * @custom:event AttachToManagedNFT Emitted when a tokenId is attached to a managed tokenId.
      */
-    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant {
+        address votingEscrowCache = votingEscrow;
+        if (_msgSender() != votingEscrowCache) {
+            if (!IVotingEscrow(votingEscrowCache).isApprovedOrOwner(_msgSender(), tokenId_)) {
+                revert AccessDenied();
+            }
+        }
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         IManagedNFTManager(managedNFTManager).onAttachToManagedNFT(tokenId_, managedTokenId_);
         _poke(managedTokenId_);
+        _updateLastVotedTimestamp(tokenId_);
         emit AttachToManagedNFT(tokenId_, managedTokenId_);
     }
 
@@ -556,13 +565,14 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
         uint256 managedTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId_);
         managedNFTManagerCache.onDettachFromManagedNFT(tokenId_);
-        uint256 weight = IVotingEscrowV2(votingEscrow).balanceOfNftIgnoreOwnershipChange(managedTokenId);
+        uint256 weight = IVotingEscrow(votingEscrow).balanceOfNftIgnoreOwnershipChange(managedTokenId);
         if (weight == 0) {
             _reset(managedTokenId);
             delete lastVotedTimestamps[managedTokenId];
         } else {
             _poke(managedTokenId);
         }
+        _updateLastVotedTimestamp(tokenId_);
         emit DettachFromManagedNFT(tokenId_);
     }
 
@@ -605,6 +615,61 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
     }
 
     /**
+     * @notice Returns the total number of pools, V2 pools, and V3 pools managed by the contract.
+     * @return totalCount The total number of pools.
+     * @return v2PoolsCount The total number of V2 pools.
+     * @return v3PoolsCount The total number of V3 pools.
+     */
+    function poolsCounts() external view returns (uint256 totalCount, uint256 v2PoolsCount, uint256 v3PoolsCount) {
+        return (pools.length, v2Pools.length, v3Pools.length);
+    }
+
+    /**
+     * @notice Checks if the provided address is a registered gauge.
+     * @param gauge_ The address of the gauge to check.
+     * @return True if the address is a registered gauge, false otherwise.
+     */
+    function isGauge(address gauge_) external view returns (bool) {
+        return gaugesState[gauge_].isGauge;
+    }
+
+    /**
+     * @notice Returns the number of pools that an NFT token ID has voted for.
+     * @param tokenId The ID of the NFT.
+     * @return The number of pools the token has voted for.
+     */
+    function poolVoteLength(uint256 tokenId) external view returns (uint256) {
+        return poolVote[tokenId].length;
+    }
+
+    /**
+     * @notice Checks if the specified gauge is alive (i.e., enabled for reward distribution).
+     * @param gauge_ The address of the gauge to check.
+     * @return True if the gauge is alive, false otherwise.
+     */
+    function isAlive(address gauge_) external view returns (bool) {
+        return gaugesState[gauge_].isAlive;
+    }
+
+    /**
+     * @notice Returns the state of a specific gauge.
+     * @param gauge_ The address of the gauge.
+     * @return GaugeState The current state of the specified gauge.
+     */
+    function getGaugeState(address gauge_) external view returns (GaugeState memory) {
+        return gaugesState[gauge_];
+    }
+
+    /**
+     * @notice Returns the pool address associated with a specified gauge.
+     * @param gauge_ The address of the gauge to query.
+     * @return The address of the pool associated with the specified gauge.
+     */
+    function poolForGauge(address gauge_) external view returns (address) {
+        return gaugesState[gauge_].pool;
+    }
+
+    /**
      * @dev Updates the voting preferences for a given tokenId after changes in the system.
      * @param tokenId_ The tokenId for which to update voting preferences.
      */
@@ -619,13 +684,12 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             }
         }
         _vote(tokenId_, _poolVote, _weights);
-        _updateLastVotedTimestamp(tokenId_);
     }
 
     /// @notice distribute the emission
     function _distribute(address gauge_) internal {
         GaugeState memory state = gaugesState[gauge_];
-        uint256 currentTimestamp = _epochTimestamp();
+        uint256 currentTimestamp = epochTimestamp();
         if (state.lastDistributionTimestamp < currentTimestamp) {
             uint256 totalVotesWeight = weightsPerEpoch[currentTimestamp - _WEEK][state.pool];
             if (totalVotesWeight > 0) {
@@ -644,6 +708,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             if (claimable > 0 && state.isAlive) {
                 gaugesState[gauge_].claimable = 0;
                 gaugesState[gauge_].lastDistributionTimestamp = currentTimestamp;
+                IERC20Upgradeable(token).approve(gauge_, claimable);
                 IGauge(gauge_).notifyRewardAmount(token, claimable);
                 emit DistributeReward(_msgSender(), gauge_, claimable);
             }
@@ -658,7 +723,6 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @param externalBribe_ The address of the associated external bribe.
      */
     function _registerCreatedGauge(address gauge_, address pool_, address internalBribe_, address externalBribe_) internal {
-        IERC20Upgradeable(token).approve(gauge_, type(uint256).max);
         gaugesState[gauge_] = GaugeState({
             isGauge: true,
             isAlive: true,
@@ -678,7 +742,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @notice Returns the current epoch timestamp used for reward calculations.
      * @return The current epoch timestamp.
      */
-    function _epochTimestamp() public view returns (uint256) {
+    function epochTimestamp() public view returns (uint256) {
         return IMinter(minter).active_period();
     }
 
@@ -689,7 +753,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
     function _reset(uint256 tokenId_) internal {
         address[] memory votesPools = poolVote[tokenId_];
         uint256 totalVotePowerForPools;
-        uint256 time = _epochTimestamp();
+        uint256 time = epochTimestamp();
         uint256 lastVotedTime = lastVotedTimestamps[tokenId_];
         for (uint256 i; i < votesPools.length; i++) {
             address pool = votesPools[i];
@@ -722,7 +786,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      */
     function _vote(uint256 tokenId_, address[] memory pools_, uint256[] memory weights_) internal {
         _reset(tokenId_);
-        uint256 nftVotePower = IVotingEscrowV2(votingEscrow).balanceOfNFT(tokenId_);
+        uint256 nftVotePower = IVotingEscrow(votingEscrow).balanceOfNFT(tokenId_);
         uint256 totalVotesWeight;
         uint256 totalVoterPower;
         for (uint256 i; i < pools_.length; i++) {
@@ -733,7 +797,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             totalVotesWeight += weights_[i];
         }
 
-        uint256 time = _epochTimestamp();
+        uint256 time = epochTimestamp();
         for (uint256 i; i < pools_.length; i++) {
             address pool = pools_[i];
             address gauge = poolToGauge[pools_[i]];
@@ -753,7 +817,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
             IBribe(gaugesState[gauge].externalBribe).deposit(votePowerForPool, tokenId_);
             emit Voted(_msgSender(), tokenId_, votePowerForPool);
         }
-        if (totalVoterPower > 0) IVotingEscrowV2(votingEscrow).votingHook(tokenId_, true);
+        if (totalVoterPower > 0) IVotingEscrow(votingEscrow).votingHook(tokenId_, true);
         totalWeightsPerEpoch[time] += totalVoterPower;
     }
 
@@ -762,7 +826,7 @@ contract VoterUpgradeableV2 is IVoterV2, AccessControlUpgradeable, BlastGovernor
      * @param tokenId_ The token ID for which to update the last voted timestamp.
      */
     function _updateLastVotedTimestamp(uint256 tokenId_) internal {
-        lastVotedTimestamps[tokenId_] = _epochTimestamp() + 1;
+        lastVotedTimestamps[tokenId_] = epochTimestamp() + 1;
     }
 
     /**

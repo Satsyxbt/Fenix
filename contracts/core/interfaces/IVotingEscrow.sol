@@ -1,68 +1,296 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-interface IVotingEscrow {
-    struct Point {
-        int128 bias;
-        int128 slope; // # -dweight / dt
-        uint256 ts;
-        uint256 blk; // block
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+
+/**
+ * @title IVotingEscrow
+ * @notice Interface for Voting Escrow, allowing users to lock tokens in exchange for veNFTs that are used in governance and other systems.
+ */
+interface IVotingEscrow is IERC721Upgradeable {
+    /**
+     * @notice Enum representing the types of deposits that can be made.
+     * @dev Defines the context in which a deposit is made:
+     * - `DEPOSIT_FOR_TYPE`: Regular deposit for an existing lock.
+     * - `CREATE_LOCK_TYPE`: Creating a new lock.
+     * - `INCREASE_UNLOCK_TIME`: Increasing the unlock time for an existing lock.
+     * - `MERGE_TYPE`: Merging two locks together.
+     */
+    enum DepositType {
+        DEPOSIT_FOR_TYPE,
+        CREATE_LOCK_TYPE,
+        INCREASE_UNLOCK_TIME,
+        MERGE_TYPE
     }
 
+    /**
+     * @notice Structure representing the state of a token.
+     * @dev This includes information about the lock, voting status, attachment status, last transfer block, and point epoch.
+     * @param locked The locked balance associated with the token.
+     * @param isVoted Whether the token has been used to vote.
+     * @param isAttached Whether the token is attached to a managed NFT.
+     * @param lastTranferBlock The block number of the last transfer.
+     * @param pointEpoch The epoch of the last point associated with the token.
+     */
+    struct TokenState {
+        LockedBalance locked;
+        bool isVoted;
+        bool isAttached;
+        uint256 lastTranferBlock;
+        uint256 pointEpoch;
+    }
+
+    /**
+     * @notice Structure representing a locked balance.
+     * @dev Contains the amount locked, the end time of the lock, and whether the lock is permanent.
+     * @param amount The amount of tokens locked.
+     * @param end The timestamp when the lock ends.
+     * @param isPermanentLocked Whether the lock is permanent.
+     */
     struct LockedBalance {
         int128 amount;
-        uint end;
+        uint256 end;
+        bool isPermanentLocked;
     }
 
-    function create_lock_for(uint _value, uint _lock_duration, address _to) external returns (uint);
+    /**
+     * @notice Structure representing a point in time for calculating voting power.
+     * @dev Used for calculating the slope and bias for lock balances over time.
+     * @param bias The bias of the lock, representing the remaining voting power.
+     * @param slope The rate at which the voting power decreases.
+     * @param ts The timestamp of the point.
+     * @param blk The block number of the point.
+     * @param permanent The permanent amount associated with the lock.
+     */
+    struct Point {
+        int128 bias;
+        int128 slope; // -dweight / dt
+        uint256 ts;
+        uint256 blk; // block
+        int128 permanent;
+    }
 
-    function create_lock_for_without_boost(uint _value, uint _lock_duration, address _to) external returns (uint);
+    /**
+     * @notice Emitted when a boost is applied to a token's lock.
+     * @param tokenId The ID of the token that received the boost.
+     * @param value The value of the boost applied.
+     */
+    event Boost(uint256 indexed tokenId, uint256 value);
 
-    function locked(uint id) external view returns (LockedBalance memory);
+    /**
+     * @notice Emitted when a deposit is made into a lock.
+     * @param provider The address of the entity making the deposit.
+     * @param tokenId The ID of the token associated with the deposit.
+     * @param value The value of the deposit made.
+     * @param locktime The time until which the lock is extended.
+     * @param deposit_type The type of deposit being made.
+     * @param ts The timestamp when the deposit was made.
+     */
+    event Deposit(address indexed provider, uint256 tokenId, uint256 value, uint256 indexed locktime, DepositType deposit_type, uint256 ts);
 
-    function tokenOfOwnerByIndex(address _owner, uint _tokenIndex) external view returns (uint);
+    /**
+     * @notice Emitted when a withdrawal is made from a lock.
+     * @param provider The address of the entity making the withdrawal.
+     * @param tokenId The ID of the token associated with the withdrawal.
+     * @param value The value of the withdrawal made.
+     * @param ts The timestamp when the withdrawal was made.
+     */
+    event Withdraw(address indexed provider, uint256 tokenId, uint256 value, uint256 ts);
 
+    /**
+     * @notice Emitted when the total supply of voting power changes.
+     * @param prevSupply The previous total supply of voting power.
+     * @param supply The new total supply of voting power.
+     */
+    event Supply(uint256 prevSupply, uint256 supply);
+
+    /**
+     * @notice Emitted when an address associated with the contract is updated.
+     * @param key The key representing the contract being updated.
+     * @param value The new address of the contract.
+     */
+    event UpdateAddress(string key, address indexed value);
+
+    /**
+     * @notice Emitted when a token is permanently locked by a user.
+     * @param sender The address of the user who initiated the lock.
+     * @param tokenId The ID of the token that has been permanently locked.
+     */
+    event LockPermanent(address indexed sender, uint256 indexed tokenId);
+
+    /**
+     * @notice Emitted when a token is unlocked from a permanent lock state by a user.
+     * @param sender The address of the user who initiated the unlock.
+     * @param tokenId The ID of the token that has been unlocked from its permanent state.
+     */
+    event UnlockPermanent(address indexed sender, uint256 indexed tokenId);
+
+    /**
+     * @notice Returns the address of the token used in voting escrow.
+     * @return The address of the token.
+     */
     function token() external view returns (address);
 
-    function team() external returns (address);
+    /**
+     * @notice Returns the address of the voter.
+     * @return The address of the voter.
+     */
+    function voter() external view returns (address);
 
-    function epoch() external view returns (uint);
+    /**
+     * @notice Checks if the specified address is approved or the owner of the given token.
+     * @param sender The address to check.
+     * @param tokenId The ID of the token to check against.
+     * @return True if the sender is approved or the owner of the token, false otherwise.
+     */
+    function isApprovedOrOwner(address sender, uint256 tokenId) external view returns (bool);
 
-    function point_history(uint loc) external view returns (Point memory);
+    /**
+     * @notice Retrieves the state of a specific NFT.
+     * @param tokenId_ The ID of the NFT to query.
+     * @return The current state of the specified NFT.
+     */
+    function getNftState(uint256 tokenId_) external view returns (TokenState memory);
 
-    function user_point_history(uint tokenId, uint loc) external view returns (Point memory);
+    /**
+     * @notice Returns the total supply of voting power at the current block timestamp.
+     * @return The total supply of voting power.
+     */
+    function votingPowerTotalSupply() external view returns (uint256);
 
-    function user_point_epoch(uint tokenId) external view returns (uint);
+    /**
+     * @notice Returns the balance of an NFT at the current block timestamp.
+     * @param tokenId_ The ID of the NFT to query.
+     * @return The balance of the NFT.
+     */
+    function balanceOfNFT(uint256 tokenId_) external view returns (uint256);
 
-    function ownerOf(uint) external view returns (address);
+    /**
+     * @notice Returns the balance of an NFT at the current block timestamp, ignoring ownership changes.
+     * @param tokenId_ The ID of the NFT to query.
+     * @return The balance of the NFT.
+     */
+    function balanceOfNftIgnoreOwnershipChange(uint256 tokenId_) external view returns (uint256);
 
-    function isApprovedOrOwner(address, uint) external view returns (bool);
+    /**
+     * @notice Updates the address of a specified contract.
+     * @param key_ The key representing the contract.
+     * @param value_ The new address of the contract.
+     * @dev Reverts with `InvalidAddressKey` if the key does not match any known contracts.
+     * Emits an {UpdateAddress} event on successful address update.
+     */
+    function updateAddress(string memory key_, address value_) external;
 
-    function transferFrom(address, address, uint) external;
+    /**
+     * @notice Hooks the voting state for a specified NFT.
+     * @param tokenId_ The ID of the NFT.
+     * @param state_ The voting state to set.
+     * @dev Reverts with `AccessDenied` if the caller is not the voter.
+     */
+    function votingHook(uint256 tokenId_, bool state_) external;
 
-    function voted(uint) external view returns (bool);
+    /**
+     * @notice Creates a new lock for a specified recipient.
+     * @param amount_ The amount of tokens to lock.
+     * @param lockDuration_ The duration for which the tokens will be locked.
+     * @param to_ The address of the recipient who will receive the veNFT.
+     * @param shouldBoosted_ Whether the deposit should be boosted.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
+     * @return The ID of the newly created veNFT.
+     * @dev Reverts with `InvalidLockDuration` if the lock duration is invalid.
+     * Emits a {Deposit} event on successful lock creation.
+     */
+    function createLockFor(
+        uint256 amount_,
+        uint256 lockDuration_,
+        address to_,
+        bool shouldBoosted_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_
+    ) external returns (uint256);
 
-    function attachments(uint) external view returns (uint);
+    /**
+     * @notice Deposits tokens for a specific NFT, increasing its locked balance.
+     * @param tokenId_ The ID of the NFT.
+     * @param amount_ The amount of tokens to deposit.
+     * @param shouldBoosted_ Whether the deposit should be boosted.
+     * @param withPermanentLock_ Whether to apply a permanent lock.
+     * @dev Reverts with `InvalidAmount` if the amount is zero.
+     * Emits a {Deposit} event on successful deposit.
+     */
+    function depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) external;
 
-    function voting(uint tokenId) external;
+    /**
+     * @notice Increases the unlock time for a specified NFT.
+     * @param tokenId_ The ID of the NFT to increase unlock time for.
+     * @param lockDuration_ The additional duration to add to the unlock time.
+     * @dev Reverts with `InvalidLockDuration` if the new unlock time is invalid.
+     * Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.
+     * Emits a {Deposit} event on successful unlock time increase.
+     */
+    function increase_unlock_time(uint256 tokenId_, uint256 lockDuration_) external;
 
-    function abstain(uint tokenId) external;
+    /**
+     * @notice Withdraws tokens from a specified NFT lock.
+     * @param tokenId_ The ID of the NFT to withdraw tokens from.
+     * @dev Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.
+     * Emits a {Supply} event reflecting the change in total supply.
+     */
+    function withdraw(uint256 tokenId_) external;
 
-    function attach(uint tokenId) external;
+    /**
+     * @notice Merges two NFTs into one.
+     * @param tokenFromId_ The ID of the NFT to merge from.
+     * @param tokenToId_ The ID of the NFT to merge into.
+     * @dev Reverts with `MergeTokenIdsTheSame` if the token IDs are the same.
+     * Reverts with `AccessDenied` if the caller is not approved or the owner of both NFTs.
+     * Emits a {Deposit} event reflecting the merge.
+     */
+    function merge(uint256 tokenFromId_, uint256 tokenToId_) external;
 
-    function detach(uint tokenId) external;
+    /**
+     * @notice Permanently locks a specified NFT.
+     * @param tokenId_ The ID of the NFT to lock permanently.
+     * @dev Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.
+     * Emits a {LockPermanent} event on successful permanent lock.
+     */
+    function lockPermanent(uint256 tokenId_) external;
 
-    function checkpoint() external;
+    /**
+     * @notice Unlocks a permanently locked NFT.
+     * @param tokenId_ The ID of the NFT to unlock.
+     * @dev Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.
+     * Emits an {UnlockPermanent} event on successful unlock.
+     */
+    function unlockPermanent(uint256 tokenId_) external;
 
-    function deposit_for(uint tokenId, uint value) external;
+    /**
+     * @notice Creates a new managed NFT for a given recipient.
+     * @param recipient_ The address of the recipient to receive the newly created managed NFT.
+     * @return The ID of the newly created managed NFT.
+     * @dev Reverts with `AccessDenied` if the caller is not the managed NFT manager.
+     */
+    function createManagedNFT(address recipient_) external returns (uint256);
 
-    function balanceOfNFT(uint _id) external view returns (uint);
+    /**
+     * @notice Attaches a token to a managed NFT.
+     * @param tokenId_ The ID of the user's token being attached.
+     * @param managedTokenId_ The ID of the managed token to which the user's token is being attached.
+     * @return The amount of tokens locked during the attach operation.
+     * @dev Reverts with `AccessDenied` if the caller is not the managed NFT manager.
+     * Reverts with `ZeroVotingPower` if the NFT has no voting power.
+     * Reverts with `NotManagedNft` if the target is not a managed NFT.
+     */
+    function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external returns (uint256);
 
-    function balanceOf(address _owner) external view returns (uint);
-
-    function totalSupply() external view returns (uint);
-
-    function supply() external view returns (uint);
-
-    function decimals() external view returns (uint8);
+    /**
+     * @notice Detaches a token from a managed NFT.
+     * @param tokenId_ The ID of the user's token being detached.
+     * @param managedTokenId_ The ID of the managed token from which the user's token is being detached.
+     * @param newBalance_ The new balance to set for the user's token post detachment.
+     * @dev Reverts with `AccessDenied` if the caller is not the managed NFT manager.
+     * Reverts with `NotManagedNft` if the target is not a managed NFT.
+     */
+    function onDettachFromManagedNFT(uint256 tokenId_, uint256 managedTokenId_, uint256 newBalance_) external;
 }

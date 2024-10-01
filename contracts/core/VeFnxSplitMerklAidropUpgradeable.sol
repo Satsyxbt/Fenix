@@ -259,7 +259,7 @@ contract VeFnxSplitMerklAidropUpgradeable is
         if (toVeNFTAmount > 0) {
             IVotingEscrow veCache = IVotingEscrow(votingEscrow);
             tokenCache.safeApprove(address(veCache), toVeNFTAmount);
-            tokenId = veCache.create_lock_for_without_boost(toVeNFTAmount, _LOCK_DURATION, target_);
+            tokenId = veCache.createLockFor(toVeNFTAmount, _LOCK_DURATION, target_, false, false, 0);
         }
 
         if (toTokenAmount > 0) {

@@ -42,7 +42,7 @@ contract MerklGaugeMiddleman is IMerklGaugeMiddleman, BlastGovernorClaimableSetu
 
         token = IERC20(token_);
         merklDistributionCreator = IDistributionCreator(merklDistributionCreator_);
-
+        merklDistributionCreator.acceptConditions();
         IERC20(token_).safeIncreaseAllowance(merklDistributionCreator_, type(uint256).max);
     }
 

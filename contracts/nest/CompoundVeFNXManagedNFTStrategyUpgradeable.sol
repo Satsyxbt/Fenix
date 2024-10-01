@@ -5,7 +5,7 @@ import {BaseManagedNFTStrategyUpgradeable, IManagedNFTManager} from "./BaseManag
 
 import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
-import {IVotingEscrowV1_2} from "../core/interfaces/IVotingEscrowV1_2.sol";
+import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 
 import {ISingelTokenVirtualRewarder} from "./interfaces/ISingelTokenVirtualRewarder.sol";
 import {ICompoundVeFNXManagedNFTStrategy} from "./interfaces/ICompoundVeFNXManagedNFTStrategy.sol";
@@ -65,7 +65,7 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
         _checkAddressZero(virtualRewarder_);
         __BaseManagedNFTStrategy__init(blastGovernor_, managedNFTManager_, name_);
         __SingelTokenBuyback__init(routerV2PathProvider_);
-        fenix = IVotingEscrowV1_2(votingEscrow).token();
+        fenix = IVotingEscrow(votingEscrow).token();
         virtualRewarder = virtualRewarder_;
     }
 
@@ -132,7 +132,7 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
         if (currentBalance > 0) {
             address votingEscrowCache = votingEscrow;
             fenixCache.safeApprove(votingEscrowCache, currentBalance);
-            IVotingEscrowV1_2(votingEscrowCache).deposit_for_without_boost(managedTokenId, currentBalance);
+            IVotingEscrow(votingEscrowCache).depositFor(managedTokenId, currentBalance, false, false);
             ISingelTokenVirtualRewarder(virtualRewarder).notifyRewardAmount(currentBalance);
             emit Compound(msg.sender, currentBalance);
         }

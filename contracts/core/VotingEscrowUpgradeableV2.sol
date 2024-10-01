@@ -7,9 +7,10 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "../integration/BlastGovernorClaimableSetup.sol";
 import "../nest/interfaces/IManagedNFTManager.sol";
-import "./interfaces/IVotingEscrowV2.sol";
+import "./interfaces/IVotingEscrow.sol";
 import "./interfaces/IVeArtProxyUpgradeable.sol";
 import "./interfaces/IVeBoost.sol";
+import "./interfaces/IVoter.sol";
 import "./libraries/LibVotingEscrowValidation.sol";
 import "./libraries/LibVotingEscrowErrors.sol";
 import "./libraries/LibVotingEscrowConstants.sol";
@@ -22,7 +23,7 @@ import "./libraries/LibVotingEscrowUtils.sol";
  *      It integrates with various external systems including Blast Governor, VotingEscrow, and VeBoost.
  */
 contract VotingEscrowUpgradeableV2 is
-    IVotingEscrowV2,
+    IVotingEscrow,
     Ownable2StepUpgradeable,
     ERC721EnumerableUpgradeable,
     ReentrancyGuardUpgradeable,
@@ -106,6 +107,7 @@ contract VotingEscrowUpgradeableV2 is
      * @notice Initializes the contract with the given parameters.
      * @param blastGovernor_ The address of the Blast governor.
      * @param token_ The address of the token used for voting escrow.
+     * @dev Sets the initial state of the contract and checkpoints the supply.
      */
     function initialize(address blastGovernor_, address token_) external initializer {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
@@ -120,39 +122,65 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-create_lock_for}.
+     * @dev See {IVotingEscrow-createLockFor}.
      */
-    function create_lock_for(uint256 amount_, uint256 lockDuration_, address to_) external override nonReentrant returns (uint256) {
-        return _createLock(amount_, lockDuration_, to_, true);
-    }
-
-    /**
-     * @dev See {IVotingEscrowV2-create_lock_for_without_boost}.
-     */
-    function create_lock_for_without_boost(
+    function createLockFor(
         uint256 amount_,
         uint256 lockDuration_,
-        address to_
+        address to_,
+        bool shouldBoosted_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_
     ) external override nonReentrant returns (uint256) {
-        return _createLock(amount_, lockDuration_, to_, false);
+        LibVotingEscrowValidation.checkNoValueZero(amount_);
+        uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
+
+        if (withPermanentLock_) {
+            unlockTimestamp = LibVotingEscrowUtils.maxUnlockTimestamp();
+        }
+
+        if (unlockTimestamp <= block.timestamp || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
+            revert InvalidLockDuration();
+        }
+
+        uint256 newTokenId = ++lastMintedTokenId;
+        _mint(to_, newTokenId);
+        _proccessLockChange(
+            newTokenId,
+            amount_,
+            unlockTimestamp,
+            nftStates[newTokenId].locked,
+            DepositType.CREATE_LOCK_TYPE,
+            shouldBoosted_
+        );
+        if (withPermanentLock_) {
+            _lockPermanent(newTokenId);
+        }
+        if (managedTokenIdForAttach_ > 0) {
+            IVoter(voter).attachToManagedNFT(newTokenId, managedTokenIdForAttach_);
+        }
+        return newTokenId;
     }
 
     /**
-     * @dev See {IVotingEscrowV2-deposit_for}.
+     * @dev See {IVotingEscrow-depositFor}.
      */
-    function deposit_for(uint256 tokenId_, uint256 amount_) external override nonReentrant {
-        _deposit(tokenId_, amount_, true);
+    function depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) external override nonReentrant {
+        LibVotingEscrowValidation.checkNoValueZero(amount_);
+        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
+            nftStates[tokenId_].depositCheck();
+        }
+        if (withPermanentLock_) {
+            if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
+                revert AccessDenied();
+            }
+            _lockPermanent(tokenId_);
+        }
+        _proccessLockChange(tokenId_, amount_, 0, nftStates[tokenId_].locked, DepositType.DEPOSIT_FOR_TYPE, shouldBoosted_);
     }
 
     /**
-     * @dev See {IVotingEscrowV2-deposit_for_without_boost}.
-     */
-    function deposit_for_without_boost(uint256 tokenId_, uint256 amount_) external override nonReentrant {
-        _deposit(tokenId_, amount_, false);
-    }
-
-    /**
-     * @dev See {IVotingEscrowV2-increase_unlock_time}.
+     * @dev See {IVotingEscrow-increase_unlock_time}.
      */
     function increase_unlock_time(uint256 tokenId_, uint256 lockDuration_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
         TokenState memory state = nftStates[tokenId_];
@@ -165,7 +193,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-withdraw}.
+     * @dev See {IVotingEscrow-withdraw}.
      */
     function withdraw(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
         TokenState memory state = (nftStates[tokenId_]);
@@ -175,7 +203,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-merge}.
+     * @dev See {IVotingEscrow-merge}.
      */
     function merge(
         uint256 tokenFromId_,
@@ -200,18 +228,14 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-lockPermanent}.
+     * @dev See {IVotingEscrow-lockPermanent}.
      */
     function lockPermanent(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        TokenState memory state = (nftStates[tokenId_]);
-        state.lockPermanentCheck();
-        permanentTotalSupply += LibVotingEscrowUtils.toUint256(state.locked.amount);
-        _updateNftLocked(tokenId_, LockedBalance(state.locked.amount, 0, true));
-        emit LockPermanent(_msgSender(), tokenId_);
+        _lockPermanent(tokenId_);
     }
 
     /**
-     * @dev See {IVotingEscrowV2-unlockPermanent}.
+     * @dev See {IVotingEscrow-unlockPermanent}.
      */
     function unlockPermanent(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
         TokenState memory state = (nftStates[tokenId_]);
@@ -222,7 +246,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-updateAddress}.
+     * @dev See {IVotingEscrow-updateAddress}.
      */
     function updateAddress(string memory key_, address value_) external onlyOwner {
         bytes32 key = keccak256(abi.encodePacked(key_));
@@ -241,7 +265,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-createManagedNFT}.
+     * @dev See {IVotingEscrow-createManagedNFT}.
      */
     function createManagedNFT(address recipient_) external override onlyManagedNFTManager returns (uint256 managedNftId) {
         managedNftId = ++lastMintedTokenId;
@@ -250,7 +274,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-votingHook}.
+     * @dev See {IVotingEscrow-votingHook}.
      */
     function votingHook(uint256 tokenId_, bool state_) external override {
         if (voter != _msgSender()) {
@@ -260,12 +284,9 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-onAttachToManagedNFT}.
+     * @dev See {IVotingEscrow-onAttachToManagedNFT}.
      */
-    function onAttachToManagedNFT(
-        uint256 tokenId_,
-        uint256 managedTokenId_
-    ) external override nonReentrant onlyManagedNFTManager returns (uint256) {
+    function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external override onlyManagedNFTManager returns (uint256) {
         TokenState memory state = nftStates[tokenId_];
         state.attachToManagedNftCheck();
         if (balanceOfNftIgnoreOwnershipChange(tokenId_) == 0) {
@@ -290,13 +311,13 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-onDettachFromManagedNFT}.
+     * @dev See {IVotingEscrow-onDettachFromManagedNFT}.
      */
     function onDettachFromManagedNFT(
         uint256 tokenId_,
         uint256 managedTokenId_,
         uint256 newBalance_
-    ) external override nonReentrant onlyManagedNFTManager {
+    ) external override onlyManagedNFTManager {
         TokenState memory state = nftStates[tokenId_];
         state.dettachFromManagedNftCheck();
         if (!IManagedNFTManager(managedNFTManager).isManagedNFT(managedTokenId_)) {
@@ -314,7 +335,15 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-isApprovedOrOwner}.
+     * @dev See {IVotingEscrow-getNftState}.
+     */
+
+    function getNftState(uint256 tokenId_) external view returns (TokenState memory) {
+        return nftStates[tokenId_];
+    }
+
+    /**
+     * @dev See {IVotingEscrow-isApprovedOrOwner}.
      */
     function isApprovedOrOwner(address spender, uint256 tokenId) external view virtual override returns (bool) {
         return _isApprovedOrOwner(spender, tokenId);
@@ -336,7 +365,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-votingPowerTotalSupply}.
+     * @dev See {IVotingEscrow-votingPowerTotalSupply}.
      */
     function votingPowerTotalSupply() external view override returns (uint256) {
         uint256 t = block.timestamp;
@@ -365,7 +394,7 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-balanceOfNFT}.
+     * @dev See {IVotingEscrow-balanceOfNFT}.
      */
     function balanceOfNFT(uint256 tokenId_) public view override returns (uint256) {
         if (nftStates[tokenId_].lastTranferBlock == block.number) return 0;
@@ -373,66 +402,21 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
-     * @dev See {IVotingEscrowV2-balanceOfNftIgnoreOwnershipChange}.
+     * @dev See {IVotingEscrow-balanceOfNftIgnoreOwnershipChange}.
      */
     function balanceOfNftIgnoreOwnershipChange(uint256 tokenId_) public view override returns (uint256) {
         return _balanceOfNFT(tokenId_, block.timestamp);
     }
 
     /**
-     * @notice Internal function to deposit tokens for a specific NFT.
-     * @param tokenId_ The ID of the NFT to deposit tokens for.
-     * @param amount_ The amount of tokens to deposit.
-     * @param shouldBoosted_ Whether the deposit should be boosted.
-     * @dev Reverts with `InvalidAmount` if the amount is zero.
-     * Emits a {Deposit} event on successful deposit.
-     */
-    function _deposit(uint256 tokenId_, uint256 amount_, bool shouldBoosted_) internal {
-        LibVotingEscrowValidation.checkNoValueZero(amount_);
-        TokenState memory state = nftStates[tokenId_];
-        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
-            state.depositCheck();
-        }
-        _proccessLockChange(tokenId_, amount_, 0, state.locked, DepositType.DEPOSIT_FOR_TYPE, shouldBoosted_);
-    }
-
-    /**
-     * @notice Internal function to create a new lock for a specific amount and duration.
-     * @param amount_ The amount of tokens to lock.
-     * @param lockDuration_ The duration of the lock in seconds.
-     * @param to_ The address to receive the locked tokens.
-     * @param shouldBoosted_ Whether the lock should be boosted.
-     * @return The ID of the newly created lock.
-     * @dev Reverts with `InvalidLockDuration` if the lock duration is invalid.
-     */
-    function _createLock(uint256 amount_, uint256 lockDuration_, address to_, bool shouldBoosted_) internal returns (uint256) {
-        LibVotingEscrowValidation.checkNoValueZero(amount_);
-        uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
-        if (unlockTimestamp <= block.timestamp || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
-            revert InvalidLockDuration();
-        }
-        uint256 newTokenId = ++lastMintedTokenId;
-        _mint(to_, newTokenId);
-        _proccessLockChange(
-            newTokenId,
-            amount_,
-            unlockTimestamp,
-            nftStates[newTokenId].locked,
-            DepositType.CREATE_LOCK_TYPE,
-            shouldBoosted_
-        );
-        return newTokenId;
-    }
-
-    /**
-     * @notice Internal function to process lock changes.
+     * @notice Internal function to process lock changes for a specific NFT.
+     * @dev Updates the NFT's lock state and total supply. Emits {Deposit}, {Boost} and {Supply} events.
      * @param tokenId_ The ID of the NFT.
-     * @param amount_ The amount of tokens to change.
-     * @param unlockTimestamp_ The new unlock timestamp.
-     * @param oldLocked_ The previous locked balance.
-     * @param depositType_ The type of deposit.
+     * @param amount_ The amount of tokens involved in the change.
+     * @param unlockTimestamp_ The new unlock timestamp (0 if not changing the time).
+     * @param oldLocked_ The previous locked balance of the NFT.
+     * @param depositType_ The type of deposit (e.g., create lock, increase time).
      * @param shouldBoosted_ Whether the change should be boosted.
-     * @dev Emits a {Deposit} event reflecting the lock change and a {Supply} event reflecting the change in total supply.
      */
     function _proccessLockChange(
         uint256 tokenId_,
@@ -467,7 +451,7 @@ contract VotingEscrowUpgradeableV2 is
         uint256 supplyBefore = supply;
         supply += diff;
         if (newLocked.isPermanentLocked) {
-            permanentTotalSupply += amount_;
+            permanentTotalSupply += diff;
         }
 
         _updateNftLocked(tokenId_, newLocked);
@@ -499,6 +483,20 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
+     * @notice Internal function to handle the permanent locking of an NFT.
+     * @param tokenId_ The ID of the NFT to lock permanently.
+     * @dev Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.
+     * Emits a {LockPermanent} event.
+     */
+    function _lockPermanent(uint256 tokenId_) internal {
+        TokenState memory state = (nftStates[tokenId_]);
+        state.lockPermanentCheck();
+        permanentTotalSupply += LibVotingEscrowUtils.toUint256(state.locked.amount);
+        _updateNftLocked(tokenId_, LockedBalance(state.locked.amount, 0, true));
+        emit LockPermanent(_msgSender(), tokenId_);
+    }
+
+    /**
      * @notice Internal function to clear the NFT's state after withdrawal.
      * @param tokenId_ The ID of the NFT.
      * @param state_ The state of the NFT.
@@ -517,6 +515,7 @@ contract VotingEscrowUpgradeableV2 is
      * @notice Internal function to update the locked balance of an NFT.
      * @param tokenId_ The ID of the NFT to update.
      * @param newLocked_ The new locked balance to set.
+     * @dev This updates the checkpoint and stores the new state.
      */
     function _updateNftLocked(uint256 tokenId_, LockedBalance memory newLocked_) internal {
         _checkpoint(tokenId_, nftStates[tokenId_].locked, newLocked_);

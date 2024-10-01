@@ -1,0 +1,9 @@
+[FIXED] boostedValue should be added to permanentTotalSupply for permanently locked tokens 
+[FIXED] The VoterUpgradeableV2.createV3Gauge function incorrectly uses v2GaugeFactory instead of v3GaugeFactory
+[FIXED] Voting is possible with a disabled NFT using VoterUpgradeableV2.poke()
+[FIXED] mVeNFT DOS - can't trigger the vote function #21
+dettachFromManagedNFT might revert and temporarily prevent users from detaching in certain situation
+
+If rewards are not distributed to some gauges in an epoch, it can lead to incorrect rewards distribution in the next 
+killGauge() will lead to wrong calculation of emission
+Potential incorrect index update in revived gauge under specific conditions

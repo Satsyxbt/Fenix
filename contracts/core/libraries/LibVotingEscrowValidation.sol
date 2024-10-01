@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../interfaces/IVotingEscrowV2.sol";
+import "../interfaces/IVotingEscrow.sol";
 import "./LibVotingEscrowErrors.sol";
 
 /**
@@ -14,7 +14,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token does not exist, is attached, is voted, or has not expired.
      */
-    function withdrawCheck(IVotingEscrowV2.TokenState memory self_) internal view {
+    function withdrawCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkExist(self_);
         checkNotAttached(self_);
         checkNotVoted(self_);
@@ -26,8 +26,8 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is permanently locked or has not yet expired.
      */
-    function checkExpired(IVotingEscrowV2.TokenState memory self_) internal view {
-        IVotingEscrowV2.LockedBalance memory locked = self_.locked;
+    function checkExpired(IVotingEscrow.TokenState memory self_) internal view {
+        IVotingEscrow.LockedBalance memory locked = self_.locked;
         if (locked.isPermanentLocked || locked.end > block.timestamp) {
             revert TokenNoExpired();
         }
@@ -38,7 +38,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token does not exist, is attached, is permanently locked, or has expired.
      */
-    function increaseUnlockCheck(IVotingEscrowV2.TokenState memory self_) internal view {
+    function increaseUnlockCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkExist(self_);
         checkNotAttached(self_);
         checkNotPermanentLocked(self_);
@@ -50,7 +50,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token does not exist, is attached, or has expired.
      */
-    function depositCheck(IVotingEscrowV2.TokenState memory self_) internal view {
+    function depositCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkExist(self_);
         checkNotAttached(self_);
         checkNotExpired(self_);
@@ -61,7 +61,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is voted or attached.
      */
-    function transferCheck(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function transferCheck(IVotingEscrow.TokenState memory self_) internal pure {
         checkNotVoted(self_);
         checkNotAttached(self_);
     }
@@ -71,7 +71,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is voted, attached, or permanently locked.
      */
-    function mergeCheckFrom(IVotingEscrowV2.TokenState memory self_) internal view {
+    function mergeCheckFrom(IVotingEscrow.TokenState memory self_) internal view {
         checkNotVoted(self_);
         checkNotAttached(self_);
         checkNotExpired(self_);
@@ -83,7 +83,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is attached.
      */
-    function mergeCheckTo(IVotingEscrowV2.TokenState memory self_) internal view {
+    function mergeCheckTo(IVotingEscrow.TokenState memory self_) internal view {
         checkNotAttached(self_);
         checkNotExpired(self_);
     }
@@ -93,7 +93,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token does not exist, is attached, is permanently locked, or has expired.
      */
-    function lockPermanentCheck(IVotingEscrowV2.TokenState memory self_) internal view {
+    function lockPermanentCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkExist(self_);
         checkNotAttached(self_);
         checkNotExpired(self_);
@@ -105,7 +105,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is voted, not permanently locked, or attached.
      */
-    function unlockPermanentCheck(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function unlockPermanentCheck(IVotingEscrow.TokenState memory self_) internal pure {
         checkNotVoted(self_);
         checkNotAttached(self_);
         checkPermanentLocked(self_);
@@ -116,7 +116,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is attached, voted, or expired.
      */
-    function attachToManagedNftCheck(IVotingEscrowV2.TokenState memory self_) internal view {
+    function attachToManagedNftCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkNotAttached(self_);
         checkNotVoted(self_);
         checkNotExpired(self_);
@@ -127,7 +127,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is not attached or is voted.
      */
-    function dettachFromManagedNftCheck(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function dettachFromManagedNftCheck(IVotingEscrow.TokenState memory self_) internal pure {
         checkAttached(self_);
     }
 
@@ -136,7 +136,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts with `TokenVoted` if the token has been voted.
      */
-    function checkNotVoted(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkNotVoted(IVotingEscrow.TokenState memory self_) internal pure {
         if (self_.isVoted) {
             revert TokenVoted();
         }
@@ -147,7 +147,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts with `TokenNotExist` if the token does not exist.
      */
-    function checkExist(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkExist(IVotingEscrow.TokenState memory self_) internal pure {
         if (self_.locked.amount == 0 && !self_.isAttached) {
             revert TokenNotExist();
         }
@@ -158,8 +158,8 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts with `TokenExpired` if the token has expired.
      */
-    function checkNotExpired(IVotingEscrowV2.TokenState memory self_) internal view {
-        IVotingEscrowV2.LockedBalance memory locked = self_.locked;
+    function checkNotExpired(IVotingEscrow.TokenState memory self_) internal view {
+        IVotingEscrow.LockedBalance memory locked = self_.locked;
         if ((!locked.isPermanentLocked && locked.end < block.timestamp) && !self_.isAttached) {
             revert TokenExpired();
         }
@@ -170,7 +170,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts with `NotPermanentLocked` if the token is not permanently locked.
      */
-    function checkPermanentLocked(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkPermanentLocked(IVotingEscrow.TokenState memory self_) internal pure {
         if (!self_.locked.isPermanentLocked) {
             revert NotPermanentLocked();
         }
@@ -181,7 +181,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts with `PermanentLocked` if the token is permanently locked.
      */
-    function checkNotPermanentLocked(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkNotPermanentLocked(IVotingEscrow.TokenState memory self_) internal pure {
         if (self_.locked.isPermanentLocked) {
             revert PermanentLocked();
         }
@@ -192,7 +192,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev This function can be expanded for specific attachment checks.
      */
-    function checkNotAttached(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkNotAttached(IVotingEscrow.TokenState memory self_) internal pure {
         if (self_.isAttached) {
             revert TokenAttached();
         }
@@ -203,7 +203,7 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev This function can be expanded for specific attachment checks.
      */
-    function checkAttached(IVotingEscrowV2.TokenState memory self_) internal pure {
+    function checkAttached(IVotingEscrow.TokenState memory self_) internal pure {
         if (!self_.isAttached) {
             revert TokenNotAttached();
         }

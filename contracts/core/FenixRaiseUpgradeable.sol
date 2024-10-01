@@ -310,7 +310,7 @@ contract FenixRaiseUpgradeable is IFenixRaise, BlastGovernorClaimableSetup, Owna
         if (toVeNftAmount > 0) {
             IVotingEscrow veCache = IVotingEscrow(votingEscrow);
             rewardTokenCache.safeApprove(address(veCache), toVeNftAmount);
-            tokenId = veCache.create_lock_for_without_boost(toVeNftAmount, _LOCK_DURATION, _msgSender());
+            tokenId = veCache.createLockFor(toVeNftAmount, _LOCK_DURATION, _msgSender(), false, false, 0);
         }
 
         if (toRewardTokenAmount > 0) {

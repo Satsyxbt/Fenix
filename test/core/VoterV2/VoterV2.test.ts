@@ -46,8 +46,7 @@ describe('VotingEscrow_V2', function () {
         expect(await Voter.hasRole(await Voter.DEFAULT_ADMIN_ROLE(), signers.deployer.address)).to.be.true;
       });
 
-      it('votingEscrow & _ve', async () => {
-        expect(await Voter._ve()).to.be.eq(VotingEscrow.target);
+      it('votingEscrow', async () => {
         expect(await Voter.votingEscrow()).to.be.eq(VotingEscrow.target);
       });
 
@@ -153,7 +152,7 @@ describe('VotingEscrow_V2', function () {
       beforeEach(async () => {
         await deployed.fenix.transfer(signers.otherUser1.address, ethers.parseEther('2'));
         await deployed.fenix.connect(signers.otherUser1).approve(VotingEscrow.target, ethers.parseEther('100'));
-        await VotingEscrow.connect(signers.otherUser1).create_lock_for_without_boost(ethers.parseEther('1'), 15724800, signers.otherUser1);
+        await VotingEscrow.connect(signers.otherUser1).createLockFor(ethers.parseEther('1'), 15724800, signers.otherUser1, false, false, 0);
       });
 
       describe('should fail if ', async () => {
@@ -405,6 +404,11 @@ describe('VotingEscrow_V2', function () {
         it('return correct address', async () => {
           expect(await Voter.poolToGauge(pair)).to.be.eq(res.gauge);
           expect((await Voter.gaugesState(res.gauge)).pool).to.be.eq(pair);
+        });
+
+        it('isGauge & poolFoGauge should return correct state', async () => {
+          expect(await Voter.isGauge(res.gauge)).to.be.true;
+          expect(await Voter.poolForGauge(res.gauge)).to.be.eq(pair);
         });
 
         it('initialized gauge state', async () => {

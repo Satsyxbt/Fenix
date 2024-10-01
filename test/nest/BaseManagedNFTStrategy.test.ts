@@ -75,6 +75,8 @@ describe('BaseManagedNFTStrategy Contract', function () {
       expect(await strategy.votingEscrow()).to.be.eq(await managedNFTManager.votingEscrow());
       expect(await strategy.name()).to.be.eq('Name 1');
       expect(await strategy.managedNFTManager()).to.be.eq(managedNFTManager.target);
+      expect(await strategy.description()).to.be.eq('');
+      expect(await strategy.creator()).to.be.eq('');
     });
   });
   describe('#setName', async () => {
@@ -89,6 +91,43 @@ describe('BaseManagedNFTStrategy Contract', function () {
       expect(await strategy.name()).to.be.eq('Second Name');
       await expect(strategy.setName('Third Name')).to.be.emit(strategy, 'SetName').withArgs('Third Name');
       expect(await strategy.name()).to.be.eq('Third Name');
+    });
+  });
+  describe('#setCreator', async () => {
+    it('fail if from not admin', async () => {
+      expect(await strategy.creator()).to.be.eq('');
+      await expect(strategy.connect(signers.otherUser1).setCreator('Creator Name')).to.be.revertedWithCustomError(strategy, 'AccessDenied');
+      expect(await strategy.creator()).to.be.eq('');
+    });
+
+    it('change creator name and emit event', async () => {
+      expect(await strategy.creator()).to.be.eq('');
+      await expect(strategy.setCreator('Second Creator Name')).to.be.emit(strategy, 'SetCreator').withArgs('Second Creator Name');
+      expect(await strategy.creator()).to.be.eq('Second Creator Name');
+      await expect(strategy.setCreator('Third Creator Name')).to.be.emit(strategy, 'SetCreator').withArgs('Third Creator Name');
+      expect(await strategy.creator()).to.be.eq('Third Creator Name');
+      await expect(strategy.setCreator('')).to.be.emit(strategy, 'SetCreator').withArgs('');
+      expect(await strategy.creator()).to.be.eq('');
+    });
+  });
+  describe('#setDescription', async () => {
+    it('fail if from not admin', async () => {
+      expect(await strategy.description()).to.be.eq('');
+      await expect(strategy.connect(signers.otherUser1).setDescription('Lorem Ipsum')).to.be.revertedWithCustomError(
+        strategy,
+        'AccessDenied',
+      );
+      expect(await strategy.description()).to.be.eq('');
+    });
+
+    it('change description and emit event', async () => {
+      expect(await strategy.description()).to.be.eq('');
+      await expect(strategy.setDescription('Lorem Ipsum')).to.be.emit(strategy, 'SetDescription').withArgs('Lorem Ipsum');
+      expect(await strategy.description()).to.be.eq('Lorem Ipsum');
+      await expect(strategy.setDescription('2 Lorem Ipsum 2')).to.be.emit(strategy, 'SetDescription').withArgs('2 Lorem Ipsum 2');
+      expect(await strategy.description()).to.be.eq('2 Lorem Ipsum 2');
+      await expect(strategy.setDescription('')).to.be.emit(strategy, 'SetDescription').withArgs('');
+      expect(await strategy.description()).to.be.eq('');
     });
   });
   describe('#attachManagedNFT', async () => {

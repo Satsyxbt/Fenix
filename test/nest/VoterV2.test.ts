@@ -125,13 +125,16 @@ describe('VoterV2 Contract', function () {
     });
     describe('window after epoch start', async () => {
       it('user cant reset vote during window distribution after change epoch', async () => {
-        let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+        let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
           ethers.parseEther('1'),
           182 * 86400,
           signers.otherUser1.address,
+          true,
+          false,
+          0,
         );
 
-        await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+        await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
         await time.increaseTo(await nextEpoch());
 
@@ -142,13 +145,16 @@ describe('VoterV2 Contract', function () {
         await expect(voter.connect(signers.otherUser1).reset(userTokenId)).to.be.not.reverted;
       });
       it('user cant call poke during window distribution after change epoch', async () => {
-        let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+        let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
           ethers.parseEther('1'),
           182 * 86400,
           signers.otherUser1.address,
+          true,
+          false,
+          0,
         );
 
-        await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+        await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
         await time.increaseTo(await nextEpoch());
 
@@ -172,13 +178,16 @@ describe('VoterV2 Contract', function () {
       });
 
       it('vote cant be called by nft in last hour if not whitelisted', async () => {
-        let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+        let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
           ethers.parseEther('1'),
           182 * 86400,
           signers.otherUser1.address,
+          true,
+          false,
+          0,
         );
 
-        await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+        await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
         await time.increaseTo((await nextEpoch()) - 3600);
 
@@ -200,12 +209,15 @@ describe('VoterV2 Contract', function () {
     });
 
     it('fail if try call during window distribution', async () => {
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       let strategy = await newStrategy();
 
@@ -231,12 +243,15 @@ describe('VoterV2 Contract', function () {
     });
 
     it('success attache and emit event', async () => {
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       let strategy = await newStrategy();
 
@@ -252,12 +267,15 @@ describe('VoterV2 Contract', function () {
       await deployed.v2PairFactory.createPair(USDT.target, WETH.target, false);
       let pair = await deployed.v2PairFactory.getPair(USDT.target, WETH.target, false);
       await voter.createV2Gauge(pair);
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
       let strategy = await newStrategy();
       let managedTokenId = userTokenId + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);
@@ -274,19 +292,25 @@ describe('VoterV2 Contract', function () {
       await deployed.v2PairFactory.createPair(USDT.target, WETH.target, false);
       let pair = await deployed.v2PairFactory.getPair(USDT.target, WETH.target, false);
       await voter.createV2Gauge(pair);
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
-      let userTokenId2 = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId2 = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('11'),
         182 * 86400,
         signers.otherUser2.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('11'), 182 * 86400, signers.otherUser2.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('11'), 182 * 86400, signers.otherUser2.address, true, false, 0);
       let strategy = await newStrategy();
       let managedTokenId = userTokenId2 + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);
@@ -314,12 +338,15 @@ describe('VoterV2 Contract', function () {
     });
 
     it('fail if try call during window distribution', async () => {
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       let strategy = await newStrategy();
 
@@ -348,12 +375,15 @@ describe('VoterV2 Contract', function () {
     });
 
     it('success attache and emit event', async () => {
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       let strategy = await newStrategy();
 
@@ -369,18 +399,24 @@ describe('VoterV2 Contract', function () {
       await deployed.v2PairFactory.createPair(USDT.target, WETH.target, false);
       let pair = await deployed.v2PairFactory.getPair(USDT.target, WETH.target, false);
       await voter.createV2Gauge(pair);
-      let userTokenId = await deployed.votingEscrow.create_lock_for.staticCall(
+      let userTokenId = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('1'),
         182 * 86400,
         signers.otherUser1.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-      let userTokenId2 = await deployed.votingEscrow.create_lock_for.staticCall(
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+      let userTokenId2 = await deployed.votingEscrow.createLockFor.staticCall(
         ethers.parseEther('11'),
         182 * 86400,
         signers.otherUser2.address,
+        true,
+        false,
+        0,
       );
-      await deployed.votingEscrow.create_lock_for(ethers.parseEther('11'), 182 * 86400, signers.otherUser2.address);
+      await deployed.votingEscrow.createLockFor(ethers.parseEther('11'), 182 * 86400, signers.otherUser2.address, true, false, 0);
       let strategy = await newStrategy();
       let managedTokenId = userTokenId2 + ONE;
       await managedNFTManager.createManagedNFT(strategy.target);

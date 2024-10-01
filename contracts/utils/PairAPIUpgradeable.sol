@@ -4,7 +4,12 @@ pragma solidity =0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 
-import "./InterfacesAPI.sol";
+import "../core/interfaces/IVoter.sol";
+import "../core/interfaces/IVotingEscrow.sol";
+import "../dexV2/interfaces/IPairFactory.sol";
+import "../dexV2/interfaces/IPair.sol";
+import "../gauges/interfaces/IGauge.sol";
+import "../bribes/interfaces/IBribe.sol";
 
 contract PairAPIUpgradeable is OwnableUpgradeable {
     struct pairInfo {
@@ -68,7 +73,7 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
     uint256 public constant WEEK = 7 * 24 * 60 * 60;
 
     IPairFactory public pairFactory;
-    IVoterV3 public voter;
+    IVoter public voter;
 
     address public underlyingToken;
 
@@ -83,19 +88,19 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
     function initialize(address voter_) public initializer {
         __Ownable_init();
 
-        voter = IVoterV3(voter_);
+        voter = IVoter(voter_);
 
-        pairFactory = IPairFactory(IVoterV3(voter_).factories()[0]);
-        underlyingToken = IVotingEscrow(IVoterV3(voter_)._ve()).token();
+        pairFactory = IPairFactory(IVoter(voter_).v2PoolFactory());
+        underlyingToken = IVotingEscrow(IVoter(voter_).votingEscrow()).token();
     }
 
     function setVoter(address _voter) external onlyOwner {
         require(_voter != address(0), "zeroAddr");
         address _oldVoter = address(voter);
-        voter = IVoterV3(_voter);
+        voter = IVoter(_voter);
 
-        pairFactory = IPairFactory(voter.factories()[0]);
-        underlyingToken = IVotingEscrow(voter._ve()).token();
+        pairFactory = IPairFactory(voter.v2PoolFactory());
+        underlyingToken = IVotingEscrow(voter.votingEscrow()).token();
 
         emit Voter(_oldVoter, _voter);
     }
@@ -125,7 +130,7 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         Pairs = new pairInfo[](_amounts);
 
         uint i = _offset;
-        uint totPairs = voter.clLength();
+        (, , uint totPairs) = voter.poolsCounts();
         address _pair;
 
         for (i; i < _offset + _amounts; i++) {
@@ -133,7 +138,7 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
             if (i == totPairs) {
                 break;
             }
-            _pair = voter.clPools(i);
+            _pair = voter.v3Pools(i);
             Pairs[i - _offset] = _pairAddressToCLInfo(_pair, _user);
 
             /*if (_pair != address()) {
@@ -160,9 +165,9 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         uint accountGaugeLPAmount = 0;
         uint earned = 0;
         uint accountGaugeLPTotalWeight = 0;
-        address addressGauge = voter.gauges(_pair);
-
-        if (voter.isAlive(addressGauge)) {
+        address addressGauge = voter.poolToGauge(_pair);
+        IVoter.GaugeState memory state = voter.getGaugeState(addressGauge);
+        if (state.isAlive) {
             _gauge = IGauge(addressGauge);
         }
 
@@ -170,7 +175,6 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
             if (_account != address(0)) {
                 accountGaugeLPAmount = _gauge.balanceOf(_account);
                 earned = _gauge.earned(_account);
-                //_pairInfo.tokens_info_of_account = getGaugeMaNFTsOfOwner(_account, address(_gauge));
             }
 
             _pairInfo.gauge_total_supply = _gauge.totalSupply();
@@ -206,8 +210,8 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         _pairInfo.emissions_token_decimals = IERC20MetadataUpgradeable(underlyingToken).decimals();
 
         // external address
-        _pairInfo.fee = voter.internal_bribes(address(_gauge));
-        _pairInfo.bribe = voter.external_bribes(address(_gauge));
+        _pairInfo.fee = state.internalBribe;
+        _pairInfo.bribe = state.externalBribe;
 
         // Account Info
         _pairInfo.account_lp_balance = 0;
@@ -231,9 +235,10 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         uint accountGaugeLPAmount = 0;
         uint earned = 0;
         uint accountGaugeLPTotalWeight = 0;
-        address addressGauge = voter.gauges(_pair);
+        address addressGauge = voter.poolToGauge(_pair);
+        IVoter.GaugeState memory state = voter.getGaugeState(addressGauge);
 
-        if (voter.isAlive(addressGauge)) {
+        if (state.isAlive) {
             _gauge = IGauge(addressGauge);
         }
 
@@ -261,7 +266,7 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         _pairInfo.total_supply = ipair.totalSupply();
 
         _pairInfo.clPool = address(0);
-        _pairInfo.feeAmount = IPairFactory(ipair.factory()).getFee(_pair, ipair.isStable());
+        _pairInfo.feeAmount = IPairFactory(pairFactory).getFee(_pair, ipair.isStable());
 
         // Token0 Info
         _pairInfo.token0 = token_0;
@@ -281,8 +286,8 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
         _pairInfo.emissions_token_decimals = IERC20MetadataUpgradeable(underlyingToken).decimals();
 
         // external address
-        _pairInfo.fee = voter.internal_bribes(address(_gauge));
-        _pairInfo.bribe = voter.external_bribes(address(_gauge));
+        _pairInfo.fee = state.internalBribe;
+        _pairInfo.bribe = state.externalBribe;
 
         // Account Info
         _pairInfo.account_lp_balance = IERC20Upgradeable(_pair).balanceOf(_account);
@@ -298,9 +303,9 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
 
         _pairEpoch = new pairBribeEpoch[](_amounts);
 
-        address _gauge = voter.gauges(_pair);
-
-        IBribeAPI bribe = IBribeAPI(voter.external_bribes(_gauge));
+        address _gauge = voter.poolToGauge(_pair);
+        IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+        IBribe bribe = IBribe(state.externalBribe);
 
         // check bribe and checkpoints exists
         if (address(0) == address(bribe)) {
@@ -331,19 +336,19 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
     }
 
     function _bribe(uint _ts, address _br) internal view returns (tokenBribe[] memory _tb) {
-        IBribeAPI _wb = IBribeAPI(_br);
-        uint tokenLen = _wb.rewardsListLength();
+        IBribe _wb = IBribe(_br);
+        address[] memory rewardTokens = _wb.getRewardTokens();
 
-        _tb = new tokenBribe[](tokenLen);
+        _tb = new tokenBribe[](rewardTokens.length);
 
         uint k;
         uint _rewPerEpoch;
         IERC20MetadataUpgradeable _t;
-        for (k = 0; k < tokenLen; k++) {
-            _t = IERC20MetadataUpgradeable(_wb.rewardTokens(k));
+        for (k = 0; k < rewardTokens.length; k++) {
+            _t = IERC20MetadataUpgradeable(rewardTokens[k]);
             if (address(_t) != address(0x0)) {
-                IBribeAPI.Reward memory _reward = _wb.rewardData(address(_t), _ts);
-                _rewPerEpoch = _reward.rewardsPerEpoch;
+                (, uint256 rewardsPerEpoch, ) = _wb.rewardData(address(_t), _ts);
+                _rewPerEpoch = rewardsPerEpoch;
                 if (_rewPerEpoch > 0) {
                     _tb[k].token = address(_t);
                     _tb[k].symbol = _t.symbol();
@@ -365,11 +370,13 @@ contract PairAPIUpgradeable is OwnableUpgradeable {
     }
 
     function left(address _pair, address _token) external view returns (uint256 _rewPerEpoch) {
-        address _gauge = voter.gauges(_pair);
-        IBribeAPI bribe = IBribeAPI(voter.internal_bribes(_gauge));
+        address _gauge = voter.poolToGauge(_pair);
+        IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+
+        IBribe bribe = IBribe(state.internalBribe);
 
         uint256 _ts = bribe.getEpochStart();
-        IBribeAPI.Reward memory _reward = bribe.rewardData(_token, _ts);
-        _rewPerEpoch = _reward.rewardsPerEpoch;
+        (, uint256 rewardsPerEpoch, ) = bribe.rewardData(_token, _ts);
+        _rewPerEpoch = rewardsPerEpoch;
     }
 }

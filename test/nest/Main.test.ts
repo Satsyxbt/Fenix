@@ -139,10 +139,10 @@ describe('Nest Main Contract', function () {
 
     await deployed.fenix.approve(votingEscrow.target, ethers.parseEther('100000'));
 
-    await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-    await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address);
+    await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+    await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address, true, false, 0);
     await managedNFTManager.createManagedNFT(firstStrategy.target);
-    await votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address);
+    await votingEscrow.createLockFor(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address, true, false, 0);
     await managedNFTManager.createManagedNFT(secondStrategy.target);
 
     gauge = await voter.poolToGauge(USDT_WETH_PAIR);

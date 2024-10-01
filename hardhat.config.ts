@@ -1,9 +1,9 @@
-import { HardhatUserConfig, task } from 'hardhat/config';
-import '@nomicfoundation/hardhat-toolbox';
-import 'hardhat-contract-sizer';
-import '@nomicfoundation/hardhat-verify';
-import 'dotenv/config';
+import { HardhatUserConfig } from 'hardhat/config';
 import { SolcUserConfig } from 'hardhat/types';
+import '@nomicfoundation/hardhat-toolbox';
+import '@nomicfoundation/hardhat-verify';
+import 'hardhat-contract-sizer';
+import 'dotenv/config';
 import 'hardhat-ignore-warnings';
 import 'hardhat-tracer';
 import './tasks';
@@ -16,21 +16,6 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
     optimizer: {
       enabled: true,
       runs: 2000,
-    },
-    metadata: {
-      bytecodeHash: 'none',
-    },
-  },
-};
-
-const SPECIFIC_COMPILER_SETTINGS: SolcUserConfig = {
-  version: '0.8.19',
-  settings: {
-    evmVersion: 'paris',
-    viaIR: true,
-    optimizer: {
-      enabled: true,
-      runs: 1,
     },
     metadata: {
       bytecodeHash: 'none',
@@ -93,10 +78,6 @@ const config: HardhatUserConfig = {
   },
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
-    overrides: {
-      'contracts/core/VotingEscrowUpgradeable.sol': SPECIFIC_COMPILER_SETTINGS,
-      'contracts/core/VotingEscrowUpgradeableV2.sol': SPECIFIC_COMPILER_SETTINGS,
-    },
   },
   warnings: {
     'contracts/mocks/**/*': {

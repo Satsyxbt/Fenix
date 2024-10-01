@@ -103,7 +103,7 @@ contract RFenix is IRFenix, BlastGovernorClaimableSetup, ERC20Burnable, Ownable2
             IVotingEscrow veCache = IVotingEscrow(votingEscrow);
             tokenCache.safeApprove(address(veCache), toVeNFTAmount);
 
-            tokenId = veCache.create_lock_for_without_boost(toVeNFTAmount, _LOCK_DURATION, msg.sender);
+            tokenId = veCache.createLockFor(toVeNFTAmount, _LOCK_DURATION, msg.sender, false, false, 0);
 
             tokenCache.safeApprove(address(veCache), 0);
         }

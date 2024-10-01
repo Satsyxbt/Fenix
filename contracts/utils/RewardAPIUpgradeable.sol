@@ -2,12 +2,18 @@
 pragma solidity =0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
 
-import "./InterfacesAPI.sol";
+import "../core/interfaces/IVoter.sol";
+import "../core/interfaces/IVotingEscrow.sol";
+import "../dexV2/interfaces/IPairFactory.sol";
+import "../dexV2/interfaces/IPair.sol";
+import "../gauges/interfaces/IGauge.sol";
+import "../bribes/interfaces/IBribe.sol";
 
 contract RewardAPIUpgradeable is OwnableUpgradeable {
     IPairFactory public pairFactory;
-    IVoterV3 public voter;
+    IVoter public voter;
     address public underlyingToken;
 
     uint256 public constant MAX_PAIRS = 1000;
@@ -20,9 +26,9 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
     function initialize(address _voter) public initializer {
         __Ownable_init();
-        voter = IVoterV3(_voter);
-        pairFactory = IPairFactory(voter.factories()[0]);
-        underlyingToken = IVotingEscrow(voter._ve()).token();
+        voter = IVoter(_voter);
+        pairFactory = IPairFactory(voter.v2PoolFactory());
+        underlyingToken = IVotingEscrow(voter.votingEscrow()).token();
         address _notrew = address(0x0000000000000000000000000000000000000000);
         notReward[_notrew] = true;
     }
@@ -37,10 +43,10 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
     function setVoter(address _voter) external onlyOwner {
         require(_voter != address(0), "zeroAddr");
-        voter = IVoterV3(_voter);
+        voter = IVoter(_voter);
         // update variable depending on voter
-        pairFactory = IPairFactory(voter.factories()[0]);
-        underlyingToken = IVotingEscrow(voter._ve()).token();
+        pairFactory = IPairFactory(voter.v2PoolFactory());
+        underlyingToken = IVotingEscrow(voter.votingEscrow()).token();
     }
 
     struct PairRewards {
@@ -79,14 +85,15 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
         for (i = 0; i < len; i++) {
             Bribes[] memory _tempReward = new Bribes[](2);
-            _gauge = voter.gauges(pairs[i]);
+            _gauge = voter.poolToGauge(pairs[i]);
+            IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
 
             // get external
-            _bribe = voter.external_bribes(_gauge);
+            _bribe = state.externalBribe;
             _tempReward[0] = _getEpochRewards(tokenId, _bribe);
 
             // get internal
-            _bribe = voter.internal_bribes(_gauge);
+            _bribe = state.internalBribe;
             _tempReward[1] = _getEpochRewards(tokenId, _bribe);
 
             _rewards[i].bribes = _tempReward;
@@ -125,7 +132,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
             for (uint u; u < len2; u++) {
                 _token = _tokens[i][u];
-                amount = IBribeAPI(_bribe).earned(tokenId, _token);
+                amount = IBribe(_bribe).earned(tokenId, _token);
 
                 if (amount != 0) {
                     _tokensReward[u] = _token;
@@ -152,7 +159,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
         address _gauge;
         address _bribe;
         uint j = 0;
-        uint time = voter._epochTimestamp();
+        uint time = voter.epochTimestamp();
 
         for (i; i < _offset + _amounts; i++) {
             // if totalPairs is reached, break.
@@ -160,26 +167,31 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                 break;
             }
             _pair = pairFactory.allPairs(i);
-            _gauge = voter.gauges(_pair);
+            _gauge = voter.poolToGauge(_pair);
 
             Pairs[j]._pool = _pair;
             if (_gauge != address(0)) {
                 Pairs[j]._gauge = _gauge;
                 Pairs[j].totalVotesOnGauge = voter.weightsPerEpoch(time, _pair);
                 if (_user != address(0)) {
-                    uint[] memory _tokens = IVotingEscrow(voter._ve()).tokensOfOwner(_user);
+                    uint256 userTokensBalance = IERC721EnumerableUpgradeable(voter.votingEscrow()).balanceOf(_user);
 
-                    for (uint u = 0; u < _tokens.length; u++) {
-                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(_tokens[u], _pair);
+                    for (uint u = 0; u < userTokensBalance; u++) {
+                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(
+                            IERC721EnumerableUpgradeable(voter.votingEscrow()).tokenOfOwnerByIndex(_user, u),
+                            _pair
+                        );
                     }
                 }
+                IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+
                 // get external
-                _bribe = voter.external_bribes(_gauge);
+                _bribe = state.externalBribe;
                 Pairs[j]._externalBribeAddress = _bribe;
                 //Pairs[j].externalBribeReward = _getNextEpochRewards(_bribe);
 
                 // get internal
-                _bribe = voter.internal_bribes(_gauge);
+                _bribe = state.internalBribe;
                 Pairs[j]._internalBribeAddress = _bribe;
                 //Pairs[j].internalBribeReward = _getNextEpochRewards(_bribe);
             }
@@ -193,11 +205,11 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
         Pairs = new PairRewards[](_amounts);
 
         uint i = _offset;
-        uint totPairs = voter.clLength();
+        (, , uint totPairs) = voter.poolsCounts();
         address _pair;
         address _gauge;
         address _bribe;
-        uint time = voter._epochTimestamp();
+        uint time = voter.epochTimestamp();
 
         uint j = 0;
 
@@ -206,8 +218,8 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
             if (i == totPairs) {
                 break;
             }
-            _pair = voter.clPools(i);
-            _gauge = voter.gauges(_pair);
+            _pair = voter.v3Pools(i);
+            _gauge = voter.poolToGauge(_pair);
 
             Pairs[j]._pool = _pair;
             if (_gauge != address(0)) {
@@ -215,19 +227,23 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                 Pairs[j].totalVotesOnGauge = voter.weightsPerEpoch(time, _pair);
 
                 if (_user != address(0)) {
-                    uint[] memory _tokens = IVotingEscrow(voter._ve()).tokensOfOwner(_user);
-
-                    for (uint u = 0; u < _tokens.length; u++) {
-                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(_tokens[u], _pair);
+                    uint256 userTokensBalance = IERC721EnumerableUpgradeable(voter.votingEscrow()).balanceOf(_user);
+                    for (uint u = 0; u < userTokensBalance; u++) {
+                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(
+                            IERC721EnumerableUpgradeable(voter.votingEscrow()).tokenOfOwnerByIndex(_user, u),
+                            _pair
+                        );
                     }
                 }
+                IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+
                 // get external
-                _bribe = voter.external_bribes(_gauge);
+                _bribe = state.internalBribe;
                 Pairs[j]._externalBribeAddress = _bribe;
                 //Pairs[j].externalBribeReward = _getNextEpochRewards(_bribe);
 
                 // get internal
-                _bribe = voter.internal_bribes(_gauge);
+                _bribe = state.externalBribe;
                 Pairs[j]._internalBribeAddress = _bribe;
                 //Pairs[j].internalBribeReward = _getNextEpochRewards(_bribe);
             }
@@ -236,24 +252,25 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
     }
 
     function _getEpochRewards(uint tokenId, address _bribe) internal view returns (Bribes memory _rewards) {
-        uint ts = IBribeAPI(_bribe).getEpochStart();
-        uint _balance = IBribeAPI(_bribe).balanceOfAt(tokenId, ts);
+        IBribe bribe = IBribe(_bribe);
+        uint ts = bribe.getEpochStart();
+        uint _balance = bribe.balanceOfAt(tokenId, ts);
         if (_balance == 0) {
             _rewards.bribe = _bribe;
             return _rewards;
         }
-        uint totTokens = IBribeAPI(_bribe).rewardsListLength();
-        uint[] memory _amounts = new uint[](totTokens);
-        address[] memory _tokens = new address[](totTokens);
-        string[] memory _symbol = new string[](totTokens);
-        uint[] memory _decimals = new uint[](totTokens);
+        address[] memory rewardTokens = bribe.getRewardTokens();
+        uint[] memory _amounts = new uint[](rewardTokens.length);
+        address[] memory _tokens = new address[](rewardTokens.length);
+        string[] memory _symbol = new string[](rewardTokens.length);
+        uint[] memory _decimals = new uint[](rewardTokens.length);
         uint i = 0;
-        uint _supply = IBribeAPI(_bribe).totalSupplyAt(ts);
+        uint _supply = bribe.totalSupplyAt(ts);
         address _token;
-        IBribeAPI.Reward memory _reward;
 
-        for (i; i < totTokens; i++) {
-            _token = IBribeAPI(_bribe).rewardTokens(i);
+        for (i; i < rewardTokens.length; i++) {
+            _token = rewardTokens[i];
+
             _tokens[i] = _token;
             if (_balance == 0 || notReward[_token]) {
                 _amounts[i] = 0;
@@ -262,8 +279,8 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
             } else {
                 _symbol[i] = IERC20MetadataUpgradeable(_token).symbol();
                 _decimals[i] = IERC20MetadataUpgradeable(_token).decimals();
-                _reward = IBribeAPI(_bribe).rewardData(_token, ts);
-                _amounts[i] = (((_reward.rewardsPerEpoch * 1e18) / _supply) * _balance) / 1e18;
+                (, uint256 rewardsPerEpoch, ) = bribe.rewardData(_token, ts);
+                _amounts[i] = (((rewardsPerEpoch * 1e18) / _supply) * _balance) / 1e18;
             }
         }
 
@@ -281,30 +298,32 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
         Bribes[] memory _tempReward = new Bribes[](2);
 
+        _gauge = voter.poolToGauge(pair);
+
+        IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+
         // get external
-        _gauge = voter.gauges(pair);
-        _bribe = voter.external_bribes(_gauge);
+        _bribe = state.externalBribe;
         _tempReward[0] = _getNextEpochRewards(_bribe);
 
         // get internal
-        _bribe = voter.internal_bribes(_gauge);
+        _bribe = state.internalBribe;
         _tempReward[1] = _getNextEpochRewards(_bribe);
         return _tempReward;
     }
 
     function _getNextEpochRewards(address _bribe) internal view returns (Bribes memory _rewards) {
-        uint totTokens = IBribeAPI(_bribe).rewardsListLength();
-        uint[] memory _amounts = new uint[](totTokens);
-        address[] memory _tokens = new address[](totTokens);
-        string[] memory _symbol = new string[](totTokens);
-        uint[] memory _decimals = new uint[](totTokens);
-        uint ts = IBribeAPI(_bribe).getNextEpochStart();
+        address[] memory rewardTokens = IBribe(_bribe).getRewardTokens();
+        uint[] memory _amounts = new uint[](rewardTokens.length);
+        address[] memory _tokens = new address[](rewardTokens.length);
+        string[] memory _symbol = new string[](rewardTokens.length);
+        uint[] memory _decimals = new uint[](rewardTokens.length);
+        uint ts = IBribe(_bribe).getNextEpochStart();
         uint i = 0;
         address _token;
-        IBribeAPI.Reward memory _reward;
 
-        for (i; i < totTokens; i++) {
-            _token = IBribeAPI(_bribe).rewardTokens(i);
+        for (i; i < rewardTokens.length; i++) {
+            _token = rewardTokens[i];
             _tokens[i] = _token;
             if (notReward[_token]) {
                 _amounts[i] = 0;
@@ -314,8 +333,9 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
             } else {
                 _symbol[i] = IERC20MetadataUpgradeable(_token).symbol();
                 _decimals[i] = IERC20MetadataUpgradeable(_token).decimals();
-                _reward = IBribeAPI(_bribe).rewardData(_token, ts);
-                _amounts[i] = _reward.rewardsPerEpoch;
+                (, uint256 rewardsPerEpoch, ) = IBribe(_bribe).rewardData(_token, ts);
+
+                _amounts[i] = rewardsPerEpoch;
             }
         }
 
@@ -367,7 +387,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
 
             for (uint u; u < len2; u++) {
                 _token = _tokens[i][u];
-                _amount = IBribeAPI(_bribe).earned(_user, _token);
+                _amount = IBribe(_bribe).earned(_user, _token);
 
                 if (_amount != 0) {
                     _tokensReward[u] = _token;

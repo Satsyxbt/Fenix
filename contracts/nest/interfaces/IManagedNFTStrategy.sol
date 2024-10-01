@@ -14,6 +14,18 @@ interface IManagedNFTStrategy {
     event SetName(string newName);
 
     /**
+     * @dev Emitted when the description of the strategy is changed.
+     * @param newDescription The new description that has been set for the strategy.
+     */
+    event SetDescription(string newDescription);
+
+    /**
+     * @dev Emitted when the description of the strategy is changed.
+     * @param newCreator The new description that has been set for the strategy.
+     */
+    event SetCreator(string newCreator);
+
+    /**
      * @dev Emitted when a new managed NFT is successfully attached to the strategy.
      * @param managedTokenId The ID of the managed NFT that has been attached.
      */
@@ -58,6 +70,20 @@ interface IManagedNFTStrategy {
      * @return A string representing the name of the strategy.
      */
     function name() external view returns (string memory);
+
+    /**
+     * @notice Retrieves the creator name of the strategy.
+     * Empty string by default
+     * @return A string representing the name of the strategy.
+     */
+    function creator() external view returns (string memory);
+
+    /**
+     * @notice Retrieves the description of the strategy.
+     * Empty string by default
+     * @return A string representing the name of the strategy.
+     */
+    function description() external view returns (string memory);
 
     /**
      * @notice Retrieves the ID of the managed token.

@@ -356,7 +356,7 @@ describe('ManagedNFTManager Contract', function () {
 
           let userTokenId = tokenId + ONE;
           await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('1'));
-          await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+          await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
           expect(await managedNFTManager.tokensInfo(userTokenId)).to.be.deep.eq([false, 0, 0]);
           await managedNFTManager.connect(signers.fenixTeam).onAttachToManagedNFT(userTokenId, tokenId);
           expect(await managedNFTManager.tokensInfo(userTokenId)).to.be.deep.eq([true, tokenId, ethers.parseEther('1')]);
@@ -368,7 +368,7 @@ describe('ManagedNFTManager Contract', function () {
 
           let userTokenId = tokenId + ONE;
           await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('1'));
-          await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+          await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
           await managedNFTManager.connect(signers.fenixTeam).onAttachToManagedNFT(userTokenId, tokenId);
 
@@ -429,7 +429,7 @@ describe('ManagedNFTManager Contract', function () {
 
           let userTokenId = tokenId + ONE;
           await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('1'));
-          await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+          await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
           await expect(managedNFTManager.connect(signers.fenixTeam).onDettachFromManagedNFT(userTokenId)).to.be.revertedWithCustomError(
             managedNFTManager,
             'NotAttached',
@@ -446,16 +446,26 @@ describe('ManagedNFTManager Contract', function () {
         await managedNFTManager.createManagedNFT(secondStrategy.target);
 
         await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('100'));
-        let userTokenIdFirst = await deployed.votingEscrow.create_lock_for.staticCall(
+        let userTokenIdFirst = await deployed.votingEscrow.createLockFor.staticCall(
           ethers.parseEther('1'),
           182 * 86400,
           signers.otherUser1.address,
+          true,
+          false,
+          0,
         );
         let userTokenIdSecond =
-          (await deployed.votingEscrow.create_lock_for.staticCall(ethers.parseEther('3'), 182 * 86400, signers.otherUser2.address)) + ONE;
+          (await deployed.votingEscrow.createLockFor.staticCall(
+            ethers.parseEther('3'),
+            182 * 86400,
+            signers.otherUser2.address,
+            true,
+            false,
+            0,
+          )) + ONE;
 
-        await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-        await deployed.votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser2.address);
+        await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+        await deployed.votingEscrow.createLockFor(ethers.parseEther('3'), 182 * 86400, signers.otherUser2.address, true, false, 0);
 
         expect(await managedNFTManager.tokensInfo(userTokenIdFirst)).to.be.deep.eq([false, 0, 0]);
         expect(await managedNFTManager.tokensInfo(userTokenIdSecond)).to.be.deep.eq([false, 0, 0]);

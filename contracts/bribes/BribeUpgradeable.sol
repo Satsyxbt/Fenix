@@ -20,12 +20,6 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
 
     /* ========== STATE VARIABLES ========== */
 
-    struct Reward {
-        uint256 periodFinish;
-        uint256 rewardsPerEpoch;
-        uint256 lastUpdateTime;
-    }
-
     mapping(address => mapping(uint256 => Reward)) public rewardData; // token -> startTimestamp -> Reward
     mapping(address => bool) public isRewardToken;
     address[] public rewardTokens;
@@ -59,7 +53,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
         voter = _voter;
         bribeFactory = _bribeFactory;
         firstBribeTimestamp = 0;
-        ve = IVoter(_voter)._ve();
+        ve = IVoter(_voter).votingEscrow();
         minter = IVoter(_voter).minter();
         require(minter != address(0));
         TYPE = _type;

@@ -103,7 +103,7 @@ describe('VotingEscrowV2 Contract', function () {
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);
 
-        await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('0.2'));
 
@@ -115,7 +115,7 @@ describe('VotingEscrowV2 Contract', function () {
 
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);
 
-        await votingEscrow.deposit_for(1, ethers.parseEther('1'));
+        await votingEscrow.depositFor(1, ethers.parseEther('1'), false, false);
 
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.closeTo(ethers.parseEther('1.5'), ethers.parseEther('0.3'));
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);
@@ -139,7 +139,7 @@ describe('VotingEscrowV2 Contract', function () {
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.eq(ethers.parseEther('3'));
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);
 
-        await votingEscrow.create_lock_for(ethers.parseEther('20'), 91 * 86400, signers.otherUser2.address);
+        await votingEscrow.createLockFor(ethers.parseEther('20'), 91 * 86400, signers.otherUser2.address, true, false, 0);
 
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.eq(ethers.parseEther('3'));
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.closeTo(ethers.parseEther('10'), ethers.parseEther('2'));
@@ -190,7 +190,7 @@ describe('VotingEscrowV2 Contract', function () {
     });
     describe('increase_unlock_time', async () => {
       it('fail if try increase unlcok time for permanent lock', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(ONE);
         await expect(votingEscrow.connect(signers.otherUser1).increase_unlock_time(ONE, 1)).to.be.revertedWithCustomError(
           votingEscrow,
@@ -199,17 +199,17 @@ describe('VotingEscrowV2 Contract', function () {
       });
 
       it('fail if try call from not nft owner', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await expect(votingEscrow.increase_unlock_time(ONE, 1)).to.be.reverted;
       });
 
       it('fail if try call for expired lock', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await expect(votingEscrow.connect(signers.otherUser1).increase_unlock_time(ONE, 1)).to.be.reverted;
       });
 
       it('fail if try call with incorrect unlock time', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await expect(votingEscrow.connect(signers.otherUser1).increase_unlock_time(ONE, 200 * 86400)).to.be.revertedWithCustomError(
           votingEscrow,
           'InvalidLockDuration',
@@ -217,7 +217,7 @@ describe('VotingEscrowV2 Contract', function () {
       });
 
       it('fail if try call with time less current lock duration', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 24 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 24 * 86400, signers.otherUser1.address, true, false, 0);
         await expect(votingEscrow.connect(signers.otherUser1).increase_unlock_time(ONE, 12 * 86400)).to.be.revertedWithCustomError(
           votingEscrow,
           'InvalidLockDuration',
@@ -225,7 +225,7 @@ describe('VotingEscrowV2 Contract', function () {
       });
 
       it('fail if try increase unlcok time for attached nft', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         let strategy = await newStrategy();
         let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
         await managedNFTManager.createManagedNFT(strategy.target);
@@ -238,7 +238,8 @@ describe('VotingEscrowV2 Contract', function () {
       });
 
       it('sucess increase unlock time', async () => {
-        let createLockBlock = (await votingEscrow.create_lock_for(ONE_ETHER, 91 * 86400, signers.otherUser1.address)).blockNumber!;
+        let createLockBlock = (await votingEscrow.createLockFor(ONE_ETHER, 91 * 86400, signers.otherUser1.address, true, false, 0))
+          .blockNumber!;
         let lockTime = Math.floor(((await time.latest()) + 91 * 86400) / _WEEK) * _WEEK;
 
         expect((await votingEscrow.nftStates(1)).locked).to.be.deep.eq([ONE_ETHER, lockTime, false]);
@@ -254,16 +255,19 @@ describe('VotingEscrowV2 Contract', function () {
         expect(await votingEscrow.balanceOfNFT(1)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('0.1'));
       });
     });
-    describe('deposit_for & deposit_for_without_boost', async () => {
+    describe('deposit with/without boost', async () => {
       it('should fail if nft is attached to managed nft', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         let strategy = await newStrategy();
         let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
         await managedNFTManager.createManagedNFT(strategy.target);
         await voter.connect(signers.otherUser1).attachToManagedNFT(ONE, managedNFTId);
 
-        await expect(votingEscrow.deposit_for(ONE, ethers.parseEther('1'))).to.be.revertedWithCustomError(votingEscrow, 'TokenAttached');
-        await expect(votingEscrow.deposit_for_without_boost(ONE, ethers.parseEther('1'))).to.be.revertedWithCustomError(
+        await expect(votingEscrow.depositFor(ONE, ethers.parseEther('1'), true, false)).to.be.revertedWithCustomError(
+          votingEscrow,
+          'TokenAttached',
+        );
+        await expect(votingEscrow.depositFor(ONE, ethers.parseEther('1'), false, false)).to.be.revertedWithCustomError(
           votingEscrow,
           'TokenAttached',
         );
@@ -271,7 +275,7 @@ describe('VotingEscrowV2 Contract', function () {
 
       it('should correct increase balance for permanent lock nft', async () => {
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
         expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ONE_ETHER, ethers.parseEther('0.1'));
 
@@ -282,7 +286,7 @@ describe('VotingEscrowV2 Contract', function () {
         await mine();
         await mine();
 
-        let depositForBlock = (await votingEscrow.deposit_for(ONE, ethers.parseEther('2'))).blockNumber!;
+        let depositForBlock = (await votingEscrow.depositFor(ONE, ethers.parseEther('2'), true, false)).blockNumber!;
 
         expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
 
@@ -292,7 +296,7 @@ describe('VotingEscrowV2 Contract', function () {
     describe('#create_lock', async () => {
       it('should not effect on permanent balance', async () => {
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
         expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ONE_ETHER, ethers.parseEther('0.1'));
       });
@@ -300,7 +304,7 @@ describe('VotingEscrowV2 Contract', function () {
 
     describe('#withdraw', async () => {
       it('should fail if permanent lock', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(ONE);
         await expect(votingEscrow.connect(signers.otherUser1).withdraw(ONE)).to.be.revertedWithCustomError(votingEscrow, 'TokenNoExpired');
       });
@@ -308,8 +312,8 @@ describe('VotingEscrowV2 Contract', function () {
 
     describe('#merge', async () => {
       it('fail if from or to nft is attached', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         let strategy = await newStrategy();
         let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
         await managedNFTManager.createManagedNFT(strategy.target);
@@ -319,16 +323,16 @@ describe('VotingEscrowV2 Contract', function () {
         await expect(votingEscrow.connect(signers.otherUser1).merge(2, ONE)).to.be.revertedWithCustomError(votingEscrow, 'TokenAttached');
       });
       it('fail if from is permanent lock', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
 
         await votingEscrow.connect(signers.otherUser1).lockPermanent(1);
 
         await expect(votingEscrow.connect(signers.otherUser1).merge(1, 2)).to.be.revertedWithCustomError(votingEscrow, 'PermanentLocked');
       });
       it('correct merge and changes balances when to is permit lock', async () => {
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(2);
 
         let currentBlock = await time.latestBlock();
@@ -359,7 +363,8 @@ describe('VotingEscrowV2 Contract', function () {
       nftId1 = ONE;
       let startBlock = await time.latestBlock();
 
-      let createLockBlock = (await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address)).blockNumber!;
+      let createLockBlock = (await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0))
+        .blockNumber!;
 
       await mine();
 
@@ -385,7 +390,8 @@ describe('VotingEscrowV2 Contract', function () {
       nftId1 = ONE;
       let startBlock = await time.latestBlock();
 
-      let createLockBlock = (await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address)).blockNumber!;
+      let createLockBlock = (await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0))
+        .blockNumber!;
 
       await mine();
 
@@ -393,7 +399,7 @@ describe('VotingEscrowV2 Contract', function () {
 
       nftId2 = nftId1 + ONE;
 
-      (await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address)).blockNumber!;
+      (await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address, true, false, 0)).blockNumber!;
 
       await mine();
 
@@ -415,7 +421,8 @@ describe('VotingEscrowV2 Contract', function () {
       nftId1 = ONE;
       let startBlock = await time.latestBlock();
 
-      let createLockBlock = (await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address)).blockNumber!;
+      let createLockBlock = (await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0))
+        .blockNumber!;
 
       await mine();
 
@@ -423,7 +430,7 @@ describe('VotingEscrowV2 Contract', function () {
 
       nftId2 = nftId1 + ONE;
 
-      (await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address)).blockNumber!;
+      (await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address, true, false, 0)).blockNumber!;
 
       await mine();
 
@@ -449,7 +456,8 @@ describe('VotingEscrowV2 Contract', function () {
       expect(await votingEscrow.supply()).to.be.eq(ZERO);
       expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
 
-      let createLockBlock = (await votingEscrow.create_lock_for(ONE_ETHER, 182 * 86400, signers.otherUser1.address)).blockNumber!;
+      let createLockBlock = (await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0))
+        .blockNumber!;
 
       expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ONE_ETHER, ethers.parseEther('0.1'));
       expect(await votingEscrow.supply()).to.be.eq(ONE_ETHER);
@@ -468,7 +476,8 @@ describe('VotingEscrowV2 Contract', function () {
       expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ONE_ETHER);
       nftId2 = ONE + ONE;
 
-      createLockBlock = (await votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser2.address)).blockNumber!;
+      createLockBlock = (await votingEscrow.createLockFor(ethers.parseEther('3'), 182 * 86400, signers.otherUser2.address, true, false, 0))
+        .blockNumber!;
 
       expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('4'), ethers.parseEther('0.3'));
       expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('4'));
@@ -493,9 +502,10 @@ describe('VotingEscrowV2 Contract', function () {
       expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
     });
     it('short votingPowerTotalSupply', async () => {
-      nftId1 = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-      let createLockBlock = (await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address))
-        .blockNumber!;
+      nftId1 = await votingEscrow.createLockFor.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+      let createLockBlock = (
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0)
+      ).blockNumber!;
 
       expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('0.1'));
 
@@ -515,18 +525,18 @@ describe('VotingEscrowV2 Contract', function () {
 
       expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ONE_ETHER);
 
-      let depositForBlock = (await votingEscrow.deposit_for(nftId1, ethers.parseEther('0.5'))).blockNumber!;
+      let depositForBlock = (await votingEscrow.depositFor(nftId1, ethers.parseEther('0.5'), true, false)).blockNumber!;
 
       expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('1.5'));
     });
     it('should return correct value called balanceOfNft', async () => {
-      nftId1 = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      nftId1 = await votingEscrow.createLockFor.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       expect(await votingEscrow.balanceOfNFT(nftId1)).to.be.eq(ZERO);
 
       expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(nftId1)).to.be.eq(ZERO);
 
-      await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+      await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
 
       expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(nftId1)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('0.1'));
 
@@ -542,8 +552,15 @@ describe('VotingEscrowV2 Contract', function () {
       let mintedNFT: bigint;
 
       beforeEach(async () => {
-        mintedNFT = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+        mintedNFT = await votingEscrow.createLockFor.staticCall(
+          ethers.parseEther('1'),
+          182 * 86400,
+          signers.otherUser1.address,
+          true,
+          false,
+          0,
+        );
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
       });
 
       it('fail if nft expired', async () => {
@@ -619,8 +636,15 @@ describe('VotingEscrowV2 Contract', function () {
       let mintedNFT: bigint;
 
       beforeEach(async () => {
-        mintedNFT = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+        mintedNFT = await votingEscrow.createLockFor.staticCall(
+          ethers.parseEther('1'),
+          182 * 86400,
+          signers.otherUser1.address,
+          true,
+          false,
+          0,
+        );
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(mintedNFT);
       });
 
@@ -638,8 +662,15 @@ describe('VotingEscrowV2 Contract', function () {
       });
 
       it('fail if try unlock for not permanent lock minted nft', async () => {
-        let mintedNFT2 = await votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-        await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser2.address);
+        let mintedNFT2 = await votingEscrow.createLockFor.staticCall(
+          ethers.parseEther('1'),
+          182 * 86400,
+          signers.otherUser1.address,
+          true,
+          false,
+          0,
+        );
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser2.address, true, false, 0);
         await expect(votingEscrow.connect(signers.otherUser2).unlockPermanent(mintedNFT2)).to.be.revertedWithCustomError(
           votingEscrow,
           'NotPermanentLocked',
@@ -781,7 +812,7 @@ describe('VotingEscrowV2 Contract', function () {
           it('mint  after others', async () => {
             await deployed.fenix.approve(votingEscrow.target, ethers.parseEther('1000'));
 
-            await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.deployer.address);
+            await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.deployer.address, true, false, 0);
 
             let strategy2 = await newStrategy();
             await managedNFTManager.createManagedNFT(strategy2.target);
@@ -818,10 +849,10 @@ describe('VotingEscrowV2 Contract', function () {
 
           await deployed.fenix.approve(votingEscrow.target, ethers.parseEther('100000'));
 
-          await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-          await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address);
+          await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+          await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address, true, false, 0);
           await managedNFTManager.createManagedNFT(strategy.target);
-          await votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address);
+          await votingEscrow.createLockFor(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address, true, false, 0);
           await managedNFTManager.createManagedNFT(secondStrategy.target);
         });
 
@@ -920,10 +951,10 @@ describe('VotingEscrowV2 Contract', function () {
 
           await deployed.fenix.approve(votingEscrow.target, ethers.parseEther('100000'));
 
-          await votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-          await votingEscrow.create_lock_for(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address);
+          await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
+          await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser2.address, true, false, 0);
           await managedNFTManager.createManagedNFT(strategy.target);
-          await votingEscrow.create_lock_for(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address);
+          await votingEscrow.createLockFor(ethers.parseEther('3'), 182 * 86400, signers.otherUser3.address, true, false, 0);
           await managedNFTManager.createManagedNFT(secondStrategy.target);
         });
 

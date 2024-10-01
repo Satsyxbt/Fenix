@@ -66,4 +66,6 @@ interface IDistributionCreator {
     function isWhitelistedToken(address token) external view returns (uint256);
 
     function rewardTokenMinAmounts(address token) external view returns (uint256);
+
+    function acceptConditions() external view;
 }

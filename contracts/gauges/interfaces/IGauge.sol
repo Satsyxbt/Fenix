@@ -8,6 +8,12 @@ interface IGauge {
 
     function getReward(address account) external;
 
+    function earned(address account) external view returns (uint256);
+
+    function periodFinish() external view returns (uint256);
+
+    function rewardRate() external view returns (uint256);
+
     function claimFees() external returns (uint claimed0, uint claimed1);
 
     function balanceOf(address _account) external view returns (uint);

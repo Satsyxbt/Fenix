@@ -3,7 +3,6 @@ pragma solidity =0.8.19;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
-import {IVotingEscrowV1_2} from "../core/interfaces/IVotingEscrowV1_2.sol";
 import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IManagedNFTStrategy} from "./interfaces/IManagedNFTStrategy.sol";
 import {IManagedNFTManager} from "./interfaces/IManagedNFTManager.sol";
@@ -136,7 +135,7 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
      * @param strategy_ The strategy to which the managed NFT will be attached
      */
     function createManagedNFT(address strategy_) external onlyRole(MANAGED_NFT_ADMIN) returns (uint256 managedTokenId) {
-        managedTokenId = IVotingEscrowV1_2(votingEscrow).createManagedNFT(strategy_);
+        managedTokenId = IVotingEscrow(votingEscrow).createManagedNFT(strategy_);
         managedTokensInfo[managedTokenId] = ManagedTokenInfo(true, false, address(0));
         IManagedNFTStrategy(strategy_).attachManagedNFT(managedTokenId);
         emit CreateManagedNFT(msg.sender, strategy_, managedTokenId);
@@ -188,7 +187,7 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
             revert IncorrectUserNFT();
         }
 
-        uint256 userBalance = IVotingEscrowV1_2(votingEscrow).onAttachToManagedNFT(tokenId_, managedTokenId_);
+        uint256 userBalance = IVotingEscrow(votingEscrow).onAttachToManagedNFT(tokenId_, managedTokenId_);
         tokensInfo[tokenId_] = TokenInfo(true, managedTokenId_, userBalance);
 
         IManagedNFTStrategy(IVotingEscrow(votingEscrow).ownerOf(managedTokenId_)).onAttach(tokenId_, userBalance);
@@ -212,11 +211,7 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
             tokenInfo.amount
         );
 
-        IVotingEscrowV1_2(votingEscrow).onDettachFromManagedNFT(
-            tokenId_,
-            tokenInfo.attachedManagedTokenId,
-            tokenInfo.amount + lockedRewards
-        );
+        IVotingEscrow(votingEscrow).onDettachFromManagedNFT(tokenId_, tokenInfo.attachedManagedTokenId, tokenInfo.amount + lockedRewards);
 
         delete tokensInfo[tokenId_];
     }

@@ -1,8 +1,14 @@
 pragma solidity =0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IERC20Upgradeable, IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
 
-import "./InterfacesAPI.sol";
+import "../core/interfaces/IVoter.sol";
+import "../core/interfaces/IVotingEscrow.sol";
+import "../dexV2/interfaces/IPairFactory.sol";
+import "../dexV2/interfaces/IPair.sol";
+import "../gauges/interfaces/IGauge.sol";
+import "../bribes/interfaces/IBribe.sol";
 
 contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     struct pairVotes {
@@ -40,7 +46,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     uint256 public constant MAX_RESULTS = 1000;
     uint256 public constant MAX_PAIRS = 30;
 
-    IVoterV3 public voter;
+    IVoter public voter;
     address public underlyingToken;
 
     mapping(address => bool) public notReward;
@@ -60,16 +66,16 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     function initialize(address _voter) public initializer {
         __Ownable_init();
 
-        voter = IVoterV3(_voter);
+        voter = IVoter(_voter);
 
-        ve = IVotingEscrow(voter._ve());
+        ve = IVotingEscrow(voter.votingEscrow());
         underlyingToken = IVotingEscrow(ve).token();
 
         notReward[address(0x0)] = true;
     }
 
     function setVoter(address _voter) external onlyOwner {
-        voter = IVoterV3(_voter);
+        voter = IVoter(_voter);
     }
 
     function setPairAPI(address _pairApi) external onlyOwner {
@@ -104,7 +110,8 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         venft = new veNFT[](totNFTs);
 
         for (i; i < totNFTs; i++) {
-            _id = ve.tokenOfOwnerByIndex(_user, i);
+            _id = IERC721EnumerableUpgradeable(address(ve)).tokenOfOwnerByIndex(_user, i);
+
             if (_id != 0) {
                 venft[i] = _getNFTFromId(_id, _user);
             }
@@ -119,8 +126,8 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         uint _totalPoolVotes = voter.poolVoteLength(id);
         pairVotes[] memory votes = new pairVotes[](_totalPoolVotes);
 
-        IVotingEscrow.LockedBalance memory _lockedBalance;
-        _lockedBalance = ve.locked(id);
+        IVotingEscrow.TokenState memory tokenState = ve.getNftState(id);
+        IVotingEscrow.LockedBalance memory _lockedBalance = tokenState.locked;
 
         uint k;
         uint256 _poolWeight;
@@ -138,16 +145,16 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
 
         venft.id = id;
         venft.account = _owner;
-        venft.decimals = ve.decimals();
+        venft.decimals = 1;
         venft.amount = uint128(_lockedBalance.amount);
         venft.voting_amount = ve.balanceOfNFT(id);
         venft.lockEnd = _lockedBalance.end;
-        venft.vote_ts = voter.lastVoted(id);
+        venft.vote_ts = voter.lastVotedTimestamps(id);
         venft.votes = votes;
         venft.token = ve.token();
         venft.tokenSymbol = IERC20MetadataUpgradeable(ve.token()).symbol();
         venft.tokenDecimals = IERC20MetadataUpgradeable(ve.token()).decimals();
-        venft.voted = ve.voted(id);
+        venft.voted = tokenState.isVoted;
         venft.isPermanentLocked = _lockedBalance.isPermanentLocked;
     }
 

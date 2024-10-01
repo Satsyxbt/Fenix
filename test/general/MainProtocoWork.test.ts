@@ -173,10 +173,10 @@ describe('Main', function () {
 
   it(`users success lock they veFNX tokens`, async () => {
     await fenix.approve(await deployed.votingEscrow.target, ethers.parseEther('200'));
-    await deployed.votingEscrow.create_lock_for(ethers.parseEther('100'), 170 * 86400, signers.deployer.address);
+    await deployed.votingEscrow.createLockFor(ethers.parseEther('100'), 170 * 86400, signers.deployer.address, true, false, 0);
     user1TokenId = await deployed.votingEscrow.lastMintedTokenId();
 
-    await deployed.votingEscrow.create_lock_for(ethers.parseEther('50'), 170 * 86400, signers.otherUser1.address);
+    await deployed.votingEscrow.createLockFor(ethers.parseEther('50'), 170 * 86400, signers.otherUser1.address, true, false, 0);
     user2TokenId = await deployed.votingEscrow.lastMintedTokenId();
   });
 

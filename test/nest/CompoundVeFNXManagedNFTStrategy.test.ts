@@ -110,8 +110,15 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
 
     await deployed.fenix.approve(deployed.votingEscrow.target, ethers.parseEther('10000'));
 
-    userNftId = await deployed.votingEscrow.create_lock_for.staticCall(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
-    await deployed.votingEscrow.create_lock_for(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address);
+    userNftId = await deployed.votingEscrow.createLockFor.staticCall(
+      ethers.parseEther('1'),
+      182 * 86400,
+      signers.otherUser1.address,
+      true,
+      false,
+      0,
+    );
+    await deployed.votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, true, false, 0);
   });
 
   describe('Deployment', async function () {

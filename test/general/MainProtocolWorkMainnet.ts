@@ -26,7 +26,6 @@ import {
   VotingEscrowUpgradeable,
   ERC20RebasingMock,
 } from '../../typechain-types';
-import { Contract } from 'hardhat/internal/hardhat-network/stack-traces/model';
 import { ERRORS, ZERO_ADDRESS, getAccessControlError } from '../utils/constants';
 import { token } from '@cryptoalgebra/integral-core/typechain/@openzeppelin/contracts';
 import { encodePriceSqrt } from '@cryptoalgebra/integral-core/test/shared/utilities';
@@ -234,7 +233,7 @@ describe('Main', function () {
         it('Voter dependencies', async () => {
           expect(await Contracts.Voter.minter()).to.be.eq(Contracts.Minter.target);
           expect(await Contracts.Voter.bribefactory()).to.be.eq(Contracts.BribeFactory.target);
-          expect(await Contracts.Voter._ve()).to.be.eq(Contracts.VotingEscrow.target);
+          expect(await Contracts.Voter.votingEscrow()).to.be.eq(Contracts.VotingEscrow.target);
           expect(await Contracts.Voter.gaugeFactories()).to.be.deep.eq([
             Contracts.GaugeFactory1.target,
             Contracts.GaugeFactory2.target,

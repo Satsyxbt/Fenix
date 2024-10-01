@@ -79,10 +79,10 @@ describe('#2 Adversary can steal all bribe rewards', function () {
     await deployed.voter.connect(signers.deployer).createV2Gauge(poolV2FenixTk18.target);
 
     await fenix.approve(deployed.votingEscrow.target, ethers.parseEther('200'));
-    await deployed.votingEscrow.create_lock_for(1e9, 182 * 86400, signers.deployer.address);
+    await deployed.votingEscrow.createLockFor(1e9, 182 * 86400, signers.deployer.address, true, false, 0);
     user1TokenId = await deployed.votingEscrow.lastMintedTokenId();
 
-    await deployed.votingEscrow.create_lock_for(ethers.parseEther('10'), 182 * 86400, signers.deployer.address);
+    await deployed.votingEscrow.createLockFor(ethers.parseEther('10'), 182 * 86400, signers.deployer.address, true, false, 0);
     user2TokenId = await deployed.votingEscrow.lastMintedTokenId();
 
     console.log('user voter power, nft 1', await deployed.votingEscrow.balanceOfNFT(user1TokenId));

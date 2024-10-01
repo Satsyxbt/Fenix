@@ -3,7 +3,7 @@ pragma solidity =0.8.19;
 
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
-import {IVoterV1_2} from "../core/interfaces/IVoterV1_2.sol";
+import {IVoter} from "../core/interfaces/IVoter.sol";
 import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {IManagedNFTManager} from "./interfaces/IManagedNFTManager.sol";
 import {IManagedNFTStrategy} from "./interfaces/IManagedNFTStrategy.sol";
@@ -17,6 +17,12 @@ import {UpgradeCall} from "../integration/UpgradeCall.sol";
 abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Initializable, BlastGovernorClaimableSetup, UpgradeCall {
     /// @notice The name of the strategy for identification purposes.
     string public override name;
+
+    /// @notice The description of the strategy for identification purposes.
+    string public override description;
+
+    /// @notice The creator of the strategy for identification purposes.
+    string public override creator;
 
     /// @notice The address of the managed NFT manager that coordinates the overall strategy and access controls.
     address public override managedNFTManager;
@@ -120,12 +126,34 @@ abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Init
     }
 
     /**
+     * @notice Allows administrative updating of the strategy's creator name for clarity or rebranding purposes.
+     * @dev Emits the SetCreator event upon successful update. This function can only be called by administrators.
+     *
+     * @param creator_ The new creator to set for the strategy, reflecting either its purpose or current operational focus.
+     */
+    function setCreator(string calldata creator_) external onlyAdmin {
+        creator = creator_;
+        emit SetCreator(creator_);
+    }
+
+    /**
+     * @notice Allows administrative updating of the strategy's description.
+     * @dev Emits the SetDescription event upon successful update. This function can only be called by administrators.
+     *
+     * @param description_ The new description to set for the strategy, reflecting either its purpose or current operational focus.
+     */
+    function setDescription(string calldata description_) external onlyAdmin {
+        description = description_;
+        emit SetDescription(description_);
+    }
+
+    /**
      * @notice Casts votes based on the strategy's parameters.
      * @param poolVote_ Array of pool addresses to vote for.
      * @param weights_ Array of weights corresponding to each pool address.
      */
     function vote(address[] calldata poolVote_, uint256[] calldata weights_) external onlyAuthorized {
-        IVoterV1_2(voter).vote(managedTokenId, poolVote_, weights_);
+        IVoter(voter).vote(managedTokenId, poolVote_, weights_);
     }
 
     /**
@@ -133,7 +161,7 @@ abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Init
      * @param gauges_ Array of gauge addresses from which to claim rewards.
      */
     function claimRewards(address[] calldata gauges_) external {
-        IVoterV1_2(voter).claimRewards(gauges_);
+        IVoter(voter).claimRewards(gauges_);
     }
 
     /**
@@ -142,7 +170,7 @@ abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Init
      * @param tokens_ Array of arrays of token addresses corresponding to each bribe address.
      */
     function claimBribes(address[] calldata bribes_, address[][] calldata tokens_) external {
-        IVoterV1_2(voter).claimBribes(bribes_, tokens_, managedTokenId);
+        IVoter(voter).claimBribes(bribes_, tokens_, managedTokenId);
     }
 
     /**

@@ -79,7 +79,7 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorClaimabl
         fenixCache.safeApprove(address(veCache), totalDistributionSum);
 
         for (uint256 i; i < amounts_.length; ) {
-            uint256 tokenId = veCache.create_lock_for_without_boost(amounts_[i], _LOCK_DURATION, recipients_[i]);
+            uint256 tokenId = veCache.createLockFor(amounts_[i], _LOCK_DURATION, recipients_[i], false, false, 0);
             emit AridropVeFnx(recipients_[i], tokenId, _LOCK_DURATION, amounts_[i]);
 
             unchecked {
