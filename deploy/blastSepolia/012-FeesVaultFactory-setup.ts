@@ -1,10 +1,11 @@
 import {
   AliasDeployedContracts,
-  deployNewImplementationAndUpgradeProxy,
+  deploy,
+  deployProxy,
   getBlastGovernorAddress,
   getDeployedContractsAddressList,
   getProxyAdminAddress,
-  upgradeProxy,
+  logTx,
 } from '../../utils/Deploy';
 import { ethers } from 'hardhat';
 import { InstanceName } from '../../utils/Names';
@@ -14,15 +15,15 @@ async function main() {
   const BlastGovernor = await getBlastGovernorAddress();
   const DeployedContracts = await getDeployedContractsAddressList();
 
-  await deployNewImplementationAndUpgradeProxy({
-    implementationName: InstanceName.VeFnxSplitMerklAidropUpgradeable,
-    deployer: deployer,
-    implementationConstructorArguments: [BlastGovernor],
-    implementationSaveAlias: AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Implementation,
-    proxyAddress: DeployedContracts[AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Proxy],
-    proxyAdmin: await getProxyAdminAddress(),
-    verify: true,
-  });
+  const FeesVaultFactoryUpgradeable_Proxy = await ethers.getContractAt(
+    InstanceName.FeesVaultFactoryUpgradeable,
+    DeployedContracts[AliasDeployedContracts.FeesVaultFactoryUpgradeable_Proxy],
+  );
+
+  await logTx(
+    FeesVaultFactoryUpgradeable_Proxy,
+    FeesVaultFactoryUpgradeable_Proxy.setVoter(DeployedContracts[AliasDeployedContracts.VoterUpgradeable_Proxy]),
+  );
 }
 
 main()

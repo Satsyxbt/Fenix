@@ -81,6 +81,11 @@ contract MinterUpgradeable is IMinter, BlastGovernorClaimableSetup, Ownable2Step
         voter = IVoter(__voter);
     }
 
+    function setVotingEscrow(address votingEscrow_) external onlyOwner {
+        require(votingEscrow_ != address(0));
+        ve = IVotingEscrow(votingEscrow_);
+    }
+
     function setTeamRate(uint256 _teamRate) external onlyOwner {
         require(_teamRate <= MAX_TEAM_RATE, "rate too high");
         teamRate = _teamRate;
