@@ -53,6 +53,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "hardhat": "^2.22.12",
+    "hardhat-abi-exporter": "^2.10.1",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-ignore-warnings": "^0.2.11",
     "hardhat-tracer": "^3.0.3",

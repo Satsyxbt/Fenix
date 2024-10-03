@@ -6,6 +6,7 @@ import 'hardhat-contract-sizer';
 import 'dotenv/config';
 import 'hardhat-ignore-warnings';
 import 'hardhat-tracer';
+import 'hardhat-abi-exporter';
 import './tasks';
 
 const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
@@ -84,6 +85,20 @@ const config: HardhatUserConfig = {
       default: 'off',
     },
   },
+  abiExporter: [
+    {
+      path: './abi/json',
+      format: 'json',
+    },
+    {
+      path: './abi/minimal',
+      format: 'minimal',
+    },
+    {
+      path: './abi/fullName',
+      format: 'fullName',
+    },
+  ],
 };
 
 export default config;
