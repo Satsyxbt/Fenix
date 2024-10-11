@@ -67,5 +67,5 @@ interface IDistributionCreator {
 
     function rewardTokenMinAmounts(address token) external view returns (uint256);
 
-    function acceptConditions() external view;
+    function acceptConditions() external;
 }

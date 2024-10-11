@@ -1,0 +1,1026 @@
+Starting deployment of BribeFactoryUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BribeFactoryUpgradeable deployed at 0x32c981701cBdbA2C295427459f87fCceF57a0dA8
+Save to deploys.json deployed address of BribeFactoryUpgradeable_Implementation:0x32c981701cBdbA2C295427459f87fCceF57a0dA8
+Verifying TransparentUpgradeableProxy at 0x32c981701cBdbA2C295427459f87fCceF57a0dA8...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeFactoryUpgradeable.sol:BribeFactoryUpgradeable at 0x32c981701cBdbA2C295427459f87fCceF57a0dA8
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0x32c981701cBdbA2C295427459f87fCceF57a0dA8#code
+
+Starting deployment of BribeUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BribeUpgradeable deployed at 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a
+Save to deploys.json deployed address of BribeUpgradeable_Implementation:0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a
+Verifying TransparentUpgradeableProxy at 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://blastscan.io/address/0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a#code
+
+Starting deployment of GaugeFactoryUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+GaugeFactoryUpgradeable deployed at 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1
+Save to deploys.json deployed address of GaugeFactoryUpgradeable_Implementation:0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1
+Verifying TransparentUpgradeableProxy at 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/GaugeFactoryUpgradeable.sol:GaugeFactoryUpgradeable at 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1#code
+
+Starting deployment of GaugeUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+GaugeUpgradeable deployed at 0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995
+Save to deploys.json deployed address of GaugeUpgradeable_Implementation:0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995
+Verifying TransparentUpgradeableProxy at 0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://blastscan.io/address/0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995#code
+
+Starting deployment of MinterUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+MinterUpgradeable deployed at 0x0FafA9074aBf128db1467af2FC592815b14508cd
+Save to deploys.json deployed address of MinterUpgradeable_Implementation:0x0FafA9074aBf128db1467af2FC592815b14508cd
+Verifying TransparentUpgradeableProxy at 0x0FafA9074aBf128db1467af2FC592815b14508cd...
+Timeout for 10s before verify proccess...
+The contract 0x0FafA9074aBf128db1467af2FC592815b14508cd has already been verified on Etherscan.
+https://blastscan.io/address/0x0FafA9074aBf128db1467af2FC592815b14508cd#code
+Starting deployment of FenixRaiseUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+FenixRaiseUpgradeable deployed at 0x02B9FD8139170E83Cd2FDf8A4Cf2c5b5aec720E8
+Save to deploys.json deployed address of FenixRaiseUpgradeable_Implementation:0x02B9FD8139170E83Cd2FDf8A4Cf2c5b5aec720E8
+Verifying TransparentUpgradeableProxy at 0x02B9FD8139170E83Cd2FDf8A4Cf2c5b5aec720E8...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/FenixRaiseUpgradeable.sol:FenixRaiseUpgradeable at 0x02B9FD8139170E83Cd2FDf8A4Cf2c5b5aec720E8
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FenixRaiseUpgradeable on the block explorer.
+https://blastscan.io/address/0x02B9FD8139170E83Cd2FDf8A4Cf2c5b5aec720E8#code
+
+Starting deployment of VeBoostUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VeBoostUpgradeable deployed at 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7
+Save to deploys.json deployed address of VeBoostUpgradeable_Implementation:0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7
+Verifying TransparentUpgradeableProxy at 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7...
+Timeout for 10s before verify proccess...
+
+
+npx hardhat verify 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7 --network blast 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1
+Successfully submitted source code for contract
+contracts/core/VeBoostUpgradeable.sol:VeBoostUpgradeable at 0xAA9378E03b4852EA024d66Ad1a4BF685715a3F6d7
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeBoostUpgradeable on the block explorer.
+https://blastscan.io/address/0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7#code
+
+Starting deployment of VeFnxDistributorUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VeFnxDistributorUpgradeable deployed at 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Implementation:0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c
+Verifying TransparentUpgradeableProxy at 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxDistributorUpgradeable on the block explorer.
+https://blastscan.io/address/0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c#code
+
+Starting deployment of VeFnxSplitMerklAidropUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VeFnxSplitMerklAidropUpgradeable deployed at 0xAD2298b20558b2729E0605350E047e804163b3f2
+Save to deploys.json deployed address of VeFnxSplitMerklAidropUpgradeable_Implementation:0xAD2298b20558b2729E0605350E047e804163b3f2
+Verifying TransparentUpgradeableProxy at 0xAD2298b20558b2729E0605350E047e804163b3f2...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxSplitMerklAidropUpgradeable.sol:VeFnxSplitMerklAidropUpgradeable at 0xAD2298b20558b2729E0605350E047e804163b3f2
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxSplitMerklAidropUpgradeable on the block explorer.
+https://blastscan.io/address/0xAD2298b20558b2729E0605350E047e804163b3f2#code
+
+Starting deployment of VoterUpgradeableV2...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VoterUpgradeableV2 deployed at 0x5df9930bdC5C02115D8F41A7850244968d16A139
+Save to deploys.json deployed address of VoterUpgradeable_Implementation:0x5df9930bdC5C02115D8F41A7850244968d16A139
+Verifying TransparentUpgradeableProxy at 0x5df9930bdC5C02115D8F41A7850244968d16A139...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV2.sol:VoterUpgradeableV2 at 0x5df9930bdC5C02115D8F41A7850244968d16A139
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV2 on the block explorer.
+https://blastscan.io/address/0x5df9930bdC5C02115D8F41A7850244968d16A139#code
+
+Starting deployment of VotingEscrowUpgradeableV2...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VotingEscrowUpgradeableV2 deployed at 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Implementation:0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A
+Verifying TransparentUpgradeableProxy at 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV2.sol:VotingEscrowUpgradeableV2 at 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeableV2 on the block explorer.
+https://blastscan.io/address/0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A#code
+
+Starting deployment of Pair...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+Pair deployed at 0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb
+Save to deploys.json deployed address of Pair_Implementation:0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb
+Verifying TransparentUpgradeableProxy at 0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb...
+Timeout for 10s before verify proccess...
+
+
+Starting deployment of PerpetualsGaugeUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+PerpetualsGaugeUpgradeable deployed at 0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622
+Save to deploys.json deployed address of PerpetualsGaugeUpgradeable_Implementation:0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622
+Verifying TransparentUpgradeableProxy at 0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/PerpetualsGaugeUpgradeable.sol:PerpetualsGaugeUpgradeable at 0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PerpetualsGaugeUpgradeable on the block explorer.
+https://blastscan.io/address/0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622#code
+
+Starting deployment of PerpetualsTradersRewarderUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+PerpetualsTradersRewarderUpgradeable deployed at 0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564
+Save to deploys.json deployed address of PerpetualsTradersRewarderUpgradeable_Implementation:0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564
+Verifying TransparentUpgradeableProxy at 0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/PerpetualsTradersRewarderUpgradeable.sol:PerpetualsTradersRewarderUpgradeable at 0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PerpetualsTradersRewarderUpgradeable on the block explorer.
+https://blastscan.io/address/0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564#code
+
+Starting deployment of AlgebraFNXPriceProviderUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+AlgebraFNXPriceProviderUpgradeable deployed at 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311
+Save to deploys.json deployed address of AlgebraFNXPriceProviderUpgradeable_Implementation:0x2c166ab0429e8f10d806FF86eddb59Eb2548B311
+Verifying TransparentUpgradeableProxy at 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/AlgebraFNXPriceProviderUpgradeable.sol:AlgebraFNXPriceProviderUpgradeable at 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract AlgebraFNXPriceProviderUpgradeable on the block explorer.
+https://blastscan.io/address/0x2c166ab0429e8f10d806FF86eddb59Eb2548B311#code
+
+Starting deployment of MinimalLinearVestingUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+MinimalLinearVestingUpgradeable deployed at 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270
+Save to deploys.json deployed address of MinimalLinearVestingUpgradeable_Implementation:0xA4C830D9C19b6b881408cf74e00Cff1ad3800270
+Verifying TransparentUpgradeableProxy at 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/vesting/MinimalLinearVestingUpgradeable.sol:MinimalLinearVestingUpgradeable at 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinimalLinearVestingUpgradeable on the block explorer.
+https://blastscan.io/address/0xA4C830D9C19b6b881408cf74e00Cff1ad3800270#code
+
+Starting deployment of SingelTokenVirtualRewarderUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+SingelTokenVirtualRewarderUpgradeable deployed at 0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196
+Save to deploys.json deployed address of SingelTokenVirtualRewarderUpgradeable_Implementation:0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196
+Verifying TransparentUpgradeableProxy at 0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract SingelTokenVirtualRewarderUpgradeable on the block explorer.
+https://blastscan.io/address/0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196#code
+
+Starting deployment of CompoundVeFNXManagedNFTStrategyUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+CompoundVeFNXManagedNFTStrategyUpgradeable deployed at 0xdC2a9AA0c13576CE714DCF4e81145D486444F103
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation:0xdC2a9AA0c13576CE714DCF4e81145D486444F103
+Verifying TransparentUpgradeableProxy at 0xdC2a9AA0c13576CE714DCF4e81145D486444F103...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyUpgradeable.sol:CompoundVeFNXManagedNFTStrategyUpgradeable at 0xdC2a9AA0c13576CE714DCF4e81145D486444F103
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyUpgradeable on the block explorer.
+https://blastscan.io/address/0xdC2a9AA0c13576CE714DCF4e81145D486444F103#code
+
+Starting deployment of CompoundVeFNXManagedNFTStrategyFactoryUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable deployed at 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation:0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1
+Verifying TransparentUpgradeableProxy at 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyFactoryUpgradeable.sol:CompoundVeFNXManagedNFTStrategyFactoryUpgradeable at 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1#code
+
+Starting deployment of RouterV2PathProviderUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+RouterV2PathProviderUpgradeable deployed at 0xbD7852f7e21bc23944A2809315385733C734369c
+Save to deploys.json deployed address of RouterV2PathProviderUpgradeable_Implementation:0xbD7852f7e21bc23944A2809315385733C734369c
+Verifying TransparentUpgradeableProxy at 0xbD7852f7e21bc23944A2809315385733C734369c...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/RouterV2PathProviderUpgradeable.sol:RouterV2PathProviderUpgradeable at 0xbD7852f7e21bc23944A2809315385733C734369c
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2PathProviderUpgradeable on the block explorer.
+https://blastscan.io/address/0xbD7852f7e21bc23944A2809315385733C734369c#code
+
+Starting deployment of ManagedNFTManagerUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+ManagedNFTManagerUpgradeable deployed at 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89
+Save to deploys.json deployed address of ManagedNFTManagerUpgradeable_Implementation:0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89
+Verifying TransparentUpgradeableProxy at 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/ManagedNFTManagerUpgradeable.sol:ManagedNFTManagerUpgradeable at 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ManagedNFTManagerUpgradeable on the block explorer.
+https://blastscan.io/address/0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89#code
+
+Starting deployment of PairAPIUpgradeable...
+	Constructor arguments: []
+PairAPIUpgradeable deployed at 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71
+Save to deploys.json deployed address of PairAPIUpgradeable_Proxy:0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71
+Verifying TransparentUpgradeableProxy at 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/PairAPIUpgradeable.sol:PairAPIUpgradeable at 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairAPIUpgradeable on the block explorer.
+https://blastscan.io/address/0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71#code
+
+Starting deployment of RewardAPIUpgradeable...
+	Constructor arguments: []
+RewardAPIUpgradeable deployed at 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c
+Save to deploys.json deployed address of RewardAPIUpgradeable_Proxy:0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c
+Verifying TransparentUpgradeableProxy at 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/RewardAPIUpgradeable.sol:RewardAPIUpgradeable at 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RewardAPIUpgradeable on the block explorer.
+https://blastscan.io/address/0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c#code
+
+Starting deployment of VeNFTAPIUpgradeable...
+	Constructor arguments: []
+VeNFTAPIUpgradeable deployed at 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57
+Save to deploys.json deployed address of VeNFTAPIUpgradeable_Implementation:0xC1BF8c9871f1196a168831BC4b47ab7b18505b57
+Verifying TransparentUpgradeableProxy at 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/VeNFTAPIUpgradeable.sol:VeNFTAPIUpgradeable at 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeNFTAPIUpgradeable on the block explorer.
+https://blastscan.io/address/0xC1BF8c9871f1196a168831BC4b47ab7b18505b57#code
+
+Starting deployment of UtilsUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+UtilsUpgradeable deployed at 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f
+Save to deploys.json deployed address of UtilsUpgradeable_Proxy:0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f
+Verifying TransparentUpgradeableProxy at 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/UtilsUpgradeable.sol:UtilsUpgradeable at 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract UtilsUpgradeable on the block explorer.
+https://blastscan.io/address/0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f#code
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Proxy:0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9
+Verifying TransparentUpgradeableProxy at 0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9...
+Timeout for 10s before verify proccess...
+The contract 0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9 has already been verified on Etherscan.
+https://blastscan.io/address/0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9#code
+	Called Contract(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", token_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192")
+	Transaction hash: 0xb75ccabc8631d89516903e6ac72f9d70304f87a1ce8bf29de53b55366413273b
+	Called Contract(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9).updateAddress(key_: "artProxy", value_: "0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8")
+	Transaction hash: 0xf478635df61ccd8c75e4410e08284f2870b21cea589a1af31483392e1a35f2f7
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x5df9930bdC5C02115D8F41A7850244968d16A139
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B
+Save to deploys.json deployed address of VoterUpgradeable_Proxy:0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B
+Verifying TransparentUpgradeableProxy at 0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B...
+Timeout for 10s before verify proccess...
+The contract 0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B has already been verified on Etherscan.
+https://blastscan.io/address/0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B#code
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", votingEscrow_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9")
+	Transaction hash: 0x673541eba26349b8a2cf5eda10f437d39a6fd3d62cc2a077b62ecd3bee2ac0d9
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).grantRole(role: "0x71840dc4906352362b0cdaf79870196c8e42acafade72d5d5a6d59291253ceb1", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+	Transaction hash: 0x1d5c94b3085c0c03f9bb6398e44045c5da787c2522d4b584d7f792d82297f894
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).grantRole(role: "0xdb77e4a0d65a915fbfe630f3ac05f3a2259b73e7baead93657155a1e625c8b5e", account: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30")
+	Transaction hash: 0x3549289e2fee310830560321e0d8bfa3503fb5ceafd6f9ad9eb366d035724bbb
+
+
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "minter", value_: "0xa4FF6fe53212e8da028e0a34819006A26615D9f8")
+	Transaction hash: 0xf1eb0da3c3b5a2bc6a9bb485f09134b0dc635367437ab549d8020ee5d512e81a
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "v2PoolFactory", value_: "0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f")
+	Transaction hash: 0xf5208f8e977561f5386fd64a68e62a5a4c52549bfca36468df1f188d5650bc1b
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "v3PoolFactory", value_: "0x7a44CD060afC1B6F4c80A2B9b37f4473E74E25Df")
+	Transaction hash: 0x4cc9967114d6d8985ca4ba58802dec21f1dcc9e368e1b15b07e45dee5259a4d5
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x32c981701cBdbA2C295427459f87fCceF57a0dA8
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e
+Save to deploys.json deployed address of BribeFactoryUpgradeable_Proxy:0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e
+Verifying TransparentUpgradeableProxy at 0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e...
+Timeout for 10s before verify proccess...
+The contract 0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e has already been verified on Etherscan.
+https://blastscan.io/address/0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e#code
+	Called Contract(0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e).initialize(_blastGovernor: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", _voter: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B", _bribeImplementation: "0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a")
+	Transaction hash: 0xe1268b3eec582e5a309c5b0336ace5e46db72a5793d0aafdbfc9479bc1afd39c
+	Called Contract(0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e).pushDefaultRewardToken(_token: "0x52f847356b38720B55ee18Cb3e094ca11C85A192")
+	Transaction hash: 0xcfa2a86b3f3bcd77d7fa381ce47260624dbb46a75b147366cb86c4069c5fecb4
+
+
+
+Starting deployment of MerklGaugeMiddleman...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1","0x52f847356b38720B55ee18Cb3e094ca11C85A192","0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd"]
+MerklGaugeMiddleman deployed at 0xD05D5D3d61fb33bb3D42805A310283000f02cFd9
+Save to deploys.json deployed address of MerklGaugeMiddleman:0xD05D5D3d61fb33bb3D42805A310283000f02cFd9
+Verifying TransparentUpgradeableProxy at 0xD05D5D3d61fb33bb3D42805A310283000f02cFd9...
+Timeout for 10s before verify proccess...
+The contract 0xD05D5D3d61fb33bb3D42805A310283000f02cFd9 has already been verified on Etherscan.
+https://blastscan.io/address/0xD05D5D3d61fb33bb3D42805A310283000f02cFd9#code
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408
+Save to deploys.json deployed address of GaugeFactory_V2Pools_Proxy:0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408
+Verifying TransparentUpgradeableProxy at 0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408...
+Timeout for 10s before verify proccess...
+The contract 0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408 has already been verified on Etherscan.
+https://blastscan.io/address/0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408#code
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9
+Save to deploys.json deployed address of GaugeFactory_V3Pools_Proxy:0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9
+Verifying TransparentUpgradeableProxy at 0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9...
+Timeout for 10s before verify proccess...
+The contract 0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9 has already been verified on Etherscan.
+https://blastscan.io/address/0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9#code
+	Called Contract(0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408).initialize(_blastGovernor: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", _voter: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B", _gaugeImplementation: "0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995", _merklGaugeMiddleman: "0xD05D5D3d61fb33bb3D42805A310283000f02cFd9")
+	Transaction hash: 0xd579e6543c6533093e2c25bcd39045afac648423c745c947e4031fab27762fa9
+	Called Contract(0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9).initialize(_blastGovernor: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", _voter: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B", _gaugeImplementation: "0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995", _merklGaugeMiddleman: "0xD05D5D3d61fb33bb3D42805A310283000f02cFd9")
+	Transaction hash: 0x7b918427c88b4ac2a88973737ee906cddd097ffa0d240a7f44979dcf35d6d643
+
+
+
+
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "bribeFactory", value_: "0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e")
+	Transaction hash: 0x93192e28ce6cd83bac0ebac9039287b9a2851feb6a6a5a1e67cf121fd43cc643
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "v2GaugeFactory", value_: "0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408")
+	Transaction hash: 0x1ba0d5a2cb8fdbf08bd2f750b0944115ff587e1064d246f1770ba64daf2ed968
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "v3GaugeFactory", value_: "0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9")
+	Transaction hash: 0xddf61a0fc5c3c9dc1f1ff5c2f0eb22288c6d79174d403e2837ae8b28cda895b9
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B
+Save to deploys.json deployed address of ManagedNFTManagerUpgradeable_Proxy:0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B
+Verifying TransparentUpgradeableProxy at 0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B...
+Timeout for 10s before verify proccess...
+The contract 0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B has already been verified on Etherscan.
+https://blastscan.io/address/0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B#code
+	Called Contract(0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", votingEscrow_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9", voter_: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B")
+	Transaction hash: 0xe71b0bd0b2b51f8712fd7a991481c8cfe1a0fff34e29759e8017d43938f9f295
+
+	
+	Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "managedNFTManager", value_: "0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B")
+	Transaction hash: 0xcbc56b4e71cee49b146736cfbb6e605a5f3010977c73879d66fd3e6e079fe6ee
+	Called Contract(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9).updateAddress(key_: "managedNFTManager", value_: "0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B")
+	Transaction hash: 0xc6b006bd602a42708e14fbec544603582dd2197ff5a5929a8546c2f588c54be0
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x73e161B4556a720d450F13D2D884D0f2f8147cdd
+Save to deploys.json deployed address of PairAPIUpgradeable_Proxy:0x73e161B4556a720d450F13D2D884D0f2f8147cdd
+Verifying TransparentUpgradeableProxy at 0x73e161B4556a720d450F13D2D884D0f2f8147cdd...
+Timeout for 10s before verify proccess...
+The contract 0x73e161B4556a720d450F13D2D884D0f2f8147cdd has already been verified on Etherscan.
+https://blastscan.io/address/0x73e161B4556a720d450F13D2D884D0f2f8147cdd#code
+	Called Contract(0x73e161B4556a720d450F13D2D884D0f2f8147cdd).initialize(voter_: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B")
+	Transaction hash: 0xc6c5ba475f0e2c1ec0c07ffdeb68b79e2e2f7ec973f79433df82d5aaf4084b18
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x68bFab63a78f444afFF59B006a2163c221CDEd71
+Save to deploys.json deployed address of VeNFTAPIUpgradeable_Proxy:0x68bFab63a78f444afFF59B006a2163c221CDEd71
+Verifying TransparentUpgradeableProxy at 0x68bFab63a78f444afFF59B006a2163c221CDEd71...
+Timeout for 10s before verify proccess...
+The contract 0x68bFab63a78f444afFF59B006a2163c221CDEd71 has already been verified on Etherscan.
+https://blastscan.io/address/0x68bFab63a78f444afFF59B006a2163c221CDEd71#code
+	Called Contract(0x68bFab63a78f444afFF59B006a2163c221CDEd71).initialize(_voter: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B")
+	Transaction hash: 0xa149b9a7294cd0c1af8e9e9641d24e7866e243ccab6f7953315463a751748065
+	Called Contract(0x68bFab63a78f444afFF59B006a2163c221CDEd71).setPairAPI(_pairApi: "0x73e161B4556a720d450F13D2D884D0f2f8147cdd")
+	Transaction hash: 0xbc5045682f0be5dceb165c67d3827d945700d9307f0f116b561010f3ddcef3c6
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xD678DB8fA490323664309e645390b6D8ee327FfE
+Save to deploys.json deployed address of RewardAPIUpgradeable_Proxy:0xD678DB8fA490323664309e645390b6D8ee327FfE
+Verifying TransparentUpgradeableProxy at 0xD678DB8fA490323664309e645390b6D8ee327FfE...
+Timeout for 10s before verify proccess...
+The contract 0xD678DB8fA490323664309e645390b6D8ee327FfE has already been verified on Etherscan.
+https://blastscan.io/address/0xD678DB8fA490323664309e645390b6D8ee327FfE#code
+	Called Contract(0xD678DB8fA490323664309e645390b6D8ee327FfE).initialize(_voter: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B")
+	Transaction hash: 0x0b0fabd189632d93d34eaae950f6a320ee482a2cf67149cc941a0fad0e379eda
+
+
+
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x929949f0d3c9b19e142ac20Ae49A1447D67F4163
+Save to deploys.json deployed address of AlgebraFNXPriceProviderUpgradeable_Proxy:0x929949f0d3c9b19e142ac20Ae49A1447D67F4163
+Verifying TransparentUpgradeableProxy at 0x929949f0d3c9b19e142ac20Ae49A1447D67F4163...
+Timeout for 10s before verify proccess...
+The contract 0x929949f0d3c9b19e142ac20Ae49A1447D67F4163 has already been verified on Etherscan.
+https://blastscan.io/address/0x929949f0d3c9b19e142ac20Ae49A1447D67F4163#code
+	Called Contract(0x929949f0d3c9b19e142ac20Ae49A1447D67F4163).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", pool_: "0xb3B4484bdFb6885f96421c3399B666a1c9D27Fca", FNX_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", USD_: "0x4300000000000000000000000000000000000003")
+	Transaction hash: 0xe58ef17d293971df19f3a5f919eafc6df7e0d436bdedfb77db2d9b622391483f
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xaf85834fc0d0302c82919E10c8817609a310fd2c
+Save to deploys.json deployed address of VeBoostUpgradeable_Proxy:0xaf85834fc0d0302c82919E10c8817609a310fd2c
+Verifying TransparentUpgradeableProxy at 0xaf85834fc0d0302c82919E10c8817609a310fd2c...
+Timeout for 10s before verify proccess...
+The contract 0xaf85834fc0d0302c82919E10c8817609a310fd2c has already been verified on Etherscan.
+https://blastscan.io/address/0xaf85834fc0d0302c82919E10c8817609a310fd2c#code
+	Called Contract(0xaf85834fc0d0302c82919E10c8817609a310fd2c).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", fenix_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", votingEscrow_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9", priceProvider_: "0x929949f0d3c9b19e142ac20Ae49A1447D67F4163")
+	Transaction hash: 0x791a9ac9dfde325fc3c33b50d0d7121a8087e3337f67a0fa47eaedf3a432ced7
+	Called Contract(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9).updateAddress(key_: "veBoost", value_: "0xaf85834fc0d0302c82919E10c8817609a310fd2c")
+	Transaction hash: 0x499e5e6eb312a478c6e61fcb938fc6c4c507db66cf4ad429ac9c88afa9e6730a
+
+
+
+
+Starting deployment of RouterV2...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1","0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f","0x4300000000000000000000000000000000000004"]
+RouterV2 deployed at 0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE
+Save to deploys.json deployed address of RouterV2:0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE
+Verifying TransparentUpgradeableProxy at 0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/dexV2/RouterV2.sol:RouterV2 at 0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RouterV2 on the block explorer.
+https://blastscan.io/address/0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xbD7852f7e21bc23944A2809315385733C734369c
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x8231A273e43B042D374d8D11Fe904482d2c91CC6
+Save to deploys.json deployed address of RouterV2PathProviderUpgradeable_Proxy:0x8231A273e43B042D374d8D11Fe904482d2c91CC6
+Verifying TransparentUpgradeableProxy at 0x8231A273e43B042D374d8D11Fe904482d2c91CC6...
+Timeout for 10s before verify proccess...
+The contract 0x8231A273e43B042D374d8D11Fe904482d2c91CC6 has already been verified on Etherscan.
+
+
+https://blastscan.io/address/0x8231A273e43B042D374d8D11Fe904482d2c91CC6#code
+Compiled 2 Solidity files successfully (evm target: paris).
+	Called Contract(0x8231A273e43B042D374d8D11Fe904482d2c91CC6).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", factory_: "0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f", router_: "0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE")
+	Transaction hash: 0x4a0b39c8a28475cceadca697be4d17e48e759a66cc8a35367d533021122dddad
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy:0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660
+Verifying TransparentUpgradeableProxy at 0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660...
+Timeout for 10s before verify proccess...
+The contract 0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660 has already been verified on Etherscan.
+https://blastscan.io/address/0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660#code
+
+
+	Called Contract(0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", strategyImplementation_: "0xdC2a9AA0c13576CE714DCF4e81145D486444F103", virtualRewarderImplementation_: "0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196", managedNFTManager_: "0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B", routerV2PathProvider_: "0x8231A273e43B042D374d8D11Fe904482d2c91CC6")
+	Transaction hash: 0xc157ff5a513e3bc413163f29ab1273af376213b9c63d87a2a8e1fc0596ce294c
+
+
+
+
+npx hardhat compare-deployed-contracts-with-alias --network blast
+┌────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┐
+│ Missing in deploys.json                                    │ Missing in AliasDeployedContracts                          │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FenixRaiseUpgradeable_Proxy                                │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Proxy                      │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Implementation                      │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsGaugeUpgradeable_Proxy                           │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsTradersRewarderUpgradeable_Proxy                 │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxDistributorUpgradeable_Proxy                          │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Proxy                     │                                                            │
+└────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┘
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F
+Save to deploys.json deployed address of UtilsUpgradeable_Proxy:0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F
+Verifying TransparentUpgradeableProxy at 0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F...
+Timeout for 10s before verify proccess...
+The contract 0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F has already been verified on Etherscan.
+https://blastscan.io/address/0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F#code
+	Called Contract(0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1")
+	Transaction hash: 0xfa39884c493fdae82257e0c5e7d36e37e8c9520c082d50f65e39ca80ba91499f
+
+
+Starting deployment of PairFactoryUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+PairFactoryUpgradeable deployed at 0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9
+Save to deploys.json deployed address of PairFactoryUpgradeable_Implementation:0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9
+Verifying TransparentUpgradeableProxy at 0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/dexV2/PairFactoryUpgradeable.sol:PairFactoryUpgradeable at 0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract PairFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x4d8513df0A19aa65398cB8495AeA319F4F81448e
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Proxy:0x4d8513df0A19aa65398cB8495AeA319F4F81448e
+Verifying TransparentUpgradeableProxy at 0x4d8513df0A19aa65398cB8495AeA319F4F81448e...
+Timeout for 10s before verify proccess...
+The contract 0x4d8513df0A19aa65398cB8495AeA319F4F81448e has already been verified on Etherscan.
+https://blastscan.io/address/0x4d8513df0A19aa65398cB8495AeA319F4F81448e#code
+	Called Contract(0x4d8513df0A19aa65398cB8495AeA319F4F81448e).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", factory_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", router_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9")
+	Transaction hash: 0xedd00dc66a62270b40e472dad329109a6b95baccbbed2779e6779348d5d860ec
+
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0xAD2298b20558b2729E0605350E047e804163b3f2
+	Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x311F7981d7159De374c378Be0815DC4257b50468
+Save to deploys.json deployed address of VeFnxSplitMerklAidropUpgradeable_Proxy:0x311F7981d7159De374c378Be0815DC4257b50468
+Verifying TransparentUpgradeableProxy at 0x311F7981d7159De374c378Be0815DC4257b50468...
+Timeout for 10s before verify proccess...
+The contract 0x311F7981d7159De374c378Be0815DC4257b50468 has already been verified on Etherscan.
+https://blastscan.io/address/0x311F7981d7159De374c378Be0815DC4257b50468#code
+	Called Contract(0x311F7981d7159De374c378Be0815DC4257b50468).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", token_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", votingEscrow_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9", toVeFnxPercentage_: "500000000000000000")
+	Transaction hash: 0xeec7a704af3c814fc3b5798ec32c9658e7415cfd41f2707461c4911c923225cd
+	Called Contract(0x311F7981d7159De374c378Be0815DC4257b50468).setIsAllowedClaimOperator(operator_: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B", isAllowed_: "true")
+	Transaction hash: 0x40f2ac88bef8d932d62fb39a005c495eda8835d5dcb53277663a79c0fc374e8b
+
+
+
+┌────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┐
+│ Missing in deploys.json                                    │ Missing in AliasDeployedContracts                          │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FenixRaiseUpgradeable_Proxy                                │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MDCBlastMock                                               │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Proxy                      │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsGaugeUpgradeable_Proxy                           │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsTradersRewarderUpgradeable_Proxy                 │                                                            │
+├────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RFenix                                                     │                                                            │
+└────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┘
+
+
+npx hardhat list-deployed-contracts --network blast                                                       
+┌────────────────────────────────────────┬────────────────────────────────────────────────────────────┐
+│ Contract Name                          │ Address                                                    │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ProxyAdmin                             │ 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Implementati… │ 0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Proxy         │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Implement… │ 0x17409D1648422596B447BC3FcEE92a5f291e4604                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Implementation │ 0x32c981701cBdbA2C295427459f87fCceF57a0dA8                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeUpgradeable_Implementation        │ 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactoryUpgradeable_Implementation │ 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeUpgradeable_Implementation        │ 0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Implementation       │ 0x0FafA9074aBf128db1467af2FC592815b14508cd                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FenixRaiseUpgradeable_Implementation   │ 0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Implementation      │ 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxDistributorUpgradeable_Implement… │ 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Impl… │ 0xAD2298b20558b2729E0605350E047e804163b3f2                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Implementation        │ 0x5df9930bdC5C02115D8F41A7850244968d16A139                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Implementation │ 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Pair_Implementation                    │ 0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsGaugeUpgradeable_Implementa… │ 0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsTradersRewarderUpgradeable_… │ 0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Im… │ 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Imple… │ 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ SingelTokenVirtualRewarderUpgradeable… │ 0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyUpgrad… │ 0xdC2a9AA0c13576CE714DCF4e81145D486444F103                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Imple… │ 0xbD7852f7e21bc23944A2809315385733C734369c                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Implemen… │ 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Implementation      │ 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Implementation    │ 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Implementation     │ 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Implementation        │ 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Fenix                                  │ 0x52f847356b38720B55ee18Cb3e094ca11C85A192                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeArtProxyUpgradeable_Proxy            │ 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Proxy          │ 0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Proxy           │ 0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Proxy                 │ 0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Proxy                │ 0xa4FF6fe53212e8da028e0a34819006A26615D9f8                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Proxy          │ 0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MerklGaugeMiddleman                    │ 0xD05D5D3d61fb33bb3D42805A310283000f02cFd9                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V2Pools_Proxy             │ 0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V3Pools_Proxy             │ 0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Proxy     │ 0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Proxy               │ 0x73e161B4556a720d450F13D2D884D0f2f8147cdd                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Proxy              │ 0x68bFab63a78f444afFF59B006a2163c221CDEd71                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Proxy             │ 0xD678DB8fA490323664309e645390b6D8ee327FfE                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Pr… │ 0x929949f0d3c9b19e142ac20Ae49A1447D67F4163                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Proxy               │ 0xaf85834fc0d0302c82919E10c8817609a310fd2c                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UniswapV2PartialRouter                 │ 0x18C3C329E8567c6cD019EC92bb1134E1e8F76Eaf                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2                               │ 0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Proxy  │ 0x8231A273e43B042D374d8D11Fe904482d2c91CC6                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Proxy      │ 0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultUpgradeable_Implementation    │ 0x17409D1648422596B447BC3FcEE92a5f291e4604                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Proxy                 │ 0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeArtProxyUpgradeable_Implementation   │ 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Implementation  │ 0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxDistributorUpgradeable_Proxy      │ 0x4d8513df0A19aa65398cB8495AeA319F4F81448e                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Proxy │ 0x311F7981d7159De374c378Be0815DC4257b50468                 │
+└────────────────────────────────────────┴────────────────────────────────────────────────────────────┘
+
+
+npx hardhat check-contracts-verification-status --network blast                                           
+ProxyAdmin(0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5): Yes
+BlastGovernorUpgradeable_Implementation(0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f): Yes
+BlastGovernorUpgradeable_Proxy(0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1): Yes
+BlastRebasingTokensGovernorUpgradeable_Implementation(0xEe9220Cb20e9f7848f22BF7117412A54766D5F72): Yes
+BlastRebasingTokensGovernorUpgradeable_Proxy(0x71B83044626c8F6Ef38F051673562Fe025F8ec1F): Yes
+FeesVaultFactoryUpgradeable_Implementation(0x17409D1648422596B447BC3FcEE92a5f291e4604): Yes
+BribeFactoryUpgradeable_Implementation(0x32c981701cBdbA2C295427459f87fCceF57a0dA8): Yes
+BribeUpgradeable_Implementation(0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a): Yes
+GaugeFactoryUpgradeable_Implementation(0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1): Yes
+GaugeUpgradeable_Implementation(0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995): Yes
+MinterUpgradeable_Implementation(0x0FafA9074aBf128db1467af2FC592815b14508cd): Yes
+FenixRaiseUpgradeable_Implementation(0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c): Yes
+VeBoostUpgradeable_Implementation(0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7): Yes
+VeFnxDistributorUpgradeable_Implementation(0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c): Yes
+VeFnxSplitMerklAidropUpgradeable_Implementation(0xAD2298b20558b2729E0605350E047e804163b3f2): Yes
+VoterUpgradeable_Implementation(0x5df9930bdC5C02115D8F41A7850244968d16A139): Yes
+VotingEscrowUpgradeable_Implementation(0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A): Yes
+Pair_Implementation(0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb): Yes
+PerpetualsGaugeUpgradeable_Implementation(0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622): Yes
+PerpetualsTradersRewarderUpgradeable_Implementation(0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564): Yes
+AlgebraFNXPriceProviderUpgradeable_Implementation(0x2c166ab0429e8f10d806FF86eddb59Eb2548B311): Yes
+MinimalLinearVestingUpgradeable_Implementation(0xA4C830D9C19b6b881408cf74e00Cff1ad3800270): Yes
+SingelTokenVirtualRewarderUpgradeable_Implementation(0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196): Yes
+CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation(0xdC2a9AA0c13576CE714DCF4e81145D486444F103): Yes
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation(0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1): Yes
+RouterV2PathProviderUpgradeable_Implementation(0xbD7852f7e21bc23944A2809315385733C734369c): Yes
+ManagedNFTManagerUpgradeable_Implementation(0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89): Yes
+PairAPIUpgradeable_Implementation(0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71): Yes
+RewardAPIUpgradeable_Implementation(0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c): Yes
+VeNFTAPIUpgradeable_Implementation(0xC1BF8c9871f1196a168831BC4b47ab7b18505b57): Yes
+UtilsUpgradeable_Implementation(0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f): Yes
+Fenix(0x52f847356b38720B55ee18Cb3e094ca11C85A192): Yes
+VeArtProxyUpgradeable_Proxy(0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8): Yes
+VotingEscrowUpgradeable_Proxy(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9): Yes
+PairFactoryUpgradeable_Proxy(0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f): Yes
+VoterUpgradeable_Proxy(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B): Yes
+MinterUpgradeable_Proxy(0xa4FF6fe53212e8da028e0a34819006A26615D9f8): Yes
+BribeFactoryUpgradeable_Proxy(0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e): Yes
+MerklGaugeMiddleman(0xD05D5D3d61fb33bb3D42805A310283000f02cFd9): Yes
+GaugeFactory_V2Pools_Proxy(0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408): Yes
+GaugeFactory_V3Pools_Proxy(0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9): Yes
+ManagedNFTManagerUpgradeable_Proxy(0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B): Yes
+PairAPIUpgradeable_Proxy(0x73e161B4556a720d450F13D2D884D0f2f8147cdd): Yes
+VeNFTAPIUpgradeable_Proxy(0x68bFab63a78f444afFF59B006a2163c221CDEd71): Yes
+RewardAPIUpgradeable_Proxy(0xD678DB8fA490323664309e645390b6D8ee327FfE): Yes
+AlgebraFNXPriceProviderUpgradeable_Proxy(0x929949f0d3c9b19e142ac20Ae49A1447D67F4163): Yes
+VeBoostUpgradeable_Proxy(0xaf85834fc0d0302c82919E10c8817609a310fd2c): Yes
+UniswapV2PartialRouter(0x18C3C329E8567c6cD019EC92bb1134E1e8F76Eaf): Yes
+RouterV2(0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE): Yes
+RouterV2PathProviderUpgradeable_Proxy(0x8231A273e43B042D374d8D11Fe904482d2c91CC6): Yes
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy(0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660): Yes
+FeesVaultFactoryUpgradeable_Proxy(0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB): Yes
+FeesVaultUpgradeable_Implementation(0x17409D1648422596B447BC3FcEE92a5f291e4604): Yes
+UtilsUpgradeable_Proxy(0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F): Yes
+VeArtProxyUpgradeable_Implementation(0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8): Yes
+PairFactoryUpgradeable_Implementation(0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9): Yes
+VeFnxDistributorUpgradeable_Proxy(0x4d8513df0A19aa65398cB8495AeA319F4F81448e): Yes
+VeFnxSplitMerklAidropUpgradeable_Proxy(0x311F7981d7159De374c378Be0815DC4257b50468): Yes
+
+
+
+npx hardhat blast-governor-map --network blast                                                            
+Current deployer: 0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30
+Proccessing...
+┌────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┐
+│ Contract Name                          │ Address                                                    │ Governor                                                   │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ProxyAdmin                             │ 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Implementation      │ 0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Implementation    │ 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Implementation     │ 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeArtProxyUpgradeable_Proxy            │ 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Proxy               │ 0x73e161B4556a720d450F13D2D884D0f2f8147cdd                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Proxy              │ 0x68bFab63a78f444afFF59B006a2163c221CDEd71                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Proxy             │ 0xD678DB8fA490323664309e645390b6D8ee327FfE                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeArtProxyUpgradeable_Implementation   │ 0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Implementati… │ 0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Proxy         │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Implement… │ 0x17409D1648422596B447BC3FcEE92a5f291e4604                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Implementation │ 0x32c981701cBdbA2C295427459f87fCceF57a0dA8                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeUpgradeable_Implementation        │ 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactoryUpgradeable_Implementation │ 0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeUpgradeable_Implementation        │ 0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Implementation       │ 0x0FafA9074aBf128db1467af2FC592815b14508cd                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FenixRaiseUpgradeable_Implementation   │ 0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Implementation      │ 0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxDistributorUpgradeable_Implement… │ 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Impl… │ 0xAD2298b20558b2729E0605350E047e804163b3f2                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Implementation        │ 0x5df9930bdC5C02115D8F41A7850244968d16A139                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Implementation │ 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Pair_Implementation                    │ 0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsGaugeUpgradeable_Implementa… │ 0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsTradersRewarderUpgradeable_… │ 0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Im… │ 0x2c166ab0429e8f10d806FF86eddb59Eb2548B311                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Imple… │ 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ SingelTokenVirtualRewarderUpgradeable… │ 0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyUpgrad… │ 0xdC2a9AA0c13576CE714DCF4e81145D486444F103                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Imple… │ 0xbD7852f7e21bc23944A2809315385733C734369c                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Implemen… │ 0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Implementation        │ 0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Proxy          │ 0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Proxy                 │ 0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Proxy          │ 0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MerklGaugeMiddleman                    │ 0xD05D5D3d61fb33bb3D42805A310283000f02cFd9                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V2Pools_Proxy             │ 0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V3Pools_Proxy             │ 0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Proxy     │ 0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Pr… │ 0x929949f0d3c9b19e142ac20Ae49A1447D67F4163                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Proxy               │ 0xaf85834fc0d0302c82919E10c8817609a310fd2c                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UniswapV2PartialRouter                 │ 0x18C3C329E8567c6cD019EC92bb1134E1e8F76Eaf                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2                               │ 0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Proxy  │ 0x8231A273e43B042D374d8D11Fe904482d2c91CC6                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultUpgradeable_Implementation    │ 0x17409D1648422596B447BC3FcEE92a5f291e4604                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Proxy                 │ 0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Implementation  │ 0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxDistributorUpgradeable_Proxy      │ 0x4d8513df0A19aa65398cB8495AeA319F4F81448e                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Proxy │ 0x311F7981d7159De374c378Be0815DC4257b50468                 │ 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Fenix                                  │ 0x52f847356b38720B55ee18Cb3e094ca11C85A192                 │ 0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Proxy           │ 0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f                 │ 0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Proxy                │ 0xa4FF6fe53212e8da028e0a34819006A26615D9f8                 │ 0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Proxy      │ 0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB                 │ 0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4                 │
+└────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┘
+
+
+
+npx hardhat check-network-contracts-bytecode --network blast                                                                                                              
+ProxyAdmin (0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5): Match with artifact ProxyAdmin
+BlastGovernorUpgradeable_Implementation (0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f): Match with artifact BlastGovernorUpgradeable
+BlastGovernorUpgradeable_Proxy (0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1): Match with artifact TransparentUpgradeableProxy
+BlastRebasingTokensGovernorUpgradeable_Implementation (0xEe9220Cb20e9f7848f22BF7117412A54766D5F72): Match with artifact BlastRebasingTokensGovernorUpgradeable
+BlastRebasingTokensGovernorUpgradeable_Proxy (0x71B83044626c8F6Ef38F051673562Fe025F8ec1F): Match with artifact TransparentUpgradeableProxy
+FeesVaultFactoryUpgradeable_Implementation (0x17409D1648422596B447BC3FcEE92a5f291e4604): Match with artifact FeesVaultFactoryUpgradeable
+BribeFactoryUpgradeable_Implementation (0x32c981701cBdbA2C295427459f87fCceF57a0dA8): Match with artifact BribeFactoryUpgradeable
+BribeUpgradeable_Implementation (0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a): Match with artifact BribeUpgradeable
+GaugeFactoryUpgradeable_Implementation (0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1): Match with artifact GaugeFactoryUpgradeable
+GaugeUpgradeable_Implementation (0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995): Match with artifact GaugeUpgradeable
+MinterUpgradeable_Implementation (0x0FafA9074aBf128db1467af2FC592815b14508cd): Match with artifact MinterUpgradeable
+FenixRaiseUpgradeable_Implementation (0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c): Match with artifact FenixRaiseUpgradeable
+VeBoostUpgradeable_Implementation (0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7): Match with artifact VeBoostUpgradeable
+VeFnxDistributorUpgradeable_Implementation (0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c): Match with artifact VeFnxDistributorUpgradeable
+VeFnxSplitMerklAidropUpgradeable_Implementation (0xAD2298b20558b2729E0605350E047e804163b3f2): Match with artifact VeFnxSplitMerklAidropUpgradeable
+VoterUpgradeable_Implementation (0x5df9930bdC5C02115D8F41A7850244968d16A139): Match with artifact VoterUpgradeableV2
+VotingEscrowUpgradeable_Implementation (0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A): Match with artifact VotingEscrowUpgradeableV2
+Pair_Implementation (0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb): Match with artifact Pair
+PerpetualsGaugeUpgradeable_Implementation (0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622): Match with artifact PerpetualsGaugeUpgradeable
+PerpetualsTradersRewarderUpgradeable_Implementation (0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564): Match with artifact PerpetualsTradersRewarderUpgradeable
+AlgebraFNXPriceProviderUpgradeable_Implementation (0x2c166ab0429e8f10d806FF86eddb59Eb2548B311): Match with artifact AlgebraFNXPriceProviderUpgradeable
+MinimalLinearVestingUpgradeable_Implementation (0xA4C830D9C19b6b881408cf74e00Cff1ad3800270): Match with artifact MinimalLinearVestingUpgradeable
+SingelTokenVirtualRewarderUpgradeable_Implementation (0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196): Match with artifact SingelTokenVirtualRewarderUpgradeable
+CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation (0xdC2a9AA0c13576CE714DCF4e81145D486444F103): Match with artifact CompoundVeFNXManagedNFTStrategyUpgradeable
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation (0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1): Match with artifact CompoundVeFNXManagedNFTStrategyFactoryUpgradeable
+RouterV2PathProviderUpgradeable_Implementation (0xbD7852f7e21bc23944A2809315385733C734369c): Match with artifact RouterV2PathProviderUpgradeable
+ManagedNFTManagerUpgradeable_Implementation (0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89): Match with artifact ManagedNFTManagerUpgradeable
+PairAPIUpgradeable_Implementation (0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71): Match with artifact PairAPIUpgradeable
+RewardAPIUpgradeable_Implementation (0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c): Match with artifact RewardAPIUpgradeable
+VeNFTAPIUpgradeable_Implementation (0xC1BF8c9871f1196a168831BC4b47ab7b18505b57): Match with artifact VeNFTAPIUpgradeable
+UtilsUpgradeable_Implementation (0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f): Match with artifact UtilsUpgradeable
+Fenix (0x52f847356b38720B55ee18Cb3e094ca11C85A192): Match with artifact Fenix
+VeArtProxyUpgradeable_Proxy (0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8): Match with artifact TransparentUpgradeableProxy
+VotingEscrowUpgradeable_Proxy (0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9): Match with artifact TransparentUpgradeableProxy
+PairFactoryUpgradeable_Proxy (0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f): Match with artifact TransparentUpgradeableProxy
+VoterUpgradeable_Proxy (0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B): Match with artifact TransparentUpgradeableProxy
+MinterUpgradeable_Proxy (0xa4FF6fe53212e8da028e0a34819006A26615D9f8): Match with artifact TransparentUpgradeableProxy
+BribeFactoryUpgradeable_Proxy (0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e): Match with artifact TransparentUpgradeableProxy
+MerklGaugeMiddleman (0xD05D5D3d61fb33bb3D42805A310283000f02cFd9): Match with artifact MerklGaugeMiddleman
+GaugeFactory_V2Pools_Proxy (0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408): Match with artifact TransparentUpgradeableProxy
+GaugeFactory_V3Pools_Proxy (0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9): Match with artifact TransparentUpgradeableProxy
+ManagedNFTManagerUpgradeable_Proxy (0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B): Match with artifact TransparentUpgradeableProxy
+PairAPIUpgradeable_Proxy (0x73e161B4556a720d450F13D2D884D0f2f8147cdd): Match with artifact TransparentUpgradeableProxy
+VeNFTAPIUpgradeable_Proxy (0x68bFab63a78f444afFF59B006a2163c221CDEd71): Match with artifact TransparentUpgradeableProxy
+RewardAPIUpgradeable_Proxy (0xD678DB8fA490323664309e645390b6D8ee327FfE): Match with artifact TransparentUpgradeableProxy
+AlgebraFNXPriceProviderUpgradeable_Proxy (0x929949f0d3c9b19e142ac20Ae49A1447D67F4163): Match with artifact TransparentUpgradeableProxy
+VeBoostUpgradeable_Proxy (0xaf85834fc0d0302c82919E10c8817609a310fd2c): Match with artifact TransparentUpgradeableProxy
+UniswapV2PartialRouter (0x18C3C329E8567c6cD019EC92bb1134E1e8F76Eaf): No match found
+RouterV2 (0xbD571125856975DBfC2E9b6d1DE496D614D7BAEE): No match found
+RouterV2PathProviderUpgradeable_Proxy (0x8231A273e43B042D374d8D11Fe904482d2c91CC6): Match with artifact TransparentUpgradeableProxy
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy (0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660): Match with artifact TransparentUpgradeableProxy
+FeesVaultFactoryUpgradeable_Proxy (0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB): Match with artifact TransparentUpgradeableProxy
+FeesVaultUpgradeable_Implementation (0x17409D1648422596B447BC3FcEE92a5f291e4604): Match with artifact FeesVaultFactoryUpgradeable
+UtilsUpgradeable_Proxy (0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F): Match with artifact TransparentUpgradeableProxy
+VeArtProxyUpgradeable_Implementation (0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8): Match with artifact TransparentUpgradeableProxy
+PairFactoryUpgradeable_Implementation (0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9): Match with artifact PairFactoryUpgradeable
+VeFnxDistributorUpgradeable_Proxy (0x4d8513df0A19aa65398cB8495AeA319F4F81448e): Match with artifact TransparentUpgradeableProxy
+VeFnxSplitMerklAidropUpgradeable_Proxy (0x311F7981d7159De374c378Be0815DC4257b50468): Match with artifact TransparentUpgradeableProxy

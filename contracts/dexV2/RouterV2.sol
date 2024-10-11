@@ -1,4 +1,3 @@
-import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {IPairFactory} from "./interfaces/IPairFactory.sol";
 
 /**
