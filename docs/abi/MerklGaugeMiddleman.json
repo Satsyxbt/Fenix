@@ -1,0 +1,372 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "blastGovernor_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "merklDistributionCreator_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AddressZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidParams",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "gauge",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "distributionAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "CreateDistribution",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "gauge",
+        "type": "address"
+      }
+    ],
+    "name": "GaugeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "gaugeParams",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "rewardId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "uniV3Pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "rewardToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "propToken0",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "propToken1",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "propFees",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "epochStart",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "numEpoch",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "isOutOfRangeIncentivized",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "boostedReward",
+        "type": "uint32"
+      },
+      {
+        "internalType": "address",
+        "name": "boostingAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "additionalData",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "merklDistributionCreator",
+    "outputs": [
+      {
+        "internalType": "contract IDistributionCreator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "gauge_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount_",
+        "type": "uint256"
+      }
+    ],
+    "name": "notifyReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "gauge_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount_",
+        "type": "uint256"
+      }
+    ],
+    "name": "notifyRewardWithTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "setFenixAllowance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "gauge_",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "rewardId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "uniV3Pool",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "rewardToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[]",
+            "name": "positionWrappers",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint32[]",
+            "name": "wrapperTypes",
+            "type": "uint32[]"
+          },
+          {
+            "internalType": "uint32",
+            "name": "propToken0",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "propToken1",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "propFees",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "epochStart",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "numEpoch",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "isOutOfRangeIncentivized",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "boostedReward",
+            "type": "uint32"
+          },
+          {
+            "internalType": "address",
+            "name": "boostingAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "additionalData",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct DistributionParameters",
+        "name": "params_",
+        "type": "tuple"
+      }
+    ],
+    "name": "setGauge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
