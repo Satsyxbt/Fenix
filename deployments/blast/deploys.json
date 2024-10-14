@@ -51,7 +51,7 @@
   "RouterV2PathProviderUpgradeable_Proxy": "0x8231A273e43B042D374d8D11Fe904482d2c91CC6",
   "CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy": "0xdb60b6cEB16dB04db0A6Fe85b1fE868FFdA20660",
   "FeesVaultFactoryUpgradeable_Proxy": "0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB",
-  "FeesVaultUpgradeable_Implementation": "0x17409D1648422596B447BC3FcEE92a5f291e4604",
+  "FeesVaultUpgradeable_Implementation": "0x29fb7E517B60322E5330eB58a5f4152BB4DdF018",
   "UtilsUpgradeable_Proxy": "0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F",
   "VeArtProxyUpgradeable_Implementation": "0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8",
   "PairFactoryUpgradeable_Implementation": "0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9",

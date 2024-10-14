@@ -1,0 +1,13 @@
+Starting deployment of FeesVaultUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+FeesVaultUpgradeable deployed at 0x29fb7E517B60322E5330eB58a5f4152BB4DdF018
+Save to deploys.json deployed address of FeesVaultUpgradeable_Implementation:0x29fb7E517B60322E5330eB58a5f4152BB4DdF018
+Verifying TransparentUpgradeableProxy at 0x29fb7E517B60322E5330eB58a5f4152BB4DdF018...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/fees/FeesVaultUpgradeable.sol:FeesVaultUpgradeable at 0x29fb7E517B60322E5330eB58a5f4152BB4DdF018
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract FeesVaultUpgradeable on the block explorer.
+https://blastscan.io/address/0x29fb7E517B60322E5330eB58a5f4152BB4DdF018#code
+
