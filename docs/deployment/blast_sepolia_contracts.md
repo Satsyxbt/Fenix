@@ -14,6 +14,7 @@ External:
 ## Core
 | Contract Name                                    | Address                                      |
 | ------------------------------------------------ | -------------------------------------------- |
+| **RouterV2**                                      │ 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6|
 | ProxyAdmin                                       | 0x9502993595815b1Fa674C5133F42C3919a696bEc   |
 | **Fenix**                                            | 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6   |
 | **MinterUpgradeable_Proxy**                          | 0xDA283872Fc205f56cE5b0268D719373dc33e35dA   |

@@ -122,7 +122,7 @@ MinterUpgradeable_Proxy(`0xa4FF6fe53212e8da028e0a34819006A26615D9f8`).setVotingE
 
 #### Update Implementation for Future Pairs
 
-**Note**: If partners integrating with `PairFactory` use calculations to determine the pool address instead of making a call, notify them to switch to calling `PairFactoryUpgradeable.getPair()` to retrieve the pool address.
+**Note, Important**: If partners integrating with `PairFactory` use calculations to determine the pool address instead of making a call, notify them to switch to calling `PairFactoryUpgradeable.getPair()` to retrieve the pool address.
 
 On the [`PairFactoryUpgradeable`](https://blastscan.io/address/0xa19C51D91891D3DF7C13Ed22a2f89d328A82950f) contract, call the `upgradePairImplementation()` function with the latest Pair implementation address: `0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb`
 
