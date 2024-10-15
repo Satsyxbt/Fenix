@@ -5,8 +5,9 @@
 ### General Addresses
 
 - **Deployer**: `0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30`
-- **Default/Setted blast points operator address**: `0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4`
-- **Default/Setted blast governor address**` 0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4` 
+- **Default/Setted blast points operator address**: `0x59D253ADF0D860279f65A6EaBc3497a18B2fB556`
+- **Default/Setted blast governor address**` 0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1` 
+- **Default/Setted blast rebasing tokens governor address**` 0x71B83044626c8F6Ef38F051673562Fe025F8ec1F` 
 - **Fenix tresuary** -`0xAC12571907b0aEE0eFd2BC13505B88284d5854db`
 
 ### External Tokens
