@@ -9,6 +9,7 @@ import "../dexV2/interfaces/IPairFactory.sol";
 import "../dexV2/interfaces/IPair.sol";
 import "../gauges/interfaces/IGauge.sol";
 import "../bribes/interfaces/IBribe.sol";
+import "../nest/interfaces/ISingelTokenVirtualRewarder.sol";
 
 contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     struct pairVotes {
@@ -18,6 +19,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
 
     struct veNFT {
         uint8 decimals;
+        bool attachStatus;
         bool voted;
         uint256 id;
         uint128 amount;
@@ -47,6 +49,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     uint256 public constant MAX_PAIRS = 30;
 
     IVoter public voter;
+    IManagedNFTManager public ManagedNFTManager;
     address public underlyingToken;
 
     mapping(address => bool) public notReward;
@@ -63,8 +66,9 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         _disableInitializers();
     }
 
-    function initialize(address _voter) public initializer {
+    function initialize(address  _voter,address _ManagedNFTManager) public initializer {
         __Ownable_init();
+        ManagedNFTManager = IManagedNFTManager(_ManagedNFTManager);
 
         voter = IVoter(_voter);
 
@@ -132,6 +136,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         uint k;
         uint256 _poolWeight;
         address _votedPair;
+         bool attachStatus = ManagedNFTManager.isAttachedNFT(id);
 
         for (k = 0; k < _totalPoolVotes; k++) {
             _votedPair = voter.poolVote(id, k);
@@ -146,6 +151,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         venft.id = id;
         venft.account = _owner;
         venft.decimals = 1;
+        venft.attachStatus = attachStatus;
         venft.amount = uint128(_lockedBalance.amount);
         venft.voting_amount = ve.balanceOfNFT(id);
         venft.lockEnd = _lockedBalance.end;
@@ -162,6 +168,27 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         veNFTs = new veNFT[](ids_.length);
         for (uint256 i; i < ids_.length; i++) {
             veNFTs[i] = _getNFTFromId(ids_[i], ve.ownerOf(ids_[i]));
+        }
+    }
+     function getNestApr(address[] memory rewarderAddresses, uint256 epoch) 
+        public 
+        view 
+        returns (uint256[] memory aprs) 
+    {
+        uint256 length = rewarderAddresses.length;
+        aprs = new uint256[](length);
+
+        for (uint256 i = 0; i < length; i++) {
+            ISingelTokenVirtualRewarder rewarder = ISingelTokenVirtualRewarder(rewarderAddresses[i]);
+            uint256 totalSupply = rewarder.totalSupply();
+            uint256 rewardsPerEpoch = rewarder.rewardsPerEpoch(epoch);
+
+            if (totalSupply > 0) {
+                // APR = (rewardsPerEpoch / totalSupply) * 100 * 52
+                aprs[i] = (rewardsPerEpoch * 100 * 52) / totalSupply;
+            } else {
+                aprs[i] = 0; // Avoid division by zero, return 0 APR if totalSupply is 0
+            }
         }
     }
 }
