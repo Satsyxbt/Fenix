@@ -1,0 +1,7 @@
+        Called Contract(0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9).updateAddress(key_: "voter", value_: "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B")
+        Transaction hash: 0xa42402171607d7aa81d04e52a1fa3477fa38b39399f7601fdd5c99025b49cb89
+
+        Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "merklDistributor", value_: "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae")
+        Transaction hash: 0xd3c235b6895fa28b3c56dc32d705dc5fa380acd249a532281735a1a74eb9d16b
+        Called Contract(0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B).updateAddress(key_: "veFnxMerklAidrop", value_: "0x311F7981d7159De374c378Be0815DC4257b50468")
+        Transaction hash: 0x185b2947d152c9616565fea0f5b60320ecc86763883a491ffb69be9144169be2
