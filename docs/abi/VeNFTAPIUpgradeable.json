@@ -155,6 +155,16 @@
             "internalType": "bool",
             "name": "isPermanentLocked",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAttachedToManagedNFT",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "attachedManagedNFTTokenId",
+            "type": "uint256"
           }
         ],
         "internalType": "struct VeNFTAPIUpgradeable.veNFT[]",
@@ -253,6 +263,16 @@
             "internalType": "bool",
             "name": "isPermanentLocked",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAttachedToManagedNFT",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "attachedManagedNFTTokenId",
+            "type": "uint256"
           }
         ],
         "internalType": "struct VeNFTAPIUpgradeable.veNFT[]",
@@ -351,6 +371,16 @@
             "internalType": "bool",
             "name": "isPermanentLocked",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAttachedToManagedNFT",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "attachedManagedNFTTokenId",
+            "type": "uint256"
           }
         ],
         "internalType": "struct VeNFTAPIUpgradeable.veNFT",
@@ -449,11 +479,45 @@
             "internalType": "bool",
             "name": "isPermanentLocked",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAttachedToManagedNFT",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "attachedManagedNFTTokenId",
+            "type": "uint256"
           }
         ],
         "internalType": "struct VeNFTAPIUpgradeable.veNFT[]",
         "name": "veNFTs",
         "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "rewarderAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "epoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNestApr",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "aprs",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -470,6 +534,19 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "managedNFTManager",
+    "outputs": [
+      {
+        "internalType": "contract IManagedNFTManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -520,6 +597,19 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IManagedNFTManager",
+        "name": "managedNFTManager_",
+        "type": "address"
+      }
+    ],
+    "name": "setManagedNFTManager",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

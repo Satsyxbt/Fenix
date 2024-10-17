@@ -1,0 +1,31 @@
+Compiled 1 Solidity file successfully (evm target: paris).
+Start deploy new impelmentations...
+Starting deployment of VeNFTAPIUpgradeable...
+	Constructor arguments: []
+
+Warning: Address for VeNFTAPIUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x581474382602eD72997EAaA5C83CEDc33c03Bf91
+        New address: 0x34f3c9484855F3C9C86857c69855d6417ac280cA
+
+VeNFTAPIUpgradeable deployed at 0x34f3c9484855F3C9C86857c69855d6417ac280cA
+Save to deploys.json deployed address of VeNFTAPIUpgradeable_Implementation:0x34f3c9484855F3C9C86857c69855d6417ac280cA
+Verifying TransparentUpgradeableProxy at 0x34f3c9484855F3C9C86857c69855d6417ac280cA...
+Timeout for 10s before verify proccess...
+
+
+Successfully submitted source code for contract
+contracts/utils/VeNFTAPIUpgradeable.sol:VeNFTAPIUpgradeable at 0x34f3c9484855F3C9C86857c69855d6417ac280cA
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeNFTAPIUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x34f3c9484855F3C9C86857c69855d6417ac280cA#code
+
+Start deploy new impelmentations...
+Upgrading proxy at 0x938DdfB6b96461287c4d5d919a559a8DD69f915C to new logic at 0x34f3c9484855F3C9C86857c69855d6417ac280cA using ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc...
+Calling ProxyAdmin.upgrade(proxy: 0x938DdfB6b96461287c4d5d919a559a8DD69f915C, newLogic: 0x34f3c9484855F3C9C86857c69855d6417ac280cA)...
+ProxyAdmin.upgrade(proxy: 0x938DdfB6b96461287c4d5d919a559a8DD69f915C, newLogic: 0x34f3c9484855F3C9C86857c69855d6417ac280cA) transaction hash: 0x35c7c5d745df928ef7f4d114c1c089554d97f8a2da16d38078d8561680b1b476
+
+
+
+	Called Contract(0x938DdfB6b96461287c4d5d919a559a8DD69f915C).setManagedNFTManager(managedNFTManager_: "0xcc5b8187F5bF5f344153a1045b1a4505ccd007f9")
+	Transaction hash: 0x8ef61ce0d57eccfbc267dbe50ee05521fb0e5cf46b166de5d66d51aa757d4178
