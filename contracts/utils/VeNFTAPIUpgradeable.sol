@@ -9,6 +9,8 @@ import "../dexV2/interfaces/IPairFactory.sol";
 import "../dexV2/interfaces/IPair.sol";
 import "../gauges/interfaces/IGauge.sol";
 import "../bribes/interfaces/IBribe.sol";
+import "../nest/interfaces/ISingelTokenVirtualRewarder.sol";
+import "../nest/interfaces/IManagedNFTManager.sol";
 
 contract VeNFTAPIUpgradeable is OwnableUpgradeable {
     struct pairVotes {
@@ -30,6 +32,8 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         string tokenSymbol;
         uint256 tokenDecimals;
         bool isPermanentLocked;
+        bool isAttachedToManagedNFT;
+        uint256 attachedManagedNFTTokenId;
     }
 
     struct Reward {
@@ -55,6 +59,8 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
 
     address public pairAPI;
 
+    IManagedNFTManager public managedNFTManager;
+
     struct AllPairRewards {
         Reward[] rewards;
     }
@@ -72,6 +78,10 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         underlyingToken = IVotingEscrow(ve).token();
 
         notReward[address(0x0)] = true;
+    }
+
+    function setManagedNFTManager(IManagedNFTManager managedNFTManager_) external onlyOwner {
+        managedNFTManager = managedNFTManager_;
     }
 
     function setVoter(address _voter) external onlyOwner {
@@ -156,12 +166,29 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         venft.tokenDecimals = IERC20MetadataUpgradeable(ve.token()).decimals();
         venft.voted = tokenState.isVoted;
         venft.isPermanentLocked = _lockedBalance.isPermanentLocked;
+        venft.isAttachedToManagedNFT = managedNFTManager.isAttachedNFT(id);
+        if (venft.isAttachedToManagedNFT) {
+            venft.attachedManagedNFTTokenId = managedNFTManager.getAttachedManagedTokenId(id);
+        }
     }
 
     function getNFTFromIds(uint256[] memory ids_) public view returns (veNFT[] memory veNFTs) {
         veNFTs = new veNFT[](ids_.length);
         for (uint256 i; i < ids_.length; i++) {
             veNFTs[i] = _getNFTFromId(ids_[i], ve.ownerOf(ids_[i]));
+        }
+    }
+
+    function getNestApr(address[] memory rewarderAddresses, uint256 epoch) public view returns (uint256[] memory aprs) {
+        aprs = new uint256[](rewarderAddresses.length);
+        for (uint256 i; i < rewarderAddresses.length; i++) {
+            ISingelTokenVirtualRewarder rewarder = ISingelTokenVirtualRewarder(rewarderAddresses[i]);
+            uint256 totalSupply = rewarder.totalSupply();
+            if (totalSupply > 0) {
+                uint256 rewardsPerEpoch = rewarder.rewardsPerEpoch(epoch);
+                // APR = (rewardsPerEpoch / totalSupply) * 100 * 52
+                aprs[i] = (rewardsPerEpoch * 100 * 52) / totalSupply;
+            }
         }
     }
 }
