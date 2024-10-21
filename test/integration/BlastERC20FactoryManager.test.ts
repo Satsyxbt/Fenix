@@ -29,7 +29,7 @@ describe('BlastERC20FactoryManager Contract', function () {
 
     instance = await factory.deploy(deployer.address, blastPoints.target, operator.address);
 
-    testToken = await ethers.deployContract('ERC20RebasingMock');
+    testToken = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
   });
 
   describe('#Deployment', async () => {

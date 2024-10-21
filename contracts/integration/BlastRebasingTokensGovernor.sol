@@ -7,6 +7,8 @@ import {IBlastERC20RebasingManage} from "../integration/interfaces/IBlastERC20Re
 import {BlastGovernorClaimableSetup} from "./BlastGovernorClaimableSetup.sol";
 import {IBlastRebasingTokensGovernor} from "./interfaces/IBlastRebasingTokensGovernor.sol";
 import {IERC20Rebasing, YieldMode} from "./interfaces/IERC20Rebasing.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@cryptoalgebra/integral-periphery/contracts/interfaces/ISwapRouter.sol";
 
 /**
  * @title BlastRebasingTokensGovernorUpgradeable
@@ -14,6 +16,7 @@ import {IERC20Rebasing, YieldMode} from "./interfaces/IERC20Rebasing.sol";
  */
 contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor, BlastGovernorClaimableSetup, AccessControlUpgradeable {
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
      * @dev Role identifier for adding token holders.
@@ -31,6 +34,16 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
     mapping(address => EnumerableSetUpgradeable.AddressSet) internal _rebasingTokensHolders;
 
     /**
+     * @dev Address of the token to be used as the target for swaps.
+     */
+    address internal _swapTargetToken;
+
+    /**
+     * @dev Address of the router contract used for token swaps.
+     */
+    address internal _swapRouter;
+
+    /**
      * @dev Error thrown when the token holder is already registered.
      */
     error AlreadyRegistered();
@@ -39,6 +52,21 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
      * @dev Error thrown when the token holder was not registered before.
      */
     error NotRegisteredBefore();
+
+    /**
+     * @notice Reverts when an invalid address key is provided.
+     */
+    error InvalidAddressKey();
+
+    /**
+     * @notice Reverts when the source token address is the same as the swap target token.
+     */
+    error InvalidSwapSourceToken();
+
+    /**
+     * @notice Reverts when the swap target token or swap router is not properly set up.
+     */
+    error AddressNotSetupForSupportSwap();
 
     /**
      * @dev Modifier to check if the address is not zero.
@@ -69,6 +97,28 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
     }
 
     /**
+     * @notice Updates the address of a specified contract.
+     * @dev Only callable by an address with the VOTER_ADMIN_ROLE.
+     * @param key_ The key representing the contract.
+     * @param value_ The new address of the contract.
+     * @custom:event UpdateAddress Emitted when a contract address is updated.
+     * @custom:error InvalidAddressKey Thrown when an invalid key is provided.
+     */
+    function updateAddress(string memory key_, address value_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        bytes32 key = keccak256(abi.encodePacked(key_));
+        if (key == 0x8a0633860f1d41166e68f6907597e1c9757371c3ac8a1415136009b533dad165) {
+            // id('swapTargetToken')
+            _swapTargetToken = value_;
+        } else if (key == 0x885b8950407e4dfe65c138144a8dabb9f50ea14dbf711eb2010a07b941b01a51) {
+            // id('swapRouter')
+            _swapRouter = value_;
+        } else {
+            revert InvalidAddressKey();
+        }
+        emit UpdateAddress(key_, value_);
+    }
+
+    /**
      * @notice Adds a token holder.
      * @dev Adds a contract to the list of token holders.
      * @param token_ The address of the token.
@@ -82,9 +132,7 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
             revert AlreadyRegistered();
         }
 
-        IERC20Rebasing token = IERC20Rebasing(token_);
-
-        if (token.getConfiguration(contractAddress_) != YieldMode.CLAIMABLE) {
+        if (IERC20Rebasing(token_).getConfiguration(contractAddress_) != YieldMode.CLAIMABLE) {
             IBlastERC20RebasingManage(contractAddress_).configure(token_, YieldMode.CLAIMABLE);
         }
 
@@ -124,6 +172,68 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
     }
 
     /**
+     * @notice Performs a direct token swap using the V3 router.
+     * @dev Swaps a specified amount of tokens for a target token using the V3 router.
+     * Requires the caller to have the TOKEN_WITHDRAWER_ROLE.
+     * Reverts if the swap target token or swap router is not set up.
+     * Reverts if the source token address is the same as the swap target token.
+     * @param token_ The address of the input token being swapped.
+     * @param recipient_ The address of the recipient receiving the swapped tokens.
+     * @param amount_ The amount of input tokens to be swapped.
+     * @param minAmountOut_ The minimum amount of output tokens expected.
+     * @param deadline_ The deadline by which the swap must be completed.
+     * @custom:event DirectV3Swap Emitted when a swap is performed using the V3 router.
+     * @custom:error AddressNotSetupForSupportSwap Thrown if the swap target token or swap router is not properly set up.
+     * @custom:error InvalidSwapSourceToken Thrown if the source token address is equal to the swap target token.
+     */
+    function directV3Swap(
+        address token_,
+        address recipient_,
+        uint256 amount_,
+        uint256 minAmountOut_,
+        uint160 limitSqrtPrice_,
+        uint256 deadline_
+    ) external onlyRole(TOKEN_WITHDRAWER_ROLE) {
+        address swapTargetTokenCache = _swapTargetToken;
+        address swapRouterCache = _swapRouter;
+
+        if (swapTargetTokenCache == address(0) || swapRouterCache == address(0)) {
+            revert AddressNotSetupForSupportSwap();
+        }
+        if (token_ == swapTargetTokenCache) {
+            revert InvalidSwapSourceToken();
+        }
+
+        IERC20Upgradeable(token_).safeApprove(swapRouterCache, amount_);
+
+        ISwapRouter.ExactInputSingleParams memory swapParams = ISwapRouter.ExactInputSingleParams(
+            token_,
+            swapTargetTokenCache,
+            recipient_,
+            deadline_,
+            amount_,
+            minAmountOut_,
+            limitSqrtPrice_
+        );
+        uint256 amountOut = ISwapRouter(swapRouterCache).exactInputSingle(swapParams);
+        emit DirectV3Swap(_msgSender(), recipient_, token_, swapTargetTokenCache, amount_, amountOut);
+    }
+
+    /**
+     * @notice Withdraws a specified amount of tokens to a recipient.
+     * @dev Transfers tokens from the contract to the specified recipient.
+     * Requires the caller to have the TOKEN_WITHDRAWER_ROLE.
+     * @param token_ The address of the token to be withdrawn.
+     * @param recipient_ The address of the recipient receiving the tokens.
+     * @param amount_ The amount of tokens to be withdrawn.
+     * @custom:event Withdraw Emitted when tokens are withdrawn by an authorized address.
+     */
+    function withdraw(address token_, address recipient_, uint256 amount_) external onlyRole(TOKEN_WITHDRAWER_ROLE) {
+        IERC20Upgradeable(token_).safeTransfer(recipient_, amount_);
+        emit Withdraw(_msgSender(), recipient_, token_, amount_);
+    }
+
+    /**
      * @notice Reads claimable amounts within the specified range.
      * @param token_ The address of the token.
      * @param offset_ The offset to start from.
@@ -159,6 +269,16 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
      */
     function isRegisteredTokenHolder(address token_, address contractAddress_) external view virtual override returns (bool isRegistered) {
         return _rebasingTokensHolders[token_].contains(contractAddress_);
+    }
+
+    /**
+     * @notice Provides information about the current swap settings.
+     * @dev Returns the target token and swap router addresses used for swaps.
+     * @return targetToken The address of the target token for swaps.
+     * @return swapRouter The address of the swap router.
+     */
+    function swapInfo() external view returns (address targetToken, address swapRouter) {
+        return (_swapTargetToken, _swapRouter);
     }
 
     /**

@@ -5,6 +5,14 @@ import {
   abi as FACTORY_ABI,
   bytecode as FACTORY_BYTECODE,
 } from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
+import {
+  abi as SWAP_ROUTER_ABI,
+  bytecode as SWAP_ROUTER_BYTECODE,
+} from '@cryptoalgebra/integral-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json';
+import {
+  abi as NonfungiblePositionManager_ABI,
+  bytecode as NonfungiblePositionManager_BYTECODE,
+} from '@cryptoalgebra/integral-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
 
 import {
   abi as POOL_DEPLOYER_ABI,
@@ -22,8 +30,6 @@ import {
   TransparentUpgradeableProxy,
   VeArtProxyUpgradeable,
   VotingEscrowUpgradeableV2,
-  VoterUpgradeable__factory,
-  VotingEscrowUpgradeable,
   PairFactoryUpgradeable__factory,
   FeesVaultUpgradeable,
   GaugeFactoryUpgradeable,
@@ -54,6 +60,7 @@ import {
   AlgebraPoolDeployer,
   AlgebraFactoryUpgradeable,
 } from '../../lib/fenix-dex-v3/src/core/typechain';
+import { NonfungiblePositionManager, SwapRouter } from '@cryptoalgebra/integral-periphery/typechain';
 
 export type SignersList = {
   deployer: HardhatEthersSigner;
@@ -360,6 +367,8 @@ export async function getSigners() {
 export interface FactoryFixture {
   factory: AlgebraFactoryUpgradeable;
   vault: AlgebraCommunityVault;
+  router: SwapRouter;
+  manager: NonfungiblePositionManager;
 }
 
 export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFixture> {
@@ -388,7 +397,30 @@ export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFix
     factory,
     signers.deployer.address,
   )) as any as AlgebraCommunityVault;
-  return { factory, vault };
+
+  const swapRouterFactory = await ethers.getContractFactory(SWAP_ROUTER_ABI, SWAP_ROUTER_BYTECODE);
+  const NonfungiblePositionManagerFactory = await ethers.getContractFactory(
+    NonfungiblePositionManager_ABI,
+    NonfungiblePositionManager_BYTECODE,
+  );
+  const WETH = await ethers.deployContract('WETH9');
+
+  let manager = (await NonfungiblePositionManagerFactory.deploy(
+    signers.blastGovernor.address,
+    factory.target,
+    WETH.target,
+    ethers.ZeroAddress,
+    poolDeployer.target,
+  )) as any as NonfungiblePositionManager;
+
+  let router = (await swapRouterFactory.deploy(
+    signers.blastGovernor.address,
+    factory.target,
+    WETH.target,
+    poolDeployer.target,
+  )) as any as SwapRouter;
+
+  return { factory, vault, router, manager };
 }
 
 export async function completeFixture(): Promise<CoreFixtureDeployed> {

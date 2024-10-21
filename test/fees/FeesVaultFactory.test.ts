@@ -1110,8 +1110,8 @@ describe('FeesVaultFactory Contract', function () {
     });
     it('correct set rebase mode for pool tokens only for token 0', async () => {
       let mockPool = await ethers.deployContract('PoolMock');
-      let token0 = await ethers.deployContract('ERC20RebasingMock');
-      let token1 = await ethers.deployContract('ERC20RebasingMock');
+      let token0 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
+      let token1 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
       let vaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPool.target);
 
       await feesVaultFactory.connect(creator).createVaultForPool(mockPool.target);
@@ -1128,8 +1128,8 @@ describe('FeesVaultFactory Contract', function () {
     });
     it('correct set rebase mode for pool tokens only for token 1', async () => {
       let mockPool = await ethers.deployContract('PoolMock');
-      let token0 = await ethers.deployContract('ERC20RebasingMock');
-      let token1 = await ethers.deployContract('ERC20RebasingMock');
+      let token0 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
+      let token1 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
       let vaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPool.target);
       await feesVaultFactory.connect(creator).createVaultForPool(mockPool.target);
 
@@ -1146,8 +1146,8 @@ describe('FeesVaultFactory Contract', function () {
 
     it('correct set rebase mode by default for pool tokens', async () => {
       let mockPool = await ethers.deployContract('PoolMock');
-      let token0 = await ethers.deployContract('ERC20RebasingMock');
-      let token1 = await ethers.deployContract('ERC20RebasingMock');
+      let token0 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
+      let token1 = await ethers.deployContract('ERC20RebasingMock', ['t0', 't0', 18]);
       let vaultAddress = await feesVaultFactory.connect(creator).createVaultForPool.staticCall(mockPool.target);
 
       await feesVaultFactory.connect(creator).createVaultForPool(mockPool.target);

@@ -295,7 +295,9 @@ contract BlastGovernorUpgradeable is IBlastGovernor, BlastGovernorClaimableSetup
      */
     function _claimAllGas(address recipient_, address[] memory holders_) internal virtual returns (uint256 totalClaimedGas) {
         for (uint256 i; i < holders_.length; ) {
-            totalClaimedGas += _BLAST().claimAllGas(holders_[i], recipient_);
+            if (_getAvailableGasToClaime(holders_[i]) > 0) {
+                totalClaimedGas += _BLAST().claimAllGas(holders_[i], recipient_);
+            }
             unchecked {
                 i++;
             }
@@ -316,7 +318,9 @@ contract BlastGovernorUpgradeable is IBlastGovernor, BlastGovernorClaimableSetup
         address[] memory holders_
     ) internal virtual returns (uint256 totalClaimedGas) {
         for (uint256 i; i < holders_.length; ) {
-            totalClaimedGas += _BLAST().claimGasAtMinClaimRate(holders_[i], recipient_, minClaimRateBips_);
+            if (_getAvailableGasToClaime(holders_[i]) > 0) {
+                totalClaimedGas += _BLAST().claimGasAtMinClaimRate(holders_[i], recipient_, minClaimRateBips_);
+            }
             unchecked {
                 i++;
             }
@@ -332,7 +336,9 @@ contract BlastGovernorUpgradeable is IBlastGovernor, BlastGovernorClaimableSetup
      */
     function _claimMaxGas(address recipient_, address[] memory holders_) internal virtual returns (uint256 totalClaimedGas) {
         for (uint256 i; i < holders_.length; ) {
-            totalClaimedGas += _BLAST().claimMaxGas(holders_[i], recipient_);
+            if (_getAvailableGasToClaime(holders_[i]) > 0) {
+                totalClaimedGas += _BLAST().claimMaxGas(holders_[i], recipient_);
+            }
             unchecked {
                 i++;
             }
@@ -355,7 +361,9 @@ contract BlastGovernorUpgradeable is IBlastGovernor, BlastGovernorClaimableSetup
         address[] memory holders_
     ) internal virtual returns (uint256 totalClaimedGas) {
         for (uint256 i; i < holders_.length; ) {
-            totalClaimedGas += _BLAST().claimGas(holders_[i], recipient_, gasToClaim_, gasSecondsToConsume_);
+            if (_getAvailableGasToClaime(holders_[i]) > 0) {
+                totalClaimedGas += _BLAST().claimGas(holders_[i], recipient_, gasToClaim_, gasSecondsToConsume_);
+            }
             unchecked {
                 i++;
             }
@@ -390,6 +398,10 @@ contract BlastGovernorUpgradeable is IBlastGovernor, BlastGovernorClaimableSetup
                 i++;
             }
         }
+    }
+
+    function _getAvailableGasToClaime(address holder_) internal view virtual returns (uint256 etherBalance) {
+        (, etherBalance, , ) = _BLAST().readGasParams(holder_);
     }
 
     /**
