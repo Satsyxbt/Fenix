@@ -3,7 +3,7 @@
 ### 1. Contract Addresses
 This guide provides the necessary steps to set up gauge parameters and create a reward campaign using the `MerklGaugeMiddleman` contract on Blast. Below are the key deployed contracts used throughout this guide:
 
-- **Gauge Creator**: [0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd](https://blastscan.io/address/0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd1#code)
+- **Gauge Creator**: [0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd](https://blastscan.io/address/0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd#code)
 - **ERC20 Mock Token**: [0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b](https://blastscan.io/address/0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b#code)
 - **Merkl Gauge Middleman**: [0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e](https://blastscan.io/address/0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e#code)
 
