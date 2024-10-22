@@ -109,9 +109,14 @@ enum ContractsInstanceName {
   MinimalLinearVestingUpgradeable = 'MinimalLinearVestingUpgradeable',
 }
 
+enum ContractsMocksInstanceName {
+  ERC20OwnableMock = 'ERC20OwnableMock',
+}
+
 export const InstanceName = {
   ...ContractsInstanceName,
   ...ThirdPart,
+  ...ContractsMocksInstanceName,
 };
 
-export type InstanceName = ContractsInstanceName;
+export type InstanceName = ContractsInstanceName | ContractsMocksInstanceName | ThirdPart;
