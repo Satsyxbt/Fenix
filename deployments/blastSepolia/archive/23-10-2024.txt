@@ -65,3 +65,41 @@ Set GaugeRewarder as Middleman in all deployed Gauges
         Transaction hash: 0x99d32e35342bbe6773c3a775161e761855a577e1814b82e6b4e3ca2b3b62c23b
         Called Contract(0x82CBFCadE804593Fe21d3476Bddd141461efEdF4).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
         Transaction hash: 0xf94b3f16faf3bddf637b9c51175036cc0f18e28935e675a238a54407b97ee8b5       
+
+
+npx hardhat run .\deploy\blastSepolia\019-UpgradeVotingEscrowV2-upgrade.ts --network blastSepolia 
+Start deploy new impelmentations...
+Starting deployment of VotingEscrowUpgradeableV2...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+HeadersTimeoutError: Headers Timeout Error
+    at Timeout.onParserTimeout [as callback] (E:\Work\Fenix\node_modules\undici\lib\client.js:1048:28)
+    at Timeout.onTimeout [as _onTimeout] (E:\Work\Fenix\node_modules\undici\lib\timers.js:20:13)
+    at listOnTimeout (node:internal/timers:573:17)
+    at processTimers (node:internal/timers:514:7) {
+  code: 'UND_ERR_HEADERS_TIMEOUT'
+}
+
+
+
+npx hardhat run .\deploy\blastSepolia\019-UpgradeVotingEscrowV2-upgrade.ts --network blastSepolia 
+Start deploy new impelmentations...
+Starting deployment of VotingEscrowUpgradeableV2...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+VotingEscrowUpgradeableV2 deployed at 0x2b7D3ba53f711708f7481C53C957689781825f86
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Implementation:0x2b7D3ba53f711708f7481C53C957689781825f86
+Warning: Address for VotingEscrowUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xB48074c330b589b3665E7697c1D0a39A5A85EDA9
+        New address: 0x2b7D3ba53f711708f7481C53C957689781825f86
+Verifying TransparentUpgradeableProxy at 0x2b7D3ba53f711708f7481C53C957689781825f86...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV2.sol:VotingEscrowUpgradeableV2 at 0x2b7D3ba53f711708f7481C53C957689781825f86
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeableV2 on the block explorer.
+https://sepolia.blastscan.io/address/0x2b7D3ba53f711708f7481C53C957689781825f86#code
+
+Start deploy new impelmentations...
+Upgrading proxy at 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34 to new logic at 0x2b7D3ba53f711708f7481C53C957689781825f86 using ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc...
+Calling ProxyAdmin.upgrade(proxy: 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34, newLogic: 0x2b7D3ba53f711708f7481C53C957689781825f86)...
+ProxyAdmin.upgrade(proxy: 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34, newLogic: 0x2b7D3ba53f711708f7481C53C957689781825f86) transaction hash: 0xe8b8133cd5cb5333b310b3cc9635cb744ab96180bad6f339b436cdde426eeb27
