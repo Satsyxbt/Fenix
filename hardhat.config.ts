@@ -24,6 +24,21 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
   },
 };
 
+const LOW_CONTRACT_SIZE_COMPILER_SETTINGS: SolcUserConfig = {
+  version: '0.8.19',
+  settings: {
+    evmVersion: 'paris',
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 700,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+};
+
 const config: HardhatUserConfig = {
   sourcify: {
     enabled: false,
@@ -79,6 +94,9 @@ const config: HardhatUserConfig = {
   },
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
+    overrides: {
+      'contracts/core/VotingEscrowUpgradeableV2.sol': LOW_CONTRACT_SIZE_COMPILER_SETTINGS,
+    },
   },
   warnings: {
     'contracts/mocks/**/*': {

@@ -232,6 +232,20 @@ interface IVotingEscrow is IERC721Upgradeable {
     function increase_unlock_time(uint256 tokenId_, uint256 lockDuration_) external;
 
     /**
+     * @notice Deposits tokens to increase the balance and extend the lock duration for a given token ID.
+     * @dev The lock duration is increased and the deposit is processed for the given token.
+     *
+     * !!! Important: The veBoost incentive is applied whenever possible
+     *
+     * @param tokenId_ The ID of the token to increase the balance and extend the lock duration.
+     * @param amount_ The amount of tokens to be deposited.
+     * @param lockDuration_ The duration (in seconds) to extend the lock period.
+     * Emits a {Deposit} event on successful deposit.
+     * Emits second a {Deposit} event on successful unlock time increase.
+     */
+    function depositWithIncreaseUnlockTime(uint256 tokenId_, uint256 amount_, uint256 lockDuration_) external;
+
+    /**
      * @notice Withdraws tokens from a specified NFT lock.
      * @param tokenId_ The ID of the NFT to withdraw tokens from.
      * @dev Reverts with `AccessDenied` if the caller is not approved or the owner of the NFT.

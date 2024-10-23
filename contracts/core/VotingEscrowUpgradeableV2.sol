@@ -166,30 +166,26 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-depositFor}.
      */
     function depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) external override nonReentrant {
-        LibVotingEscrowValidation.checkNoValueZero(amount_);
-        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
-            nftStates[tokenId_].depositCheck();
-        }
-        if (withPermanentLock_) {
-            if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
-                revert AccessDenied();
-            }
-            _lockPermanent(tokenId_);
-        }
-        _proccessLockChange(tokenId_, amount_, 0, nftStates[tokenId_].locked, DepositType.DEPOSIT_FOR_TYPE, shouldBoosted_);
+        _depositFor(tokenId_, amount_, shouldBoosted_, withPermanentLock_);
+    }
+
+    /**
+     * @dev See {IVotingEscrow-depositWithIncreaseUnlockTime}.
+     */
+    function depositWithIncreaseUnlockTime(
+        uint256 tokenId_,
+        uint256 amount_,
+        uint256 lockDuration_
+    ) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+        _increaseUnlockTime(tokenId_, lockDuration_);
+        _depositFor(tokenId_, amount_, true, false);
     }
 
     /**
      * @dev See {IVotingEscrow-increase_unlock_time}.
      */
     function increase_unlock_time(uint256 tokenId_, uint256 lockDuration_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        TokenState memory state = nftStates[tokenId_];
-        state.increaseUnlockCheck();
-        uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
-        if (unlockTimestamp <= state.locked.end || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
-            revert InvalidLockDuration();
-        }
-        _proccessLockChange(tokenId_, 0, unlockTimestamp, state.locked, DepositType.INCREASE_UNLOCK_TIME, false);
+        _increaseUnlockTime(tokenId_, lockDuration_);
     }
 
     /**
@@ -480,6 +476,44 @@ contract VotingEscrowUpgradeableV2 is
         (nftStates[firstTokenId_]).transferCheck();
         nftStates[firstTokenId_].lastTranferBlock = block.number;
         super._beforeTokenTransfer(from_, to_, firstTokenId_, batchSize_);
+    }
+
+    /**
+     * @notice Internal function to handle deposits for a given token ID.
+     * @dev Performs necessary checks and processes the deposit for the token.
+     * @param tokenId_ The ID of the token to deposit for.
+     * @param amount_ The amount of tokens to be deposited.
+     * @param shouldBoosted_ Indicates whether the deposit should be boosted.
+     * @param withPermanentLock_ Indicates whether the deposit should be permanently locked.
+     */
+    function _depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) internal {
+        LibVotingEscrowValidation.checkNoValueZero(amount_);
+        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
+            nftStates[tokenId_].depositCheck();
+        }
+        if (withPermanentLock_) {
+            if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
+                revert AccessDenied();
+            }
+            _lockPermanent(tokenId_);
+        }
+        _proccessLockChange(tokenId_, amount_, 0, nftStates[tokenId_].locked, DepositType.DEPOSIT_FOR_TYPE, shouldBoosted_);
+    }
+
+    /**
+     * @notice Internal function to increase the unlock time for a given token ID.
+     * @dev Performs necessary checks and updates the unlock time.
+     * @param tokenId_ The ID of the token to extend the unlock time.
+     * @param lockDuration_ The duration (in seconds) to extend the lock period.
+     */
+    function _increaseUnlockTime(uint256 tokenId_, uint256 lockDuration_) internal {
+        TokenState memory state = nftStates[tokenId_];
+        state.increaseUnlockCheck();
+        uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
+        if (unlockTimestamp <= state.locked.end || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
+            revert InvalidLockDuration();
+        }
+        _proccessLockChange(tokenId_, 0, unlockTimestamp, state.locked, DepositType.INCREASE_UNLOCK_TIME, false);
     }
 
     /**

@@ -670,6 +670,169 @@ describe('VotingEscrow_V2', function () {
     });
   });
 
+  describe('Deposit with increase lock duration', async () => {
+    describe('should fail if', async () => {
+      let nftId = 1n;
+      let nftId_2 = 2n;
+      beforeEach(async () => {
+        await token.mint(signers.user1.address, ONE_ETHER + ONE_ETHER);
+        await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('2'));
+        await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, MAX_LOCK_TIME, signers.user1.address, false, false, 0);
+        await VotingEscrow.connect(signers.user1).createLockFor(
+          ONE_ETHER,
+          Math.floor(MAX_LOCK_TIME / 2),
+          signers.user1.address,
+          false,
+          false,
+          0,
+        );
+      });
+      it('nft not exist', async () => {
+        await expect(VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(10000, ONE_ETHER, WEEK)).to.be.revertedWith(
+          'ERC721: invalid token ID',
+        );
+      });
+
+      it('caller not nft owner', async () => {
+        await expect(
+          VotingEscrow.connect(signers.user2).depositWithIncreaseUnlockTime(nftId, ONE_ETHER, WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'AccessDenied');
+        await expect(
+          VotingEscrow.connect(signers.deployer).depositWithIncreaseUnlockTime(nftId, ONE_ETHER, WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'AccessDenied');
+      });
+
+      it('new unlock timestamp less then actual lock duration', async () => {
+        await expect(VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId, 1, WEEK)).to.be.revertedWithCustomError(
+          VotingEscrow,
+          'InvalidLockDuration',
+        );
+      });
+
+      it('unlock timestamp more then MAX_LOCK_TIME', async () => {
+        await expect(
+          VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId_2, ONE_ETHER, MAX_LOCK_TIME + WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'InvalidLockDuration');
+      });
+
+      it('deposit zero', async () => {
+        await expect(
+          VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId_2, 0, Math.floor(MAX_LOCK_TIME / 2) + WEEK + WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'ValueZero');
+      });
+      it('try increase unlock for permanent lock nft', async () => {
+        await VotingEscrow.connect(signers.user1).lockPermanent(nftId);
+        await expect(
+          VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId, ONE_ETHER, WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'PermanentLocked');
+      });
+
+      it('deposit for expired nft', async () => {
+        await time.increase(MAX_LOCK_TIME + WEEK);
+        await expect(
+          VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId, ONE_ETHER, WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'TokenExpired');
+      });
+
+      it('deposit for attached nft', async () => {
+        await managedNFTManager.create(VotingEscrow.target, signers.deployer.address);
+        await managedNFTManager.setIsManagedNft(3);
+        await managedNFTManager.onAttachToManagedNFT(VotingEscrow.target, nftId, 3);
+        await expect(
+          VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId, ONE_ETHER, WEEK),
+        ).to.be.revertedWithCustomError(VotingEscrow, 'TokenAttached');
+      });
+    });
+
+    describe('success deposit & increase unlock time for exist nft', async () => {
+      let nftId: bigint;
+      let unlockTimestamp: bigint;
+      let stateNftAfterCreate: any;
+
+      beforeEach(async () => {
+        await VotingEscrow.updateAddress('veBoost', ethers.ZeroAddress);
+
+        await token.mint(signers.user1.address, ethers.parseEther('1'));
+        await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('1'));
+        unlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(WEEK + WEEK + WEEK));
+        await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, WEEK + WEEK + WEEK, signers.user1.address, false, false, 0);
+        nftId = await VotingEscrow.lastMintedTokenId();
+      });
+
+      it('state before deposit and increase unlock time', async () => {
+        expect(await VotingEscrow.supply()).to.be.eq(ONE_ETHER);
+        expect(await VotingEscrow.votingPowerTotalSupply()).to.be.closeTo((ONE_ETHER / 26n) * 3n, ONE_ETHER / 26n);
+        expect(await VotingEscrow.balanceOfNftIgnoreOwnershipChange(1n)).to.be.closeTo((ONE_ETHER / 26n) * 3n, ONE_ETHER / 26n);
+
+        expect(await VotingEscrow.lastMintedTokenId()).to.be.eq(nftId);
+        stateNftAfterCreate = await VotingEscrow.nftStates(nftId);
+        expect(stateNftAfterCreate.locked.amount).to.be.eq(ONE_ETHER);
+        expect(stateNftAfterCreate.locked.end).to.be.eq(unlockTimestamp);
+        expect(stateNftAfterCreate.locked.isPermanentLocked).to.be.false;
+        expect(stateNftAfterCreate.isVoted).to.be.false;
+        expect(stateNftAfterCreate.pointEpoch).to.be.eq(1);
+      });
+
+      describe('deposit & increase unlock timestamp without veBoost setup', async () => {
+        let tx: ContractTransactionResponse;
+        let newUnlockTimestamp: bigint;
+        let txTimestamp: number;
+        beforeEach(async () => {
+          newUnlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(MAX_LOCK_TIME));
+
+          await token.mint(signers.user1.address, ethers.parseEther('0.5'));
+          await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('0.5'));
+
+          tx = await VotingEscrow.connect(signers.user1).depositWithIncreaseUnlockTime(nftId, ethers.parseEther('0.5'), MAX_LOCK_TIME);
+          txTimestamp = (await ethers.provider.getBlock(tx.blockNumber!))?.timestamp!;
+        });
+
+        it('transfer token', async () => {
+          expect(await token.balanceOf(VotingEscrow.target)).to.be.eq(ONE_ETHER + ethers.parseEther('0.5'));
+          expect(await token.balanceOf(signers.user1.address)).to.be.eq(0);
+          expect(await token.balanceOf(signers.user2.address)).to.be.eq(0);
+        });
+
+        it('increase supply', async () => {
+          expect(await VotingEscrow.supply()).to.be.eq(ONE_ETHER + ethers.parseEther('0.5'));
+          expect(await VotingEscrow.permanentTotalSupply()).to.be.eq(0);
+        });
+
+        it('emit events', async () => {
+          await expect(tx)
+            .to.be.emit(VotingEscrow, 'Deposit')
+            .withArgs(signers.user1.address, nftId, 0, newUnlockTimestamp, VotingEscrowDepositType.INCREASE_UNLOCK_TIME, txTimestamp);
+
+          await expect(tx)
+            .to.be.emit(VotingEscrow, 'Deposit')
+            .withArgs(
+              signers.user1.address,
+              nftId,
+              ethers.parseEther('0.5'),
+              newUnlockTimestamp,
+              VotingEscrowDepositType.DEPOSIT_FOR_TYPE,
+              txTimestamp,
+            );
+
+          await expect(tx).to.be.emit(token, 'Transfer').withArgs(signers.user1.address, VotingEscrow.target, ethers.parseEther('0.5'));
+
+          await expect(tx)
+            .to.be.emit(VotingEscrow, 'Supply')
+            .withArgs(ONE_ETHER, ONE_ETHER + ethers.parseEther('0.5'));
+        });
+
+        it('change nft state with new unlock timestamp and new balance', async () => {
+          expect(await VotingEscrow.lastMintedTokenId()).to.be.eq(nftId);
+          let newState = await VotingEscrow.nftStates(nftId);
+          expect(newState.locked.amount).to.be.eq(stateNftAfterCreate.locked.amount + ethers.parseEther('0.5'));
+          expect(newState.locked.isPermanentLocked).to.be.eq(stateNftAfterCreate.locked.isPermanentLocked);
+          expect(newState.isVoted).to.be.eq(stateNftAfterCreate.isVoted);
+          expect(newState.pointEpoch).to.be.eq(3);
+          expect(newState.locked.end).to.be.eq(newUnlockTimestamp);
+        });
+      });
+    });
+  });
   describe('Deposit to lock', async () => {
     let nftId = 1n;
     beforeEach(async () => {
@@ -907,54 +1070,54 @@ describe('VotingEscrow_V2', function () {
           ).to.be.revertedWithCustomError(VotingEscrow, 'InvalidLockDuration');
         });
       });
-      describe('success increase unlock time for exist nft', async () => {
-        let nftId: bigint;
-        let unlockTimestamp: bigint;
-        let stateNftAfterCreate: any;
+    });
+    describe('success increase unlock time for exist nft', async () => {
+      let nftId: bigint;
+      let unlockTimestamp: bigint;
+      let stateNftAfterCreate: any;
 
+      beforeEach(async () => {
+        await token.mint(signers.user1.address, ethers.parseEther('1'));
+        await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('1'));
+        nftId = (await VotingEscrow.lastMintedTokenId()) + 1n;
+        unlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(WEEK + WEEK + WEEK));
+        await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, WEEK + WEEK + WEEK, signers.user1.address, false, false, 0);
+      });
+
+      it('state before increase unlock time', async () => {
+        expect(await VotingEscrow.lastMintedTokenId()).to.be.eq(nftId);
+        stateNftAfterCreate = await VotingEscrow.nftStates(nftId);
+        expect(stateNftAfterCreate.locked.amount).to.be.eq(ONE_ETHER);
+        expect(stateNftAfterCreate.locked.end).to.be.eq(unlockTimestamp);
+        expect(stateNftAfterCreate.locked.isPermanentLocked).to.be.false;
+        expect(stateNftAfterCreate.isVoted).to.be.false;
+        expect(stateNftAfterCreate.pointEpoch).to.be.eq(1);
+      });
+
+      describe('increase unlock timestamp', async () => {
+        let tx: ContractTransactionResponse;
+        let newUnlockTimestamp: bigint;
+        let txTimestamp: number;
         beforeEach(async () => {
-          await token.mint(signers.user1.address, ethers.parseEther('1'));
-          await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('1'));
-          nftId = (await VotingEscrow.lastMintedTokenId()) + 1n;
-          unlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(WEEK + WEEK + WEEK));
-          await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, WEEK + WEEK + WEEK, signers.user1.address, false, false, 0);
+          newUnlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(MAX_LOCK_TIME));
+          tx = await VotingEscrow.connect(signers.user1).increase_unlock_time(nftId, MAX_LOCK_TIME);
+          txTimestamp = (await ethers.provider.getBlock(tx.blockNumber!))?.timestamp!;
         });
 
-        it('state before increase unlock time', async () => {
+        it('emit events', async () => {
+          await expect(tx)
+            .to.be.emit(VotingEscrow, 'Deposit')
+            .withArgs(signers.user1.address, nftId, 0, newUnlockTimestamp, VotingEscrowDepositType.INCREASE_UNLOCK_TIME, txTimestamp);
+        });
+
+        it('change nft state with new unlock timestamp', async () => {
           expect(await VotingEscrow.lastMintedTokenId()).to.be.eq(nftId);
-          stateNftAfterCreate = await VotingEscrow.nftStates(nftId);
-          expect(stateNftAfterCreate.locked.amount).to.be.eq(ONE_ETHER);
-          expect(stateNftAfterCreate.locked.end).to.be.eq(unlockTimestamp);
-          expect(stateNftAfterCreate.locked.isPermanentLocked).to.be.false;
-          expect(stateNftAfterCreate.isVoted).to.be.false;
-          expect(stateNftAfterCreate.pointEpoch).to.be.eq(1);
-        });
-
-        describe('increase unlock timestamp', async () => {
-          let tx: ContractTransactionResponse;
-          let newUnlockTimestamp: bigint;
-          let txTimestamp: number;
-          beforeEach(async () => {
-            newUnlockTimestamp = await roundToWeek(BigInt(await time.latest()) + BigInt(MAX_LOCK_TIME));
-            tx = await VotingEscrow.connect(signers.user1).increase_unlock_time(nftId, MAX_LOCK_TIME);
-            txTimestamp = (await ethers.provider.getBlock(tx.blockNumber!))?.timestamp!;
-          });
-
-          it('emit events', async () => {
-            await expect(tx)
-              .to.be.emit(VotingEscrow, 'Deposit')
-              .withArgs(signers.user1.address, nftId, 0, newUnlockTimestamp, VotingEscrowDepositType.INCREASE_UNLOCK_TIME, txTimestamp);
-          });
-
-          it('change nft state with new unlock timestamp', async () => {
-            expect(await VotingEscrow.lastMintedTokenId()).to.be.eq(nftId);
-            let newState = await VotingEscrow.nftStates(nftId);
-            expect(newState.locked.amount).to.be.eq(stateNftAfterCreate.locked.amount);
-            expect(newState.locked.isPermanentLocked).to.be.eq(stateNftAfterCreate.locked.isPermanentLocked);
-            expect(newState.isVoted).to.be.eq(stateNftAfterCreate.isVoted);
-            expect(newState.pointEpoch).to.be.eq(2);
-            expect(newState.locked.end).to.be.eq(newUnlockTimestamp);
-          });
+          let newState = await VotingEscrow.nftStates(nftId);
+          expect(newState.locked.amount).to.be.eq(stateNftAfterCreate.locked.amount);
+          expect(newState.locked.isPermanentLocked).to.be.eq(stateNftAfterCreate.locked.isPermanentLocked);
+          expect(newState.isVoted).to.be.eq(stateNftAfterCreate.isVoted);
+          expect(newState.pointEpoch).to.be.eq(2);
+          expect(newState.locked.end).to.be.eq(newUnlockTimestamp);
         });
       });
     });
