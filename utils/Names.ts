@@ -63,6 +63,8 @@ export enum AliasDeployedContracts {
   MDCBlastMock = 'MDCBlastMock',
   MinimalLinearVestingUpgradeable_Proxy = 'MinimalLinearVestingUpgradeable_Proxy',
   MinimalLinearVestingUpgradeable_Implementation = 'MinimalLinearVestingUpgradeable_Implementation',
+  GaugeRewader_Implementation = 'GaugeRewader_Implementation',
+  GaugeRewader_Proxy = 'GaugeRewader_Proxy',
 }
 
 enum ThirdPart {
@@ -107,6 +109,7 @@ enum ContractsInstanceName {
   TransparentUpgradeableProxy = 'TransparentUpgradeableProxy',
   BlastGovernorUpgradeable = 'BlastGovernorUpgradeable',
   MinimalLinearVestingUpgradeable = 'MinimalLinearVestingUpgradeable',
+  GaugeRewarder = 'GaugeRewarder',
 }
 
 enum ContractsMocksInstanceName {

@@ -1,0 +1,67 @@
+npx hardhat run .\deploy\blastSepolia\017-GaugeRewarder-deploy.ts --network blastSepolia
+Compiled 1 Solidity file successfully (evm target: paris).
+Starting deployment of GaugeRewarder...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+GaugeRewarder deployed at 0x13a57d4204781B8c4811C6365047800Bd2394973
+Save to deploys.json deployed address of GaugeRewader_Implementation:0x13a57d4204781B8c4811C6365047800Bd2394973
+Verifying TransparentUpgradeableProxy at 0x13a57d4204781B8c4811C6365047800Bd2394973...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/GaugeRewarder.sol:GaugeRewarder at 0x13a57d4204781B8c4811C6365047800Bd2394973
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeRewarder on the block explorer.
+https://sepolia.blastscan.io/address/0x13a57d4204781B8c4811C6365047800Bd2394973#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0x13a57d4204781B8c4811C6365047800Bd2394973
+        Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x54CDE9f3B0251571aE6a505C6540656D208BE256
+Save to deploys.json deployed address of GaugeRewader_Proxy:0x54CDE9f3B0251571aE6a505C6540656D208BE256
+Verifying TransparentUpgradeableProxy at 0x54CDE9f3B0251571aE6a505C6540656D208BE256...
+Timeout for 10s before verify proccess...
+The contract 0x54CDE9f3B0251571aE6a505C6540656D208BE256 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x54CDE9f3B0251571aE6a505C6540656D208BE256#code
+        Called Contract(0x54CDE9f3B0251571aE6a505C6540656D208BE256).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", token_: "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6", voter_: "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43", minter_: "0xDA283872Fc205f56cE5b0268D719373dc33e35dA")
+        Transaction hash: 0x45422984a6554dd6851f950cd9f2fedb5889df6096c8fbe63ab75f72cd56bb7c
+        Called Contract(0x54CDE9f3B0251571aE6a505C6540656D208BE256).setSigner(signer_: "0x72bEe8a409977fb340fe137d067540ea88685927")
+        Transaction hash: 0xf901deb7b5ab42ab6b9d7fe864f6a88a16fc68aa86b85506945e17c8d27e5032
+        Called Contract(0x54CDE9f3B0251571aE6a505C6540656D208BE256).grantRole(role: "0xbeec13769b5f410b0584f69811bfd923818456d5edcf426b0e31cf90eed7a3f6", account: "0x9140D359f2855E6540609dd4A93773ED1f45f509")
+        Transaction hash: 0x61aca8ffbb526f97fd1dbe58e30d41c62a0874f93803726bd74d3fad5d9299ae
+        Called Contract(0x54CDE9f3B0251571aE6a505C6540656D208BE256).grantRole(role: "0xa1b0b7f2395fdcc15ae087ceb3d1fa3e32b39c5dd8aca23265d8ee0d7f3db69e", account: "0x9140D359f2855E6540609dd4A93773ED1f45f509")
+        Transaction hash: 0xddf4f7654d3dd202828c059719d603bfc61ddedc9578b13bd1b8ba33b02f6a80
+
+
+npx hardhat run .\deploy\blastSepolia\018-SetupGaugeRewarderInGaugeFactoryAndGauges-setup.ts.ts --network blastSepolia
+        Called Contract(0xe18aE06D762370615664e9a14C6Eaa1bed6D203e).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x0b8b44dfa5cd724050c61bbff0340ecf690384631a6ee2eecb983d893f96148e
+        Called Contract(0xedD8172FD89f615b873Ca01f5b94A8C899616e47).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x7ebc4a4d89c2fda5c476682148f3b37c2d149e28b9467463d3f39b9b555b1460
+Set GaugeRewarder as Middleman in all deployed Gauges
+        Called Contract(0xadB023dD251cbc5F97f60552f391aC5A3D6C52e7).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xb7d40dcebbfb7abb83647f57b24ff6dc96d96ce3ca26e2df045dbef23798dc4e
+        Called Contract(0x3EA180d935E77a656a5e1DDd185232d72EdaFbd2).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x605d080c41c2eb34764641e79b636148545bf1e5825456c7a910a1ccd1ca3515
+        Called Contract(0x236576EB1CE9f78eD69BA83df02F23c2796894C5).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xaa791c40578fafd2a7787d3a909bdc6530f4e1a87aa8e88c0e95a0f90691d38b
+        Called Contract(0xd789DD386239d35BA57B0AB82DBAa99dE711E12B).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x5c890bb197e7ea268c1da7435774f15f0053aaa63adf5d8c207f8f1d0dfe5d83
+        Called Contract(0xF6dB3609dAA149D4461997f4b1B44CE6787ce7CD).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x23c9cf7bf9a034eb7eb1df74fb5a689d0e7d5371e1e0b08b9c8f6b5ec7ff1982
+        Called Contract(0xB2Ef1Fc58d59cE4900De4dC56411d6A486E4B510).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x3d39cfda96c1fe444ebcd3f84592eeb4b9065dcea9ebaf2e1987faa9c483b755
+        Called Contract(0xaF87Af9996700B851d48f095B620739b65365058).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x15c478d76f42df85d6cee10357cd04f33c7746fed5fb3fcd8a6a81a9ef5b3fd4
+        Called Contract(0x5D6783076D82e810BC8bb318fd011211AE0FA364).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x583089cf543a356b76de5805e0aceb9b6948b2b70d62fe33509c083384bade40
+        Called Contract(0xb55CfbDBE35ca6Ae9efB7D9D2FeF88C94e3451AA).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xf22fba5cdbaa8234dd01208561700b05e30dada998aa9ec329b6689d1167f4aa
+        Called Contract(0x41B2220fb113e1Ec7f2475fFF1dA8F77FAf734E2).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xe29faed3020bb462abee8003566590235a66976a086729e6b18875613a6afffa
+        Called Contract(0x548760cD3011EdD67B686275246f3C67486d6F6a).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xf1678a7a0d74b57b81fdb42b5aadad964f0b65224415db3b26416f27629e0dc0
+        Called Contract(0x0FcDdf1a968193c0d675e02B42cb2d1Ec892bB14).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0x99d32e35342bbe6773c3a775161e761855a577e1814b82e6b4e3ca2b3b62c23b
+        Called Contract(0x82CBFCadE804593Fe21d3476Bddd141461efEdF4).setMerklGaugeMiddleman(_newMerklGaugeMiddleman: "0x54CDE9f3B0251571aE6a505C6540656D208BE256")
+        Transaction hash: 0xf94b3f16faf3bddf637b9c51175036cc0f18e28935e675a238a54407b97ee8b5       
