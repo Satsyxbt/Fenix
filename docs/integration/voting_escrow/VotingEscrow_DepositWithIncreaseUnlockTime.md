@@ -11,7 +11,7 @@ The `depositWithIncreaseUnlockTime` function allows users to both extend the loc
  *      The veNFT must not be in permanent lock, must not be attached to a managed veNFT, and must exist.
  * @param tokenId_ The ID of the token to increase the balance and extend the lock duration.
  * @param amount_ The amount of tokens to be deposited.
- * @param lockDuration_ The duration (in seconds) to extend the lock period.
+ * @param lockDuration_ Duration (in seconds) - how long the new lock should be.
  */
 function depositWithIncreaseUnlockTime(
     uint256 tokenId_,
@@ -25,7 +25,7 @@ function depositWithIncreaseUnlockTime(
 - **Parameters**:
   - `tokenId_ (uint256)`: The ID of the veNFT to be modified.
   - `amount_ (uint256)`: The amount of tokens to be deposited into the veNFT.
-  - `lockDuration_ (uint256)`: The number of seconds by which the lock period should be extended.
+  - `lockDuration_ (uint256)`: Duration (in seconds) - how long the new lock should be.
 
 - **Requirements**:
   - Only the owner or an approved user of the veNFT can invoke this function.

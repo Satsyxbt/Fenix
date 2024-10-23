@@ -239,7 +239,7 @@ interface IVotingEscrow is IERC721Upgradeable {
      *
      * @param tokenId_ The ID of the token to increase the balance and extend the lock duration.
      * @param amount_ The amount of tokens to be deposited.
-     * @param lockDuration_ The duration (in seconds) to extend the lock period.
+     * @param lockDuration_ The duration (in seconds) - how long the new lock should be.
      * Emits a {Deposit} event on successful deposit.
      * Emits second a {Deposit} event on successful unlock time increase.
      */
