@@ -1,0 +1,210 @@
+[
+  {
+    "inputs": [],
+    "name": "AddressZero",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isRebase",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum YieldMode",
+        "name": "mode",
+        "type": "uint8"
+      }
+    ],
+    "name": "ConfigurationForRebaseToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "defaultBlastGovernor",
+        "type": "address"
+      }
+    ],
+    "name": "DefaultBlastGovernor",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "defaultBlastPoints",
+        "type": "address"
+      }
+    ],
+    "name": "DefaultBlastPoints",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "defaultBlastPointsOperator",
+        "type": "address"
+      }
+    ],
+    "name": "DefaultBlastPointsOperator",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "configurationForBlastRebaseTokens",
+    "outputs": [
+      {
+        "internalType": "enum YieldMode",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultBlastGovernor",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultBlastPoints",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultBlastPointsOperator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isRebaseToken",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token_",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "isRebase_",
+        "type": "bool"
+      },
+      {
+        "internalType": "enum YieldMode",
+        "name": "mode_",
+        "type": "uint8"
+      }
+    ],
+    "name": "setConfigurationForRebaseToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "defaultBlastGovernor_",
+        "type": "address"
+      }
+    ],
+    "name": "setDefaultBlastGovernor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "defaultBlastPoints_",
+        "type": "address"
+      }
+    ],
+    "name": "setDefaultBlastPoints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "defaultBlastPointsOperator_",
+        "type": "address"
+      }
+    ],
+    "name": "setDefaultBlastPointsOperator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

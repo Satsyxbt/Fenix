@@ -1,0 +1,208 @@
+[
+  {
+    "inputs": [],
+    "name": "IncorrectInputToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IncorrectSlippage",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInputRoutes",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RouteNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroBalance",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "inputToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "outputToken",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "stable",
+            "type": "bool"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IRouterV2.route[]",
+        "name": "routes",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "inputAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "outputAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "BuybackTokenByV2",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "version",
+        "type": "uint8"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_SLIPPAGE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SLIPPAGE_PRECISION",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "inputToken_",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "stable",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IRouterV2.route[]",
+        "name": "inputRouters_",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "slippage_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline_",
+        "type": "uint256"
+      }
+    ],
+    "name": "buybackTokenByV2",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "outputAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBuybackTargetToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "routerV2PathProvider",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
