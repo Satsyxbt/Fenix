@@ -38,6 +38,40 @@ interface IBlastRebasingTokensGovernor {
     event Claim(address indexed caller, address indexed recipient, address indexed token, address[] holders, uint256 totalClaimedAmount);
 
     /**
+     * @notice Emitted when a contract address is updated.
+     * @param key The key representing the contract.
+     * @param value The new address of the contract.
+     */
+    event UpdateAddress(string key, address indexed value);
+
+    /**
+     * @dev Event emitted when tokens are withdrawn by an authorized address.
+     * @param caller The address initiating the withdrawal.
+     * @param recipient The address receiving the withdrawn tokens.
+     * @param token The address of the token being withdrawn.
+     * @param amount The amount of tokens withdrawn.
+     */
+    event Withdraw(address indexed caller, address indexed recipient, address indexed token, uint256 amount);
+
+    /**
+     * @dev Event emitted when a swap is performed using the V3 router.
+     * @param caller The address initiating the swap.
+     * @param recipient The address receiving the swapped tokens.
+     * @param tokenIn The address of the input token being swapped.
+     * @param tokenOut The address of the output token received.
+     * @param amountIn The amount of input tokens provided.
+     * @param amountOut The amount of output tokens received.
+     */
+    event DirectV3Swap(
+        address indexed caller,
+        address indexed recipient,
+        address indexed tokenIn,
+        address tokenOut,
+        uint256 amountIn,
+        uint256 amountOut
+    );
+
+    /**
      * @notice Initializes the contract by setting up roles and inherited contracts.
      * @param blastGoveror_ The address of the Blast Governor contract.
      */
