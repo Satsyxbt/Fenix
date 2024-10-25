@@ -58,5 +58,7 @@
   "VeFnxDistributorUpgradeable_Proxy": "0x4d8513df0A19aa65398cB8495AeA319F4F81448e",
   "VeFnxSplitMerklAidropUpgradeable_Proxy": "0x311F7981d7159De374c378Be0815DC4257b50468",
   "ERC20MockTokenForMerklGaugeMiddleman": "0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b",
-  "MerklGaugeMiddlemanWithERC20MockToken": "0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e"
+  "MerklGaugeMiddlemanWithERC20MockToken": "0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e",
+  "AlgebraFactory_Proxy": "0x7a44CD060afC1B6F4c80A2B9b37f4473E74E25Df"
+
 }

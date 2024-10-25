@@ -1,3 +1,21 @@
+import 'dotenv/config';
+interface ChainConfig {
+  algebraTheGraph: string;
+}
+
+interface ChainsConfig {
+  [key: string]: ChainConfig;
+}
+
+const chains: ChainsConfig = {
+  ['blast']: {
+    algebraTheGraph: process.env.BLAST_ALGEBRA_THE_GRAPH || '',
+  },
+  ['blastSepolia']: {
+    algebraTheGraph: process.env.BLAST_SEPOLIA_ALGEBRA_THE_GRAPH || '',
+  },
+};
+
 export default {
   'extract-abis-to-docs': {
     output: 'docs/abi',
@@ -18,5 +36,9 @@ export default {
       'FenixVaultProxy',
       'StrategyProxy',
     ],
+  },
+  'get-state': {
+    output: 'docs/state',
+    chains: chains,
   },
 };

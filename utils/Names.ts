@@ -65,6 +65,7 @@ export enum AliasDeployedContracts {
   MinimalLinearVestingUpgradeable_Implementation = 'MinimalLinearVestingUpgradeable_Implementation',
   GaugeRewader_Implementation = 'GaugeRewader_Implementation',
   GaugeRewader_Proxy = 'GaugeRewader_Proxy',
+  AlgebraFactory_Proxy = 'AlgebraFactory_Proxy',
 }
 
 enum ThirdPart {
