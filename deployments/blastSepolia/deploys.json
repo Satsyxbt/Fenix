@@ -9,7 +9,7 @@
   "AlgebraFNXPriceProviderUpgradeable_Proxy": "0x968106c45b72eB84A1Abc799CC4AaFf618495c76",
   "PairFactoryUpgradeable_Implementation": "0xbdaf5fc15D03FE670C974a2083a3892d21762449",
   "Pair_Implementation": "0x71F9683e343309d7D7A235199f891a254CeC9eF7",
-  "FeesVaultFactoryUpgradeable_Implementation": "0xCB1270476D62E2cF1062f53Cd3F919bC23616618",
+  "FeesVaultFactoryUpgradeable_Implementation": "0xf873BaE7A0173704503c4c43b57348eb7d41Eae0",
   "FeesVaultUpgradeable_Implementation": "0x6F7f0Ab5505A679f9cD593E81afcE2Ee54b2f61B",
   "FeesVaultFactoryUpgradeable_Proxy": "0xa3103248290399cc2655b68f0038ce590ce8639E",
   "PairFactoryUpgradeable_Proxy": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
