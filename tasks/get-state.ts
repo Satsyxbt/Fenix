@@ -82,10 +82,12 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       minterState.address,
       pairFactoryState.address,
       algebraFactoryState.address,
+      ...pairsInfo.map((t) => t.fees),
       ...pairsInfo.map((t) => t.address),
       ...pairsInfo.map((t) => t.feesVaultInfo.address),
       ...poolsInfo.map((t) => t.address),
       ...poolsInfo.map((t) => t.feesVaultInfo.address),
+      ...poolsInfo.map((t) => t.plugin),
     ];
     const governorMap = await getBlastGovernor(Blast, listAddresses);
     const result = {
