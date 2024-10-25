@@ -66,6 +66,7 @@ export enum AliasDeployedContracts {
   GaugeRewader_Implementation = 'GaugeRewader_Implementation',
   GaugeRewader_Proxy = 'GaugeRewader_Proxy',
   AlgebraFactory_Proxy = 'AlgebraFactory_Proxy',
+  BasePluginV1Factory_Proxy = 'BasePluginV1Factory_Proxy',
 }
 
 enum ThirdPart {
