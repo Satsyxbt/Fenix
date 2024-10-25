@@ -82,7 +82,7 @@
       },
       "feesVaultInfo": {
         "address": "0x84Ab747FCA0e04e0e5AB016886FAc96CB4a6ad42",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -113,7 +113,7 @@
       },
       "feesVaultInfo": {
         "address": "0x5Cf7436aBe66363Dd6043fFc34f626c97b55185B",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -144,7 +144,7 @@
       },
       "feesVaultInfo": {
         "address": "0x4a6819D095cD22FD55d7aA9E91Da3D2F34C91E29",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -175,7 +175,7 @@
       },
       "feesVaultInfo": {
         "address": "0x87f62586eBdBb8Ebe2234500b081659c1Db43B96",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -206,7 +206,7 @@
       },
       "feesVaultInfo": {
         "address": "0xEACa8600a0d8E560AD0D7cEaa14bFc05444B1083",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -237,7 +237,7 @@
       },
       "feesVaultInfo": {
         "address": "0xaEf34054EC7cD4aD934152a1a8B85D2D24cdF9cb",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -268,7 +268,7 @@
       },
       "feesVaultInfo": {
         "address": "0x99929882137c84eD6399CDEA8BcdB56C0C903ef6",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -299,7 +299,7 @@
       },
       "feesVaultInfo": {
         "address": "0xFd4cAC00094EC78bFE961Cfd734d8D21315b4D86",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -330,7 +330,7 @@
       },
       "feesVaultInfo": {
         "address": "0xF55139d6508B5bF6B9196D9e84c63ee659F651CC",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -361,7 +361,7 @@
       },
       "feesVaultInfo": {
         "address": "0x5dB720439C156755B1e88D87d7bdCd08403aB5C0",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -392,7 +392,7 @@
       },
       "feesVaultInfo": {
         "address": "0xDeE7Da666246a20243514E01854496ef6cC9cA8C",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -423,7 +423,7 @@
       },
       "feesVaultInfo": {
         "address": "0xDbd29d55d99013B75798Ce48D890074319c43102",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -454,7 +454,7 @@
       },
       "feesVaultInfo": {
         "address": "0x7E0d059aaF53CD61bFf6FE664B6cd81d754caA9c",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -520,7 +520,7 @@
       },
       "feesVaultInfo": {
         "address": "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -561,7 +561,7 @@
       },
       "feesVaultInfo": {
         "address": "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -602,7 +602,7 @@
       },
       "feesVaultInfo": {
         "address": "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
@@ -643,7 +643,7 @@
       },
       "feesVaultInfo": {
         "address": "0x3d2fb9e461c986b855267458034ba06B47Cb49c7",
-        "creator": "0x0000000000000000000000000000000000000000",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
           "toGaugeRate": "0",
           "recipients": [
