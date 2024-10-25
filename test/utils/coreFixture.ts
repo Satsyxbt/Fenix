@@ -379,7 +379,7 @@ export async function deployAlgebraCore(blastPoints: string): Promise<FactoryFix
     nonce: (await ethers.provider.getTransactionCount(signers.deployer.address)) + 3,
   });
   const factoryFactory = await ethers.getContractFactory(FACTORY_ABI, FACTORY_BYTECODE);
-  const factoryImplementation = await factoryFactory.deploy();
+  const factoryImplementation = await factoryFactory.deploy(signers.deployer.address);
 
   const factory = factoryFactory.attach(
     (await deployTransaperntUpgradeableProxy(signers.deployer, signers.proxyAdmin.address, await factoryImplementation.getAddress()))

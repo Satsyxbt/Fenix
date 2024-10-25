@@ -263,6 +263,7 @@ export type AlgebraFactoryState = {
   address: string;
   poolDeployer: string;
   defaultBlastGovernor: string;
+  rebasingTokensGovernor: string;
   defaultBlastPoints: string;
   defaultBlastPointsOperator: string;
   isPublicPoolCreationMode: boolean;
@@ -316,6 +317,7 @@ export async function getAlgebraFactoryState(algebraFactory: AlgebraFactoryUpgra
   const [
     poolDeployer,
     defaultBlastGovernor,
+    rebasingTokensGovernor,
     defaultBlastPoints,
     defaultBlastPointsOperator,
     isPublicPoolCreationMode,
@@ -329,6 +331,7 @@ export async function getAlgebraFactoryState(algebraFactory: AlgebraFactoryUpgra
   ] = await Promise.all([
     algebraFactory.poolDeployer(),
     algebraFactory.defaultBlastGovernor(),
+    algebraFactory.rebasingTokensGovernor(),
     algebraFactory.defaultBlastPoints(),
     algebraFactory.defaultBlastPointsOperator(),
     algebraFactory.isPublicPoolCreationMode(),
@@ -345,6 +348,7 @@ export async function getAlgebraFactoryState(algebraFactory: AlgebraFactoryUpgra
     address: algebraFactory.target.toString(),
     poolDeployer,
     defaultBlastGovernor,
+    rebasingTokensGovernor,
     defaultBlastPoints,
     defaultBlastPointsOperator,
     isPublicPoolCreationMode,

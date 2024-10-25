@@ -167,3 +167,20 @@ ProxyAdmin.upgrade(proxy: 0xa3103248290399cc2655b68f0038ce590ce8639E, newLogic: 
 	Transaction hash: 0x7148a6f81d3a7dbdd8ab4b3d1c6a2b7acf7e2d8068550d84db78a4e479d652b9
 	Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).changeCreatorForFeesVaults(creator_: "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef", feesVaults_: "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66,0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793,0xB53ed69cE2046A05B009912F3B8B7cac32e244a2,0x3d2fb9e461c986b855267458034ba06B47Cb49c7")
 	Transaction hash: 0x2dfaf1bc72449dbe1c9b22653c381a8fcb2643c4e2d02577aef35bd1750704ee
+
+
+
+	Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).setDistributionConfigForCreator(creator_: "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3", config_: "10000,,")
+	Transaction hash: 0x4dd8dc1e10a5520012d01ddaf751d65e0f4f2a010824862612c2b0810a3993dc
+	Called Contract(0xa3103248290399cc2655b68f0038ce590ce8639E).setDistributionConfigForCreator(creator_: "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef", config_: "10000,,")
+	Transaction hash: 0x13ecfa240c4f088d019643c6454ec4ced6cff6f3bd0cff6c3ae50432f719e9f7
+	Called Contract(0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef).setDefaultCommunityFee(newDefaultCommunityFee: "1000")
+	Transaction hash: 0x81d5e0cd295aeb481ec04e2ebc15a3437003c451107c1bc7fe1c34d2f6c56a18
+	Called Contract(0x73a432d0758aded25c1a8ba4610e20ea4ae28ca9).setCommunityFee(newCommunityFee: "1000")
+	Transaction hash: 0x39c6fd3aeae65d2afb56946696ee6e048b37719dfe77267f017f91caaf2ff965
+	Called Contract(0xf13ebe82f017c3c07c4ff4b814b98fb4c834504e).setCommunityFee(newCommunityFee: "1000")
+	Transaction hash: 0xc98d80ba9b5a5cb0df040eb4bd094683ea0c5fcf6fd52edb1b7f504430e7fbc8
+	Called Contract(0xd1deedb6a3e6d71607258cfeeedcb3acc862dba3).setCommunityFee(newCommunityFee: "1000")
+	Transaction hash: 0xc8d0bbe833a8c55b64a5194c17c12ac090c38d00dc7e1cc7d757ca6b7f3e8aab
+	Called Contract(0xadfcaba34a101998f6929aa7325cdf04377009bc).setCommunityFee(newCommunityFee: "1000")
+	Transaction hash: 0xa1ee6d962880bc46d18bfe9f73176bac116f6d18b20f39d48ff0df2bd04a1064

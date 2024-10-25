@@ -84,13 +84,9 @@
         "address": "0x84Ab747FCA0e04e0e5AB016886FAc96CB4a6ad42",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -115,13 +111,9 @@
         "address": "0x5Cf7436aBe66363Dd6043fFc34f626c97b55185B",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -146,13 +138,9 @@
         "address": "0x4a6819D095cD22FD55d7aA9E91Da3D2F34C91E29",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -177,13 +165,9 @@
         "address": "0x87f62586eBdBb8Ebe2234500b081659c1Db43B96",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -208,13 +192,9 @@
         "address": "0xEACa8600a0d8E560AD0D7cEaa14bFc05444B1083",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -239,13 +219,9 @@
         "address": "0xaEf34054EC7cD4aD934152a1a8B85D2D24cdF9cb",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -270,13 +246,9 @@
         "address": "0x99929882137c84eD6399CDEA8BcdB56C0C903ef6",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -301,13 +273,9 @@
         "address": "0xFd4cAC00094EC78bFE961Cfd734d8D21315b4D86",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -332,13 +300,9 @@
         "address": "0xF55139d6508B5bF6B9196D9e84c63ee659F651CC",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -363,13 +327,9 @@
         "address": "0x5dB720439C156755B1e88D87d7bdCd08403aB5C0",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -394,13 +354,9 @@
         "address": "0xDeE7Da666246a20243514E01854496ef6cC9cA8C",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -425,13 +381,9 @@
         "address": "0xDbd29d55d99013B75798Ce48D890074319c43102",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -456,13 +408,9 @@
         "address": "0x7E0d059aaF53CD61bFf6FE664B6cd81d754caA9c",
         "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     }
@@ -470,12 +418,13 @@
   "algebraFactoryState": {
     "address": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
     "poolDeployer": "0x383F8153913c2Da0769aCe87F20ED18A45f2E3C7",
-    "defaultBlastGovernor": "0x9140D359f2855E6540609dd4A93773ED1f45f509",
+    "defaultBlastGovernor": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "rebasingTokensGovernor": "0x76da5656DEa3D8A8111aB749042f98103198332F",
     "defaultBlastPoints": "0x2fc95838c71e76ec69ff817983BFf17c710F34E0",
     "defaultBlastPointsOperator": "0x5888eEe48C0173681109Be60396D75bA2c02f632",
     "isPublicPoolCreationMode": true,
-    "defaultCommunityFee": "10",
-    "defaultCommunityFeeFormmated": "1%",
+    "defaultCommunityFee": "1000",
+    "defaultCommunityFeeFormmated": "100%",
     "defaultFee": "500",
     "defaultFeeFormmated": "0.05%",
     "defaultTickspacing": "60",
@@ -500,8 +449,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "10",
-      "communityFeePercent": "1%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -514,21 +463,17 @@
       "communityVault": "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "10",
-        "protocolFeePercent": "1%",
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
         "isCustom": false
       },
       "feesVaultInfo": {
         "address": "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66",
         "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -541,8 +486,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "10",
-      "communityFeePercent": "1%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "4397052834022996348",
       "totalFeeGrowth0Token": "8925333443299550026661571544844552",
@@ -555,21 +500,17 @@
       "communityVault": "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "10",
-        "protocolFeePercent": "1%",
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
         "isCustom": false
       },
       "feesVaultInfo": {
         "address": "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793",
         "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -582,8 +523,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "10",
-      "communityFeePercent": "1%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "914964089000",
       "totalFeeGrowth0Token": "0",
@@ -596,21 +537,17 @@
       "communityVault": "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "10",
-        "protocolFeePercent": "1%",
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
         "isCustom": false
       },
       "feesVaultInfo": {
         "address": "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2",
         "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     },
@@ -623,8 +560,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "10",
-      "communityFeePercent": "1%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -637,21 +574,17 @@
       "communityVault": "0x3d2fb9e461c986b855267458034ba06B47Cb49c7",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "10",
-        "protocolFeePercent": "1%",
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
         "isCustom": false
       },
       "feesVaultInfo": {
         "address": "0x3d2fb9e461c986b855267458034ba06B47Cb49c7",
         "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
         "distributionConfig": {
-          "toGaugeRate": "0",
-          "recipients": [
-            "0x9140D359f2855E6540609dd4A93773ED1f45f509"
-          ],
-          "rates": [
-            "10000"
-          ]
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
         }
       }
     }
