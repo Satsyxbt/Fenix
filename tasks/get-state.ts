@@ -11,6 +11,7 @@ import {
   getPairState,
   getPools,
   getPoolState,
+  getVeBoostState,
 } from './utils';
 import AlgebraFactory_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 import AlgebraPool_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
@@ -40,6 +41,11 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       InstanceName.MinterUpgradeable,
       deployData[AliasDeployedContracts.MinterUpgradeable_Proxy],
     );
+    const VeBoostUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.VeBoostUpgradeable,
+      deployData[AliasDeployedContracts.VeBoostUpgradeable_Proxy],
+    );
+    const veBoostState = await getVeBoostState(VeBoostUpgradeable);
 
     const pairFactoryState = await getPairFactoryState(PairFactory);
     const pairsInfo = await Promise.all(
@@ -95,6 +101,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
     const result = {
       fenixState,
       minterState,
+      veBoostState,
       pairFactoryState,
       pairsInfo,
       algebraFactoryState,

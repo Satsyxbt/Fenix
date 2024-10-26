@@ -1,7 +1,17 @@
 import { AlgebraFactoryUpgradeable, AlgebraPool } from '@cryptoalgebra/integral-core/typechain';
-import { FeesVaultFactoryUpgradeable, Fenix, IBlastFull, MinterUpgradeable, Pair, PairFactoryUpgradeable } from '../typechain-types';
+import {
+  FeesVaultFactoryUpgradeable,
+  Fenix,
+  IBlastFull,
+  MinterUpgradeable,
+  Pair,
+  PairFactoryUpgradeable,
+  VeBoostUpgradeable,
+} from '../typechain-types';
 import { formatEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { ethers } from 'hardhat';
+import { InstanceName } from '../utils/Names';
 
 export type PairFactoryState = {
   address: string;
@@ -155,6 +165,32 @@ export async function getPairFactoryState(pairFactory: PairFactoryUpgradeable): 
     defaultBlastGovernor,
     defaultBlastPoints,
     defaultBlastPointsOperator,
+  };
+}
+export type VeBoostState = {
+  address: string;
+  owner: string;
+  minLockedTimeForBoost: bigint;
+  minLockedTimeForBoostFormmated: string;
+  boostFNXPercentage: bigint;
+  boostFNXPercentageFormmated: string;
+  priceProvider: string;
+};
+export async function getVeBoostState(veBoost: VeBoostUpgradeable): Promise<VeBoostState> {
+  const [owner, minLockedTimeForBoost, boostFNXPercentage, priceProvider] = await Promise.all([
+    veBoost.owner(),
+    veBoost.getMinLockedTimeForBoost(),
+    veBoost.getBoostFNXPercentage(),
+    veBoost.priceProvider(),
+  ]);
+  return {
+    address: veBoost.target.toString(),
+    owner,
+    minLockedTimeForBoost,
+    minLockedTimeForBoostFormmated: Number(minLockedTimeForBoost) / 86400 + ' days',
+    boostFNXPercentage,
+    boostFNXPercentageFormmated: Number(boostFNXPercentage) / 100 + '%',
+    priceProvider,
   };
 }
 
