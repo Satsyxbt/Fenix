@@ -88,6 +88,8 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       ...poolsInfo.map((t) => t.address),
       ...poolsInfo.map((t) => t.feesVaultInfo.address),
       ...poolsInfo.map((t) => t.plugin),
+      ...Object.values(deployData),
+      ...(Config.governoMapAdditionalAddress || []),
     ];
     const governorMap = await getBlastGovernor(Blast, listAddresses);
     const result = {

@@ -331,7 +331,7 @@ export async function getAlgebraFactoryState(algebraFactory: AlgebraFactoryUpgra
   ] = await Promise.all([
     algebraFactory.poolDeployer(),
     algebraFactory.defaultBlastGovernor(),
-    algebraFactory.rebasingTokensGovernor(),
+    'not setup', //algebraFactory.rebasingTokensGovernor(),
     algebraFactory.defaultBlastPoints(),
     algebraFactory.defaultBlastPointsOperator(),
     algebraFactory.isPublicPoolCreationMode(),
@@ -468,10 +468,11 @@ export async function getPoolState(
 }
 
 export async function getBlastGovernor(blast: IBlastFull, list: string[]): Promise<{ [key: string]: any }> {
+  const uniqueList = Array.from(new Set(list));
   const result: { [key: string]: any } = {};
 
-  for (let i = 0; i < list.length; i++) {
-    const address = list[i];
+  for (let i = 0; i < uniqueList.length; i++) {
+    const address = uniqueList[i];
     try {
       const governor = await blast.governorMap(address);
       result[address] = governor;
