@@ -1,5 +1,6 @@
 import { AlgebraFactoryUpgradeable, AlgebraPool } from '@cryptoalgebra/integral-core/typechain';
 import {
+  BribeFactoryUpgradeable,
   FeesVaultFactoryUpgradeable,
   Fenix,
   IBlastFull,
@@ -10,8 +11,6 @@ import {
 } from '../typechain-types';
 import { formatEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { ethers } from 'hardhat';
-import { InstanceName } from '../utils/Names';
 
 export type PairFactoryState = {
   address: string;
@@ -167,6 +166,49 @@ export async function getPairFactoryState(pairFactory: PairFactoryUpgradeable): 
     defaultBlastPointsOperator,
   };
 }
+export type BribeFactoryState = {
+  address: string;
+  owner: string;
+  bribeOwner: string;
+  voter: string;
+  bribeImplementation: string;
+  defaultBlastGovernor: string;
+  defaultRewardTokens: string[];
+  defaultRewardTokensSymbols: string[];
+};
+
+export async function getBribeFactoryState(
+  hre: HardhatRuntimeEnvironment,
+  bribeFactory: BribeFactoryUpgradeable,
+): Promise<BribeFactoryState> {
+  const [owner, bribeOwner, voter, bribeImplementation, defaultBlastGovernor, defaultRewardTokens] = await Promise.all([
+    bribeFactory.owner(),
+    bribeFactory.bribeOwner(),
+    bribeFactory.voter(),
+    bribeFactory.bribeImplementation(),
+    bribeFactory.defaultBlastGovernor(),
+    bribeFactory.getDefaultRewardTokens(),
+  ]);
+
+  const defaultRewardTokensSymbols = await Promise.all(
+    defaultRewardTokens.map(async (token) => {
+      const erc20 = await hre.ethers.getContractAt(['function symbol() view returns (string)'], token);
+      return erc20.symbol();
+    }),
+  );
+
+  return {
+    address: bribeFactory.target.toString(),
+    owner,
+    bribeOwner,
+    voter,
+    bribeImplementation,
+    defaultBlastGovernor,
+    defaultRewardTokens,
+    defaultRewardTokensSymbols,
+  };
+}
+
 export type VeBoostState = {
   address: string;
   owner: string;

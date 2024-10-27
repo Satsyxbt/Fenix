@@ -12,6 +12,7 @@ import {
   getPools,
   getPoolState,
   getVeBoostState,
+  getBribeFactoryState,
 } from './utils';
 import AlgebraFactory_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 import AlgebraPool_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
@@ -45,6 +46,11 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       InstanceName.VeBoostUpgradeable,
       deployData[AliasDeployedContracts.VeBoostUpgradeable_Proxy],
     );
+    const BribeFactoryUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.BribeFactoryUpgradeable,
+      deployData[AliasDeployedContracts.BribeFactoryUpgradeable_Proxy],
+    );
+
     const veBoostState = await getVeBoostState(VeBoostUpgradeable);
 
     const pairFactoryState = await getPairFactoryState(PairFactory);
@@ -56,6 +62,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
     const fenixState = await getFenixState(Fenix);
 
     const minterState = await getMinterState(MinterUpgradeable);
+    const bribeFactoryState = await getBribeFactoryState(hre, BribeFactoryUpgradeable);
 
     const AlgebraFactory = (await hre.ethers.getContractAtFromArtifact(
       AlgebraFactory_Artifact,
@@ -84,10 +91,6 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
 
     const Blast = await hre.ethers.getContractAt(InstanceName.Blast, THIRD_PART_CONTRACTS.Blast);
     const listAddresses = [
-      fenixState.address,
-      minterState.address,
-      pairFactoryState.address,
-      algebraFactoryState.address,
       ...pairsInfo.map((t) => t.fees),
       ...pairsInfo.map((t) => t.address),
       ...pairsInfo.map((t) => t.feesVaultInfo.address),
@@ -102,6 +105,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       fenixState,
       minterState,
       veBoostState,
+      bribeFactoryState,
       pairFactoryState,
       pairsInfo,
       algebraFactoryState,
