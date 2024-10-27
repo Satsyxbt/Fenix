@@ -9,8 +9,9 @@ import {
   PairFactoryUpgradeable,
   VeBoostUpgradeable,
 } from '../typechain-types';
-import { formatEther } from 'ethers';
+import { formatEther, parseEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { InstanceName } from '../utils/Names';
 
 export type PairFactoryState = {
   address: string;
@@ -217,14 +218,37 @@ export type VeBoostState = {
   boostFNXPercentage: bigint;
   boostFNXPercentageFormmated: string;
   priceProvider: string;
+  minUSDAmount: bigint;
+  minUSDAmountFormmated: string;
+  priceProviderState: {
+    address: string;
+    fnx: string;
+    usd: string;
+    pool: string;
+    usdToFnxPrice: bigint;
+    usdToFnxPriceFormmated: string;
+    currentTick: bigint;
+  };
 };
-export async function getVeBoostState(veBoost: VeBoostUpgradeable): Promise<VeBoostState> {
-  const [owner, minLockedTimeForBoost, boostFNXPercentage, priceProvider] = await Promise.all([
+export async function getVeBoostState(hre: HardhatRuntimeEnvironment, veBoost: VeBoostUpgradeable): Promise<VeBoostState> {
+  const [owner, minLockedTimeForBoost, boostFNXPercentage, priceProvider, minUSDAmount] = await Promise.all([
     veBoost.owner(),
     veBoost.getMinLockedTimeForBoost(),
     veBoost.getBoostFNXPercentage(),
     veBoost.priceProvider(),
+    veBoost.minUSDAmount(),
   ]);
+
+  let pp = await hre.ethers.getContractAt(InstanceName.AlgebraFNXPriceProviderUpgradeable, priceProvider);
+
+  const [ppFNX, ppUSD, ppPool, usdToFnxPrice, currentTick] = await Promise.all([
+    pp.FNX(),
+    pp.USD(),
+    pp.pool(),
+    pp.getUsdToFNXPrice(),
+    pp.currentTick(),
+  ]);
+
   return {
     address: veBoost.target.toString(),
     owner,
@@ -233,6 +257,17 @@ export async function getVeBoostState(veBoost: VeBoostUpgradeable): Promise<VeBo
     boostFNXPercentage,
     boostFNXPercentageFormmated: Number(boostFNXPercentage) / 100 + '%',
     priceProvider,
+    minUSDAmount,
+    minUSDAmountFormmated: formatEther(minUSDAmount),
+    priceProviderState: {
+      address: pp.target.toString(),
+      currentTick: currentTick,
+      fnx: ppFNX,
+      usd: ppUSD,
+      pool: ppPool,
+      usdToFnxPrice: usdToFnxPrice,
+      usdToFnxPriceFormmated: formatEther(usdToFnxPrice),
+    },
   };
 }
 

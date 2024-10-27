@@ -51,7 +51,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       deployData[AliasDeployedContracts.BribeFactoryUpgradeable_Proxy],
     );
 
-    const veBoostState = await getVeBoostState(VeBoostUpgradeable);
+    const veBoostState = await getVeBoostState(hre, VeBoostUpgradeable);
 
     const pairFactoryState = await getPairFactoryState(PairFactory);
     const pairsInfo = await Promise.all(
