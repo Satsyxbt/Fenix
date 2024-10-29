@@ -516,6 +516,11 @@
       {
         "components": [
           {
+            "internalType": "bool",
+            "name": "inPureTokens",
+            "type": "bool"
+          },
+          {
             "internalType": "uint256",
             "name": "amount",
             "type": "uint256"

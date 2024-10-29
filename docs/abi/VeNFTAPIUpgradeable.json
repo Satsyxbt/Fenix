@@ -178,6 +178,62 @@
   {
     "inputs": [
       {
+        "internalType": "uint256[]",
+        "name": "veNftIds_",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getAttachedVeNftsRewardInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "attachedManagedTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "strategy",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentTokenBalanceInStrategy",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentTokenLockedRewardsBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentTotalSupply",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct VeNFTAPIUpgradeable.AttachedVeNftInfo[]",
+        "name": "array",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_user",
         "type": "address"
@@ -518,6 +574,19 @@
         "internalType": "uint256[]",
         "name": "aprs",
         "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPrevEpochTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

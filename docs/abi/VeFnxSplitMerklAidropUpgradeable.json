@@ -17,7 +17,7 @@
   },
   {
     "inputs": [],
-    "name": "IncorrectToVeFnxPercentage",
+    "name": "IncorrectPureTokensRate",
     "type": "error"
   },
   {
@@ -33,6 +33,11 @@
   {
     "inputs": [],
     "name": "ZeroAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroPureTokensRate",
     "type": "error"
   },
   {
@@ -193,11 +198,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "toVeFnxPercentage",
+        "name": "pureTokensRate",
         "type": "uint256"
       }
     ],
-    "name": "SetToVeFnxPercentage",
+    "name": "SetPureTokensRate",
     "type": "event"
   },
   {
@@ -224,6 +229,30 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "claimAmount_",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculatePureTokensAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "inPureTokens_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
         "name": "amount_",
         "type": "uint256"
       },
@@ -244,6 +273,11 @@
         "internalType": "address",
         "name": "target_",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "inPureTokens_",
+        "type": "bool"
       },
       {
         "internalType": "uint256",
@@ -280,7 +314,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "toVeFnxPercentage_",
+        "name": "pureTokensRate_",
         "type": "uint256"
       }
     ],
@@ -397,6 +431,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "pureTokensRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -451,26 +498,13 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "toVeFnxPercentage_",
+        "name": "pureTokensRate_",
         "type": "uint256"
       }
     ],
-    "name": "setToVeFnxPercentage",
+    "name": "setPureTokensRate",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "toVeFnxPercentage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
