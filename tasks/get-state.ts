@@ -13,6 +13,7 @@ import {
   getPoolState,
   getVeBoostState,
   getBribeFactoryState,
+  getVeFnxSplitMerklAidropState,
 } from './utils';
 import AlgebraFactory_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 import AlgebraPool_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
@@ -50,6 +51,11 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       InstanceName.BribeFactoryUpgradeable,
       deployData[AliasDeployedContracts.BribeFactoryUpgradeable_Proxy],
     );
+    const VeFnxSplitMerklAidropUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.VeFnxSplitMerklAidropUpgradeable,
+      deployData[AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Proxy],
+    );
+    const veFnxSplitMerklAidropState = await getVeFnxSplitMerklAidropState(VeFnxSplitMerklAidropUpgradeable);
 
     const veBoostState = await getVeBoostState(hre, VeBoostUpgradeable);
 
@@ -105,6 +111,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       fenixState,
       minterState,
       veBoostState,
+      veFnxSplitMerklAidropState,
       bribeFactoryState,
       pairFactoryState,
       pairsInfo,

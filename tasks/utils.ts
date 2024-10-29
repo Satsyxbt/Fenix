@@ -8,8 +8,9 @@ import {
   Pair,
   PairFactoryUpgradeable,
   VeBoostUpgradeable,
+  VeFnxSplitMerklAidropUpgradeable,
 } from '../typechain-types';
-import { formatEther, parseEther } from 'ethers';
+import { formatEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { InstanceName } from '../utils/Names';
 
@@ -595,4 +596,36 @@ export async function getBlastGovernor(blast: IBlastFull, list: string[]): Promi
   }
 
   return result;
+}
+
+export type VeFnxSplitMerklAidropState = {
+  address: string;
+  owner: string;
+  token: string;
+  votingEscrow: string;
+  pureTokensRate: bigint;
+  pureTokensRateFormatted: string;
+  merklRoot: string;
+  isPaused: boolean;
+};
+export async function getVeFnxSplitMerklAidropState(veFnxSplit: VeFnxSplitMerklAidropUpgradeable): Promise<VeFnxSplitMerklAidropState> {
+  const [owner, token, votingEscrow, pureTokensRate, isPaused, merklRoot] = await Promise.all([
+    veFnxSplit.owner(),
+    veFnxSplit.token(),
+    veFnxSplit.votingEscrow(),
+    veFnxSplit.pureTokensRate(),
+    veFnxSplit.paused(),
+    veFnxSplit.merklRoot(),
+  ]);
+
+  return {
+    address: veFnxSplit.target.toString(),
+    owner,
+    token,
+    votingEscrow,
+    pureTokensRate,
+    pureTokensRateFormatted: formatEther(pureTokensRate * 100n) + '%',
+    merklRoot,
+    isPaused,
+  };
 }

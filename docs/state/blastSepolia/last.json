@@ -1,0 +1,752 @@
+{
+  "fenixState": {
+    "address": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+    "name": "Fenix",
+    "symbol": "FNX",
+    "totalSupply": "104684620205710081898860364",
+    "totalSupplyFormmated": "104684620.205710081898860364 FNX",
+    "owner": "0xDA283872Fc205f56cE5b0268D719373dc33e35dA"
+  },
+  "minterState": {
+    "address": "0xDA283872Fc205f56cE5b0268D719373dc33e35dA",
+    "isFirstMint": false,
+    "isStarted": true,
+    "decayRate": "100",
+    "decayRatePercent": "1%",
+    "inflationRate": "150",
+    "inflationRatePercent": "1.5%",
+    "inflationPeriodCount": "8",
+    "teamRate": "500",
+    "teamRatePercent": "5%",
+    "weekly": "1954678078730201192940806",
+    "weeklyFormmated": "1954678.078730201192940806 FNX",
+    "activePeriod": "1729728000",
+    "lastInflationPeriod": "1715212800",
+    "fenix": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+    "voter": "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43",
+    "ve": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
+    "owner": "0x9140D359f2855E6540609dd4A93773ED1f45f509",
+    "check": false,
+    "period": "1729728000"
+  },
+  "pairFactoryState": {
+    "address": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+    "protocolFee": "1000",
+    "protocolFeePercent": "10%",
+    "stableFee": "4",
+    "stableFeePercent": "0.04%",
+    "volatilityFee": "18",
+    "volatilityFeePercent": "0.18%",
+    "implementation": "0x71F9683e343309d7D7A235199f891a254CeC9eF7",
+    "communityVaultFactory": "0xa3103248290399cc2655b68f0038ce590ce8639E",
+    "rebasingTokensGovernor": "0x76da5656DEa3D8A8111aB749042f98103198332F",
+    "isPaused": false,
+    "isPublicPoolCreationMode": true,
+    "pairs": [
+      "0xb1A4Ed5e453953A625A530E90f1A49e13E7BEbdD",
+      "0xd30CD5626aB7d89D8f159069Ecd86079ef4B9024",
+      "0xC9684ef567eA6700103816F24B38B23474886Ca8",
+      "0x30330761b2b7548a8CeB92a45E914387a78C02Ec",
+      "0xc6e9375F6E834383C15142240Bd61cb84798B6CF",
+      "0x93C297b68d7D5D3Ca8f07d4918933257750401c5",
+      "0xae362f2B4a0fd94Bf4a2aFEF179277584f451E05",
+      "0x233B9c242Fe75e8eff108c8658E26bc82E19397D",
+      "0x57575a2BE14D5F54A3F3EB6c7a61EE82691C6A95",
+      "0xA439B6f0F08410FeF32B11f1f97FbC09CB9aF85c",
+      "0xD06F1a73e6B120f9A08962e3583933D547E52163",
+      "0xe9aeD3DbDEf8740d30dB5514f7BCB3E4fBEDa819",
+      "0xD29719a5139737F757e9012B97E25BbCD5aa2C3c",
+      "0x5b6412F855ae165594D538b160e02e2b81d5674A",
+      "0x904C672A49bD409fc8e9cc9b8A874A0E38d65c85"
+    ],
+    "allPairsLength": "15",
+    "defaultBlastGovernor": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "defaultBlastPoints": "0x2fc95838c71e76ec69ff817983BFf17c710F34E0",
+    "defaultBlastPointsOperator": "0x5888eEe48C0173681109Be60396D75bA2c02f632"
+  },
+  "pairsInfo": [
+    {
+      "address": "0xb1A4Ed5e453953A625A530E90f1A49e13E7BEbdD",
+      "name": "StableV1 AMM - fnUSDT/FNX",
+      "symbol": "sAMM-fnUSDT/FNX",
+      "token0": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "fees": "0x3dCe024740e0FB34a5e8bf204df5aa7baB1F4609",
+      "reserve0": "20000000",
+      "reserve1": "20000000000000000000",
+      "stable": true,
+      "totalSupply": "20000000000000",
+      "communityVault": "0x84Ab747FCA0e04e0e5AB016886FAc96CB4a6ad42",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x84Ab747FCA0e04e0e5AB016886FAc96CB4a6ad42",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xd30CD5626aB7d89D8f159069Ecd86079ef4B9024",
+      "name": "VolatileV1 AMM - fnUSDT/FNX",
+      "symbol": "vAMM-fnUSDT/FNX",
+      "token0": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "fees": "0x335fa40a2d8648Ca492545bffc7C61dbC0b6d97F",
+      "reserve0": "10000000",
+      "reserve1": "10000000000000000000",
+      "stable": false,
+      "totalSupply": "10000000000000",
+      "communityVault": "0x5Cf7436aBe66363Dd6043fFc34f626c97b55185B",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x5Cf7436aBe66363Dd6043fFc34f626c97b55185B",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xC9684ef567eA6700103816F24B38B23474886Ca8",
+      "name": "StableV1 AMM - WETH/FNX",
+      "symbol": "sAMM-WETH/FNX",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "fees": "0x0aeC474c1A699A6689625925A5388ca953f24D3E",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": true,
+      "totalSupply": "0",
+      "communityVault": "0x4a6819D095cD22FD55d7aA9E91Da3D2F34C91E29",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x4a6819D095cD22FD55d7aA9E91Da3D2F34C91E29",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x30330761b2b7548a8CeB92a45E914387a78C02Ec",
+      "name": "VolatileV1 AMM - WETH/fnTOK",
+      "symbol": "vAMM-WETH/fnTOK",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5",
+      "fees": "0x339B1B26Af7c06c1F1d72925060d8C8bAFcb2CF7",
+      "reserve0": "10000000000001000",
+      "reserve1": "10000000000001000",
+      "stable": false,
+      "totalSupply": "10000000000001000",
+      "communityVault": "0x87f62586eBdBb8Ebe2234500b081659c1Db43B96",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x87f62586eBdBb8Ebe2234500b081659c1Db43B96",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xc6e9375F6E834383C15142240Bd61cb84798B6CF",
+      "name": "VolatileV1 AMM - fnTOK/FNX",
+      "symbol": "vAMM-fnTOK/FNX",
+      "token0": "0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5",
+      "token1": "0xCF0A6C7cf979Ab031DF787e69dfB94816f6cB3c9",
+      "fees": "0xd95d7bE300a851958AF9d10Bf5c0825Cd1821b07",
+      "reserve0": "502000000000000000000",
+      "reserve1": "502000000000000000000",
+      "stable": false,
+      "totalSupply": "502000000000000000000",
+      "communityVault": "0xEACa8600a0d8E560AD0D7cEaa14bFc05444B1083",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xEACa8600a0d8E560AD0D7cEaa14bFc05444B1083",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x93C297b68d7D5D3Ca8f07d4918933257750401c5",
+      "name": "StableV1 AMM - USDT/fnUSDT",
+      "symbol": "sAMM-USDT/fnUSDT",
+      "token0": "0x7e1C73E1FAED242F7E2882323ca2641e17B7F185",
+      "token1": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "fees": "0x14b3021C09bFec98EbDa3ef28699d32B0e93b7B9",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": true,
+      "totalSupply": "0",
+      "communityVault": "0xaEf34054EC7cD4aD934152a1a8B85D2D24cdF9cb",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xaEf34054EC7cD4aD934152a1a8B85D2D24cdF9cb",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xae362f2B4a0fd94Bf4a2aFEF179277584f451E05",
+      "name": "VolatileV1 AMM - fnUSDT/fnTOK",
+      "symbol": "vAMM-fnUSDT/fnTOK",
+      "token0": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "token1": "0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5",
+      "fees": "0x2Aeb0FEffB4365d42f846Df3530158b90Ce68b8C",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": false,
+      "totalSupply": "0",
+      "communityVault": "0x99929882137c84eD6399CDEA8BcdB56C0C903ef6",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x99929882137c84eD6399CDEA8BcdB56C0C903ef6",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x233B9c242Fe75e8eff108c8658E26bc82E19397D",
+      "name": "StableV1 AMM - WETH/fnTOK",
+      "symbol": "sAMM-WETH/fnTOK",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5",
+      "fees": "0x7882f5eBe850D9fb5AeeB6F6f8e6BeDB5A42f602",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": true,
+      "totalSupply": "0",
+      "communityVault": "0xFd4cAC00094EC78bFE961Cfd734d8D21315b4D86",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xFd4cAC00094EC78bFE961Cfd734d8D21315b4D86",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x57575a2BE14D5F54A3F3EB6c7a61EE82691C6A95",
+      "name": "StableV1 AMM - fnUSDT/fnTOK",
+      "symbol": "sAMM-fnUSDT/fnTOK",
+      "token0": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "token1": "0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5",
+      "fees": "0x8963189FE960545f294B3CdbF57b1bFf84A57497",
+      "reserve0": "288848021",
+      "reserve1": "493184914645915506705",
+      "stable": true,
+      "totalSupply": "390560028665696",
+      "communityVault": "0xF55139d6508B5bF6B9196D9e84c63ee659F651CC",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xF55139d6508B5bF6B9196D9e84c63ee659F651CC",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xA439B6f0F08410FeF32B11f1f97FbC09CB9aF85c",
+      "name": "VolatileV1 AMM - WETH/FNX",
+      "symbol": "vAMM-WETH/FNX",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "fees": "0xD1C33ab53457d30bb3d2a4Da40903C74b37593b9",
+      "reserve0": "100100000000000000",
+      "reserve1": "250250000000000000000",
+      "stable": false,
+      "totalSupply": "5005000000000000000",
+      "communityVault": "0x5dB720439C156755B1e88D87d7bdCd08403aB5C0",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x5dB720439C156755B1e88D87d7bdCd08403aB5C0",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xD06F1a73e6B120f9A08962e3583933D547E52163",
+      "name": "VolatileV1 AMM - WETH/$GREED",
+      "symbol": "vAMM-WETH/$GREED",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0x7CF92BEeD3f720fcc19F1E093Aa6971edBF3f450",
+      "fees": "0xf8949bC2F98D7F0948477b9009534424Ea33a0fE",
+      "reserve0": "39991999240876",
+      "reserve1": "10001999601528526501",
+      "stable": false,
+      "totalSupply": "19999999011789119",
+      "communityVault": "0xDeE7Da666246a20243514E01854496ef6cC9cA8C",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xDeE7Da666246a20243514E01854496ef6cC9cA8C",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xe9aeD3DbDEf8740d30dB5514f7BCB3E4fBEDa819",
+      "name": "VolatileV1 AMM - WETH/GANG",
+      "symbol": "vAMM-WETH/GANG",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0xcC3675e34083D2D36F68D7c7c268FFa8ba0C1a35",
+      "fees": "0x99c9Ed9947E0d4Af22758A83b03054FA5E0B8CFb",
+      "reserve0": "10009008107296568",
+      "reserve1": "3996400000000000000000000",
+      "stable": false,
+      "totalSupply": "200000000000000000000",
+      "communityVault": "0xDbd29d55d99013B75798Ce48D890074319c43102",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xDbd29d55d99013B75798Ce48D890074319c43102",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xD29719a5139737F757e9012B97E25BbCD5aa2C3c",
+      "name": "VolatileV1 AMM - GOLD/WETH",
+      "symbol": "vAMM-GOLD/WETH",
+      "token0": "0x0636Ac16B608737473b1b9311E1857D542460D17",
+      "token1": "0x4200000000000000000000000000000000000023",
+      "fees": "0x69241f8b6f4Ce783be5f96d879B34FaF6eB60421",
+      "reserve0": "3492389115664841654130443",
+      "reserve1": "1536940372592505554",
+      "stable": false,
+      "totalSupply": "2316806467769304273389",
+      "communityVault": "0x7E0d059aaF53CD61bFf6FE664B6cd81d754caA9c",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x7E0d059aaF53CD61bFf6FE664B6cd81d754caA9c",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x5b6412F855ae165594D538b160e02e2b81d5674A",
+      "name": "VolatileV1 AMM - MOK1/MOK2",
+      "symbol": "vAMM-MOK1/MOK2",
+      "token0": "0x187488f4ea0eB78E17EC42eb93d2AF2aB9cb9759",
+      "token1": "0x2bAa70789767975b280bD5Dd5ea42B007Ad3f811",
+      "fees": "0xd619d1df85986CeDa404c74B8FE6347d72BAE396",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": false,
+      "totalSupply": "0",
+      "communityVault": "0xfA3a554af1718A3a828fdC9071910c48C9FAc471",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xfA3a554af1718A3a828fdC9071910c48C9FAc471",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x904C672A49bD409fc8e9cc9b8A874A0E38d65c85",
+      "name": "StableV1 AMM - MOK1/MOK2",
+      "symbol": "sAMM-MOK1/MOK2",
+      "token0": "0x187488f4ea0eB78E17EC42eb93d2AF2aB9cb9759",
+      "token1": "0x2bAa70789767975b280bD5Dd5ea42B007Ad3f811",
+      "fees": "0x85CFe747963eF5850d3189E0Ce82Db4ED661c564",
+      "reserve0": "0",
+      "reserve1": "0",
+      "stable": true,
+      "totalSupply": "0",
+      "communityVault": "0xcDeE1C160981e0d222Ff831B7104Df64e307D60f",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "10%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xcDeE1C160981e0d222Ff831B7104Df64e307D60f",
+        "creator": "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    }
+  ],
+  "algebraFactoryState": {
+    "address": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+    "poolDeployer": "0x383F8153913c2Da0769aCe87F20ED18A45f2E3C7",
+    "defaultBlastGovernor": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "rebasingTokensGovernor": "0x76da5656DEa3D8A8111aB749042f98103198332F",
+    "defaultBlastPoints": "0x2fc95838c71e76ec69ff817983BFf17c710F34E0",
+    "defaultBlastPointsOperator": "0x5888eEe48C0173681109Be60396D75bA2c02f632",
+    "isPublicPoolCreationMode": true,
+    "defaultCommunityFee": "1000",
+    "defaultCommunityFeeFormmated": "100%",
+    "defaultFee": "500",
+    "defaultFeeFormmated": "0.05%",
+    "defaultTickspacing": "60",
+    "renounceOwnershipStartTimestamp": "0",
+    "defaultPluginFactory": "0xc6366a42c28b81B45f9b7e41eC020D99fCA091E4",
+    "vaultFactory": "0xa3103248290399cc2655b68f0038ce590ce8639E",
+    "owner": "0x9140D359f2855E6540609dd4A93773ED1f45f509",
+    "pools": [
+      "0x73a432d0758aded25c1a8ba4610e20ea4ae28ca9",
+      "0xf13ebe82f017c3c07c4ff4b814b98fb4c834504e",
+      "0xd1deedb6a3e6d71607258cfeeedcb3acc862dba3",
+      "0xadfcaba34a101998f6929aa7325cdf04377009bc",
+      "0x27b96e424f487943790124514754438108373c03"
+    ]
+  },
+  "poolsInfo": [
+    {
+      "address": "0x73a432d0758aded25c1a8ba4610e20ea4ae28ca9",
+      "name": "fnUSDT/FNX",
+      "initialized": true,
+      "price": "79228162514264337593543950336000000",
+      "tick": "276324",
+      "lastFee": "100",
+      "lastFeePercent": "0.01%",
+      "pluginConfig": "193",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
+      "unlocked": true,
+      "liquidity": "0",
+      "totalFeeGrowth0Token": "0",
+      "totalFeeGrowth1Token": "0",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
+      "token0": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "plugin": "0xB4F645AC39E935af06ac4B965C10b99Bb9077B52",
+      "communityVault": "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66",
+      "tickSpacing": "60",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xf13ebe82f017c3c07c4ff4b814b98fb4c834504e",
+      "name": "WETH/FNX",
+      "initialized": true,
+      "price": "33473557404289593785803216477278",
+      "tick": "120929",
+      "lastFee": "15000",
+      "lastFeePercent": "1.5%",
+      "pluginConfig": "193",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
+      "unlocked": true,
+      "liquidity": "4397052834022996348",
+      "totalFeeGrowth0Token": "8925333443299550026661571544844552",
+      "totalFeeGrowth1Token": "4086541602021081866977283136412806110269",
+      "communityFeePending0": "408821385525",
+      "communityFeePending1": "0",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6",
+      "plugin": "0x2b2f72b87447382982ea9fcB926904357C9CcDcc",
+      "communityVault": "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793",
+      "tickSpacing": "60",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xd1deedb6a3e6d71607258cfeeedcb3acc862dba3",
+      "name": "WETH/fnUSDT",
+      "initialized": true,
+      "price": "1427360687993175343889424032",
+      "tick": "-80335",
+      "lastFee": "100",
+      "lastFeePercent": "0.01%",
+      "pluginConfig": "193",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
+      "unlocked": true,
+      "liquidity": "914964089000",
+      "totalFeeGrowth0Token": "0",
+      "totalFeeGrowth1Token": "0",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
+      "token0": "0x4200000000000000000000000000000000000023",
+      "token1": "0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a",
+      "plugin": "0xa2825a88595Cef55B284C384793aE207a9E14054",
+      "communityVault": "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2",
+      "tickSpacing": "60",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0xadfcaba34a101998f6929aa7325cdf04377009bc",
+      "name": "GOLD/WETH",
+      "initialized": true,
+      "price": "1833775631871286178144540835289364",
+      "tick": "201001",
+      "lastFee": "100",
+      "lastFeePercent": "0.01%",
+      "pluginConfig": "193",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
+      "unlocked": true,
+      "liquidity": "0",
+      "totalFeeGrowth0Token": "0",
+      "totalFeeGrowth1Token": "0",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
+      "token0": "0x0636Ac16B608737473b1b9311E1857D542460D17",
+      "token1": "0x4200000000000000000000000000000000000023",
+      "plugin": "0x713B507366Fb7C953036986a2f94F4fcE98d9c47",
+      "communityVault": "0x3d2fb9e461c986b855267458034ba06B47Cb49c7",
+      "tickSpacing": "60",
+      "protocolFeeState": {
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": false
+      },
+      "feesVaultInfo": {
+        "address": "0x3d2fb9e461c986b855267458034ba06B47Cb49c7",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    },
+    {
+      "address": "0x27b96e424f487943790124514754438108373c03",
+      "name": "MOK1/MOK2",
+      "initialized": false,
+      "price": "0",
+      "tick": "0",
+      "lastFee": "0",
+      "lastFeePercent": "0%",
+      "pluginConfig": "0",
+      "communityFee": "0",
+      "communityFeePercent": "0%",
+      "unlocked": true,
+      "liquidity": "0",
+      "totalFeeGrowth0Token": "0",
+      "totalFeeGrowth1Token": "0",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
+      "token0": "0x187488f4ea0eB78E17EC42eb93d2AF2aB9cb9759",
+      "token1": "0x2bAa70789767975b280bD5Dd5ea42B007Ad3f811",
+      "plugin": "0x229cd2b606E49e1Faa2547BF0635E655123cbfb2",
+      "communityVault": "0x0000000000000000000000000000000000000000",
+      "tickSpacing": "0",
+      "protocolFeeState": {
+        "protocolFee": "0",
+        "protocolFeePercent": "0%",
+        "isCustom": true
+      },
+      "feesVaultInfo": {
+        "address": "0x7A10F93a35c727A22CF03C6143FfD625fcCE2347",
+        "creator": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
+        "distributionConfig": {
+          "toGaugeRate": "10000",
+          "recipients": [],
+          "rates": []
+        }
+      }
+    }
+  ],
+  "governorMap": {
+    "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xDA283872Fc205f56cE5b0268D719373dc33e35dA": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x3dCe024740e0FB34a5e8bf204df5aa7baB1F4609": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x335fa40a2d8648Ca492545bffc7C61dbC0b6d97F": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x0aeC474c1A699A6689625925A5388ca953f24D3E": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x339B1B26Af7c06c1F1d72925060d8C8bAFcb2CF7": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xd95d7bE300a851958AF9d10Bf5c0825Cd1821b07": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x14b3021C09bFec98EbDa3ef28699d32B0e93b7B9": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x2Aeb0FEffB4365d42f846Df3530158b90Ce68b8C": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x7882f5eBe850D9fb5AeeB6F6f8e6BeDB5A42f602": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x8963189FE960545f294B3CdbF57b1bFf84A57497": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xD1C33ab53457d30bb3d2a4Da40903C74b37593b9": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xf8949bC2F98D7F0948477b9009534424Ea33a0fE": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x99c9Ed9947E0d4Af22758A83b03054FA5E0B8CFb": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x69241f8b6f4Ce783be5f96d879B34FaF6eB60421": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xd619d1df85986CeDa404c74B8FE6347d72BAE396": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x85CFe747963eF5850d3189E0Ce82Db4ED661c564": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xb1A4Ed5e453953A625A530E90f1A49e13E7BEbdD": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xd30CD5626aB7d89D8f159069Ecd86079ef4B9024": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xC9684ef567eA6700103816F24B38B23474886Ca8": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x30330761b2b7548a8CeB92a45E914387a78C02Ec": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xc6e9375F6E834383C15142240Bd61cb84798B6CF": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x93C297b68d7D5D3Ca8f07d4918933257750401c5": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xae362f2B4a0fd94Bf4a2aFEF179277584f451E05": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x233B9c242Fe75e8eff108c8658E26bc82E19397D": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x57575a2BE14D5F54A3F3EB6c7a61EE82691C6A95": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xA439B6f0F08410FeF32B11f1f97FbC09CB9aF85c": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xD06F1a73e6B120f9A08962e3583933D547E52163": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xe9aeD3DbDEf8740d30dB5514f7BCB3E4fBEDa819": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xD29719a5139737F757e9012B97E25BbCD5aa2C3c": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x5b6412F855ae165594D538b160e02e2b81d5674A": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x904C672A49bD409fc8e9cc9b8A874A0E38d65c85": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x84Ab747FCA0e04e0e5AB016886FAc96CB4a6ad42": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x5Cf7436aBe66363Dd6043fFc34f626c97b55185B": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x4a6819D095cD22FD55d7aA9E91Da3D2F34C91E29": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x87f62586eBdBb8Ebe2234500b081659c1Db43B96": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xEACa8600a0d8E560AD0D7cEaa14bFc05444B1083": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xaEf34054EC7cD4aD934152a1a8B85D2D24cdF9cb": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x99929882137c84eD6399CDEA8BcdB56C0C903ef6": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xFd4cAC00094EC78bFE961Cfd734d8D21315b4D86": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xF55139d6508B5bF6B9196D9e84c63ee659F651CC": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x5dB720439C156755B1e88D87d7bdCd08403aB5C0": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xDeE7Da666246a20243514E01854496ef6cC9cA8C": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xDbd29d55d99013B75798Ce48D890074319c43102": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x7E0d059aaF53CD61bFf6FE664B6cd81d754caA9c": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xfA3a554af1718A3a828fdC9071910c48C9FAc471": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xcDeE1C160981e0d222Ff831B7104Df64e307D60f": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x73a432d0758aded25c1a8ba4610e20ea4ae28ca9": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xf13ebe82f017c3c07c4ff4b814b98fb4c834504e": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xd1deedb6a3e6d71607258cfeeedcb3acc862dba3": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xadfcaba34a101998f6929aa7325cdf04377009bc": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x27b96e424f487943790124514754438108373c03": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x6429Eee8D66bC19987237AE543ff864EA1DdBf66": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xE90bF456D318D3D7789c623aB54EdE6F0C6a0793": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xB53ed69cE2046A05B009912F3B8B7cac32e244a2": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x3d2fb9e461c986b855267458034ba06B47Cb49c7": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x7A10F93a35c727A22CF03C6143FfD625fcCE2347": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xB4F645AC39E935af06ac4B965C10b99Bb9077B52": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x2b2f72b87447382982ea9fcB926904357C9CcDcc": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0xa2825a88595Cef55B284C384793aE207a9E14054": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x713B507366Fb7C953036986a2f94F4fcE98d9c47": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
+    "0x229cd2b606E49e1Faa2547BF0635E655123cbfb2": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"
+  }
+}
