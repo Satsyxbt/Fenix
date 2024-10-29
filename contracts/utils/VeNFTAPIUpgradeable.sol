@@ -195,14 +195,23 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
         }
     }
 
+    struct PrevEpochRewardStrategyInfo {
+        uint256 tokenBalanceInStrategy;
+        uint256 tokenEpochReward;
+        uint256 strategyTotalSupply;
+        uint256 strategyEpochRewards;
+    }
+
     struct AttachedVeNftInfo {
         bool success;
         uint256 tokenId;
         uint256 attachedManagedTokenId;
-        address strategy;
         uint256 currentTokenBalanceInStrategy;
         uint256 currentTokenLockedRewardsBalance;
         uint256 currentTotalSupply;
+        address strategy;
+        address rewarder;
+        PrevEpochRewardStrategyInfo prevEpochInfo;
     }
 
     function getAttachedVeNftsRewardInfo(uint256[] calldata veNftIds_) external view returns (AttachedVeNftInfo[] memory array) {
@@ -226,6 +235,17 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
                     array[i].currentTokenBalanceInStrategy = strategy.balanceOf(tokenId);
                     array[i].currentTokenLockedRewardsBalance = strategy.getLockedRewardsBalance(tokenId);
                     array[i].currentTotalSupply = strategy.totalSupply();
+                    array[i].rewarder = strategy.virtualRewarder();
+
+                    ISingelTokenVirtualRewarder rewarder = ISingelTokenVirtualRewarder(array[i].rewarder);
+
+                    uint256 prevEpoch = getPrevEpochTimestamp();
+                    array[i].prevEpochInfo.tokenBalanceInStrategy = rewarder.balanceOfAt(tokenId, prevEpoch);
+                    array[i].prevEpochInfo.strategyTotalSupply = rewarder.totalSupplyAt(prevEpoch);
+                    array[i].prevEpochInfo.strategyEpochRewards = rewarder.rewardsPerEpoch(prevEpoch);
+                    array[i].prevEpochInfo.tokenEpochReward =
+                        (array[i].prevEpochInfo.strategyEpochRewards * array[i].prevEpochInfo.tokenBalanceInStrategy) /
+                        array[i].prevEpochInfo.strategyTotalSupply;
 
                     array[i].success = true;
                 }

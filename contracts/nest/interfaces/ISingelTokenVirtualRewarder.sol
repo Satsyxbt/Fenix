@@ -91,6 +91,23 @@ interface ISingelTokenVirtualRewarder {
     function balanceOf(uint256 tokenId) external view returns (uint256);
 
     /**
+     * @notice Provides the balance of a specific tokenId at a given timestamp
+     *
+     * @param tokenId_ The ID of the token to check
+     * @param timestamp_ The specific timestamp to check the balance at
+     * @return The balance of the token at the given timestamp
+     */
+    function balanceOfAt(uint256 tokenId_, uint256 timestamp_) external view returns (uint256);
+
+    /**
+     * @notice Provides the total supply of tokens at a given timestamp
+     *
+     * @param timestamp_ The timestamp to check the total supply at
+     * @return The total supply of tokens at the specified timestamp
+     */
+    function totalSupplyAt(uint256 timestamp_) external view returns (uint256);
+
+    /**
      * @notice Returns the reward per epoch for a specific epoch.
      * @param epoch The epoch for which to retrieve the reward amount.
      * @return The reward amount for the specified epoch.

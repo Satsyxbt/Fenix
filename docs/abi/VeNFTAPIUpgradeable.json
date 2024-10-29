@@ -203,11 +203,6 @@
             "type": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "strategy",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
             "name": "currentTokenBalanceInStrategy",
             "type": "uint256"
@@ -221,6 +216,43 @@
             "internalType": "uint256",
             "name": "currentTotalSupply",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "strategy",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "rewarder",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenBalanceInStrategy",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenEpochReward",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "strategyTotalSupply",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "strategyEpochRewards",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct VeNFTAPIUpgradeable.PrevEpochRewardStrategyInfo",
+            "name": "prevEpochInfo",
+            "type": "tuple"
           }
         ],
         "internalType": "struct VeNFTAPIUpgradeable.AttachedVeNftInfo[]",
