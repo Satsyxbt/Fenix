@@ -4,6 +4,7 @@ import {
   FeesVaultFactoryUpgradeable,
   Fenix,
   IBlastFull,
+  MinimalLinearVestingUpgradeable,
   MinterUpgradeable,
   Pair,
   PairFactoryUpgradeable,
@@ -596,6 +597,43 @@ export async function getBlastGovernor(blast: IBlastFull, list: string[]): Promi
   }
 
   return result;
+}
+
+export type MinimalLinearVestingState = {
+  address: string;
+  owner: string;
+  token: string;
+  startTimestamp: bigint;
+  startTimestampFormmated: string;
+  duration: bigint;
+  durationFormatted: string;
+  totalAllocated: bigint;
+  isClaimPhase: boolean;
+};
+
+export async function getMinimalLinearVestingState(
+  minimalLinearVesting: MinimalLinearVestingUpgradeable,
+): Promise<MinimalLinearVestingState> {
+  const [owner, token, startTimestamp, duration, totalAllocated, isClaimPhase] = await Promise.all([
+    minimalLinearVesting.owner(),
+    minimalLinearVesting.token(),
+    minimalLinearVesting.startTimestamp(),
+    minimalLinearVesting.duration(),
+    minimalLinearVesting.totalAllocated(),
+    minimalLinearVesting.isClaimPhase(),
+  ]);
+
+  return {
+    address: minimalLinearVesting.target.toString(),
+    owner,
+    token,
+    startTimestamp,
+    startTimestampFormmated: new Date(Number(startTimestamp) * 1000).toUTCString(),
+    duration,
+    durationFormatted: Number(duration) / 86400 + ' days',
+    totalAllocated,
+    isClaimPhase,
+  };
 }
 
 export type VeFnxSplitMerklAidropState = {

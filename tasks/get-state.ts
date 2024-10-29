@@ -14,6 +14,7 @@ import {
   getVeBoostState,
   getBribeFactoryState,
   getVeFnxSplitMerklAidropState,
+  getMinimalLinearVestingState,
 } from './utils';
 import AlgebraFactory_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 import AlgebraPool_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
@@ -55,6 +56,10 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       InstanceName.VeFnxSplitMerklAidropUpgradeable,
       deployData[AliasDeployedContracts.VeFnxSplitMerklAidropUpgradeable_Proxy],
     );
+    const MinimalLinearVestingUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.MinimalLinearVestingUpgradeable,
+      deployData[AliasDeployedContracts.MinimalLinearVestingUpgradeable_Proxy],
+    );
     const veFnxSplitMerklAidropState = await getVeFnxSplitMerklAidropState(VeFnxSplitMerklAidropUpgradeable);
 
     const veBoostState = await getVeBoostState(hre, VeBoostUpgradeable);
@@ -66,6 +71,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       }),
     );
     const fenixState = await getFenixState(Fenix);
+    const minimalLinearVestingState = await getMinimalLinearVestingState(MinimalLinearVestingUpgradeable);
 
     const minterState = await getMinterState(MinterUpgradeable);
     const bribeFactoryState = await getBribeFactoryState(hre, BribeFactoryUpgradeable);
@@ -112,6 +118,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       minterState,
       veBoostState,
       veFnxSplitMerklAidropState,
+      minimalLinearVestingState,
       bribeFactoryState,
       pairFactoryState,
       pairsInfo,

@@ -56,8 +56,7 @@ function setWalletsAllocation(address[] calldata wallets_, uint256[] calldata am
 - `wallets_`: An array of wallet addresses to receive allocations.
 - `amounts_`: An array of amounts corresponding to each wallet.
 
-This function can only be called by the owner and only before the vesting has started. If the wallet allocation changes result in a difference between the contract's current balance and the total allocated amount, the contract will either return excess tokens to the owner or request additional tokens.
-
+**This function can only be called by the owner and only before the vesting has started. If the wallet allocation changes result in a difference between the contract's current balance and the total allocated amount, the contract will either return excess tokens to the owner or request additional tokens.**
 ### Example
 
 ```solidity
@@ -93,8 +92,7 @@ function setVestingParams(uint256 startTimestamp_, uint256 duration_) external o
 - `startTimestamp_`: The new start timestamp for the vesting period.
 - `duration_`: The new duration for vesting, in seconds.
 
-This function can only be used before the vesting phase begins. Once the vesting has started, it cannot be modified.
-
+**This function can only be used before the vesting phase begins. Once the vesting has started, it cannot be modified.**
 ## Claiming Tokens
 
 The `claim()` function allows users to claim their vested tokens. The claim is based on the time that has passed since the vesting started and the total allocated amount for the user.
