@@ -67,11 +67,13 @@ export enum AliasDeployedContracts {
   GaugeRewader_Proxy = 'GaugeRewader_Proxy',
   AlgebraFactory_Proxy = 'AlgebraFactory_Proxy',
   BasePluginV1Factory_Proxy = 'BasePluginV1Factory_Proxy',
+  ManualFNXPriceProvider = 'ManualFNXPriceProvider',
 }
 
 enum ThirdPart {
   Blast = 'IBlastFull',
 }
+
 enum ContractsInstanceName {
   UtilsUpgradeable = 'UtilsUpgradeable',
   ProxyAdmin = 'ProxyAdmin',
@@ -112,6 +114,7 @@ enum ContractsInstanceName {
   BlastGovernorUpgradeable = 'BlastGovernorUpgradeable',
   MinimalLinearVestingUpgradeable = 'MinimalLinearVestingUpgradeable',
   GaugeRewarder = 'GaugeRewarder',
+  ManualFNXPriceProvider = 'ManualFNXPriceProvider',
 }
 
 enum ContractsMocksInstanceName {
