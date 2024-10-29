@@ -1,12 +1,11 @@
+## VeFnxSplitMerklAidropUpgradeable Integrate
 
-### VeFnxSplitMerklAidrop Integrate
+### Integration Guide
 
-#### Integration Guide
+#### Overview
+The `VeFnxSplitMerklAidropUpgradeable` contract allows users to claim their allocated tokens either entirely as veNFT tokens or as pure tokens at a specified rate. The contract supports pausing and unpausing by the owner and integrates with a Voting Escrow contract to lock the claimed tokens as veNFT if chosen.
 
-##### Overview
-The `VeFnxSplitMerklAidropUpgradeable` contract allows users to claim their allocated FNX and veFNX tokens based on a Merkle tree proof. The contract supports pausing and unpausing by the owner and integrates with a Voting Escrow contract to lock a portion of the claimed tokens as veFNX.
-
-##### Claiming Tokens
+#### Claiming Tokens
 To claim your allocated tokens, follow these steps:
 
 1. Ensure the contract is not paused.
@@ -14,46 +13,43 @@ To claim your allocated tokens, follow these steps:
 3. Call the `claim` function with the amount and the Merkle proof.
 
 ```solidity
-function claim(uint256 amount_, bytes32[] memory proof_) external;
+function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
 ```
-
 - **Parameters:**
+  - `inPureTokens_`: A boolean indicating if the claim is in pure tokens.
   - `amount_`: The total amount of tokens you can claim.
   - `proof_`: The Merkle proof verifying your claim.
 
-The function will verify the provided proof against the stored Merkle root. If the proof is valid, the function will calculate the amount to be locked as veFNX and the amount to be transferred directly. The claim will then be processed, and the relevant amounts will be distributed accordingly.
+The function will verify the provided proof against the stored Merkle root. If the proof is valid, the function will either:
+- Transfer the full amount as veNFT token if `inPureTokens_` is `false`.
+- Will issue in the form of pure FNX tokens but with conversion at a certain rate, based on the `pureTokensRate` if `inPureTokens_` is `true`.
 
-**Note:** If the Merkle root is updated, you can claim again if your new claim amount equals the previous claim amount plus any new rewards.
+The claim will then be processed, and the relevant amounts will be distributed accordingly.
 
-##### Merkle Root
-The Merkle root is used to verify user claims. It is set by the owner and can only be updated when the contract is paused.
+**Note**: If the Merkle root is updated, you can claim again if your new claim amount equals the previous claim amount plus any new rewards.
 
-To update the Merkle root:
-
-1. Ensure the contract is paused.
-2. Call the `setMerklRoot` function with the new Merkle root.
+#### Calculating Pure Tokens Amount
+The contract provides a function to calculate the equivalent amount in pure tokens based on the claim amount. This is useful for determining how much you will receive if you choose to claim in pure tokens.
 
 ```solidity
-function setMerklRoot(bytes32 merklRoot_) external onlyOwner whenPaused;
+function calculatePureTokensAmount(uint256 claimAmount_) public view returns (uint256);
 ```
-
 - **Parameters:**
-  - `merklRoot_`: The new Merkle root.
+  - `claimAmount_`: The claim amount for which to calculate the equivalent pure tokens.
+- **Returns:**
+  - The calculated amount of pure tokens.
 
-This function will emit a `SetMerklRoot` event upon successful update.
+This function allows users to estimate the pure tokens they will receive before making a claim.
 
-##### Errors
+#### Errors
+- **IncorrectPureTokensRate**: Thrown when the pure tokens rate is set incorrectly.
+- **InvalidProof**: Thrown when a provided Merkle proof is invalid.
+- **ZeroAmount**: Thrown when the claim amount is zero.
+- **NotAllowedClaimOperator**: Thrown when the caller is not an allowed claim operator.
+- **ZeroPureTokensRate**: Thrown when the pure tokens rate is zero.
 
-###### IncorrectToVeFnxPercentage
-- Thrown when the `toVeFnxPercentage` is set to a value greater than 1e18.
-
-###### InvalidProof
-- Thrown when a provided Merkle proof is invalid.
-
-###### ZeroAmount
-- Thrown when the claim amount is zero.
-
-##### Special Considerations
+#### Special Considerations
 - Ensure that the contract is not paused when making a claim.
 - Verify the Merkle proof accurately to avoid `InvalidProof` errors.
-- The `toVeFnxPercentage` should be a fraction of 1e18 (e.g., 0.5 * 1e18 represents 50%).
+- The pure tokens rate is used to determine the number of pure tokens equivalent to the claimed amount. Ensure it is set correctly by the owner.
+

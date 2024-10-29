@@ -1,42 +1,43 @@
-## VeFnxSplitMerklAidrop Manage
+## VeFnxSplitMerklAidropUpgradeable Manage
 
 ### Management Guide
 
 #### Overview
-The `VeFnxSplitMerklAidropUpgradeable` contract provides several functions for the owner to manage the contract. These include initializing the contract, pausing and unpausing operations, setting the Merkle root, and adjusting the split percentage.
+The `VeFnxSplitMerklAidropUpgradeable` contract provides several functions for the owner to manage the contract. These include initializing the contract, pausing and unpausing operations, setting the Merkle root, and adjusting the pure tokens rate.
 
 #### Functions Available During Pause State
 - `setMerklRoot(bytes32 merklRoot_)` - Allows the owner to set a new Merkle root.
-- `recoverToken(uint256 amount_)` - Allows the owner to recover FNX tokens from the contract.
+- `recoverToken(uint256 amount_)` - Allows the owner to recover tokens from the contract.
 - `unpause()` -  Allows the owner to unpause the contract.
-- `setToVeFnxPercentage(uint256 toVeFnxPercentage_)` - Allows the owner to adjust the split percentage of tokens to be locked as veFNX.
-  
-#### Functions Available When Not Paused
-- `claim(uint256 amount_, bytes32[] memory proof_)` - Allows users to claim their allocated FNX and veFNX tokens.
+- `setPureTokensRate(uint256 pureTokensRate_)` - Allows the owner to adjust the rate for pure tokens.
 - `pause()` - Allows the owner to pause the contract.
+
+#### Functions Available When Not Paused
+- `claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_)` - Allows users to claim their allocated tokens, either as pure tokens or as veNFT tokens.
+- `claimFor(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_)` - Allows claim operators to claim tokens on behalf of a target address.
 
 #### Initialization
 The contract must be initialized with the following parameters:
 
 - Address of the Blast Governor contract.
-- Address of the FNX token contract.
+- Address of the token contract.
 - Address of the Voting Escrow contract.
-- Percentage of tokens to be locked as veFNX.
+- Rate for pure tokens.
 
 ```solidity
     /**
      * @dev Initializes the contract with the provided parameters.
      * @param blastGovernor_ Address of the Blast Governor contract.
-     * @param token_ Address of the FNX token contract.
+     * @param token_ Address of the token contract.
      * @param votingEscrow_ Address of the Voting Escrow contract.
-     * @param toVeFnxPercentage_ Percentage of tokens to be locked as veFNX.
+     * @param pureTokensRate_ Rate for pure tokens.
      * @notice This function can only be called once.
      */
     function initialize(
         address blastGovernor_,
         address token_,
         address votingEscrow_,
-        uint256 toVeFnxPercentage_
+        uint256 pureTokensRate_
     ) external initializer;
 ```
 
@@ -60,7 +61,6 @@ To unpause the contract:
      * Can only be called by the owner.
      * @notice Emits an {Unpaused} event.
      */
-
     function unpause() external;
 ```
 
@@ -80,22 +80,51 @@ The Merkle root can be updated by the owner when the contract is paused.
 
 This function will emit a `SetMerklRoot` event upon successful update.
 
-#### Adjusting the Split Percentage
-The percentage of tokens to be locked as veFNX can be updated by the owner.
-```
-function setToVeFnxPercentage(uint256 toVeFnxPercentage_) external
+#### Adjusting the Pure Tokens Rate
+The rate for pure tokens can be updated by the owner.
+```solidity
+    /**
+     * @dev Sets the pure tokens rate.
+     * Can only be called by the owner when the contract is paused.
+     * @param pureTokensRate_ The new pure tokens rate.
+     * @notice Emits a {SetPureTokensRate} event.
+     */
+    function setPureTokensRate(uint256 pureTokensRate_) external;
 ```
 - **Parameters:**
-  - `toVeFnxPercentage_`: The new percentage.
+  - `pureTokensRate_`: The new rate for pure tokens.
 
-This function will emit a `SetToVeFnxPercentage` event upon successful update.
+This function will emit a `SetPureTokensRate` event upon successful update.
 
-#### Recovering FNX Tokens
-The owner can recover `FNX` tokens from the contract.
+#### Setting Claim Operators
+The owner can set whether an address is allowed to operate claims on behalf of others.
+```solidity
+    /**
+     * @dev Sets whether an address is allowed to operate claims on behalf of others.
+     * Can only be called by the owner.
+     * @param operator_ The address of the operator to set.
+     * @param isAllowed_ A boolean indicating whether the operator is allowed.
+     * @notice Emits a {SetIsAllowedClaimOperator} event.
+     */
+    function setIsAllowedClaimOperator(address operator_, bool isAllowed_) external;
+```
+- **Parameters:**
+  - `operator_`: The address of the claim operator.
+  - `isAllowed_`: A boolean indicating whether the operator is allowed.
+
+This function will emit a `SetIsAllowedClaimOperator` event upon successful update.
+
+#### Recovering Tokens
+The owner can recover tokens from the contract.
 
 ```solidity
-function recoverToken(uint256 amount_) external onlyOwner whenPaused;
-
+    /**
+     * @notice Allows the owner to recover token from the contract.
+     * @param amount_ The amount of tokens to be recovered.
+     * Transfers the specified amount of tokens to the owner's address.
+     */
+    function recoverToken(uint256 amount_) external onlyOwner whenPaused;
 ```
 - **Parameters:**
-  - `amount_`: The amount of FNX tokens to be recovered.
+  - `amount_`: The amount of tokens to be recovered.
+
