@@ -36,6 +36,7 @@ External:
 | **VeNFTAPIUpgradeable_Proxy**                        | 0x938DdfB6b96461287c4d5d919a559a8DD69f915C   |
 | **RewardAPIUpgradeable_Proxy**                       | 0x43002697555743241155ee8b950F2075fD085F32   |
 | **VeBoostUpgradeable_Proxy**                         | 0x20ba4388a1ef501F1fD055a39c4e303eCf5a1660   |
+| **VeFnxSplitMerklAidropUpgradeable_Proxy**        |  0x4BcC88B000C02075115275d5BB1e4133Ed1BD068|
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy | 0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938  |
 | MDCBlastMock                                     | 0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01   |
 
@@ -55,11 +56,11 @@ External:
 | PerpetualsGaugeUpgradeable_Implementation               | 0x88d8aE0B24fcB16845788810a298131CfD12f45f   |
 | BlastGovernorUpgradeable_Implementation                 | 0x032a4Bdd9c98abf3c8d4D29a540c29f57b393252   |
 | BlastRebasingTokensGovernorUpgradeable_Implementation   | 0x2ECcA22fb93674e45D37Ada6Ce21a67884709682   |
-| VeFnxSplitMerklAidropUpgradeable_Implementation         | 0x5E2f616444b98895DF8E57105Dca9B0774B86b99   |
+| VeFnxSplitMerklAidropUpgradeable_Implementation         | 0x5F38c84bE7C62F7F682AF4D1036c5fB72c0A4eb9   |
 | UtilsUpgradeable_Implementation                         | 0x7A2A229bB0FC58628448437Cc94db06FF1730550   |
 | MinimalLinearVestingUpgradeable_Implementation          | 0x6F6B1F213fe196711139076dd41b30cD0DcC4910   |
-| VotingEscrowUpgradeable_Implementation                  | 0xB48074c330b589b3665E7697c1D0a39A5A85EDA9   |
-| VoterUpgradeable_Implementation                         | 0x2b7D3ba53f711708f7481C53C957689781825f86   |
+| VotingEscrowUpgradeable_Implementation                  | 0xaD82F3C1d70e270F418F0Be58850a4af237B9a72   |
+| VoterUpgradeable_Implementation                         | 0xeF0d86AC88c0bC1B3E5E4071Adee02Ac0d90F3A8   |
 | BribeUpgradeable_Implementation                         | 0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D   |
 | BribeFactoryUpgradeable_Implementation                  | 0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca   |
 | GaugeUpgradeable_Implementation                         | 0x913837b6C6e15275a5e034c935c3568367431e59   |
