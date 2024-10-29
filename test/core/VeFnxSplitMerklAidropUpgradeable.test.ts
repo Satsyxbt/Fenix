@@ -1,13 +1,11 @@
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { setCode, time, mine, loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
+import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { Fenix, VeFnxSplitMerklAidropUpgradeable, VotingEscrowUpgradeableV2 } from '../../typechain-types/index';
-import { BLAST_PREDEPLOYED_ADDRESS, ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, { deployERC20MockToken, SignersList } from '../utils/coreFixture';
-import { deploy } from '@openzeppelin/hardhat-upgrades/dist/utils';
-import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
-import { eq } from '../../lib/fenix-dex-v3/docs/doc_templates/public/helpers';
+import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { SignersList } from '../utils/coreFixture';
 
 function getProof(address: string, tree: any): string[] {
   let proof: string[];
@@ -20,7 +18,7 @@ function getProof(address: string, tree: any): string[] {
 }
 
 describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
-  const TO_VE_FNX_PERCENTRAGE = ethers.parseEther('0.4');
+  const TO_PURE_TOKESN_RATE = ethers.parseEther('0.25');
 
   let implementation: VeFnxSplitMerklAidropUpgradeable;
   let proxy: VeFnxSplitMerklAidropUpgradeable;
@@ -42,18 +40,18 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       ).target,
     );
 
-    await proxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_VE_FNX_PERCENTRAGE);
+    await proxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_PURE_TOKESN_RATE);
   });
 
   describe('Deployment', function () {
     it('fail if try initialize on implementation', async () => {
       await expect(
-        implementation.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_VE_FNX_PERCENTRAGE),
+        implementation.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_PURE_TOKESN_RATE),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('fail if try initialize second time', async () => {
       await expect(
-        proxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_VE_FNX_PERCENTRAGE),
+        proxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_PURE_TOKESN_RATE),
       ).to.be.revertedWith(ERRORS.Initializable.Initialized);
     });
     it('fail if try set zero address', async () => {
@@ -64,17 +62,17 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         ).target,
       );
       await expect(
-        uninitializedProxy.initialize(ZERO_ADDRESS, fenix.target, votingEscrow.target, TO_VE_FNX_PERCENTRAGE),
+        uninitializedProxy.initialize(ZERO_ADDRESS, fenix.target, votingEscrow.target, TO_PURE_TOKESN_RATE),
       ).to.be.revertedWithCustomError(uninitializedProxy, 'AddressZero');
       await expect(
-        uninitializedProxy.initialize(signers.blastGovernor.address, ZERO_ADDRESS, votingEscrow.target, TO_VE_FNX_PERCENTRAGE),
+        uninitializedProxy.initialize(signers.blastGovernor.address, ZERO_ADDRESS, votingEscrow.target, TO_PURE_TOKESN_RATE),
       ).to.be.revertedWithCustomError(uninitializedProxy, 'AddressZero');
 
       await expect(
-        uninitializedProxy.initialize(signers.blastGovernor.address, fenix.target, ZERO_ADDRESS, TO_VE_FNX_PERCENTRAGE),
+        uninitializedProxy.initialize(signers.blastGovernor.address, fenix.target, ZERO_ADDRESS, TO_PURE_TOKESN_RATE),
       ).to.be.revertedWithCustomError(uninitializedProxy, 'AddressZero');
     });
-    it('fail if try set ve fnx percentage more then precision', async () => {
+    it('fail if try set pure tokens rate more then 100%', async () => {
       let uninitializedProxy = await ethers.getContractAt(
         'VeFnxSplitMerklAidropUpgradeable',
         (
@@ -83,19 +81,19 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       );
       await expect(
         uninitializedProxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, ethers.parseEther('1') + BigInt(1)),
-      ).to.be.revertedWithCustomError(uninitializedProxy, 'IncorrectToVeFnxPercentage');
+      ).to.be.revertedWithCustomError(uninitializedProxy, 'IncorrectPureTokensRate');
       await expect(
         uninitializedProxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, ethers.parseEther('1')),
-      ).to.be.not.revertedWithCustomError(uninitializedProxy, 'IncorrectToVeFnxPercentage');
+      ).to.be.not.revertedWithCustomError(uninitializedProxy, 'IncorrectPureTokensRate');
       await expect(
         uninitializedProxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, 0),
-      ).to.be.not.revertedWithCustomError(uninitializedProxy, 'IncorrectToVeFnxPercentage');
+      ).to.be.not.revertedWithCustomError(uninitializedProxy, 'IncorrectPureTokensRate');
     });
     describe('success deployment', async () => {
       it('correct setup params', async () => {
         expect(await proxy.token()).to.be.eq(fenix.target);
         expect(await proxy.votingEscrow()).to.be.eq(votingEscrow.target);
-        expect(await proxy.toVeFnxPercentage()).to.be.eq(TO_VE_FNX_PERCENTRAGE);
+        expect(await proxy.pureTokensRate()).to.be.eq(TO_PURE_TOKESN_RATE);
       });
 
       it('owner should be deployer', async () => {
@@ -113,40 +111,40 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
   });
 
   describe('Access restricted methods', async () => {
-    describe('#setToVeFnxPercentage', async () => {
+    describe('#setPureTokensRate', async () => {
       it('fail if try call from not owner', async () => {
-        await expect(proxy.connect(signers.otherUser1).setToVeFnxPercentage(1)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+        await expect(proxy.connect(signers.otherUser1).setPureTokensRate(1)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
       });
 
       it('should fail if try setup during not paused state', async () => {
         await proxy.unpause();
         expect(await proxy.paused()).to.be.false;
-        await expect(proxy.setToVeFnxPercentage(1)).to.be.revertedWith(ERRORS.Pausable.NotPaused);
+        await expect(proxy.setPureTokensRate(1)).to.be.revertedWith(ERRORS.Pausable.NotPaused);
       });
 
       it('should fail if try setup more then 100%', async () => {
-        await expect(proxy.setToVeFnxPercentage(ethers.parseEther('1') + BigInt(1))).to.be.revertedWithCustomError(
+        await expect(proxy.setPureTokensRate(ethers.parseEther('1') + BigInt(1))).to.be.revertedWithCustomError(
           proxy,
-          'IncorrectToVeFnxPercentage',
+          'IncorrectPureTokensRate',
         );
       });
 
       it('success setup with emit event', async () => {
         expect(await proxy.paused()).to.be.true;
-        expect(await proxy.toVeFnxPercentage()).to.be.eq(TO_VE_FNX_PERCENTRAGE);
+        expect(await proxy.pureTokensRate()).to.be.eq(TO_PURE_TOKESN_RATE);
 
-        await expect(proxy.setToVeFnxPercentage(0)).to.be.emit(proxy, 'SetToVeFnxPercentage').withArgs(0);
-        expect(await proxy.toVeFnxPercentage()).to.be.eq(0);
+        await expect(proxy.setPureTokensRate(0)).to.be.emit(proxy, 'SetPureTokensRate').withArgs(0);
+        expect(await proxy.pureTokensRate()).to.be.eq(0);
 
-        await expect(proxy.setToVeFnxPercentage(ethers.parseEther('1')))
-          .to.be.emit(proxy, 'SetToVeFnxPercentage')
+        await expect(proxy.setPureTokensRate(ethers.parseEther('1')))
+          .to.be.emit(proxy, 'SetPureTokensRate')
           .withArgs(ethers.parseEther('1'));
-        expect(await proxy.toVeFnxPercentage()).to.be.eq(ethers.parseEther('1'));
+        expect(await proxy.pureTokensRate()).to.be.eq(ethers.parseEther('1'));
 
-        await expect(proxy.setToVeFnxPercentage(ethers.parseEther('0.005')))
-          .to.be.emit(proxy, 'SetToVeFnxPercentage')
+        await expect(proxy.setPureTokensRate(ethers.parseEther('0.005')))
+          .to.be.emit(proxy, 'SetPureTokensRate')
           .withArgs(ethers.parseEther('0.005'));
-        expect(await proxy.toVeFnxPercentage()).to.be.eq(ethers.parseEther('0.005'));
+        expect(await proxy.pureTokensRate()).to.be.eq(ethers.parseEther('0.005'));
       });
     });
 
@@ -351,7 +349,22 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('0.01'));
     });
   });
+  it('#calculatePureTokensAmount', async () => {
+    expect(await proxy.pureTokensRate()).to.be.eq(TO_PURE_TOKESN_RATE);
+    expect(await proxy.calculatePureTokensAmount(0)).to.be.eq(0);
+    expect(await proxy.calculatePureTokensAmount(1)).to.be.eq(0);
+    expect(await proxy.calculatePureTokensAmount(10)).to.be.eq(2);
+    expect(await proxy.calculatePureTokensAmount(100)).to.be.eq(25);
+    expect(await proxy.calculatePureTokensAmount(ethers.parseEther('1'))).to.be.eq(ethers.parseEther('0.25'));
 
+    await proxy.setPureTokensRate(ethers.parseEther('1'));
+    expect(await proxy.calculatePureTokensAmount(ethers.parseEther('1'))).to.be.eq(ethers.parseEther('1'));
+    expect(await proxy.calculatePureTokensAmount(1)).to.be.eq(1);
+    await proxy.setPureTokensRate(ethers.parseEther('0.1'));
+    expect(await proxy.calculatePureTokensAmount(ethers.parseEther('1'))).to.be.eq(ethers.parseEther('0.1'));
+    expect(await proxy.calculatePureTokensAmount(10)).to.be.eq(1);
+    expect(await proxy.calculatePureTokensAmount(ethers.parseEther('1.12345'))).to.be.eq(ethers.parseEther('0.112345'));
+  });
   describe('Claim flow', async () => {
     let tree: any;
     let user: string;
@@ -378,24 +391,24 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
     describe('fail if', async () => {
       it("contracts have'nt enough tokens for user claim", async () => {
         await expect(
-          proxy.connect(signers.otherUser3).claim(ethers.parseEther('200.1'), getProof(signers.otherUser3.address, tree)),
+          proxy.connect(signers.otherUser3).claim(false, ethers.parseEther('200.1'), getProof(signers.otherUser3.address, tree)),
         ).to.be.revertedWith(ERRORS.ERC20.InsufficientBalance);
       });
       it('user provide invalid proof', async () => {
         await expect(
-          proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser2.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'InvalidProof');
       });
       it('during paused state', async () => {
         await proxy.pause();
         await expect(
-          proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWith(ERRORS.Pausable.Paused);
       });
       it('claim amount is zero (after success claim)', async () => {
-        await proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+        await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
         await expect(
-          proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
       });
     });
@@ -413,58 +426,119 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.supply()).to.be.eq(0);
         expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
       });
+
+      it('success claim in pure and veNft tokens', async () => {
+        await proxy.pause();
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('100.1')],
+            [signers.otherUser2.address, 1],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+        expect(await proxy.pureTokensRate()).to.be.eq(TO_PURE_TOKESN_RATE);
+        let claimAmount = ethers.parseEther('100.1');
+        let expectedOutAmount = ethers.parseEther('25.02500');
+        expect(await proxy.calculatePureTokensAmount(claimAmount)).to.be.eq(expectedOutAmount);
+
+        let tx = await proxy.connect(signers.otherUser1).claim(true, claimAmount, getProof(signers.otherUser1.address, tree));
+        await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, claimAmount, expectedOutAmount, 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, expectedOutAmount);
+
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(expectedOutAmount);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('200') - expectedOutAmount);
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(claimAmount);
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(0);
+        expect(await votingEscrow.supply()).to.be.eq(0);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
+
+        await proxy.pause();
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('202.2')],
+            [signers.otherUser2.address, 1],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+
+        expect(await proxy.calculatePureTokensAmount(claimAmount)).to.be.eq(expectedOutAmount);
+
+        let newClaimedAmount = ethers.parseEther('202.2') - claimAmount;
+        tx = await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('202.2'), getProof(signers.otherUser1.address, tree));
+        await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, newClaimedAmount, 0, newClaimedAmount, 1);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, newClaimedAmount);
+
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(expectedOutAmount);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('200') - newClaimedAmount - expectedOutAmount);
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('202.2'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(newClaimedAmount);
+        expect(await votingEscrow.supply()).to.be.eq(newClaimedAmount);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+      });
+
       it('test', async () => {
-        let tx = await proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+        let tx = await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser1.address, ethers.parseEther('100'), ethers.parseEther('60'), ethers.parseEther('40'), 1);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('60'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('40'));
+          .withArgs(signers.otherUser1.address, ethers.parseEther('100'), 0, ethers.parseEther('100'), 1);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('100'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
         expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('100'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('40'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('40'));
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
         expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
 
         await expect(
-          proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
-        tx = await proxy.connect(signers.otherUser2).claim(ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree));
+        tx = await proxy.connect(signers.otherUser2).claim(true, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser2.address, ethers.parseEther('50.5'), ethers.parseEther('30.3'), ethers.parseEther('20.2'), 2);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('30.3'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('20.2'));
+          .withArgs(signers.otherUser2.address, ethers.parseEther('50.5'), ethers.parseEther('12.62500'), 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('12.62500'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.3'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('12.62500'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('49.5'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('87.37500'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('50.5'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
-        expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
 
         await expect(
-          proxy.connect(signers.otherUser1).claim(ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
         await expect(
-          proxy.connect(signers.otherUser2).claim(ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree)),
+          proxy.connect(signers.otherUser2).claim(false, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         await proxy.pause();
@@ -479,40 +553,36 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser1).claim(ethers.parseEther('101'), getProof(signers.otherUser1.address, tree));
+        tx = await proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('101'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('0.6'), ethers.parseEther('0.4'), 3);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('0.6'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('0.4'));
+          .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('0.25'), 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('0.25'));
 
-        tx = await proxy.connect(signers.otherUser2).claim(ethers.parseEther('51'), getProof(signers.otherUser2.address, tree));
+        tx = await proxy.connect(signers.otherUser2).claim(false, ethers.parseEther('51'), getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser2.address, ethers.parseEther('0.5'), ethers.parseEther('0.3'), ethers.parseEther('0.2'), 4);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('0.3'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('0.2'));
+          .withArgs(signers.otherUser2.address, ethers.parseEther('0.5'), 0, ethers.parseEther('0.5'), 2);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('0.5'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('0.25'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('12.62500'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('48'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('86.62500'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('101'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
         await proxy.pause();
 
-        await proxy.setToVeFnxPercentage(ethers.parseEther('0'));
+        await proxy.setPureTokensRate(ethers.parseEther('1'));
         tree = StandardMerkleTree.of(
           [
             [user, ethers.parseEther('102')],
@@ -524,38 +594,36 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser1).claim(ethers.parseEther('102'), getProof(signers.otherUser1.address, tree));
+        tx = await proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('102'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('1'), 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('1'));
 
-        tx = await proxy.connect(signers.otherUser3).claim(ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
+        tx = await proxy.connect(signers.otherUser3).claim(true, ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('10'), 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser3.address, ethers.parseEther('10'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('61.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('1.25'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('12.62500'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('37'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('75.62500'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('102'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
         await proxy.pause();
 
-        await proxy.setToVeFnxPercentage(ethers.parseEther('1'));
+        await proxy.setPureTokensRate(ethers.parseEther('0.5'));
         tree = StandardMerkleTree.of(
           [
             [user, ethers.parseEther('102')],
@@ -567,30 +635,26 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser3).claim(ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
+        tx = await proxy.connect(signers.otherUser3).claim(true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser3.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 5);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('10'));
+          .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('5'), 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser3.address, ethers.parseEther('5'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('61.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
-        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('27'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('1.25'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('12.62500'));
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('15'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('70.62500'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('102'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('20'));
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(5);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100.5'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
-        expect(await votingEscrow.ownerOf(5)).to.be.eq(signers.otherUser3.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser3.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
       });
     });
   });
@@ -607,7 +671,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       tree = StandardMerkleTree.of(
         [
           [user, ethers.parseEther('100')],
-          [signers.otherUser2.address, ethers.parseEther('50.5')],
+          [signers.otherUser2.address, ethers.parseEther('50')],
           [signers.otherUser3.address, ethers.parseEther('200.1')],
         ],
         ['address', 'uint256'],
@@ -625,7 +689,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
     it('fail if call from not allowed operator', async () => {
       await expect(
-        proxy.connect(signers.otherUser3).claimFor(user, ethers.parseEther('100'), getProof(user, tree)),
+        proxy.connect(signers.otherUser3).claimFor(user, false, ethers.parseEther('100'), getProof(user, tree)),
       ).to.be.revertedWithCustomError(proxy, 'NotAllowedClaimOperator');
     });
 
@@ -633,7 +697,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       await expect(
         proxy
           .connect(signers.otherUser1)
-          .claimFor(signers.otherUser1, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          .claimFor(signers.otherUser1, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
       ).to.be.not.reverted;
     });
 
@@ -650,25 +714,38 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.supply()).to.be.eq(0);
         expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
       });
+
       it('test', async () => {
+        await proxy.pause();
+        await proxy.setPureTokensRate(ethers.parseEther('0.1'));
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('100')],
+            [signers.otherUser2.address, ethers.parseEther('50')],
+            [signers.otherUser3.address, ethers.parseEther('200.1')],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+
         let tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser1.address, ethers.parseEther('100'), ethers.parseEther('60'), ethers.parseEther('40'), 1);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('60'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('40'));
+          .withArgs(signers.otherUser1.address, ethers.parseEther('100'), 0, ethers.parseEther('100'), 1);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('100'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
         expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
         expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('100'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
         expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('40'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('40'));
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
         expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
@@ -676,49 +753,46 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser1.address, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+            .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser2.address, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree));
+          .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser2.address, ethers.parseEther('50.5'), ethers.parseEther('30.3'), ethers.parseEther('20.2'), 2);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('30.3'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('20.2'));
+          .withArgs(signers.otherUser2.address, ethers.parseEther('50'), ethers.parseEther('5'), 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('5'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.3'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('5'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('49.5'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('95'));
         expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
-        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('50.5'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('50'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.2'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('100'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
-        expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser1.address, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+            .claimFor(signers.otherUser1.address, true, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser2.address, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree)),
+            .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         await proxy.pause();
         tree = StandardMerkleTree.of(
           [
-            [user, ethers.parseEther('101')],
-            [signers.otherUser2.address, ethers.parseEther('51')],
+            [user, ethers.parseEther('110')],
+            [signers.otherUser2.address, ethers.parseEther('60')],
             [signers.otherUser3.address, ethers.parseEther('200.1')],
           ],
           ['address', 'uint256'],
@@ -728,56 +802,53 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, ethers.parseEther('101'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, true, ethers.parseEther('110'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('0.6'), ethers.parseEther('0.4'), 3);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('0.6'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('0.4'));
+          .withArgs(signers.otherUser1.address, ethers.parseEther('10'), ethers.parseEther('1'), 0, 0);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('1'));
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser2.address, ethers.parseEther('51'), getProof(signers.otherUser2.address, tree));
+          .claimFor(signers.otherUser2.address, false, ethers.parseEther('60'), getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser2.address, ethers.parseEther('0.5'), ethers.parseEther('0.3'), ethers.parseEther('0.2'), 4);
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser2.address, ethers.parseEther('0.3'));
-        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('0.2'));
+          .withArgs(signers.otherUser2.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 2);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('10'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('60.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('5'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('48'));
-        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('101'));
-        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('84'));
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('110'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('60'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('110'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('110'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
         await proxy.pause();
 
-        await proxy.setToVeFnxPercentage(ethers.parseEther('0'));
         tree = StandardMerkleTree.of(
           [
-            [user, ethers.parseEther('102')],
-            [signers.otherUser2.address, ethers.parseEther('51')],
+            [user, ethers.parseEther('111')],
+            [signers.otherUser2.address, ethers.parseEther('60')],
             [signers.otherUser3.address, ethers.parseEther('10')],
           ],
           ['address', 'uint256'],
         );
         await proxy.setMerklRoot(tree.root);
+        await proxy.setPureTokensRate(ethers.parseEther('1'));
+
         await proxy.unpause();
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, ethers.parseEther('102'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, true, ethers.parseEther('111'), getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('1'), 0, 0);
@@ -785,36 +856,34 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser3.address, ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
+          .claimFor(signers.otherUser3.address, true, ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('10'), 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser3.address, ethers.parseEther('10'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('61.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('2'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('5'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('37'));
-        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('102'));
-        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('73'));
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('111'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('60'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('60.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(4);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('110'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('110'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
 
         await proxy.pause();
 
-        await proxy.setToVeFnxPercentage(ethers.parseEther('1'));
+        await proxy.setPureTokensRate(ethers.parseEther('0'));
         tree = StandardMerkleTree.of(
           [
-            [user, ethers.parseEther('102')],
-            [signers.otherUser2.address, ethers.parseEther('51')],
+            [user, ethers.parseEther('112')],
+            [signers.otherUser2.address, ethers.parseEther('61')],
             [signers.otherUser3.address, ethers.parseEther('20')],
           ],
           ['address', 'uint256'],
@@ -822,31 +891,40 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
+        await expect(
+          proxy
+            .connect(operator)
+            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree)),
+        ).revertedWithCustomError(proxy, 'ZeroPureTokensRate');
+        await expect(
+          proxy
+            .connect(signers.otherUser3)
+            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree)),
+        ).revertedWithCustomError(proxy, 'ZeroPureTokensRate');
+
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser3.address, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
+          .claimFor(signers.otherUser3.address, false, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
-          .withArgs(signers.otherUser3.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 5);
+          .withArgs(signers.otherUser3.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 3);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('10'));
 
-        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('61.6'));
-        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('30.6'));
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('2'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('5'));
         expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
-        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('27'));
-        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('102'));
-        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('51'));
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('63'));
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('111'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('60'));
         expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('20'));
-        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('70.8'));
-        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(5);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('120'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('120'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(3);
         expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser1.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.ownerOf(4)).to.be.eq(signers.otherUser2.address);
-        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(2);
-        expect(await votingEscrow.ownerOf(5)).to.be.eq(signers.otherUser3.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser3.address);
         expect(await votingEscrow.balanceOf(signers.otherUser3.address)).to.be.eq(1);
       });
     });

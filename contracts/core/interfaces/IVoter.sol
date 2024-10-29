@@ -61,10 +61,12 @@ interface IVoter {
 
     /**
      * @notice Parameters for claiming VeFnx Merkl airdrop data.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount The amount to claim.
      * @param proofs The array of Merkle proofs.
      */
     struct AggregateClaimVeFnxMerklAirdrop {
+        bool inPureTokens;
         uint256 amount;
         bytes32[] proofs;
     }

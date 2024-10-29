@@ -610,7 +610,12 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
             IMerklDistributor(merklDistributor).claim(merkl_.users, merkl_.tokens, merkl_.amounts, merkl_.proofs);
         }
         if (splitMerklAidrop_.amount > 0) {
-            IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claimFor(_msgSender(), splitMerklAidrop_.amount, splitMerklAidrop_.proofs);
+            IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claimFor(
+                _msgSender(),
+                splitMerklAidrop_.inPureTokens,
+                splitMerklAidrop_.amount,
+                splitMerklAidrop_.proofs
+            );
         }
     }
 

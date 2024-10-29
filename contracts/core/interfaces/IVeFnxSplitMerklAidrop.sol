@@ -11,8 +11,8 @@ interface IVeFnxSplitMerklAidrop {
      * @param user The address of the user.
      * @param claimAmount The total amount of tokens claimed.
      * @param toTokenAmount The amount of tokens transferred directly to the user.
-     * @param toVeNFTAmount The amount of tokens locked as veFNX.
-     * @param tokenId The ID of the veFNX lock created.
+     * @param toVeNFTAmount The amount of tokens locked as veNFT.
+     * @param tokenId The ID of the veNFT lock created.
      */
     event Claim(address indexed user, uint256 claimAmount, uint256 toTokenAmount, uint256 toVeNFTAmount, uint256 tokenId);
 
@@ -23,10 +23,10 @@ interface IVeFnxSplitMerklAidrop {
     event SetMerklRoot(bytes32 merklRoot);
 
     /**
-     * @dev Emitted when the split percentage is set.
-     * @param toVeFnxPercentage The new percentage of tokens to be locked as veFNX.
+     * @dev Emitted when the pure tokens rate is set.
+     * @param pureTokensRate The new pure tokens rate.
      */
-    event SetToVeFnxPercentage(uint256 toVeFnxPercentage);
+    event SetPureTokensRate(uint256 pureTokensRate);
     /**
      * @dev Emitted when the allowed status of a claim operator is set or changed.
      * @param operator The address of the claim operator.
@@ -35,30 +35,32 @@ interface IVeFnxSplitMerklAidrop {
     event SetIsAllowedClaimOperator(address indexed operator, bool indexed isAllowed);
 
     /**
-     * @dev Emitted when FNX tokens are recovered from the contract.
+     * @dev Emitted when tokens are recovered from the contract.
      * @param sender address that performed the recovery.
-     * @param amount of FNX tokens recovered.
+     * @param amount of tokens recovered.
      */
     event Recover(address indexed sender, uint256 amount);
 
     /**
-     * @dev Allows a user to claim their allocated FNX and veFNX tokens.
-     * @param amount_ The total amount of tokens the user can claim.
-     * @param proof_ The Merkle proof verifying the user's claim.
+     * @dev Allows a user to claim tokens or veNFT tokens based on a Merkle proof.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
+     * @param amount_ The amount to claim.
+     * @param proof_ The Merkle proof for the claim.
+     * @notice This function can only be called when the contract is not paused.
      */
-    function claim(uint256 amount_, bytes32[] memory proof_) external;
+    function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
 
     /**
      * @dev Allows a claim operator to claim tokens on behalf of a target address.
-     * Also, the user can claim for himself without the operator permissions
      * @param target_ The address of the user on whose behalf tokens are being claimed.
-     * @param amount_ The total amount of tokens to claim.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
+     * @param amount_ The amount to claim.
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice This function can only be called when the contract is not paused.
      * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
      * @notice Emits a {Claim} event.
      */
-    function claimFor(address target_, uint256 amount_, bytes32[] memory proof_) external;
+    function claimFor(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
 
     /**
      * @dev Sets whether an address is allowed to operate claims on behalf of others.
@@ -89,16 +91,17 @@ interface IVeFnxSplitMerklAidrop {
     function setMerklRoot(bytes32 merklRoot_) external;
 
     /**
-     * @dev Sets the percentage of tokens to be locked as veFNX.
-     * Can only be called by the owner.
-     * @param toVeFnxPercentage_ The new percentage.
+     * @dev Sets the pure tokens rate.
+     * Can only be called by the owner when the contract is paused.
+     * @param pureTokensRate_ The new pure tokens rate.
+     * @notice Emits a {SetPureTokensRate} event.
      */
-    function setToVeFnxPercentage(uint256 toVeFnxPercentage_) external;
+    function setPureTokensRate(uint256 pureTokensRate_) external;
 
     /**
-     * @notice Allows the owner to recover FNX tokens from the contract.
-     * @param amount_ The amount of FNX tokens to be recovered.
-     * Transfers the specified amount of FNX tokens to the owner's address.
+     * @notice Allows the owner to recover tokens from the contract.
+     * @param amount_ The amount of tokens to be recovered.
+     * Transfers the specified amount of tokens to the owner's address.
      */
     function recoverToken(uint256 amount_) external;
 
@@ -112,7 +115,7 @@ interface IVeFnxSplitMerklAidrop {
     function isValidProof(address user_, uint256 amount_, bytes32[] memory proof_) external view returns (bool);
 
     /**
-     * @dev Returns the address of the FNX token contract.
+     * @dev Returns the address of the token contract.
      */
     function token() external view returns (address);
 
@@ -122,9 +125,9 @@ interface IVeFnxSplitMerklAidrop {
     function votingEscrow() external view returns (address);
 
     /**
-     * @dev Returns the percentage of tokens to be locked as veFNX.
+     * @dev Rate for pure tokens.
      */
-    function toVeFnxPercentage() external view returns (uint256);
+    function pureTokensRate() external view returns (uint256);
 
     /**
      * @dev Returns the Merkle root used for verifying claims.
@@ -144,4 +147,11 @@ interface IVeFnxSplitMerklAidrop {
      * @return true if the operator is allowed, false otherwise.
      */
     function isAllowedClaimOperator(address operator_) external view returns (bool);
+
+    /**
+     * @dev Calculates the equivalent amount in pure tokens based on the claim amount.
+     * @param claimAmount_ The claim amount for which to calculate the equivalent pure tokens.
+     * @return The calculated amount of pure tokens.
+     */
+    function calculatePureTokensAmount(uint256 claimAmount_) external view returns (uint256);
 }

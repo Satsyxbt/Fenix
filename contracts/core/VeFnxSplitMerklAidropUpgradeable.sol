@@ -11,7 +11,7 @@ import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimable
 
 /**
  * @title VeFnxSplitMerklAidropUpgradeable
- * @dev A contract for handling FNX and veFNX token claims based on a Merkle tree proof.
+ * @dev A contract for handling token and veNft token claims based on a Merkle tree proof.
  */
 contract VeFnxSplitMerklAidropUpgradeable is
     IVeFnxSplitMerklAidrop,
@@ -22,7 +22,7 @@ contract VeFnxSplitMerklAidropUpgradeable is
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
-     * @dev The duration for which veFNX tokens will be locked.
+     * @dev The duration for which veNFT tokens will be locked.
      */
     uint256 internal constant _LOCK_DURATION = 182 days;
 
@@ -32,20 +32,19 @@ contract VeFnxSplitMerklAidropUpgradeable is
     uint256 internal constant _PRECISION = 1e18;
 
     /**
-     * @dev Address of the FNX token contract.
+     * @dev Address of the token contract.
      */
     address public override token;
 
     /**
-     * @dev Address of the Voting Escrow contract used for veFNX tokens.
+     * @dev Address of the Voting Escrow contract used for veNFT tokens.
      */
     address public override votingEscrow;
 
     /**
-     * @dev Percentage of the claimed amount to be locked as veFNX.
-     * This value should be set as a fraction of 1e18 (e.g., 0.5 * 1e18 represents 50%).
+     * @dev Rate for pure tokens.
      */
-    uint256 public override toVeFnxPercentage;
+    uint256 public override pureTokensRate;
 
     /**
      * @dev Merkle root used for verifying user claims.
@@ -63,9 +62,9 @@ contract VeFnxSplitMerklAidropUpgradeable is
     mapping(address => bool) public override isAllowedClaimOperator;
 
     /**
-     * @dev Error thrown when the `toVeFnxPercentage` is incorrect (i.e., greater than 1e18).
+     * @dev Error thrown when the pure tokens rate is incorrect.
      */
-    error IncorrectToVeFnxPercentage();
+    error IncorrectPureTokensRate();
 
     /**
      * @dev Error thrown when a provided Merkle proof is invalid.
@@ -83,7 +82,13 @@ contract VeFnxSplitMerklAidropUpgradeable is
     error NotAllowedClaimOperator();
 
     /**
+     * @dev Error thrown when the pure tokens rate is zero.
+     */
+    error ZeroPureTokensRate();
+
+    /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
+     * @param blastGovernor_ Address of the Blast Governor contract.
      */
     constructor(address blastGovernor_) {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
@@ -93,20 +98,20 @@ contract VeFnxSplitMerklAidropUpgradeable is
     /**
      * @dev Initializes the contract with the provided parameters.
      * @param blastGovernor_ Address of the Blast Governor contract.
-     * @param token_ Address of the FNX token contract.
+     * @param token_ Address of the token contract.
      * @param votingEscrow_ Address of the Voting Escrow contract.
-     * @param toVeFnxPercentage_ Percentage of tokens to be locked as veFNX.
+     * @param pureTokensRate_ Rate for pure tokens.
      * @notice This function can only be called once.
      */
     function initialize(
         address blastGovernor_,
         address token_,
         address votingEscrow_,
-        uint256 toVeFnxPercentage_
+        uint256 pureTokensRate_
     ) external virtual initializer {
         _checkAddressZero(token_);
         _checkAddressZero(votingEscrow_);
-        _checkToVeFnxPercentage(toVeFnxPercentage_);
+        _checkPureTokensRate(pureTokensRate_);
 
         __BlastGovernorClaimableSetup_init(blastGovernor_);
         __Ownable2Step_init();
@@ -116,37 +121,40 @@ contract VeFnxSplitMerklAidropUpgradeable is
 
         token = token_;
         votingEscrow = votingEscrow_;
-        toVeFnxPercentage = toVeFnxPercentage_;
+        pureTokensRate = pureTokensRate_;
     }
 
     /**
-     * @dev Allows a user to claim their allocated FNX and veFNX tokens.
-     * @param amount_ The total amount of tokens the user can claim.
-     * @param proof_ The Merkle proof verifying the user's claim.
+     * @dev Allows a user to claim tokens or veNFT tokens based on a Merkle proof.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
+     * @param amount_ The amount to claim.
+     * @param proof_ The Merkle proof for the claim.
      * @notice This function can only be called when the contract is not paused.
-     * @notice Reverts with `InvalidProof` if the provided proof is not valid.
-     * @notice Reverts with `ZeroAmount` if the claim amount is zero.
-     * @notice Emits a {Claim} event.
      */
-    function claim(uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
-        _claim(_msgSender(), amount_, proof_);
+    function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
+        _claim(_msgSender(), inPureTokens_, amount_, proof_);
     }
 
     /**
      * @dev Allows a claim operator to claim tokens on behalf of a target address.
-     * Also, the user can claim for himself without the operator permissions
      * @param target_ The address of the user on whose behalf tokens are being claimed.
-     * @param amount_ The total amount of tokens to claim.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
+     * @param amount_ The amount to claim.
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice This function can only be called when the contract is not paused.
      * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
      * @notice Emits a {Claim} event.
      */
-    function claimFor(address target_, uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
+    function claimFor(
+        address target_,
+        bool inPureTokens_,
+        uint256 amount_,
+        bytes32[] memory proof_
+    ) external virtual override whenNotPaused {
         if (target_ != _msgSender() && !isAllowedClaimOperator[_msgSender()]) {
             revert NotAllowedClaimOperator();
         }
-        _claim(target_, amount_, proof_);
+        _claim(target_, inPureTokens_, amount_, proof_);
     }
 
     /**
@@ -192,22 +200,21 @@ contract VeFnxSplitMerklAidropUpgradeable is
     }
 
     /**
-     * @dev Sets the percentage of tokens to be locked as veFNX.
-     * Can only be called by the owner.
-     * @param toVeFnxPercentage_ The new percentage.
-     * @notice Reverts with `IncorrectToVeFnxPercentage` if the percentage is greater than 1e18.
-     * @notice Emits a {SetToVeFnxPercentage} event.
+     * @dev Sets the pure tokens rate.
+     * Can only be called by the owner when the contract is paused.
+     * @param pureTokensRate_ The new pure tokens rate.
+     * @notice Emits a {SetPureTokensRate} event.
      */
-    function setToVeFnxPercentage(uint256 toVeFnxPercentage_) external virtual override onlyOwner whenPaused {
-        _checkToVeFnxPercentage(toVeFnxPercentage_);
-        toVeFnxPercentage = toVeFnxPercentage_;
-        emit SetToVeFnxPercentage(toVeFnxPercentage_);
+    function setPureTokensRate(uint256 pureTokensRate_) external virtual override onlyOwner whenPaused {
+        _checkPureTokensRate(pureTokensRate_);
+        pureTokensRate = pureTokensRate_;
+        emit SetPureTokensRate(pureTokensRate_);
     }
 
     /**
-     * @notice Allows the owner to recover FNX tokens from the contract.
-     * @param amount_ The amount of FNX tokens to be recovered.
-     * Transfers the specified amount of FNX tokens to the owner's address.
+     * @notice Allows the owner to recover token from the contract.
+     * @param amount_ The amount of tokens to be recovered.
+     * Transfers the specified amount of tokens to the owner's address.
      */
     function recoverToken(uint256 amount_) external virtual override onlyOwner whenPaused {
         IERC20Upgradeable(token).safeTransfer(_msgSender(), amount_);
@@ -231,15 +238,25 @@ contract VeFnxSplitMerklAidropUpgradeable is
     }
 
     /**
+     * @dev Calculates the equivalent amount in pure tokens based on the claim amount.
+     * @param claimAmount_ The claim amount for which to calculate the equivalent pure tokens.
+     * @return The calculated amount of pure tokens.
+     */
+    function calculatePureTokensAmount(uint256 claimAmount_) public view returns (uint256) {
+        return (pureTokensRate * claimAmount_) / _PRECISION;
+    }
+
+    /**
      * @dev Internal function to handle the claiming process.
      * @param target_ The address of the user making the claim.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The total amount of tokens the user can claim.
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice Reverts with `InvalidProof` if the provided proof is not valid.
      * @notice Reverts with `ZeroAmount` if the claim amount is zero.
      * @notice Emits a {Claim} event.
      */
-    function _claim(address target_, uint256 amount_, bytes32[] memory proof_) internal virtual {
+    function _claim(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) internal virtual {
         if (!isValidProof(target_, amount_, proof_)) {
             revert InvalidProof();
         }
@@ -252,18 +269,22 @@ contract VeFnxSplitMerklAidropUpgradeable is
         userClaimed[target_] = amount_;
 
         IERC20Upgradeable tokenCache = IERC20Upgradeable(token);
-        uint256 toVeNFTAmount = (claimAmount * toVeFnxPercentage) / _PRECISION;
-        uint256 toTokenAmount = claimAmount - toVeNFTAmount;
-
         uint256 tokenId;
-        if (toVeNFTAmount > 0) {
+
+        uint256 toTokenAmount;
+        uint256 toVeNFTAmount;
+        if (inPureTokens_) {
+            uint256 pureTokensRateCache = pureTokensRate;
+            if (pureTokensRateCache == 0) {
+                revert ZeroPureTokensRate();
+            }
+            toTokenAmount = calculatePureTokensAmount(claimAmount);
+            tokenCache.safeTransfer(target_, toTokenAmount);
+        } else {
+            toVeNFTAmount = claimAmount;
             IVotingEscrow veCache = IVotingEscrow(votingEscrow);
             tokenCache.safeApprove(address(veCache), toVeNFTAmount);
             tokenId = veCache.createLockFor(toVeNFTAmount, _LOCK_DURATION, target_, false, false, 0);
-        }
-
-        if (toTokenAmount > 0) {
-            tokenCache.safeTransfer(target_, toTokenAmount);
         }
 
         emit Claim(target_, claimAmount, toTokenAmount, toVeNFTAmount, tokenId);
@@ -280,14 +301,9 @@ contract VeFnxSplitMerklAidropUpgradeable is
         }
     }
 
-    /**
-     * @dev Checks if the provided percentage is valid.
-     * @param toVeFnxPercentage_ The percentage to check.
-     * @notice Reverts with `IncorrectToVeFnxPercentage` if the percentage is greater than 1e18.
-     */
-    function _checkToVeFnxPercentage(uint256 toVeFnxPercentage_) internal pure virtual {
-        if (toVeFnxPercentage_ > _PRECISION) {
-            revert IncorrectToVeFnxPercentage();
+    function _checkPureTokensRate(uint256 pureTokensRate_) internal pure virtual {
+        if (pureTokensRate_ > _PRECISION) {
+            revert IncorrectPureTokensRate();
         }
     }
 
