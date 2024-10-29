@@ -10,6 +10,8 @@ import "../dexV2/interfaces/IPair.sol";
 import "../gauges/interfaces/IGauge.sol";
 import "../bribes/interfaces/IBribe.sol";
 import "../nest/interfaces/ISingelTokenVirtualRewarder.sol";
+import "../nest/interfaces/ICompoundVeFNXManagedNFTStrategy.sol";
+
 import "../nest/interfaces/IManagedNFTManager.sol";
 
 contract VeNFTAPIUpgradeable is OwnableUpgradeable {
@@ -49,6 +51,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
 
     uint256 public constant MAX_RESULTS = 1000;
     uint256 public constant MAX_PAIRS = 30;
+    uint256 internal constant _WEEK = 86400 * 7;
 
     IVoter public voter;
     address public underlyingToken;
@@ -190,5 +193,51 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
                 aprs[i] = (rewardsPerEpoch * 100 * 52) / totalSupply;
             }
         }
+    }
+
+    struct AttachedVeNftInfo {
+        bool success;
+        uint256 tokenId;
+        uint256 attachedManagedTokenId;
+        address strategy;
+        uint256 currentTokenBalanceInStrategy;
+        uint256 currentTokenLockedRewardsBalance;
+        uint256 currentTotalSupply;
+    }
+
+    function getAttachedVeNftsRewardInfo(uint256[] calldata veNftIds_) external view returns (AttachedVeNftInfo[] memory array) {
+        array = new AttachedVeNftInfo[](veNftIds_.length);
+        IManagedNFTManager managedNFTManagerCache = managedNFTManager;
+        IVotingEscrow votingEscrowCache = ve;
+
+        for (uint256 i; i < veNftIds_.length; ) {
+            uint256 tokenId = veNftIds_[i];
+
+            array[i].tokenId = tokenId;
+
+            uint256 mTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId);
+            if (mTokenId > 0) {
+                array[i].attachedManagedTokenId = mTokenId;
+                array[i].strategy = IERC721EnumerableUpgradeable(address(votingEscrowCache)).ownerOf(mTokenId);
+
+                if (array[i].strategy.code.length > 0) {
+                    ICompoundVeFNXManagedNFTStrategy strategy = ICompoundVeFNXManagedNFTStrategy(array[i].strategy);
+
+                    array[i].currentTokenBalanceInStrategy = strategy.balanceOf(tokenId);
+                    array[i].currentTokenLockedRewardsBalance = strategy.getLockedRewardsBalance(tokenId);
+                    array[i].currentTotalSupply = strategy.totalSupply();
+
+                    array[i].success = true;
+                }
+            }
+
+            unchecked {
+                i++;
+            }
+        }
+    }
+
+    function getPrevEpochTimestamp() public view returns (uint256) {
+        return (block.timestamp / _WEEK) * _WEEK - _WEEK;
     }
 }
