@@ -7,13 +7,14 @@ import { time } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { ERC20Mock, Fenix, GaugeFactoryUpgradeable, GaugeUpgradeable, ICHIMock, Pair } from '../../typechain-types';
-import { getAccessControlError, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { GaugeType, getAccessControlError, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, {
   CoreFixtureDeployed,
   FactoryFixture,
   deployAlgebraCore,
   deployERC20MockToken,
   deployGaugeFactory,
+  deployGaugeImplementation,
 } from '../utils/coreFixture';
 
 describe('Main', function () {
@@ -99,12 +100,13 @@ describe('Main', function () {
   });
 
   it('Success add factory and create gaugeType for just pool v3', async () => {
+    let v3GaugeImpl = await deployGaugeImplementation(signers.deployer, GaugeType.V3PairsGauge);
     v3CommonGaugeFactory = await deployGaugeFactory(
       signers.deployer,
       signers.proxyAdmin.address,
       signers.blastGovernor.address,
       await deployed.voter.getAddress(),
-      await deployed.gaugeImplementation.getAddress(),
+      await v3GaugeImpl.getAddress(),
       await deployed.merklGaugeMiddleman.getAddress(),
     );
     await deployed.voter.updateAddress('v3PoolFactory', algebraCore.factory.target);

@@ -53,7 +53,7 @@ import {
   SingelTokenVirtualRewarderUpgradeable,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { BLAST_PREDEPLOYED_ADDRESS, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from './constants';
+import { BLAST_PREDEPLOYED_ADDRESS, GaugeType, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from './constants';
 import {
   AlgebraCommunityVault,
   IAlgebraFactory,
@@ -281,9 +281,9 @@ export async function deployV2PairFactory(
   return attached;
 }
 
-export async function deployGaugeImplementation(deployer: HardhatEthersSigner): Promise<GaugeUpgradeable> {
+export async function deployGaugeImplementation(deployer: HardhatEthersSigner, gaugeType: number): Promise<GaugeUpgradeable> {
   const factory = await ethers.getContractFactory('GaugeUpgradeable');
-  return await factory.connect(deployer).deploy(deployer.address);
+  return await factory.connect(deployer).deploy(deployer.address, gaugeType);
 }
 
 export async function deployBribeImplementation(deployer: HardhatEthersSigner): Promise<BribeUpgradeable> {
@@ -490,7 +490,7 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     await fenix.getAddress(),
     await merklDistributionCreator.getAddress(),
   );
-  const gaugeImplementation = await deployGaugeImplementation(signers.deployer);
+  const gaugeImplementation = await deployGaugeImplementation(signers.deployer, GaugeType.V2PairsGauge);
   const gaugeFactory = await deployGaugeFactory(
     signers.deployer,
     signers.proxyAdmin.address,

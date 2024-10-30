@@ -10,8 +10,8 @@ import {IRewarder} from "./interfaces/IRewarder.sol";
 import {IMerklGaugeMiddleman} from "../integration/interfaces/IMerklGaugeMiddleman.sol";
 import {IPairIntegrationInfo} from "../integration/interfaces/IPairIntegrationInfo.sol";
 import {BlastGovernorClaimableSetup} from "../integration/BlastGovernorClaimableSetup.sol";
-
 import {IPairInfo} from "../dexV2/interfaces/IPairInfo.sol";
+import {IPair} from "../dexV2/interfaces/IPair.sol";
 import {IBribe} from "../bribes/interfaces/IBribe.sol";
 import {IGauge} from "./interfaces/IGauge.sol";
 import {IFeesVault} from "../fees/interfaces/IFeesVault.sol";
@@ -19,6 +19,14 @@ import {UpgradeCall} from "../integration/UpgradeCall.sol";
 
 contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuardUpgradeable, UpgradeCall {
     using SafeERC20 for IERC20;
+
+    enum GaugeType {
+        None,
+        V2PairsGauge,
+        V3PairsGauge
+    }
+
+    GaugeType public immutable gaugeType;
 
     bool public isDistributeEmissionToMerkle;
     bool public emergency;
@@ -75,9 +83,10 @@ contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuar
         _;
     }
 
-    constructor(address blastGovernor_) {
+    constructor(address blastGovernor_, GaugeType gaugeType_) {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
+        gaugeType = gaugeType_;
     }
 
     function initialize(
@@ -108,7 +117,7 @@ contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuar
 
         isDistributeEmissionToMerkle = _isDistributeEmissionToMerkle;
         if (_isDistributeEmissionToMerkle) {
-            require(_merklGaugeMiddleman != address(0));
+            require(_merklGaugeMiddleman != address(0), "not setup merklGaugeMiddleman");
         }
 
         merklGaugeMiddleman = _merklGaugeMiddleman;
@@ -392,6 +401,12 @@ contract GaugeUpgradeable is IGauge, BlastGovernorClaimableSetup, ReentrancyGuar
     function _claimFees() internal returns (uint256 claimed0, uint256 claimed1) {
         address _token = address(TOKEN);
         (claimed0, claimed1) = IFeesVault(feeVault).claimFees();
+
+        if (gaugeType == GaugeType.V2PairsGauge) {
+            (uint256 poolClaimedToken0, uint256 poolClaimedToken1) = IPair(_token).claimFees();
+            claimed0 += poolClaimedToken0;
+            claimed1 += poolClaimedToken1;
+        }
 
         if (claimed0 > 0 || claimed1 > 0) {
             uint256 _fees0 = claimed0;
