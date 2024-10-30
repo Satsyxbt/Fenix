@@ -270,6 +270,9 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         address token0 = IPairIntegrationInfo(pool_).token0();
         address token1 = IPairIntegrationInfo(pool_).token1();
         address feeVault = IPairIntegrationInfo(pool_).communityVault();
+        if (feeVault == address(0)) {
+            revert PoolNotInitialized();
+        }
         string memory symbol = IERC20MetadataUpgradeable(pool_).symbol();
         IBribeFactory bribeFactoryCache = IBribeFactory(bribeFactory);
         internalBribe = IBribeFactory(bribeFactoryCache).createBribe(token0, token1, string.concat("Fenix LP Fees: ", symbol));
@@ -310,11 +313,16 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         if (IAlgebraFactory(v3PoolFactory).poolByPair(token0, token1) != pool_) {
             revert PoolNotCreatedByFactory();
         }
+
         address feeVault = IPairIntegrationInfo(pool_).communityVault();
+        if (feeVault == address(0)) {
+            revert PoolNotInitialized();
+        }
         string memory symbol = string.concat(IERC20MetadataUpgradeable(token0).symbol(), "/", IERC20MetadataUpgradeable(token1).symbol());
         IBribeFactory bribeFactoryCache = IBribeFactory(bribeFactory);
         internalBribe = IBribeFactory(bribeFactoryCache).createBribe(token0, token1, string.concat("Fenix LP Fees: ", symbol));
         externalBribe = IBribeFactory(bribeFactoryCache).createBribe(token0, token1, string.concat("Fenix Bribes: ", symbol));
+
         gauge = IGaugeFactory(v3GaugeFactory).createGauge(
             token,
             votingEscrow,
@@ -325,8 +333,10 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
             true,
             feeVault
         );
+
         _registerCreatedGauge(gauge, pool_, internalBribe, externalBribe);
         v3Pools.push(pool_);
+
         emit GaugeCreatedType(gauge, 1);
     }
 

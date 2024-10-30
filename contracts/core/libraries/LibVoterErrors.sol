@@ -70,3 +70,8 @@ error DisabledManagedNft();
  * @notice Reverts when the operation is attempted outside the allowed distribution window.
  */
 error DistributionWindow();
+
+/**
+ * @notice Reverts when the try create gauge for pool without setup fees vault.
+ */
+error PoolNotInitialized();
