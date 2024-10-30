@@ -12,7 +12,7 @@ This document explains how to track the rewards accrued to a lock (veNFT) for a 
 
 To determine the rewards accrued to a user's lock from bribe contracts, follow these steps:
 
-### 1. Track All Bribe Contracts Related to a Gauge (registered in protocol)
+#### 1. Track All Bribe Contracts Related to a Gauge (registered in protocol)
 
 To track bribe rewards, you first need to identify all the `BribeUpgradeable` contracts where rewards might be distributed. This involves listening to the `GaugeCreated` event on `Voter` contract, which emits the addresses of the internal and external bribes.
 
@@ -32,7 +32,7 @@ To track bribe rewards, you first need to identify all the `BribeUpgradeable` co
 
   By monitoring this event, you can identify all relevant bribe contracts that may hold rewards for a given lock.
 
-### 2. Track User Voting Power in Each Bribe Contract at the End of an Epoch
+#### 2. Track User Voting Power in Each Bribe Contract at the End of an Epoch
 
 To determine the user's share of rewards in **each bribe contract**, you need to determine the user's voting power in each contract at the end of an epoch. **Events within an era only change the power of the voice of that era, events in new eras have no effect on the past ones, so from each era the user's balance = 0**
 
@@ -47,7 +47,7 @@ To determine the user's share of rewards in **each bribe contract**, you need to
 After each reset of the user's voice, Withdrawn should reset the balance to zero. The may best solution is to track the last Staked event in the era, and if it is not followed by Withdrawn, take the value of the event amount as the user's balance
 
 
-### 3. Track Rewards Distributed to the Bribe Contract
+#### 3. Track Rewards Distributed to the Bribe Contract
 
 To determine how much reward has been distributed to a bribe contract, you need to track the reward events and state variables that hold the reward data.
 
@@ -59,7 +59,7 @@ To determine how much reward has been distributed to a bribe contract, you need 
    - `startTimestamp`: Indicates the epoch during which the reward was issued. Sum all rewards of the same token within the same epoch to get the total reward for that epoch for locks that voted for pools associated with the bribe contracts.
 
 
-### 4. Calculate User's Share of the Rewards
+#### 4. Calculate User's Share of the Rewards
 
 Once you have the user's voting power and the total rewards for the epoch, you can calculate the user's share of the rewards.
 
@@ -74,12 +74,61 @@ Once you have the user's voting power and the total rewards for the epoch, you c
 
 
 
-### 5. Convert Rewards to USD Equivalent
+#### 5. Convert Rewards to USD Equivalent
 
 After calculating the user's tokens rewards, convert the reward tokens to their USD equivalent at the end of the epoch.
 
 
+### Useful Methods in `BribeUpgradeable` Contract for Tracking Voting Power, Total Supply, and Rewards
 
+This document lists useful methods from the `BribeUpgradeable` contract that can be used to track voting power, total supply, and reward distribution for a specific epoch.
+
+#### 1. Methods to Track Voting Power
+
+These methods help in determining the user's voting power (or balance) for a given lock at a specific timestamp (epoch).
+
+- **`balanceOfAt(uint256 tokenId, uint256 _timestamp) -> uint256`**
+  - Retrieves the voting power for a specific lock (`tokenId`) at a given epoch (`_timestamp`). This is useful to determine how much weight a user's vote has during that epoch.
+  
+  ```solidity
+  function balanceOfAt(uint256 tokenId, uint256 _timestamp) external view returns (uint256);
+  ```
+
+- **`balanceOf(uint256 tokenId) -> uint256`**
+  - Retrieves the current voting power for a given lock (`tokenId`). This can be used to track the real-time voting power of the user, but for rewards calculation, the balance at a specific epoch should be used.
+  
+  ```solidity
+  function balanceOf(uint256 tokenId) public view returns (uint256);
+  ```
+
+#### 2. Methods to Track Total Supply
+
+These methods provide the total voting power for a pool at a specific epoch.
+
+- **`totalSupplyAt(uint256 _timestamp) -> uint256`**
+  - Retrieves the total voting power (`totalSupply`) at a specific epoch (`_timestamp`). This is required to calculate the user's share of the reward by comparing their balance with the total supply.
+  
+  ```solidity
+  function totalSupplyAt(uint256 _timestamp) external view returns (uint256);
+  ```
+
+- **`totalSupply() -> uint256`**
+  - Retrieves the current total voting power for a pool. This value is useful for understanding the current status but should not be used for historical reward calculations.
+  
+  ```solidity
+  function totalSupply() external view returns (uint256);
+  ```
+
+#### 3. Methods to Track Rewards for a Token
+
+These methods help in tracking the rewards that are distributed to the bribe contracts for a specific epoch.
+
+- **`rewardPerToken(address _rewardsToken, uint256 _timestamp) -> uint256`**
+  - Retrieves the amount of rewards available per token at a specific epoch (`_timestamp`). This is crucial for calculating the rewards accrued to a user's lock.
+  
+  ```solidity
+  function rewardPerToken(address _rewardsToken, uint256 _timestamp) public view returns (uint256);
+  ```
 
 
 ## Diagrams
