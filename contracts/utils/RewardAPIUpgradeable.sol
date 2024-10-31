@@ -160,6 +160,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
         address _bribe;
         uint j = 0;
         uint time = voter.epochTimestamp();
+        address votingEscrow = voter.votingEscrow();
 
         for (i; i < _offset + _amounts; i++) {
             // if totalPairs is reached, break.
@@ -174,13 +175,12 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                 Pairs[j]._gauge = _gauge;
                 Pairs[j].totalVotesOnGauge = voter.weightsPerEpoch(time, _pair);
                 if (_user != address(0)) {
-                    uint256 userTokensBalance = IERC721EnumerableUpgradeable(voter.votingEscrow()).balanceOf(_user);
-
-                    for (uint u = 0; u < userTokensBalance; u++) {
-                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(
-                            IERC721EnumerableUpgradeable(voter.votingEscrow()).tokenOfOwnerByIndex(_user, u),
-                            _pair
-                        );
+                    uint256 userTokensBalance = IERC721EnumerableUpgradeable(votingEscrow).balanceOf(_user);
+                    for (uint256 u = 0; u < userTokensBalance; u++) {
+                        uint256 tokenId = IERC721EnumerableUpgradeable(votingEscrow).tokenOfOwnerByIndex(_user, u);
+                        if (voter.lastVotedTimestamps(tokenId) >= time) {
+                            Pairs[j].totalVotesOnGaugeByUser += voter.votes(tokenId, _pair);
+                        }
                     }
                 }
                 IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
@@ -210,6 +210,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
         address _gauge;
         address _bribe;
         uint time = voter.epochTimestamp();
+        address votingEscrow = voter.votingEscrow();
 
         uint j = 0;
 
@@ -229,10 +230,10 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                 if (_user != address(0)) {
                     uint256 userTokensBalance = IERC721EnumerableUpgradeable(voter.votingEscrow()).balanceOf(_user);
                     for (uint u = 0; u < userTokensBalance; u++) {
-                        Pairs[j].totalVotesOnGaugeByUser += voter.votes(
-                            IERC721EnumerableUpgradeable(voter.votingEscrow()).tokenOfOwnerByIndex(_user, u),
-                            _pair
-                        );
+                        uint256 tokenId = IERC721EnumerableUpgradeable(votingEscrow).tokenOfOwnerByIndex(_user, u);
+                        if (voter.lastVotedTimestamps(tokenId) >= time) {
+                            Pairs[j].totalVotesOnGaugeByUser += voter.votes(tokenId, _pair);
+                        }
                     }
                 }
                 IVoter.GaugeState memory state = voter.getGaugeState(_gauge);

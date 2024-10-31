@@ -67,8 +67,8 @@ External:
 | GaugeFactoryUpgradeable_Implementation                  | 0x72b17eC1765969445e931615D13042BA83be5714   |
 | ManagedNFTManagerUpgradeable_Implementation             | 0x68Ac7e2C5Cd4Fa9f4BEFa9124A29B36A525c82B0   |
 | PairAPIUpgradeable_Implementation                       | 0xA31f3c621b68435811baC8634A2a84746d5c2a67   |
-| VeNFTAPIUpgradeable_Implementation                      | 0xA31f3c621b68435811baC8634A2a84746d5c2a67   |
-| RewardAPIUpgradeable_Implementation                     | 0xB9Cc46B765888c54CB1CD69D637442ce9D837cDd   |
+| VeNFTAPIUpgradeable_Implementation                      | 0x241558c6973C65Cb8FB8c6CCF792C5DecAdFf29F   |
+| RewardAPIUpgradeable_Implementation                     | 0x33d9B00860164309deA0c3F65Fa5c561C964427B   |
 | VeBoostUpgradeable_Implementation                       | 0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590   |
 | CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0x47a95acbFC949802916151050Dea668aB9AC427a   |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation | 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8  |
