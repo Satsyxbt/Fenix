@@ -15,6 +15,9 @@ import {
   getBribeFactoryState,
   getVeFnxSplitMerklAidropState,
   getMinimalLinearVestingState,
+  getVoterState,
+  getVotingEscrowState,
+  getGaugeFactoryState,
 } from './utils';
 import AlgebraFactory_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactoryUpgradeable.sol/AlgebraFactoryUpgradeable.json';
 import AlgebraPool_Artifact from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraPool.sol/AlgebraPool.json';
@@ -60,6 +63,28 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       InstanceName.MinimalLinearVestingUpgradeable,
       deployData[AliasDeployedContracts.MinimalLinearVestingUpgradeable_Proxy],
     );
+    const VoterUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.VoterUpgradeable,
+      deployData[AliasDeployedContracts.VoterUpgradeable_Proxy],
+    );
+    const VotingEscrowUpgradeable = await hre.ethers.getContractAt(
+      InstanceName.VotingEscrowUpgradeable,
+      deployData[AliasDeployedContracts.VotingEscrowUpgradeable_Proxy],
+    );
+    const GaugeFactory_V2Pools_Proxy = await hre.ethers.getContractAt(
+      InstanceName.GaugeFactoryUpgradeable,
+      deployData[AliasDeployedContracts.GaugeFactory_V2Pools_Proxy],
+    );
+    const GaugeFactory_V3Pools_Proxy = await hre.ethers.getContractAt(
+      InstanceName.GaugeFactoryUpgradeable,
+      deployData[AliasDeployedContracts.GaugeFactory_V3Pools_Proxy],
+    );
+
+    const gaugeFactoryV2PoolsState = await getGaugeFactoryState(hre, GaugeFactory_V2Pools_Proxy);
+    const gaugeFactoryV3PoolsState = await getGaugeFactoryState(hre, GaugeFactory_V3Pools_Proxy);
+
+    const votingEscrowState = await getVotingEscrowState(VotingEscrowUpgradeable);
+    const voterState = await getVoterState(VoterUpgradeable);
     const veFnxSplitMerklAidropState = await getVeFnxSplitMerklAidropState(VeFnxSplitMerklAidropUpgradeable);
 
     const veBoostState = await getVeBoostState(hre, VeBoostUpgradeable);
@@ -117,6 +142,10 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       fenixState,
       minterState,
       veBoostState,
+      voterState,
+      votingEscrowState,
+      gaugeFactoryV2PoolsState,
+      gaugeFactoryV3PoolsState,
       veFnxSplitMerklAidropState,
       minimalLinearVestingState,
       bribeFactoryState,

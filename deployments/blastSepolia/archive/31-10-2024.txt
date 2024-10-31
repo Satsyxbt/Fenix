@@ -33,3 +33,341 @@ Start deploy new impelmentations...
 Upgrading proxy at 0x43002697555743241155ee8b950F2075fD085F32 to new logic at 0x33d9B00860164309deA0c3F65Fa5c561C964427B using ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc...  
 Calling ProxyAdmin.upgrade(proxy: 0x43002697555743241155ee8b950F2075fD085F32, newLogic: 0x33d9B00860164309deA0c3F65Fa5c561C964427B)...
 ProxyAdmin.upgrade(proxy: 0x43002697555743241155ee8b950F2075fD085F32, newLogic: 0x33d9B00860164309deA0c3F65Fa5c561C964427B) transaction hash: 0xf8d9041c0f9da8640432ea992beebafb4fda8569630e859f061aea2fed683612
+
+
+
+
+ npx hardhat blast-governor-map --network blastSepolia 
+Current deployer: 0x9140D359f2855E6540609dd4A93773ED1f45f509
+Proccessing...
+┌────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┐
+│ Contract Name                          │ Address                                                    │ Governor                                                   │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ProxyAdmin                             │ 0x9502993595815b1Fa674C5133F42C3919a696bEc                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeArtProxyUpgradeable_Implementation   │ 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MDCBlastMock                           │ 0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Implementation      │ 0xA31f3c621b68435811baC8634A2a84746d5c2a67                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Implementation     │ 0x241558c6973C65Cb8FB8c6CCF792C5DecAdFf29F                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Implementation    │ 0x33d9B00860164309deA0c3F65Fa5c561C964427B                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairAPIUpgradeable_Proxy               │ 0x6074fa138160aa81f3082FF1684a5d089D9B1f99                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeNFTAPIUpgradeable_Proxy              │ 0x938DdfB6b96461287c4d5d919a559a8DD69f915C                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RewardAPIUpgradeable_Proxy             │ 0x43002697555743241155ee8b950F2075fD085F32                 │ 0x0000000000000000000000000000000000000000                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Fenix                                  │ 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Proxy                │ 0xDA283872Fc205f56cE5b0268D719373dc33e35dA                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinterUpgradeable_Implementation       │ 0x2823d09A5b1B162f5192C4B10Fa85B015bFAD4fB                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MerklGaugeMiddleman                    │ 0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Im… │ 0x9Ac737DB1768272C8711B168560a41e989A6f77A                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFNXPriceProviderUpgradeable_Pr… │ 0x968106c45b72eB84A1Abc799CC4AaFf618495c76                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Implementation  │ 0xbdaf5fc15D03FE670C974a2083a3892d21762449                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ Pair_Implementation                    │ 0x71F9683e343309d7D7A235199f891a254CeC9eF7                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Implement… │ 0xf873BaE7A0173704503c4c43b57348eb7d41Eae0                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultUpgradeable_Implementation    │ 0x6F7f0Ab5505A679f9cD593E81afcE2Ee54b2f61B                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ FeesVaultFactoryUpgradeable_Proxy      │ 0xa3103248290399cc2655b68f0038ce590ce8639E                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PairFactoryUpgradeable_Proxy           │ 0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Proxy  │ 0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2PathProviderUpgradeable_Imple… │ 0x8CBEad3ceA2b44669d7a1C8FCb7A2CFB62416df6                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ SingelTokenVirtualRewarderUpgradeable… │ 0xcDEB1fFB05e783cEef7880295b831d838BBe7b91                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsTradersRewarderUpgradeable_… │ 0xaa4e8563C477907a410B871b2e27056Dc3d4aD32                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ PerpetualsGaugeUpgradeable_Implementa… │ 0x88d8aE0B24fcB16845788810a298131CfD12f45f                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Implementati… │ 0x032a4Bdd9c98abf3c8d4D29a540c29f57b393252                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastGovernorUpgradeable_Proxy         │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0x2ECcA22fb93674e45D37Ada6Ce21a67884709682                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BlastRebasingTokensGovernorUpgradeabl… │ 0x76da5656DEa3D8A8111aB749042f98103198332F                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Proxy │ 0x4BcC88B000C02075115275d5BB1e4133Ed1BD068                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeFnxSplitMerklAidropUpgradeable_Impl… │ 0x5F38c84bE7C62F7F682AF4D1036c5fB72c0A4eb9                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Implementation        │ 0x7A2A229bB0FC58628448437Cc94db06FF1730550                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ UtilsUpgradeable_Proxy                 │ 0xcE0dc336D6059847f89cDac71F313607c0996225                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Imple… │ 0x6F6B1F213fe196711139076dd41b30cD0DcC4910                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ MinimalLinearVestingUpgradeable_Proxy  │ 0xf18c097D830D650693643981eB1223cc4e023e54                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Implementation │ 0xaD82F3C1d70e270F418F0Be58850a4af237B9a72                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VotingEscrowUpgradeable_Proxy          │ 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Implementation        │ 0xeF0d86AC88c0bC1B3E5E4071Adee02Ac0d90F3A8                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VoterUpgradeable_Proxy                 │ 0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeUpgradeable_Implementation        │ 0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Implementation │ 0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BribeFactoryUpgradeable_Proxy          │ 0x1B52578d4f504ED3f9251AE349dC094f60B382f3                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeUpgradeable_Implementation        │ 0x913837b6C6e15275a5e034c935c3568367431e59                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactoryUpgradeable_Implementation │ 0x72b17eC1765969445e931615D13042BA83be5714                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V2Pools_Proxy             │ 0xe18aE06D762370615664e9a14C6Eaa1bed6D203e                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeFactory_V3Pools_Proxy             │ 0xedD8172FD89f615b873Ca01f5b94A8C899616e47                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Implemen… │ 0x68Ac7e2C5Cd4Fa9f4BEFa9124A29B36A525c82B0                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ ManagedNFTManagerUpgradeable_Proxy     │ 0xcc5b8187F5bF5f344153a1045b1a4505ccd007f9                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Implementation      │ 0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ VeBoostUpgradeable_Proxy               │ 0x20ba4388a1ef501F1fD055a39c4e303eCf5a1660                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyUpgrad… │ 0x47a95acbFC949802916151050Dea668aB9AC427a                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ CompoundVeFNXManagedNFTStrategyFactor… │ 0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ RouterV2                               │ 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeRewader_Implementation            │ 0x13a57d4204781B8c4811C6365047800Bd2394973                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ GaugeRewader_Proxy                     │ 0x54CDE9f3B0251571aE6a505C6540656D208BE256                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ AlgebraFactory_Proxy                   │ 0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef                 │ 0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228                 │
+├────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┤
+│ BasePluginV1Factory_Proxy              │ 0xc6366a42c28b81B45f9b7e41eC020D99fCA091E4                 │ 0x9140D359f2855E6540609dd4A93773ED1f45f509                 │
+└────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┘
+
+
+npx hardhat check-contracts-verification-status --network blastSepolia
+ProxyAdmin(0x9502993595815b1Fa674C5133F42C3919a696bEc): Yes
+Fenix(0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6): Yes
+MinterUpgradeable_Proxy(0xDA283872Fc205f56cE5b0268D719373dc33e35dA): Yes
+MinterUpgradeable_Implementation(0x2823d09A5b1B162f5192C4B10Fa85B015bFAD4fB): Yes
+VeArtProxyUpgradeable_Implementation(0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD): Yes
+MerklGaugeMiddleman(0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85): Yes
+AlgebraFNXPriceProviderUpgradeable_Implementation(0x9Ac737DB1768272C8711B168560a41e989A6f77A): Yes
+AlgebraFNXPriceProviderUpgradeable_Proxy(0x968106c45b72eB84A1Abc799CC4AaFf618495c76): Yes
+PairFactoryUpgradeable_Implementation(0xbdaf5fc15D03FE670C974a2083a3892d21762449): Yes
+Pair_Implementation(0x71F9683e343309d7D7A235199f891a254CeC9eF7): Yes
+FeesVaultFactoryUpgradeable_Implementation(0xf873BaE7A0173704503c4c43b57348eb7d41Eae0): Yes
+FeesVaultUpgradeable_Implementation(0x6F7f0Ab5505A679f9cD593E81afcE2Ee54b2f61B): Yes
+FeesVaultFactoryUpgradeable_Proxy(0xa3103248290399cc2655b68f0038ce590ce8639E): Yes
+PairFactoryUpgradeable_Proxy(0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3): Yes
+RouterV2PathProviderUpgradeable_Proxy(0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648): Yes
+RouterV2PathProviderUpgradeable_Implementation(0x8CBEad3ceA2b44669d7a1C8FCb7A2CFB62416df6): Yes
+SingelTokenVirtualRewarderUpgradeable_Implementation(0xcDEB1fFB05e783cEef7880295b831d838BBe7b91): Yes
+PerpetualsTradersRewarderUpgradeable_Implementation(0xaa4e8563C477907a410B871b2e27056Dc3d4aD32): Yes
+PerpetualsGaugeUpgradeable_Implementation(0x88d8aE0B24fcB16845788810a298131CfD12f45f): Yes
+MDCBlastMock(0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01): Yes
+BlastGovernorUpgradeable_Implementation(0x032a4Bdd9c98abf3c8d4D29a540c29f57b393252): Yes
+BlastGovernorUpgradeable_Proxy(0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228): Yes
+BlastRebasingTokensGovernorUpgradeable_Implementation(0x2ECcA22fb93674e45D37Ada6Ce21a67884709682): Yes
+BlastRebasingTokensGovernorUpgradeable_Proxy(0x76da5656DEa3D8A8111aB749042f98103198332F): Yes
+VeFnxSplitMerklAidropUpgradeable_Proxy(0x4BcC88B000C02075115275d5BB1e4133Ed1BD068): Yes
+VeFnxSplitMerklAidropUpgradeable_Implementation(0x5F38c84bE7C62F7F682AF4D1036c5fB72c0A4eb9): Yes
+UtilsUpgradeable_Implementation(0x7A2A229bB0FC58628448437Cc94db06FF1730550): Yes
+UtilsUpgradeable_Proxy(0xcE0dc336D6059847f89cDac71F313607c0996225): Yes
+MinimalLinearVestingUpgradeable_Implementation(0x6F6B1F213fe196711139076dd41b30cD0DcC4910): Yes
+MinimalLinearVestingUpgradeable_Proxy(0xf18c097D830D650693643981eB1223cc4e023e54): Yes
+VotingEscrowUpgradeable_Implementation(0xaD82F3C1d70e270F418F0Be58850a4af237B9a72): Yes
+VotingEscrowUpgradeable_Proxy(0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34): Yes
+VoterUpgradeable_Implementation(0xeF0d86AC88c0bC1B3E5E4071Adee02Ac0d90F3A8): Yes
+VoterUpgradeable_Proxy(0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43): Yes
+BribeUpgradeable_Implementation(0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D): Yes
+BribeFactoryUpgradeable_Implementation(0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca): Yes
+BribeFactoryUpgradeable_Proxy(0x1B52578d4f504ED3f9251AE349dC094f60B382f3): Yes
+GaugeUpgradeable_Implementation(0x913837b6C6e15275a5e034c935c3568367431e59): Yes
+GaugeFactoryUpgradeable_Implementation(0x72b17eC1765969445e931615D13042BA83be5714): Yes
+GaugeFactory_V2Pools_Proxy(0xe18aE06D762370615664e9a14C6Eaa1bed6D203e): Yes
+GaugeFactory_V3Pools_Proxy(0xedD8172FD89f615b873Ca01f5b94A8C899616e47): Yes
+ManagedNFTManagerUpgradeable_Implementation(0x68Ac7e2C5Cd4Fa9f4BEFa9124A29B36A525c82B0): Yes
+ManagedNFTManagerUpgradeable_Proxy(0xcc5b8187F5bF5f344153a1045b1a4505ccd007f9): Yes
+PairAPIUpgradeable_Implementation(0xA31f3c621b68435811baC8634A2a84746d5c2a67): Yes
+VeNFTAPIUpgradeable_Implementation(0x241558c6973C65Cb8FB8c6CCF792C5DecAdFf29F): Yes
+RewardAPIUpgradeable_Implementation(0x33d9B00860164309deA0c3F65Fa5c561C964427B): Yes
+PairAPIUpgradeable_Proxy(0x6074fa138160aa81f3082FF1684a5d089D9B1f99): Yes
+VeNFTAPIUpgradeable_Proxy(0x938DdfB6b96461287c4d5d919a559a8DD69f915C): Yes
+RewardAPIUpgradeable_Proxy(0x43002697555743241155ee8b950F2075fD085F32): Yes
+VeBoostUpgradeable_Implementation(0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590): Yes
+VeBoostUpgradeable_Proxy(0x20ba4388a1ef501F1fD055a39c4e303eCf5a1660): Yes
+CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation(0x47a95acbFC949802916151050Dea668aB9AC427a): Yes
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation(0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8): Yes
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy(0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938): Yes
+RouterV2(0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6): Yes
+GaugeRewader_Implementation(0x13a57d4204781B8c4811C6365047800Bd2394973): Yes
+GaugeRewader_Proxy(0x54CDE9f3B0251571aE6a505C6540656D208BE256): Yes
+AlgebraFactory_Proxy(0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef): Yes
+BasePluginV1Factory_Proxy(0xc6366a42c28b81B45f9b7e41eC020D99fCA091E4): Yes
+
+
+npx hardhat check-network-contracts-bytecode --network blastSepolia     
+ProxyAdmin (0x9502993595815b1Fa674C5133F42C3919a696bEc): Match with artifact ProxyAdmin
+Fenix (0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6): Match with artifact Fenix
+MinterUpgradeable_Proxy (0xDA283872Fc205f56cE5b0268D719373dc33e35dA): Match with artifact TransparentUpgradeableProxy
+MinterUpgradeable_Implementation (0x2823d09A5b1B162f5192C4B10Fa85B015bFAD4fB): Match with artifact MinterUpgradeable
+VeArtProxyUpgradeable_Implementation (0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD): Match with artifact VeArtProxyUpgradeable
+MerklGaugeMiddleman (0x6cA5683422A1A5A854e213120E8bd72cB2FdDf85): Match with artifact MerklGaugeMiddleman
+AlgebraFNXPriceProviderUpgradeable_Implementation (0x9Ac737DB1768272C8711B168560a41e989A6f77A): Match with artifact AlgebraFNXPriceProviderUpgradeable
+AlgebraFNXPriceProviderUpgradeable_Proxy (0x968106c45b72eB84A1Abc799CC4AaFf618495c76): Match with artifact TransparentUpgradeableProxy
+PairFactoryUpgradeable_Implementation (0xbdaf5fc15D03FE670C974a2083a3892d21762449): Match with artifact PairFactoryUpgradeable
+Pair_Implementation (0x71F9683e343309d7D7A235199f891a254CeC9eF7): Match with artifact Pair
+FeesVaultFactoryUpgradeable_Implementation (0xf873BaE7A0173704503c4c43b57348eb7d41Eae0): Match with artifact FeesVaultFactoryUpgradeable
+FeesVaultUpgradeable_Implementation (0x6F7f0Ab5505A679f9cD593E81afcE2Ee54b2f61B): Match with artifact FeesVaultUpgradeable
+FeesVaultFactoryUpgradeable_Proxy (0xa3103248290399cc2655b68f0038ce590ce8639E): Match with artifact TransparentUpgradeableProxy
+PairFactoryUpgradeable_Proxy (0x514AeBB1526a08DB1dB97616F281fa30F7FAB6B3): Match with artifact TransparentUpgradeableProxy
+RouterV2PathProviderUpgradeable_Proxy (0xf49b7D01E9A5d3331b2995Fc049e9CBF29db0648): Match with artifact TransparentUpgradeableProxy
+RouterV2PathProviderUpgradeable_Implementation (0x8CBEad3ceA2b44669d7a1C8FCb7A2CFB62416df6): Match with artifact RouterV2PathProviderUpgradeable
+SingelTokenVirtualRewarderUpgradeable_Implementation (0xcDEB1fFB05e783cEef7880295b831d838BBe7b91): No match found
+PerpetualsTradersRewarderUpgradeable_Implementation (0xaa4e8563C477907a410B871b2e27056Dc3d4aD32): Match with artifact PerpetualsTradersRewarderUpgradeable
+PerpetualsGaugeUpgradeable_Implementation (0x88d8aE0B24fcB16845788810a298131CfD12f45f): Match with artifact PerpetualsGaugeUpgradeable
+MDCBlastMock (0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01): Match with artifact MDCBlastMock
+BlastGovernorUpgradeable_Implementation (0x032a4Bdd9c98abf3c8d4D29a540c29f57b393252): Match with artifact BlastGovernorUpgradeable
+BlastGovernorUpgradeable_Proxy (0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228): Match with artifact TransparentUpgradeableProxy
+BlastRebasingTokensGovernorUpgradeable_Implementation (0x2ECcA22fb93674e45D37Ada6Ce21a67884709682): Match with artifact BlastRebasingTokensGovernorUpgradeable
+BlastRebasingTokensGovernorUpgradeable_Proxy (0x76da5656DEa3D8A8111aB749042f98103198332F): Match with artifact TransparentUpgradeableProxy
+VeFnxSplitMerklAidropUpgradeable_Proxy (0x4BcC88B000C02075115275d5BB1e4133Ed1BD068): Match with artifact TransparentUpgradeableProxy
+VeFnxSplitMerklAidropUpgradeable_Implementation (0x5F38c84bE7C62F7F682AF4D1036c5fB72c0A4eb9): Match with artifact VeFnxSplitMerklAidropUpgradeable
+UtilsUpgradeable_Implementation (0x7A2A229bB0FC58628448437Cc94db06FF1730550): Match with artifact UtilsUpgradeable
+UtilsUpgradeable_Proxy (0xcE0dc336D6059847f89cDac71F313607c0996225): Match with artifact TransparentUpgradeableProxy
+MinimalLinearVestingUpgradeable_Implementation (0x6F6B1F213fe196711139076dd41b30cD0DcC4910): Match with artifact MinimalLinearVestingUpgradeable
+MinimalLinearVestingUpgradeable_Proxy (0xf18c097D830D650693643981eB1223cc4e023e54): Match with artifact TransparentUpgradeableProxy
+VotingEscrowUpgradeable_Implementation (0xaD82F3C1d70e270F418F0Be58850a4af237B9a72): Match with artifact VotingEscrowUpgradeableV2
+VotingEscrowUpgradeable_Proxy (0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34): Match with artifact TransparentUpgradeableProxy
+VoterUpgradeable_Implementation (0xeF0d86AC88c0bC1B3E5E4071Adee02Ac0d90F3A8): No match found
+VoterUpgradeable_Proxy (0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43): Match with artifact TransparentUpgradeableProxy
+BribeUpgradeable_Implementation (0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D): Match with artifact BribeUpgradeable
+BribeFactoryUpgradeable_Implementation (0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca): Match with artifact BribeFactoryUpgradeable
+BribeFactoryUpgradeable_Proxy (0x1B52578d4f504ED3f9251AE349dC094f60B382f3): Match with artifact TransparentUpgradeableProxy
+GaugeUpgradeable_Implementation (0x913837b6C6e15275a5e034c935c3568367431e59): No match found
+GaugeFactoryUpgradeable_Implementation (0x72b17eC1765969445e931615D13042BA83be5714): Match with artifact GaugeFactoryUpgradeable
+GaugeFactory_V2Pools_Proxy (0xe18aE06D762370615664e9a14C6Eaa1bed6D203e): Match with artifact TransparentUpgradeableProxy
+GaugeFactory_V3Pools_Proxy (0xedD8172FD89f615b873Ca01f5b94A8C899616e47): Match with artifact TransparentUpgradeableProxy
+ManagedNFTManagerUpgradeable_Implementation (0x68Ac7e2C5Cd4Fa9f4BEFa9124A29B36A525c82B0): Match with artifact ManagedNFTManagerUpgradeable
+ManagedNFTManagerUpgradeable_Proxy (0xcc5b8187F5bF5f344153a1045b1a4505ccd007f9): Match with artifact TransparentUpgradeableProxy
+PairAPIUpgradeable_Implementation (0xA31f3c621b68435811baC8634A2a84746d5c2a67): Match with artifact PairAPIUpgradeable
+VeNFTAPIUpgradeable_Implementation (0x241558c6973C65Cb8FB8c6CCF792C5DecAdFf29F): Match with artifact VeNFTAPIUpgradeable
+RewardAPIUpgradeable_Implementation (0x33d9B00860164309deA0c3F65Fa5c561C964427B): Match with artifact RewardAPIUpgradeable
+PairAPIUpgradeable_Proxy (0x6074fa138160aa81f3082FF1684a5d089D9B1f99): Match with artifact TransparentUpgradeableProxy
+VeNFTAPIUpgradeable_Proxy (0x938DdfB6b96461287c4d5d919a559a8DD69f915C): Match with artifact TransparentUpgradeableProxy
+RewardAPIUpgradeable_Proxy (0x43002697555743241155ee8b950F2075fD085F32): Match with artifact TransparentUpgradeableProxy
+VeBoostUpgradeable_Implementation (0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590): Match with artifact VeBoostUpgradeable
+VeBoostUpgradeable_Proxy (0x20ba4388a1ef501F1fD055a39c4e303eCf5a1660): Match with artifact TransparentUpgradeableProxy
+CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation (0x47a95acbFC949802916151050Dea668aB9AC427a): Match with artifact CompoundVeFNXManagedNFTStrategyUpgradeable
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation (0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8): Match with artifact CompoundVeFNXManagedNFTStrategyFactoryUpgradeable
+CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy (0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938): Match with artifact TransparentUpgradeableProxy
+RouterV2 (0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6): No match found
+GaugeRewader_Implementation (0x13a57d4204781B8c4811C6365047800Bd2394973): Match with artifact GaugeRewarder
+GaugeRewader_Proxy (0x54CDE9f3B0251571aE6a505C6540656D208BE256): Match with artifact TransparentUpgradeableProxy
+AlgebraFactory_Proxy (0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef): No match found
+BasePluginV1Factory_Proxy (0xc6366a42c28b81B45f9b7e41eC020D99fCA091E4): No match found
+
+
+
+        Called Contract(0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43).updateAddress(key_: "veFnxMerklAidrop", value_: "0x4BcC88B000C02075115275d5BB1e4133Ed1BD068")
+        Transaction hash: 0x289653a0a9137e10d170c80c2f5317474c7344efe92034fbc090f736031d2263
+
+
+Starting deployment of GaugeUpgradeable...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",1]
+GaugeUpgradeable deployed at 0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5
+Save to deploys.json deployed address of GaugeUpgradeable_V2Pools_Implementation:0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5
+Verifying TransparentUpgradeableProxy at 0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5#code
+
+Starting deployment of GaugeUpgradeable...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",2]
+GaugeUpgradeable deployed at 0x25a92F38002802388f4f489AA57C502DFD3c7338
+Save to deploys.json deployed address of GaugeUpgradeable_V3Pools_Implementation:0x25a92F38002802388f4f489AA57C502DFD3c7338
+Verifying TransparentUpgradeableProxy at 0x25a92F38002802388f4f489AA57C502DFD3c7338...
+Timeout for 10s before verify proccess...
+The contract 0x25a92F38002802388f4f489AA57C502DFD3c7338 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x25a92F38002802388f4f489AA57C502DFD3c7338#code
+        Called Contract(0xe18aE06D762370615664e9a14C6Eaa1bed6D203e).changeImplementation(_implementation: "0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5")
+        Transaction hash: 0x39b608f912c2c6d346fc2960fe22fba3b0154c95c57da8e82c12bee4265327f4
+        Called Contract(0xedD8172FD89f615b873Ca01f5b94A8C899616e47).changeImplementation(_implementation: "0x25a92F38002802388f4f489AA57C502DFD3c7338")
+        Transaction hash: 0x998c193b975cdb7030e762ee6ce32f53531cc7fb19942cbb2ff65b20cf1c60b4
+
+
+Start deploy new impelmentations...
+Starting deployment of VoterUpgradeableV2...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+VoterUpgradeableV2 deployed at 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552
+Save to deploys.json deployed address of VoterUpgradeable_Implementation:0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552
+Warning: Address for VoterUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xeF0d86AC88c0bC1B3E5E4071Adee02Ac0d90F3A8
+        New address: 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552
+Verifying TransparentUpgradeableProxy at 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV2.sol:VoterUpgradeableV2 at 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV2 on the block explorer.
+https://sepolia.blastscan.io/address/0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552#code
+
+Start deploy new impelmentations...
+Upgrading proxy at 0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43 to new logic at 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552 using ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc...
+Calling ProxyAdmin.upgrade(proxy: 0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43, newLogic: 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552)...
+ProxyAdmin.upgrade(proxy: 0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43, newLogic: 0x0Fd328aDDfB14e2C1db7166F62eE4790eCD0A552) transaction hash: 0x913b9a139ab81a2ca79804767c94bc6c0e8e9e6a2e537ddf81d1c410af2f3d76
+
+
+
+npx hardhat run '.\deploy\blastSepolia\035-Upgrade Singel token virtual rewarder to last version with support Upgradecall.ts.ts' --network blastSepolia
+Starting deployment of SingelTokenVirtualRewarderUpgradeable...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+SingelTokenVirtualRewarderUpgradeable deployed at 0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7
+Save to deploys.json deployed address of SingelTokenVirtualRewarderUpgradeable_Implementation:0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7
+Warning: Address for SingelTokenVirtualRewarderUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xcDEB1fFB05e783cEef7880295b831d838BBe7b91
+        New address: 0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7
+Verifying TransparentUpgradeableProxy at 0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/SingelTokenVirtualRewarderUpgradeable.sol:SingelTokenVirtualRewarderUpgradeable at 0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract SingelTokenVirtualRewarderUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7#code
+
+        Called Contract(0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938).changeVirtualRewarderImplementation(virtualRewarderImplementation_: "0x049c0D47aE36b67B1C74668071B30D4dF5590Fa7")
+        Transaction hash: 0x6c761bbd89762b2f8b361e943dc50456222d0823b7b67d19a5f52cb88b9c4af8
+
+
+        Called Contract(0xcE0dc336D6059847f89cDac71F313607c0996225).multiUpgradeCall(targets_: "0xadB023dD251cbc5F97f60552f391aC5A3D6C52e7,0x3EA180d935E77a656a5e1DDd185232d72EdaFbd2,0x236576EB1CE9f78eD69BA83df02F23c2796894C5,0xd789DD386239d35BA57B0AB82DBAa99dE711E12B,0xF6dB3609dAA149D4461997f4b1B44CE6787ce7CD,0xB2Ef1Fc58d59cE4900De4dC56411d6A486E4B510,0xaF87Af9996700B851d48f095B620739b65365058,0x5D6783076D82e810BC8bb318fd011211AE0FA364,0xb55CfbDBE35ca6Ae9efB7D9D2FeF88C94e3451AA,0x41B2220fb113e1Ec7f2475fFF1dA8F77FAf734E2,0x548760cD3011EdD67B686275246f3C67486d6F6a,0x0FcDdf1a968193c0d675e02B42cb2d1Ec892bB14,0x82CBFCadE804593Fe21d3476Bddd141461efEdF4,0x7eFbE8D78A0BE51A7386750B1529C14A94CE41B8,0x6FB1256E3F3081AF1443b1A03F6EE459A75C5280,0xdd3aAeDD5979181aE201115027bF6c61718FfaC5,0x92522079d128ce22842a4433371F8563525412A8")
+        Transaction hash: 0x6ff4da3d147614d205c46d7ec7017435cc8e12593efb219b36f36f184e4a6224
+
+
+
+        Called Contract(0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34).updateAddress(key_: "veBoost", value_: "0x0000000000000000000000000000000000000000")
+        Transaction hash: 0x7c094561ff66a24e3820a6c535b929beea6408d2c7f4ba41f755b7492ee18af5

@@ -3,6 +3,7 @@ import {
   BribeFactoryUpgradeable,
   FeesVaultFactoryUpgradeable,
   Fenix,
+  GaugeFactoryUpgradeable,
   IBlastFull,
   MinimalLinearVestingUpgradeable,
   MinterUpgradeable,
@@ -10,10 +11,13 @@ import {
   PairFactoryUpgradeable,
   VeBoostUpgradeable,
   VeFnxSplitMerklAidropUpgradeable,
+  VoterUpgradeableV2,
+  VotingEscrowUpgradeableV2,
 } from '../typechain-types';
 import { formatEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { InstanceName } from '../utils/Names';
+import { GaugeType } from '../utils/Constants';
 
 export type PairFactoryState = {
   address: string;
@@ -665,5 +669,179 @@ export async function getVeFnxSplitMerklAidropState(veFnxSplit: VeFnxSplitMerklA
     pureTokensRateFormatted: formatEther(pureTokensRate * 100n) + '%',
     merklRoot,
     isPaused,
+  };
+}
+
+export type VoterUpgradeableState = {
+  address: string;
+  votingEscrow: string;
+  token: string;
+  minter: string;
+  bribeFactory: string;
+  v2PoolFactory: string;
+  v3PoolFactory: string;
+  v2GaugeFactory: string;
+  v3GaugeFactory: string;
+  merklDistributor: string;
+  veFnxMerklAidrop: string;
+  index: bigint;
+  voteDelay: bigint;
+  distributionWindowDuration: bigint;
+};
+
+export async function getVoterState(voter: VoterUpgradeableV2): Promise<VoterUpgradeableState> {
+  const [
+    votingEscrow,
+    token,
+    minter,
+    bribeFactory,
+    v2PoolFactory,
+    v3PoolFactory,
+    v2GaugeFactory,
+    v3GaugeFactory,
+    merklDistributor,
+    veFnxMerklAidrop,
+    index,
+    voteDelay,
+    distributionWindowDuration,
+  ] = await Promise.all([
+    voter.votingEscrow(),
+    voter.token(),
+    voter.minter(),
+    voter.bribeFactory(),
+    voter.v2PoolFactory(),
+    voter.v3PoolFactory(),
+    voter.v2GaugeFactory(),
+    voter.v3GaugeFactory(),
+    voter.merklDistributor(),
+    voter.veFnxMerklAidrop(),
+    voter.index(),
+    voter.voteDelay(),
+    voter.distributionWindowDuration(),
+  ]);
+
+  return {
+    address: voter.target.toString(),
+    votingEscrow,
+    token,
+    minter,
+    bribeFactory,
+    v2PoolFactory,
+    v3PoolFactory,
+    v2GaugeFactory,
+    v3GaugeFactory,
+    merklDistributor,
+    veFnxMerklAidrop,
+    index,
+    voteDelay,
+    distributionWindowDuration,
+  };
+}
+
+export type VotingEscrowState = {
+  address: string;
+  owner: string;
+  pendingOwner: string;
+  token: string;
+  voter: string;
+  artProxy: string;
+  veBoost: string;
+  managedNFTManager: string;
+  supply: bigint;
+  permanentTotalSupply: bigint;
+  epoch: bigint;
+  lastMintedTokenId: bigint;
+  votingPowerTotalSupply: bigint;
+};
+
+export async function getVotingEscrowState(votingEscrow: VotingEscrowUpgradeableV2): Promise<VotingEscrowState> {
+  const [
+    owner,
+    pendingOwner,
+    token,
+    voter,
+    artProxy,
+    veBoost,
+    managedNFTManager,
+    supply,
+    permanentTotalSupply,
+    epoch,
+    lastMintedTokenId,
+    votingPowerTotalSupply,
+  ] = await Promise.all([
+    votingEscrow.owner(),
+    votingEscrow.pendingOwner(),
+    votingEscrow.token(),
+    votingEscrow.voter(),
+    votingEscrow.artProxy(),
+    votingEscrow.veBoost(),
+    votingEscrow.managedNFTManager(),
+    votingEscrow.supply(),
+    votingEscrow.permanentTotalSupply(),
+    votingEscrow.epoch(),
+    votingEscrow.lastMintedTokenId(),
+    votingEscrow.votingPowerTotalSupply(),
+  ]);
+
+  return {
+    address: votingEscrow.target.toString(),
+    owner,
+    pendingOwner,
+    token,
+    voter,
+    artProxy,
+    veBoost,
+    managedNFTManager,
+    supply,
+    permanentTotalSupply,
+    epoch,
+    lastMintedTokenId,
+    votingPowerTotalSupply,
+  };
+}
+
+export type GaugeFactoryState = {
+  address: string;
+  owner: string;
+  defaultBlastGovernor: string;
+  gaugeImplementation: string;
+  gaugeOwner: string;
+  merklGaugeMiddleman: string;
+  voter: string;
+  last_gauge: string;
+  gaugeImplementationType: bigint | string;
+};
+
+export async function getGaugeFactoryState(
+  hre: HardhatRuntimeEnvironment,
+  gaugeFactory: GaugeFactoryUpgradeable,
+): Promise<GaugeFactoryState> {
+  const [owner, defaultBlastGovernor, gaugeImplementation, gaugeOwner, merklGaugeMiddleman, voter, last_gauge] = await Promise.all([
+    gaugeFactory.owner(),
+    gaugeFactory.defaultBlastGovernor(),
+    gaugeFactory.gaugeImplementation(),
+    gaugeFactory.gaugeOwner(),
+    gaugeFactory.merklGaugeMiddleman(),
+    gaugeFactory.voter(),
+    gaugeFactory.last_gauge(),
+  ]);
+
+  let gaugeImplementationType = 'not support';
+
+  try {
+    let Contract = await hre.ethers.getContractAt(['function gaugeType() view returns (uint8)'], gaugeImplementation);
+    gaugeImplementationType = await Contract.gaugeType();
+  } catch {}
+
+  return {
+    address: gaugeFactory.target.toString(),
+    owner,
+    defaultBlastGovernor,
+    gaugeImplementation,
+    gaugeOwner,
+    merklGaugeMiddleman,
+    voter,
+    last_gauge,
+    gaugeImplementationType,
   };
 }
