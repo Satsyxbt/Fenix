@@ -1,0 +1,10 @@
+Starting deployment of MerklGaugeMiddleman...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1","0xa7c167f58833c5e25848837f45a1372491a535ed","0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd"]
+MerklGaugeMiddleman deployed at 0xC5fAE3085A259463bA72aeEEfc2ee864471B669B
+Save to deploys.json deployed address of MerklGaugeMiddlemanWithERC20MockToken:0xC5fAE3085A259463bA72aeEEfc2ee864471B669B
+Verifying TransparentUpgradeableProxy at 0xC5fAE3085A259463bA72aeEEfc2ee864471B669B...
+Timeout for 10s before verify proccess...
+The contract 0xC5fAE3085A259463bA72aeEEfc2ee864471B669B has already been verified on Etherscan.
+https://blastscan.io/address/0xC5fAE3085A259463bA72aeEEfc2ee864471B669B#code
+	Called Contract(0xC5fAE3085A259463bA72aeEEfc2ee864471B669B).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+	Transaction hash: 0xcc9f4202e651e10996c7f251b7773af148b8676ed8df2ef8018dee23c09f0ca8

@@ -4,26 +4,17 @@
 This guide provides the necessary steps to set up gauge parameters and create a reward campaign using the `MerklGaugeMiddleman` contract on Blast. Below are the key deployed contracts used throughout this guide:
 
 - **Gauge Creator**: [0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd](https://blastscan.io/address/0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd#code)
-- **ERC20 Mock Token**: [0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b](https://blastscan.io/address/0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b#code)
-- **Merkl Gauge Middleman**: [0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e](https://blastscan.io/address/0x2b9B9Cbe8dD6988393b30Df4f5961AAe382D343e#code)
+- **ERC20 Mock Token**: [0xA7c167f58833c5e25848837f45A1372491A535eD](https://blastscan.io/address/0xA7c167f58833c5e25848837f45A1372491A535eD#code)
+- **Merkl Gauge Middleman**: [0xC5fAE3085A259463bA72aeEEfc2ee864471B669B](https://blastscan.io/address/0xC5fAE3085A259463bA72aeEEfc2ee864471B669B#code)
 
 These contracts are essential for deploying and managing the gauge and reward distribution system on Blast.
 
 ### 2. ERC20 Mock Token for Rewards
-The **ERC20OwnableMock** token is deployed as a reward token for incentivizing liquidity pools in the campaigns. This mock token acts as the reward asset distributed to liquidity providers who participate in the incentivized pools. The token was deployed using the following constructor arguments:
 
-- **Name**: "MerklGaugeMiddleman ERC20 Mock token"
-- **Symbol**: "MGMEMT"
-- **Decimals**: 18
-
-Deployed at address: [0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b](https://blastscan.io/address/0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b#code).
-
-Minting of reward tokens can be done by calling the `mint` function. In this example, 10 million tokens were minted to the address `0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30` for reward distribution:
-
-```plaintext
-Called Contract(0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b).mint(to_: "0x4867664BaAFE5926B3cA338e96c88fB5a5FeAb30", amount_: "10000000000000000000000000")
-Transaction hash: 0xca1655c5ed51cf769d8e798c782ca2033ef5d14305ef858ab448be683c483c37
-```
+- **Name**: "aglaMerkl"
+- **Symbol**: "aglaMerkl"
+- **Decimals**: 6
+- **Address**: 0xA7c167f58833c5e25848837f45A1372491A535eD
 
 ### 3. Configuring Future Campaigns
 To set up future reward campaigns, gauge parameters need to be configured using the `setGauge` function of the `MerklGaugeMiddleman` contract. The configuration involves defining a set of parameters to properly incentivize the targeted liquidity pools.
@@ -92,8 +83,8 @@ setGauge(
   DistributionParameters({
     rewardId: 0x...
     uniV3Pool: 0x...
-    rewardToken: 0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b,
-    amount: 100000000000000000000000,
+    rewardToken: 0xA7c167f58833c5e25848837f45A1372491A535eD,
+    amount: 100000000,
     ...additional configurations...
   })
 );
@@ -129,7 +120,7 @@ MerklGaugeMiddleman.setGauge(
   DistributionParameters({
     rewardId: "0x",
     uniV3Pool: 0x...
-    rewardToken: 0xB481E79A38Ed9f8DcEecC56C7a0393a22C1cAb9b,
+    rewardToken: 0xA7c167f58833c5e25848837f45A1372491A535eD,
     amount: 0, // Will be set automatically, according to the value of the emission distributed
     positionWrappers: [],
     wrapperTypes: [],
@@ -148,5 +139,6 @@ MerklGaugeMiddleman.setGauge(
 
 **Call distribution rewards**
 ```solidity
-MerklGaugeMiddleman.notifyRewardWithTransfer(0xAddressOfGauge, 50000000000000000000000);
+ERC20(0xA7c167f58833c5e25848837f45A1372491A535eD).approve(MerklGaugeMiddleman, 500000000)
+MerklGaugeMiddleman.notifyRewardWithTransfer(0xAddressOfGauge, 500000000);
 ```
