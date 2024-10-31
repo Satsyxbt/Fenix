@@ -190,7 +190,7 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
             if (totalSupply > 0) {
                 uint256 rewardsPerEpoch = rewarder.rewardsPerEpoch(epoch);
                 // APR = (rewardsPerEpoch / totalSupply) * 100 * 52
-                aprs[i] = (rewardsPerEpoch * 100 * 52) / totalSupply;
+                aprs[i] = (rewardsPerEpoch * 1e18 * 52) / totalSupply;
             }
         }
     }
