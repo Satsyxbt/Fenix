@@ -18,6 +18,7 @@ import { formatEther } from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { InstanceName } from '../utils/Names';
 import { GaugeType } from '../utils/Constants';
+import { bigint } from 'hardhat/internal/core/params/argumentTypes';
 
 export type PairFactoryState = {
   address: string;
@@ -651,14 +652,17 @@ export type VeFnxSplitMerklAidropState = {
   isPaused: boolean;
 };
 export async function getVeFnxSplitMerklAidropState(veFnxSplit: VeFnxSplitMerklAidropUpgradeable): Promise<VeFnxSplitMerklAidropState> {
-  const [owner, token, votingEscrow, pureTokensRate, isPaused, merklRoot] = await Promise.all([
+  const [owner, token, votingEscrow, isPaused, merklRoot] = await Promise.all([
     veFnxSplit.owner(),
     veFnxSplit.token(),
     veFnxSplit.votingEscrow(),
-    veFnxSplit.pureTokensRate(),
     veFnxSplit.paused(),
     veFnxSplit.merklRoot(),
   ]);
+  let pureTokensRate = 0n;
+  try {
+    pureTokensRate = await veFnxSplit.pureTokensRate();
+  } catch {}
 
   return {
     address: veFnxSplit.target.toString(),

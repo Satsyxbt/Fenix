@@ -1,0 +1,156 @@
+    Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270
+        Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0x4B9F15E357456364f715AddC6f120148767fc530
+Save to deploys.json deployed address of MinimalLinearVestingUpgradeable_Proxy:0x4B9F15E357456364f715AddC6f120148767fc530
+Verifying TransparentUpgradeableProxy at 0x4B9F15E357456364f715AddC6f120148767fc530...
+Timeout for 10s before verify proccess...
+The contract 0x4B9F15E357456364f715AddC6f120148767fc530 has already been verified on Etherscan.
+https://blastscan.io/address/0x4B9F15E357456364f715AddC6f120148767fc530#code
+        Called Contract(0x4B9F15E357456364f715AddC6f120148767fc530).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", token_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", startTimestamp_: "1730937600", duration_: "15724800")
+        Transaction hash: 0x89a179e9cd6cac44458921022192e584da2e5200af3ccce8edfaeaa2b1769285
+
+Starting deployment of BlastGovernorUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BlastGovernorUpgradeable deployed at 0x2A22fC295cf3771015e18c08F37A5D65E313349d
+Save to deploys.json deployed address of BlastGovernorUpgradeable_Implementation:0x2A22fC295cf3771015e18c08F37A5D65E313349d
+Warning: Address for BlastGovernorUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xD8Da36A27A745A1f9FfA356a7EC7f730fc8EdE6f
+        New address: 0x2A22fC295cf3771015e18c08F37A5D65E313349d
+Verifying TransparentUpgradeableProxy at 0x2A22fC295cf3771015e18c08F37A5D65E313349d...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/BlastGovernorUpgradeable.sol:BlastGovernorUpgradeable at 0x2A22fC295cf3771015e18c08F37A5D65E313349d
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastGovernorUpgradeable on the block explorer.
+https://blastscan.io/address/0x2A22fC295cf3771015e18c08F37A5D65E313349d#code
+
+Starting deployment of BlastRebasingTokensGovernorUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BlastRebasingTokensGovernorUpgradeable deployed at 0x45882278Dc8D8DD2199aED9905A825C5acED2902
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Implementation:0x45882278Dc8D8DD2199aED9905A825C5acED2902
+Warning: Address for BlastRebasingTokensGovernorUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xEe9220Cb20e9f7848f22BF7117412A54766D5F72
+        New address: 0x45882278Dc8D8DD2199aED9905A825C5acED2902
+Verifying TransparentUpgradeableProxy at 0x45882278Dc8D8DD2199aED9905A825C5acED2902...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/BlastRebasingTokensGovernor.sol:BlastRebasingTokensGovernorUpgradeable at 0x45882278Dc8D8DD2199aED9905A825C5acED2902
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastRebasingTokensGovernorUpgradeable on the block explorer.
+https://blastscan.io/address/0x45882278Dc8D8DD2199aED9905A825C5acED2902#code
+
+Starting deployment of VeFnxSplitMerklAidropUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VeFnxSplitMerklAidropUpgradeable deployed at 0xa1d61F8893dc1341Af9ce6F2289cEe869a220153
+Save to deploys.json deployed address of VeFnxSplitMerklAidropUpgradeable_Implementation:0xa1d61F8893dc1341Af9ce6F2289cEe869a220153
+Warning: Address for VeFnxSplitMerklAidropUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xAD2298b20558b2729E0605350E047e804163b3f2
+        New address: 0xa1d61F8893dc1341Af9ce6F2289cEe869a220153
+Verifying TransparentUpgradeableProxy at 0xa1d61F8893dc1341Af9ce6F2289cEe869a220153...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxSplitMerklAidropUpgradeable.sol:VeFnxSplitMerklAidropUpgradeable at 0xa1d61F8893dc1341Af9ce6F2289cEe869a220153
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxSplitMerklAidropUpgradeable on the block explorer.
+https://blastscan.io/address/0xa1d61F8893dc1341Af9ce6F2289cEe869a220153#code
+
+Starting deployment of VoterUpgradeableV2...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VoterUpgradeableV2 deployed at 0xc6552a3E87b416FBE211b91cE1A7886336f20456
+Save to deploys.json deployed address of VoterUpgradeable_Implementation:0xc6552a3E87b416FBE211b91cE1A7886336f20456
+Warning: Address for VoterUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x5df9930bdC5C02115D8F41A7850244968d16A139
+        New address: 0xc6552a3E87b416FBE211b91cE1A7886336f20456
+Verifying TransparentUpgradeableProxy at 0xc6552a3E87b416FBE211b91cE1A7886336f20456...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VoterUpgradeableV2.sol:VoterUpgradeableV2 at 0xc6552a3E87b416FBE211b91cE1A7886336f20456
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VoterUpgradeableV2 on the block explorer.
+https://blastscan.io/address/0xc6552a3E87b416FBE211b91cE1A7886336f20456#code
+
+Starting deployment of VotingEscrowUpgradeableV2...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VotingEscrowUpgradeableV2 deployed at 0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Implementation:0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F
+Warning: Address for VotingEscrowUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xeB54Ab83Ac82e27b7Bc2252728dfe739b6A60A2A
+        New address: 0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F
+Verifying TransparentUpgradeableProxy at 0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV2.sol:VotingEscrowUpgradeableV2 at 0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeableV2 on the block explorer.
+https://blastscan.io/address/0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F#code
+
+Starting deployment of GaugeUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",1]
+GaugeUpgradeable deployed at 0x67d391Aa49ddD09E57b0b9226e2891e408621e9b
+Save to deploys.json deployed address of GaugeUpgradeable_V2Pools_Implementation:0x67d391Aa49ddD09E57b0b9226e2891e408621e9b
+Verifying TransparentUpgradeableProxy at 0x67d391Aa49ddD09E57b0b9226e2891e408621e9b...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/gauges/GaugeUpgradeable.sol:GaugeUpgradeable at 0x67d391Aa49ddD09E57b0b9226e2891e408621e9b
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GaugeUpgradeable on the block explorer.
+https://blastscan.io/address/0x67d391Aa49ddD09E57b0b9226e2891e408621e9b#code
+
+Starting deployment of GaugeUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",2]
+GaugeUpgradeable deployed at 0x58D12813E77B87c67ccC9312598c8E1d35B96E23
+Save to deploys.json deployed address of GaugeUpgradeable_V3Pools_Implementation:0x58D12813E77B87c67ccC9312598c8E1d35B96E23
+Verifying TransparentUpgradeableProxy at 0x58D12813E77B87c67ccC9312598c8E1d35B96E23...
+Timeout for 10s before verify proccess...
+
+
+Starting deployment of RewardAPIUpgradeable...
+        Constructor arguments: []
+RewardAPIUpgradeable deployed at 0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E
+Save to deploys.json deployed address of RewardAPIUpgradeable_Implementation:0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E
+Warning: Address for RewardAPIUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x7E0b1935968cDB17dA8Cc09B154Ed4418a91ac5c
+        New address: 0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E
+Verifying TransparentUpgradeableProxy at 0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/RewardAPIUpgradeable.sol:RewardAPIUpgradeable at 0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract RewardAPIUpgradeable on the block explorer.
+https://blastscan.io/address/0x256Eb6dE4cA0ac5CC952D773c93F1AB7f5064B1E#code
+
+Starting deployment of VeNFTAPIUpgradeable...
+        Constructor arguments: []
+VeNFTAPIUpgradeable deployed at 0x38Fec988ebCd4159d655295Aa37C321382dBb766
+Save to deploys.json deployed address of VeNFTAPIUpgradeable_Implementation:0x38Fec988ebCd4159d655295Aa37C321382dBb766
+Warning: Address for VeNFTAPIUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xC1BF8c9871f1196a168831BC4b47ab7b18505b57
+        New address: 0x38Fec988ebCd4159d655295Aa37C321382dBb766
+Verifying TransparentUpgradeableProxy at 0x38Fec988ebCd4159d655295Aa37C321382dBb766...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/VeNFTAPIUpgradeable.sol:VeNFTAPIUpgradeable at 0x38Fec988ebCd4159d655295Aa37C321382dBb766
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeNFTAPIUpgradeable on the block explorer.
+https://blastscan.io/address/0x38Fec988ebCd4159d655295Aa37C321382dBb766#code   
+       
+       
+       
+        Called Contract(0xaf85834fc0d0302c82919E10c8817609a310fd2c).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0x7b36ff1cc4ce533c96e9c2ae428c58f96aad513b0197e47a52e9ec63a4472dd1
+        Called Contract(0x311F7981d7159De374c378Be0815DC4257b50468).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0x5ae08e7e6a53cf1bfe0c3262f15b7728e05a1d371482da07b17035b4d42bbc4f
+        Called Contract(0x4B9F15E357456364f715AddC6f120148767fc530).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0xe732efc069ed17eda0d72a138a6119cf7f4d806b302bdb7a9be484d6ea38bc15
+        Called Contract(0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0x731f892514318cb5cc058cc6122e277c3ef7404b7b5379b2f089279d6e3b593b
