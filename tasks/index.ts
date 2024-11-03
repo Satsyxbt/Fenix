@@ -6,3 +6,4 @@ import './check-network-contracts-bytecode';
 import './fees-vaults';
 import './extract-abis-to-docs';
 import './get-state';
+import './check-match-fees-vault';
