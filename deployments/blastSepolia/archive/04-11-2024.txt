@@ -13,3 +13,19 @@ The contract 0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820 has already been verifie
 https://sepolia.blastscan.io/address/0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820#code
         Called Contract(0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", token_: "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6", startTimestamp_: "1730796069", duration_: "15724800")
         Transaction hash: 0x55ffcb6095ad5b715f55953732a57538a6f1a197b83110cb8eef10472494a1a2
+
+
+
+
+        Starting deployment of veFNXClaimer...
+        Constructor arguments: ["0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6","0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34"]
+veFNXClaimer deployed at 0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2
+Save to deploys.json deployed address of veFNXClaimer:0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2
+Verifying TransparentUpgradeableProxy at 0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/migration/veFNXClaimer.sol:veFNXClaimer at 0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract veFNXClaimer on the block explorer.
+https://sepolia.blastscan.io/address/0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2#code

@@ -35,6 +35,11 @@
 | **MinimalLinearVestingUpgradeable_Proxy** | `0x4B9F15E357456364f715AddC6f120148767fc530`|
 | **VeFnxSplitMerklAidropUpgradeable_Proxy** | `0x311F7981d7159De374c378Be0815DC4257b50468` |
 
+### Migration
+| Contract Name | Address |
+| -------------- | ------- |
+| **VeFnxClaimer** | `0x5698eB845f4DfC4C627Fa59EE28B7A270fb2036a` |
+
 #### VeBoost
 | Contract Name | Address |
 | ------------- | ------- |

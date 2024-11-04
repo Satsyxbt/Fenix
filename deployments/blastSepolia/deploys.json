@@ -59,5 +59,6 @@
   "AlgebraFactory_Proxy": "0x242A0C57EAf78A061db42D913DE7FA4eA648a1Ef",
   "BasePluginV1Factory_Proxy": "0xc6366a42c28b81B45f9b7e41eC020D99fCA091E4",
   "GaugeUpgradeable_V2Pools_Implementation": "0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5",
-  "GaugeUpgradeable_V3Pools_Implementation": "0x25a92F38002802388f4f489AA57C502DFD3c7338"
+  "GaugeUpgradeable_V3Pools_Implementation": "0x25a92F38002802388f4f489AA57C502DFD3c7338",
+  "veFNXClaimer": "0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2"
 }
