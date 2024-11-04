@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "blastGovernor_",
         "type": "address"
+      },
+      {
+        "internalType": "enum GaugeUpgradeable.GaugeType",
+        "name": "gaugeType_",
+        "type": "uint8"
       }
     ],
     "stateMutability": "nonpayable",
@@ -376,6 +381,19 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gaugeType",
+    "outputs": [
+      {
+        "internalType": "enum GaugeUpgradeable.GaugeType",
+        "name": "",
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",

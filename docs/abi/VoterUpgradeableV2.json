@@ -67,6 +67,11 @@
   },
   {
     "inputs": [],
+    "name": "PoolNotInitialized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "VoteDelay",
     "type": "error"
   },
