@@ -69,6 +69,7 @@ export enum AliasDeployedContracts {
   AlgebraFactory_Proxy = 'AlgebraFactory_Proxy',
   BasePluginV1Factory_Proxy = 'BasePluginV1Factory_Proxy',
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
+  veFNXClaimer = 'veFNXClaimer',
 }
 
 enum ThirdPart {
@@ -116,6 +117,7 @@ enum ContractsInstanceName {
   MinimalLinearVestingUpgradeable = 'MinimalLinearVestingUpgradeable',
   GaugeRewarder = 'GaugeRewarder',
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
+  veFNXClaimer = 'veFNXClaimer',
 }
 
 enum ContractsMocksInstanceName {
