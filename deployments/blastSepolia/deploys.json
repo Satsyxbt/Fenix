@@ -27,7 +27,7 @@
   "VeFnxSplitMerklAidropUpgradeable_Implementation": "0xc32160bC7841aedB9b594DB6641320746bb6aAB1",
   "UtilsUpgradeable_Implementation": "0x7A2A229bB0FC58628448437Cc94db06FF1730550",
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
-  "MinimalLinearVestingUpgradeable_Implementation": "0x6F6B1F213fe196711139076dd41b30cD0DcC4910",
+  "MinimalLinearVestingUpgradeable_Implementation": "0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7",
   "MinimalLinearVestingUpgradeable_Proxy": "0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820",
   "VotingEscrowUpgradeable_Implementation": "0xaD82F3C1d70e270F418F0Be58850a4af237B9a72",
   "VotingEscrowUpgradeable_Proxy": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
