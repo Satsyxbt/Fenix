@@ -13,8 +13,8 @@ The `VeFnxSplitMerklAidropUpgradeable` contract provides several functions for t
 - `pause()` - Allows the owner to pause the contract.
 
 #### Functions Available When Not Paused
-- `claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_)` - Allows users to claim their allocated tokens, either as pure tokens or as veNFT tokens.
-- `claimFor(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_)` - Allows claim operators to claim tokens on behalf of a target address.
+- `claim(bool inPureTokens_, uint256 amount_, bool withPermanentLock_, uint256 managedTokenIdForAttach_, bytes32[] memory proof_)` - Allows users to claim their allocated tokens, either as pure tokens or as veNFT tokens.
+- `claimFor(address target_, bool inPureTokens_, uint256 amount_, bool withPermanentLock_, uint256 managedTokenIdForAttach_, bytes32[] memory proof_)` - Allows claim operators to claim tokens on behalf of a target address.
 
 #### Initialization
 The contract must be initialized with the following parameters:

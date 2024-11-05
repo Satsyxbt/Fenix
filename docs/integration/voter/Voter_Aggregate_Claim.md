@@ -53,10 +53,13 @@ The `aggregateClaim` function in the `VoterUpgradeable` contract allows users to
     }
 
     /**
-     * @dev Parameters for claiming VeFnx Merkl airdrop data.
-     */
+    * @dev Parameters for claiming VeFnx Merkl airdrop data.
+    */
     struct AggregateClaimVeFnxMerklAirdrop {
+        bool inPureTokens; ///< Indicates if the claim is in pure tokens.
         uint256 amount; ///< The amount to claim.
+        bool withPermanentLock; ///< Indicates if the lock should be permanent for veNFT claims.
+        uint256 managedTokenIdForAttach; ///< ID of the managed NFT to attach (0 to ignore).
         bytes32[] proofs; ///< The array of Merkle proofs.
     }
 ```
@@ -148,8 +151,10 @@ This comprehensive aggregation allows users to perform multiple reward and bribe
 ### `splitMerklAidrop_`
 - **Type**: `AggregateClaimVeFnxMerklAirdrop`
     - `uint256 amount`: The amount to claim.
+    - `bool withPermanentLock`: Specifies if the veNFT lock should be permanent (applicable only when claiming as veNFT).
+    - `uint256 managedTokenIdForAttach`: ID of the managed NFT to attach if required (0 if not attaching to any NFT).
     - `bytes32[] proofs`: The array of Merkle proofs.
-- **Equivalent Call**: `IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claim(amount, proofs)`
+- **Equivalent Call**: `IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claim(inPureTokens, amount, withPermanentLock, managedTokenIdForAttach, proofs)`
 - **Details**: This parameter is used to claim the VeFnx Merkl airdrop.
 
 ## Enabling Aggregate Claims with Voter Contract

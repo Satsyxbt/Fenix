@@ -13,20 +13,38 @@ To claim your allocated tokens, follow these steps:
 3. Call the `claim` function with the amount and the Merkle proof.
 
 ```solidity
-function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
+    /**
+     * @dev Allows a user to claim tokens or veNFT tokens based on a Merkle proof.
+     * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
+     * @param amount_ The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
+     * @param proof_ The Merkle proof for the claim.
+     * @notice This function can only be called when the contract is not paused.
+     */
+    function claim(
+        bool inPureTokens_,
+        uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
+        bytes32[] memory proof_
+    ) external;
 ```
 - **Parameters:**
   - `inPureTokens_`: A boolean indicating if the claim is in pure tokens.
   - `amount_`: The total amount of tokens you can claim.
   - `proof_`: The Merkle proof verifying your claim.
+  - `withPermanentLock_`: A boolean indicating whether the veNFT lock should be permanent lock. (Only applicable if claiming as veNFT).
+  - `managedTokenIdForAttach_`: The managed NFT ID to attach to when claiming. Use 0 if not attaching to any NFT.
 
-The function will verify the provided proof against the stored Merkle root. If the proof is valid, the function will either:
-- Transfer the full amount as veNFT token if `inPureTokens_` is `false`.
-- Will issue in the form of pure FNX tokens but with conversion at a certain rate, based on the `pureTokensRate` if `inPureTokens_` is `true`.
+The function verifies the provided proof against the stored Merkle root. If valid, it proceeds as follows:
+- If `inPureTokens_` is `true`, the claim is processed as pure tokens at a rate based on pureTokensRate.
+- If `inPureTokens_` is `false`, the full amount is issued as veNFT with the option of permanent lock and attach to managed NFT if specified.
 
 The claim will then be processed, and the relevant amounts will be distributed accordingly.
 
 **Note**: If the Merkle root is updated, you can claim again if your new claim amount equals the previous claim amount plus any new rewards.
+
 
 #### Calculating Pure Tokens Amount
 The contract provides a function to calculate the equivalent amount in pure tokens based on the claim amount. This is useful for determining how much you will receive if you choose to claim in pure tokens.
