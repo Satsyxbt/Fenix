@@ -70,78 +70,44 @@ contract veFNXClaimer is Ownable, ReentrancyGuard {
         emit RatiosSet(chrRatio, spchrRatio, elchrRatio, vechrRatio, chrnftRatio);
     }
 
-    function claimWithCHR() external nonReentrant {
+    function claimWithCHR(bool withPermanentLock_, uint256 managedTokenIdForAttach_) external nonReentrant {
         uint256 claimAmount = chrClaimAmount[msg.sender];
-        require(claimAmount > 0, "No claimable amount");
-
-        fnxToken.approve(address(lockingContract), claimAmount);
-        lockingContract.createLockFor(claimAmount, LOCK_DURATION, msg.sender, false, true, 0);
-
         chrClaimedAmount[msg.sender] += claimAmount;
-        updateClaimAmount(msg.sender, "CHR");
+        _updateClaimAmount(msg.sender, "CHR");
+
+        _createLock(msg.sender, claimAmount, withPermanentLock_, managedTokenIdForAttach_);
     }
 
-    function claimWithSPCHR() external nonReentrant {
+    function claimWithSPCHR(bool withPermanentLock_, uint256 managedTokenIdForAttach_) external nonReentrant {
         uint256 claimAmount = spchrClaimAmount[msg.sender];
-        require(claimAmount > 0, "No claimable amount");
-
-        fnxToken.approve(address(lockingContract), claimAmount);
-        lockingContract.createLockFor(claimAmount, LOCK_DURATION, msg.sender, false, true, 0);
-
         spchrClaimedAmount[msg.sender] += claimAmount;
-        updateClaimAmount(msg.sender, "SPCHR");
+        _updateClaimAmount(msg.sender, "SPCHR");
+
+        _createLock(msg.sender, claimAmount, withPermanentLock_, managedTokenIdForAttach_);
     }
 
-    function claimWithELCHR() external nonReentrant {
+    function claimWithELCHR(bool withPermanentLock_, uint256 managedTokenIdForAttach_) external nonReentrant {
         uint256 claimAmount = elchrClaimAmount[msg.sender];
-        require(claimAmount > 0, "No claimable amount");
-
-        fnxToken.approve(address(lockingContract), claimAmount);
-        lockingContract.createLockFor(claimAmount, LOCK_DURATION, msg.sender, false, true, 0);
-
         elchrClaimedAmount[msg.sender] += claimAmount;
-        updateClaimAmount(msg.sender, "ELCHR");
+        _updateClaimAmount(msg.sender, "ELCHR");
+
+        _createLock(msg.sender, claimAmount, withPermanentLock_, managedTokenIdForAttach_);
     }
 
-    function claimWithVECHR() external nonReentrant {
+    function claimWithVECHR(bool withPermanentLock_, uint256 managedTokenIdForAttach_) external nonReentrant {
         uint256 claimAmount = vechrClaimAmount[msg.sender];
-        require(claimAmount > 0, "No claimable amount");
-
-        fnxToken.approve(address(lockingContract), claimAmount);
-        lockingContract.createLockFor(claimAmount, LOCK_DURATION, msg.sender, false, true, 0);
-
         vechrClaimedAmount[msg.sender] += claimAmount;
-        updateClaimAmount(msg.sender, "VECHR");
+        _updateClaimAmount(msg.sender, "VECHR");
+
+        _createLock(msg.sender, claimAmount, withPermanentLock_, managedTokenIdForAttach_);
     }
 
-    function claimWithCHRNFT() external nonReentrant {
+    function claimWithCHRNFT(bool withPermanentLock_, uint256 managedTokenIdForAttach_) external nonReentrant {
         uint256 claimAmount = chrnftClaimAmount[msg.sender];
-        require(claimAmount > 0, "No claimable amount");
-
-        fnxToken.approve(address(lockingContract), claimAmount);
-        lockingContract.createLockFor(claimAmount, LOCK_DURATION, msg.sender, false, true, 0);
-
         chrnftClaimedAmount[msg.sender] += claimAmount;
-        updateClaimAmount(msg.sender, "CHRNFT");
-    }
+        _updateClaimAmount(msg.sender, "CHRNFT");
 
-    function updateClaimAmount(address user, string memory tokenType) internal {
-        if (keccak256(abi.encodePacked(tokenType)) == keccak256("CHR")) {
-            emit Claimed(user, chrClaimAmount[user], "CHR");
-            chrClaimAmount[user] = 0;
-        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("SPCHR")) {
-            emit Claimed(user, spchrClaimAmount[user], "SPCHR");
-            spchrClaimAmount[user] = 0;
-        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("ELCHR")) {
-            emit Claimed(user, elchrClaimAmount[user], "ELCHR");
-            elchrClaimAmount[user] = 0;
-        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("VECHR")) {
-            emit Claimed(user, vechrClaimAmount[user], "VECHR");
-            vechrClaimAmount[user] = 0;
-        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("CHRNFT")) {
-            emit Claimed(user, chrnftClaimAmount[user], "CHRNFT");
-            chrnftClaimAmount[user] = 0;
-        }
+        _createLock(msg.sender, claimAmount, withPermanentLock_, managedTokenIdForAttach_);
     }
 
     function setUserClaimAmounts(address[] memory users, uint256[] memory migratedAmounts, string memory tokenType) external onlyOwner {
@@ -212,5 +178,30 @@ contract veFNXClaimer is Ownable, ReentrancyGuard {
         uint256 balance = fnxToken.balanceOf(address(this));
         require(amount <= balance, "Amount exceeds balance");
         fnxToken.transfer(msg.sender, amount);
+    }
+
+    function _createLock(address target_, uint256 claimAmount_, bool withPermanentLock_, uint256 managedTokenIdForAttach_) internal {
+        require(claimAmount_ > 0, "No claimable amount");
+        fnxToken.approve(address(lockingContract), claimAmount_);
+        lockingContract.createLockFor(claimAmount_, LOCK_DURATION, target_, false, withPermanentLock_, managedTokenIdForAttach_);
+    }
+
+    function _updateClaimAmount(address user, string memory tokenType) internal {
+        if (keccak256(abi.encodePacked(tokenType)) == keccak256("CHR")) {
+            emit Claimed(user, chrClaimAmount[user], "CHR");
+            chrClaimAmount[user] = 0;
+        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("SPCHR")) {
+            emit Claimed(user, spchrClaimAmount[user], "SPCHR");
+            spchrClaimAmount[user] = 0;
+        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("ELCHR")) {
+            emit Claimed(user, elchrClaimAmount[user], "ELCHR");
+            elchrClaimAmount[user] = 0;
+        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("VECHR")) {
+            emit Claimed(user, vechrClaimAmount[user], "VECHR");
+            vechrClaimAmount[user] = 0;
+        } else if (keccak256(abi.encodePacked(tokenType)) == keccak256("CHRNFT")) {
+            emit Claimed(user, chrnftClaimAmount[user], "CHRNFT");
+            chrnftClaimAmount[user] = 0;
+        }
     }
 }
