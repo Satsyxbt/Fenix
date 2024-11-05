@@ -14,7 +14,7 @@ External:
 ## Core
 | Contract Name                                    | Address                                      |
 | ------------------------------------------------ | -------------------------------------------- |
-| **veFNXClaimer**                                  |  0x8E89866b25702d64c7Cd6141A65e7e7f7C9A8aC2 |
+| **veFNXClaimer**                                  |  0x89A4a91aA2C5abC72531D9075AD890d23b234F58 |
 | **RouterV2**                                      │ 0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6 |
 | ProxyAdmin                                       | 0x9502993595815b1Fa674C5133F42C3919a696bEc   |
 | **Fenix**                                            | 0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6   |

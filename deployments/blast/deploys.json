@@ -64,5 +64,5 @@
   "MinimalLinearVestingUpgradeable_Proxy": "0x4B9F15E357456364f715AddC6f120148767fc530",
   "GaugeUpgradeable_V2Pools_Implementation": "0x67d391Aa49ddD09E57b0b9226e2891e408621e9b",
   "GaugeUpgradeable_V3Pools_Implementation": "0x58D12813E77B87c67ccC9312598c8E1d35B96E23",
-  "veFNXClaimer": "0x5698eB845f4DfC4C627Fa59EE28B7A270fb2036a"
+  "veFNXClaimer": "0x3191EF613f297b53f593fEa5044ce7A6B19985A5"
 }

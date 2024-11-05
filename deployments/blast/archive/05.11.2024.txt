@@ -1,0 +1,18 @@
+Starting deployment of veFNXClaimer...
+        Constructor arguments: ["0x52f847356b38720B55ee18Cb3e094ca11C85A192","0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9"]
+veFNXClaimer deployed at 0x3191EF613f297b53f593fEa5044ce7A6B19985A5
+Save to deploys.json deployed address of veFNXClaimer:0x3191EF613f297b53f593fEa5044ce7A6B19985A5
+Warning: Address for veFNXClaimer is already in the list. It will be replaced.
+        Existing address: 0x5698eB845f4DfC4C627Fa59EE28B7A270fb2036a
+        New address: 0x3191EF613f297b53f593fEa5044ce7A6B19985A5
+Verifying TransparentUpgradeableProxy at 0x3191EF613f297b53f593fEa5044ce7A6B19985A5...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/migration/veFNXClaimer.sol:veFNXClaimer at 0x3191EF613f297b53f593fEa5044ce7A6B19985A5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract veFNXClaimer on the block explorer.
+https://blastscan.io/address/0x3191EF613f297b53f593fEa5044ce7A6B19985A5#code
+
+        Called Contract(0x3191EF613f297b53f593fEa5044ce7A6B19985A5).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0x95510ce557b410fb057d420ad3eb3c5445acb091c10c5364b5c9d0e23f23ca88

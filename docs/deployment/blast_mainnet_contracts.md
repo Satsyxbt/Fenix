@@ -38,7 +38,7 @@
 ### Migration
 | Contract Name | Address |
 | -------------- | ------- |
-| **VeFnxClaimer** | `0x5698eB845f4DfC4C627Fa59EE28B7A270fb2036a` |
+| **VeFnxClaimer** | `0x3191EF613f297b53f593fEa5044ce7A6B19985A5` |
 
 #### VeBoost
 | Contract Name | Address |
