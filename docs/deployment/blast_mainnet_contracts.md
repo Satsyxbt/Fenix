@@ -105,8 +105,8 @@
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c` |
-| **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0xa1d61F8893dc1341Af9ce6F2289cEe869a220153`|
-| **VoterUpgradeable_Implementation** | `0xc6552a3E87b416FBE211b91cE1A7886336f20456`|
+| **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0xa1d61F8893dc1341Af9ce6F2289cEe869a220153 (in future 0x1D099397B2049Ce63eE051801E5A774A4E60F6cd)`|
+| **VoterUpgradeable_Implementation** | `0xc6552a3E87b416FBE211b91cE1A7886336f20456 (in future 0x932C74DD5504D94AaF5d62195966E00F6d897364)`|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
