@@ -128,11 +128,19 @@ contract VeFnxSplitMerklAidropUpgradeable is
      * @dev Allows a user to claim tokens or veNFT tokens based on a Merkle proof.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proof_ The Merkle proof for the claim.
      * @notice This function can only be called when the contract is not paused.
      */
-    function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external virtual override whenNotPaused {
-        _claim(_msgSender(), inPureTokens_, amount_, proof_);
+    function claim(
+        bool inPureTokens_,
+        uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
+        bytes32[] memory proof_
+    ) external virtual override whenNotPaused {
+        _claim(_msgSender(), inPureTokens_, amount_, withPermanentLock_, managedTokenIdForAttach_, proof_);
     }
 
     /**
@@ -140,6 +148,8 @@ contract VeFnxSplitMerklAidropUpgradeable is
      * @param target_ The address of the user on whose behalf tokens are being claimed.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice This function can only be called when the contract is not paused.
      * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
@@ -149,12 +159,14 @@ contract VeFnxSplitMerklAidropUpgradeable is
         address target_,
         bool inPureTokens_,
         uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
         bytes32[] memory proof_
     ) external virtual override whenNotPaused {
         if (target_ != _msgSender() && !isAllowedClaimOperator[_msgSender()]) {
             revert NotAllowedClaimOperator();
         }
-        _claim(target_, inPureTokens_, amount_, proof_);
+        _claim(target_, inPureTokens_, amount_, withPermanentLock_, managedTokenIdForAttach_, proof_);
     }
 
     /**
@@ -251,12 +263,21 @@ contract VeFnxSplitMerklAidropUpgradeable is
      * @param target_ The address of the user making the claim.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The total amount of tokens the user can claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice Reverts with `InvalidProof` if the provided proof is not valid.
      * @notice Reverts with `ZeroAmount` if the claim amount is zero.
      * @notice Emits a {Claim} event.
      */
-    function _claim(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) internal virtual {
+    function _claim(
+        address target_,
+        bool inPureTokens_,
+        uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
+        bytes32[] memory proof_
+    ) internal virtual {
         if (!isValidProof(target_, amount_, proof_)) {
             revert InvalidProof();
         }
@@ -284,7 +305,7 @@ contract VeFnxSplitMerklAidropUpgradeable is
             toVeNFTAmount = claimAmount;
             IVotingEscrow veCache = IVotingEscrow(votingEscrow);
             tokenCache.safeApprove(address(veCache), toVeNFTAmount);
-            tokenId = veCache.createLockFor(toVeNFTAmount, _LOCK_DURATION, target_, false, false, 0);
+            tokenId = veCache.createLockFor(toVeNFTAmount, _LOCK_DURATION, target_, false, withPermanentLock_, managedTokenIdForAttach_);
         }
 
         emit Claim(target_, claimAmount, toTokenAmount, toVeNFTAmount, tokenId);

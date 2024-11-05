@@ -3,9 +3,17 @@ import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { Fenix, VeFnxSplitMerklAidropUpgradeable, VotingEscrowUpgradeableV2 } from '../../typechain-types/index';
-import { ERRORS, ONE, ONE_ETHER, ZERO, ZERO_ADDRESS } from '../utils/constants';
-import completeFixture, { SignersList } from '../utils/coreFixture';
+import {
+  CompoundVeFNXManagedNFTStrategyFactoryUpgradeable,
+  Fenix,
+  ManagedNFTManagerUpgradeable,
+  RouterV2,
+  RouterV2PathProviderUpgradeable,
+  VeFnxSplitMerklAidropUpgradeable,
+  VotingEscrowUpgradeableV2,
+} from '../../typechain-types/index';
+import { ERRORS, ONE, ONE_ETHER, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, deployTransaperntUpgradeableProxy, SignersList } from '../utils/coreFixture';
 
 function getProof(address: string, tree: any): string[] {
   let proof: string[];
@@ -20,14 +28,73 @@ function getProof(address: string, tree: any): string[] {
 describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
   const TO_PURE_TOKESN_RATE = ethers.parseEther('0.25');
 
+  let deployed: CoreFixtureDeployed;
   let implementation: VeFnxSplitMerklAidropUpgradeable;
   let proxy: VeFnxSplitMerklAidropUpgradeable;
   let fenix: Fenix;
   let votingEscrow: VotingEscrowUpgradeableV2;
   let signers: SignersList;
+  let strategyFactory: CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
+  let routerV2: RouterV2;
+  let routerV2PathProvider: RouterV2PathProviderUpgradeable;
+  let managedNFTManager: ManagedNFTManagerUpgradeable;
+
+  async function newStrategy() {
+    let strategy = await ethers.getContractAt(
+      'CompoundVeFNXManagedNFTStrategyUpgradeable',
+      await strategyFactory.createStrategy.staticCall('VeMax'),
+    );
+    await strategyFactory.createStrategy('VeMax');
+    return strategy;
+  }
+
+  async function deployStrategyFactory() {
+    strategyFactory = (await ethers.getContractAt(
+      'CompoundVeFNXManagedNFTStrategyFactoryUpgradeable',
+      (
+        await deployTransaperntUpgradeableProxy(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          await (
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+          ).getAddress(),
+        )
+      ).target,
+    )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
+
+    routerV2PathProvider = (await ethers.getContractFactory('RouterV2PathProviderUpgradeable')).attach(
+      (
+        await deployTransaperntUpgradeableProxy(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          await (await ethers.deployContract('RouterV2PathProviderUpgradeable', [signers.blastGovernor.address])).getAddress(),
+        )
+      ).target,
+    ) as RouterV2PathProviderUpgradeable;
+
+    routerV2 = await ethers.deployContract('RouterV2', [
+      signers.blastGovernor.address,
+      deployed.v2PairFactory.target,
+      WETH_PREDEPLOYED_ADDRESS,
+    ]);
+
+    await routerV2PathProvider.initialize(signers.blastGovernor.address, deployed.v2PairFactory.target, routerV2.target);
+
+    await strategyFactory.initialize(
+      signers.blastGovernor.address,
+      (
+        await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
+      ).target,
+      (
+        await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
+      ).target,
+      managedNFTManager.target,
+      routerV2PathProvider.target,
+    );
+  }
 
   beforeEach(async function () {
-    let deployed = await loadFixture(completeFixture);
+    deployed = await loadFixture(completeFixture);
     votingEscrow = deployed.votingEscrow;
     signers = deployed.signers;
     fenix = deployed.fenix;
@@ -41,6 +108,10 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
     );
 
     await proxy.initialize(signers.blastGovernor.address, fenix.target, votingEscrow.target, TO_PURE_TOKESN_RATE);
+
+    managedNFTManager = deployed.managedNFTManager;
+
+    await deployStrategyFactory();
   });
 
   describe('Deployment', function () {
@@ -365,6 +436,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
     expect(await proxy.calculatePureTokensAmount(10)).to.be.eq(1);
     expect(await proxy.calculatePureTokensAmount(ethers.parseEther('1.12345'))).to.be.eq(ethers.parseEther('0.112345'));
   });
+
   describe('Claim flow', async () => {
     let tree: any;
     let user: string;
@@ -391,24 +463,26 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
     describe('fail if', async () => {
       it("contracts have'nt enough tokens for user claim", async () => {
         await expect(
-          proxy.connect(signers.otherUser3).claim(false, ethers.parseEther('200.1'), getProof(signers.otherUser3.address, tree)),
+          proxy.connect(signers.otherUser3).claim(false, ethers.parseEther('200.1'), false, 0, getProof(signers.otherUser3.address, tree)),
         ).to.be.revertedWith(ERRORS.ERC20.InsufficientBalance);
       });
       it('user provide invalid proof', async () => {
         await expect(
-          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser2.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'InvalidProof');
       });
       it('during paused state', async () => {
         await proxy.pause();
         await expect(
-          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWith(ERRORS.Pausable.Paused);
       });
       it('claim amount is zero (after success claim)', async () => {
-        await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+        await proxy
+          .connect(signers.otherUser1)
+          .claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(
-          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
       });
     });
@@ -427,6 +501,82 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.lastMintedTokenId()).to.be.eq(0);
       });
 
+      it('success claim in veNft tokens with permanent and not permanent lock', async () => {
+        await proxy.pause();
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('100.1')],
+            [signers.otherUser2.address, 1],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+        let claimAmount = ethers.parseEther('100.1');
+
+        let tx = await proxy.connect(signers.otherUser1).claim(false, claimAmount, false, 0, getProof(signers.otherUser1.address, tree));
+        await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, claimAmount, 0, claimAmount, 1);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, claimAmount);
+
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('200') - claimAmount);
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(claimAmount);
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(claimAmount);
+        expect(await votingEscrow.supply()).to.be.eq(claimAmount);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+
+        await proxy.pause();
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('200')],
+            [signers.otherUser2.address, 1],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+
+        let newClaimedAmount = ethers.parseEther('200') - claimAmount;
+        tx = await proxy
+          .connect(signers.otherUser1)
+          .claim(false, ethers.parseEther('200'), true, 0, getProof(signers.otherUser1.address, tree));
+        await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, newClaimedAmount, 0, newClaimedAmount, 2);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, newClaimedAmount);
+
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(ethers.parseEther('200') - newClaimedAmount - claimAmount);
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('200'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+        expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(newClaimedAmount + claimAmount);
+        expect(await votingEscrow.supply()).to.be.eq(newClaimedAmount + claimAmount);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newClaimedAmount);
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2);
+        expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
+        expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser1.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(2);
+
+        let nftState = await votingEscrow.nftStates(1);
+        expect(nftState.locked.isPermanentLocked).to.be.false;
+        expect(nftState.locked.amount).to.be.eq(ethers.parseEther('100.1'));
+        expect(nftState.isAttached).to.be.false;
+        expect(nftState.isVoted).to.be.false;
+
+        nftState = await votingEscrow.nftStates(2);
+        expect(nftState.locked.isPermanentLocked).to.be.true;
+        expect(nftState.locked.amount).to.be.eq(ethers.parseEther('99.9'));
+        expect(nftState.isAttached).to.be.false;
+        expect(nftState.isVoted).to.be.false;
+      });
+
       it('success claim in pure and veNft tokens', async () => {
         await proxy.pause();
         tree = StandardMerkleTree.of(
@@ -443,7 +593,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         let expectedOutAmount = ethers.parseEther('25.02500');
         expect(await proxy.calculatePureTokensAmount(claimAmount)).to.be.eq(expectedOutAmount);
 
-        let tx = await proxy.connect(signers.otherUser1).claim(true, claimAmount, getProof(signers.otherUser1.address, tree));
+        let tx = await proxy.connect(signers.otherUser1).claim(true, claimAmount, false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, claimAmount, expectedOutAmount, 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, expectedOutAmount);
 
@@ -472,7 +622,9 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await proxy.calculatePureTokensAmount(claimAmount)).to.be.eq(expectedOutAmount);
 
         let newClaimedAmount = ethers.parseEther('202.2') - claimAmount;
-        tx = await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('202.2'), getProof(signers.otherUser1.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser1)
+          .claim(false, ethers.parseEther('202.2'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx).to.be.emit(proxy, 'Claim').withArgs(signers.otherUser1.address, newClaimedAmount, 0, newClaimedAmount, 1);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, newClaimedAmount);
 
@@ -491,7 +643,9 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       });
 
       it('test', async () => {
-        let tx = await proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+        let tx = await proxy
+          .connect(signers.otherUser1)
+          .claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('100'), 0, ethers.parseEther('100'), 1);
@@ -511,10 +665,12 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
 
         await expect(
-          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
-        tx = await proxy.connect(signers.otherUser2).claim(true, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser2)
+          .claim(true, ethers.parseEther('50.5'), false, 0, getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser2.address, ethers.parseEther('50.5'), ethers.parseEther('12.62500'), 0, 0);
@@ -535,10 +691,10 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
 
         await expect(
-          proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
         await expect(
-          proxy.connect(signers.otherUser2).claim(false, ethers.parseEther('50.5'), getProof(signers.otherUser2.address, tree)),
+          proxy.connect(signers.otherUser2).claim(false, ethers.parseEther('50.5'), false, 0, getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         await proxy.pause();
@@ -553,13 +709,17 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('101'), getProof(signers.otherUser1.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser1)
+          .claim(true, ethers.parseEther('101'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('0.25'), 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('0.25'));
 
-        tx = await proxy.connect(signers.otherUser2).claim(false, ethers.parseEther('51'), getProof(signers.otherUser2.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser2)
+          .claim(false, ethers.parseEther('51'), false, 0, getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser2.address, ethers.parseEther('0.5'), 0, ethers.parseEther('0.5'), 2);
@@ -594,13 +754,17 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser1).claim(true, ethers.parseEther('102'), getProof(signers.otherUser1.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser1)
+          .claim(true, ethers.parseEther('102'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('1'), 0, 0);
         await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, signers.otherUser1.address, ethers.parseEther('1'));
 
-        tx = await proxy.connect(signers.otherUser3).claim(true, ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser3)
+          .claim(true, ethers.parseEther('10'), false, 0, getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('10'), 0, 0);
@@ -635,7 +799,9 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await proxy.setMerklRoot(tree.root);
         await proxy.unpause();
 
-        tx = await proxy.connect(signers.otherUser3).claim(true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
+        tx = await proxy
+          .connect(signers.otherUser3)
+          .claim(true, ethers.parseEther('20'), false, 0, getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('5'), 0, 0);
@@ -689,7 +855,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
     it('fail if call from not allowed operator', async () => {
       await expect(
-        proxy.connect(signers.otherUser3).claimFor(user, false, ethers.parseEther('100'), getProof(user, tree)),
+        proxy.connect(signers.otherUser3).claimFor(user, false, ethers.parseEther('100'), false, 0, getProof(user, tree)),
       ).to.be.revertedWithCustomError(proxy, 'NotAllowedClaimOperator');
     });
 
@@ -697,7 +863,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
       await expect(
         proxy
           .connect(signers.otherUser1)
-          .claimFor(signers.otherUser1, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+          .claimFor(signers.otherUser1, false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
       ).to.be.not.reverted;
     });
 
@@ -731,7 +897,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         let tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('100'), 0, ethers.parseEther('100'), 1);
@@ -753,12 +919,12 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+            .claimFor(signers.otherUser1.address, false, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), getProof(signers.otherUser2.address, tree));
+          .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), false, 0, getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser2.address, ethers.parseEther('50'), ethers.parseEther('5'), 0, 0);
@@ -780,12 +946,12 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser1.address, true, ethers.parseEther('100'), getProof(signers.otherUser1.address, tree)),
+            .claimFor(signers.otherUser1.address, true, ethers.parseEther('100'), false, 0, getProof(signers.otherUser1.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), getProof(signers.otherUser2.address, tree)),
+            .claimFor(signers.otherUser2.address, true, ethers.parseEther('50'), false, 0, getProof(signers.otherUser2.address, tree)),
         ).to.be.revertedWithCustomError(proxy, 'ZeroAmount');
 
         await proxy.pause();
@@ -802,7 +968,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, true, ethers.parseEther('110'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, true, ethers.parseEther('110'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('10'), ethers.parseEther('1'), 0, 0);
@@ -810,7 +976,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser2.address, false, ethers.parseEther('60'), getProof(signers.otherUser2.address, tree));
+          .claimFor(signers.otherUser2.address, false, ethers.parseEther('60'), false, 0, getProof(signers.otherUser2.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser2.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 2);
@@ -848,7 +1014,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser1.address, true, ethers.parseEther('111'), getProof(signers.otherUser1.address, tree));
+          .claimFor(signers.otherUser1.address, true, ethers.parseEther('111'), false, 0, getProof(signers.otherUser1.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser1.address, ethers.parseEther('1'), ethers.parseEther('1'), 0, 0);
@@ -856,7 +1022,7 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser3.address, true, ethers.parseEther('10'), getProof(signers.otherUser3.address, tree));
+          .claimFor(signers.otherUser3.address, true, ethers.parseEther('10'), false, 0, getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), ethers.parseEther('10'), 0, 0);
@@ -894,17 +1060,17 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         await expect(
           proxy
             .connect(operator)
-            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree)),
+            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), false, 0, getProof(signers.otherUser3.address, tree)),
         ).revertedWithCustomError(proxy, 'ZeroPureTokensRate');
         await expect(
           proxy
             .connect(signers.otherUser3)
-            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree)),
+            .claimFor(signers.otherUser3.address, true, ethers.parseEther('20'), false, 0, getProof(signers.otherUser3.address, tree)),
         ).revertedWithCustomError(proxy, 'ZeroPureTokensRate');
 
         tx = await proxy
           .connect(operator)
-          .claimFor(signers.otherUser3.address, false, ethers.parseEther('20'), getProof(signers.otherUser3.address, tree));
+          .claimFor(signers.otherUser3.address, false, ethers.parseEther('20'), false, 0, getProof(signers.otherUser3.address, tree));
         await expect(tx)
           .to.be.emit(proxy, 'Claim')
           .withArgs(signers.otherUser3.address, ethers.parseEther('10'), 0, ethers.parseEther('10'), 3);
@@ -926,6 +1092,97 @@ describe('VeFnxSplitMerklAidropUpgradeable Contract', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
         expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser3.address);
         expect(await votingEscrow.balanceOf(signers.otherUser3.address)).to.be.eq(1);
+
+        let strategy = await newStrategy();
+        await managedNFTManager.createManagedNFT(strategy);
+        let managedTokenId = await votingEscrow.lastMintedTokenId();
+        let user4TokenId = (await votingEscrow.lastMintedTokenId()) + 1n;
+        let user5TokenId = (await votingEscrow.lastMintedTokenId()) + 2n;
+
+        await proxy.pause();
+        tree = StandardMerkleTree.of(
+          [
+            [user, ethers.parseEther('112')],
+            [signers.otherUser2.address, ethers.parseEther('61')],
+            [signers.otherUser3.address, ethers.parseEther('20')],
+            [signers.otherUser4.address, ethers.parseEther('100')],
+            [signers.otherUser5.address, ethers.parseEther('200')],
+          ],
+          ['address', 'uint256'],
+        );
+        await proxy.setMerklRoot(tree.root);
+        await proxy.unpause();
+
+        await fenix.transfer(proxy.target, ethers.parseEther('237'));
+
+        tx = await proxy
+          .connect(operator)
+          .claimFor(signers.otherUser4.address, false, ethers.parseEther('100'), true, 0, getProof(signers.otherUser4.address, tree));
+        await expect(tx)
+          .to.be.emit(proxy, 'Claim')
+          .withArgs(signers.otherUser4.address, ethers.parseEther('100'), 0, ethers.parseEther('100'), user4TokenId);
+        await expect(tx).to.be.emit(deployed.votingEscrow, 'LockPermanent').withArgs(proxy.target, user4TokenId);
+        await expect(tx).to.be.emit(fenix, 'Transfer').withArgs(proxy.target, votingEscrow.target, ethers.parseEther('100'));
+
+        tx = await proxy
+          .connect(signers.otherUser5)
+          .claim(false, ethers.parseEther('200'), false, managedTokenId, getProof(signers.otherUser5.address, tree));
+        await expect(tx)
+          .to.be.emit(proxy, 'Claim')
+          .withArgs(signers.otherUser5.address, ethers.parseEther('200'), 0, ethers.parseEther('200'), user5TokenId);
+        await expect(tx).to.be.emit(deployed.voter, 'AttachToManagedNFT').withArgs(user5TokenId, managedTokenId);
+
+        expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('2'));
+        expect(await fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('5'));
+        expect(await fenix.balanceOf(signers.otherUser3.address)).to.be.eq(ethers.parseEther('10'));
+        expect(await fenix.balanceOf(signers.otherUser4.address)).to.be.eq(0);
+        expect(await fenix.balanceOf(signers.otherUser5.address)).to.be.eq(0);
+
+        expect(await fenix.balanceOf(proxy.target)).to.be.eq(0);
+        expect(await proxy.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('111'));
+        expect(await proxy.userClaimed(signers.otherUser2.address)).to.be.eq(ethers.parseEther('60'));
+        expect(await proxy.userClaimed(signers.otherUser3.address)).to.be.eq(ethers.parseEther('20'));
+        expect(await proxy.userClaimed(signers.otherUser4.address)).to.be.eq(ethers.parseEther('100'));
+        expect(await proxy.userClaimed(signers.otherUser5.address)).to.be.eq(ethers.parseEther('200'));
+
+        expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('420'));
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('300'));
+
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('420'));
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(user5TokenId);
+        expect(await votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(2)).to.be.eq(signers.otherUser2.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(3)).to.be.eq(signers.otherUser3.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser3.address)).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(user4TokenId)).to.be.eq(signers.otherUser4.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser4.address)).to.be.eq(1);
+        expect(await votingEscrow.ownerOf(user5TokenId)).to.be.eq(signers.otherUser5.address);
+        expect(await votingEscrow.balanceOf(signers.otherUser5.address)).to.be.eq(1);
+
+        let nftState = await deployed.votingEscrow.nftStates(managedTokenId);
+        expect(nftState.locked.isPermanentLocked).to.be.true;
+        expect(nftState.locked.end).to.be.eq(0);
+        expect(nftState.locked.amount).to.be.eq(ethers.parseEther('200'));
+        expect(nftState.isAttached).to.be.false;
+        expect(nftState.isVoted).to.be.false;
+
+        nftState = await deployed.votingEscrow.nftStates(user4TokenId);
+        expect(nftState.locked.isPermanentLocked).to.be.true;
+        expect(nftState.locked.end).to.be.eq(0);
+        expect(nftState.locked.amount).to.be.eq(ethers.parseEther('100'));
+        expect(nftState.isAttached).to.be.false;
+        expect(nftState.isVoted).to.be.false;
+
+        nftState = await deployed.votingEscrow.nftStates(user5TokenId);
+        expect(nftState.locked.isPermanentLocked).to.be.false;
+        expect(nftState.locked.end).to.be.eq(0);
+        expect(nftState.locked.amount).to.be.eq(0);
+        expect(nftState.isAttached).to.be.true;
+        expect(nftState.isVoted).to.be.false;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(user5TokenId)).to.be.eq(managedTokenId);
       });
     });
   });

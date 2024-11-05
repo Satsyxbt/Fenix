@@ -63,11 +63,15 @@ interface IVoter {
      * @notice Parameters for claiming VeFnx Merkl airdrop data.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proofs The array of Merkle proofs.
      */
     struct AggregateClaimVeFnxMerklAirdrop {
         bool inPureTokens;
         uint256 amount;
+        bool withPermanentLock;
+        uint256 managedTokenIdForAttach;
         bytes32[] proofs;
     }
 

@@ -624,6 +624,8 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
                 _msgSender(),
                 splitMerklAidrop_.inPureTokens,
                 splitMerklAidrop_.amount,
+                splitMerklAidrop_.withPermanentLock,
+                splitMerklAidrop_.managedTokenIdForAttach,
                 splitMerklAidrop_.proofs
             );
         }

@@ -45,22 +45,39 @@ interface IVeFnxSplitMerklAidrop {
      * @dev Allows a user to claim tokens or veNFT tokens based on a Merkle proof.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proof_ The Merkle proof for the claim.
      * @notice This function can only be called when the contract is not paused.
      */
-    function claim(bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
+    function claim(
+        bool inPureTokens_,
+        uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
+        bytes32[] memory proof_
+    ) external;
 
     /**
      * @dev Allows a claim operator to claim tokens on behalf of a target address.
      * @param target_ The address of the user on whose behalf tokens are being claimed.
      * @param inPureTokens_ Boolean indicating if the claim is in pure tokens.
      * @param amount_ The amount to claim.
+     * @param withPermanentLock_ Whether the lock should be permanent.
+     * @param managedTokenIdForAttach_ The ID of the managed NFT to attach, if any. 0 for ignore
      * @param proof_ The Merkle proof verifying the user's claim.
      * @notice This function can only be called when the contract is not paused.
      * @notice Reverts with `NotAllowedClaimOperator` if the caller is not an allowed claim operator.
      * @notice Emits a {Claim} event.
      */
-    function claimFor(address target_, bool inPureTokens_, uint256 amount_, bytes32[] memory proof_) external;
+    function claimFor(
+        address target_,
+        bool inPureTokens_,
+        uint256 amount_,
+        bool withPermanentLock_,
+        uint256 managedTokenIdForAttach_,
+        bytes32[] memory proof_
+    ) external;
 
     /**
      * @dev Sets whether an address is allowed to operate claims on behalf of others.

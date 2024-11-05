@@ -531,6 +531,16 @@
             "type": "uint256"
           },
           {
+            "internalType": "bool",
+            "name": "withPermanentLock",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "managedTokenIdForAttach",
+            "type": "uint256"
+          },
+          {
             "internalType": "bytes32[]",
             "name": "proofs",
             "type": "bytes32[]"

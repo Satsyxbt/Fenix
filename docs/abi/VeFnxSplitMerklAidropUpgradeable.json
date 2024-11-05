@@ -257,6 +257,16 @@
         "type": "uint256"
       },
       {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      },
+      {
         "internalType": "bytes32[]",
         "name": "proof_",
         "type": "bytes32[]"
@@ -282,6 +292,16 @@
       {
         "internalType": "uint256",
         "name": "amount_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
         "type": "uint256"
       },
       {
