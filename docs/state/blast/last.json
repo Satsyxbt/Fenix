@@ -21,7 +21,7 @@
     "weekly": "2250000000000000000000000",
     "weeklyFormmated": "2250000.0 FNX",
     "activePeriod": "1730332800",
-    "lastInflationPeriod": "1735171200",
+    "lastInflationPeriod": "1735776000",
     "fenix": "0x52f847356b38720B55ee18Cb3e094ca11C85A192",
     "voter": "0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B",
     "ve": "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9",
@@ -74,11 +74,11 @@
     "artProxy": "0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8",
     "veBoost": "0x0000000000000000000000000000000000000000",
     "managedNFTManager": "0x1A24B4bD1F8BE73098342167Cb3fE63FD1EaC42B",
-    "supply": "14624831966400000000000",
-    "permanentTotalSupply": "1663232086400000000000",
-    "epoch": "125",
-    "lastMintedTokenId": "52",
-    "votingPowerTotalSupply": "14115429152008400478491"
+    "supply": "14672831966400000000000",
+    "permanentTotalSupply": "1698232086400000000000",
+    "epoch": "141",
+    "lastMintedTokenId": "58",
+    "votingPowerTotalSupply": "14114798910042093677683"
   },
   "gaugeFactoryV2PoolsState": {
     "address": "0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408",
@@ -183,8 +183,8 @@
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0x4300000000000000000000000000000000000004",
       "fees": "0x808B627825bA0a47aeFdAf9fbd19e33Fda4D9125",
-      "reserve0": "373717320330665699763",
-      "reserve1": "142945344321104624",
+      "reserve0": "379412137576596437520",
+      "reserve1": "140801111483064383",
       "stable": false,
       "totalSupply": "7307478061192474061",
       "communityVault": "0xc48452A293cbdd741d5359747868645F88afbaB8",
@@ -249,10 +249,10 @@
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0x8e38179D361402f6a94767757e807146609E9B3d",
       "fees": "0xaf7773DA4b9E914b3762dcEbd22772d5edEf6559",
-      "reserve0": "15306196403365945871826",
-      "reserve1": "14429080871706747199867",
+      "reserve0": "15300894852271693973020",
+      "reserve1": "14424083123901314368827",
       "stable": true,
-      "totalSupply": "14867635823554027737393",
+      "totalSupply": "14862486175078854104548",
       "communityVault": "0xe4E4f83095c9Bf01c8879204043ad2bcF3045be3",
       "protocolFeeState": {
         "protocolFee": "1000",
@@ -513,10 +513,10 @@
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xFf76CA0B2006183ABeB22ccb56740083a68767Ed",
       "fees": "0x333FC836eeDEA9D8E85E4c4C52b0743194110D6C",
-      "reserve0": "5604962717218852257",
-      "reserve1": "41210443428887931023957734",
+      "reserve0": "5442164846340751520",
+      "reserve1": "41914391937706638993254839",
       "stable": false,
-      "totalSupply": "15198124850749630711773",
+      "totalSupply": "15103146372830241403168",
       "communityVault": "0xDBd792E612B715c9c8cB9993A1EA6dA235580052",
       "protocolFeeState": {
         "protocolFee": "1000",
@@ -546,10 +546,10 @@
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xfA8a0567E64A166376B23D51C0eb8338EA539CEE",
       "fees": "0x2746935608F1C473379a6a3a0e8723Df20cE10B4",
-      "reserve0": "0",
-      "reserve1": "0",
+      "reserve0": "1011155733658347740",
+      "reserve1": "8954652857275833191639226",
       "stable": false,
-      "totalSupply": "0",
+      "totalSupply": "3009077695832157222234",
       "communityVault": "0x1BaeA7E1b156938d3F034CAC53C805ad0384a002",
       "protocolFeeState": {
         "protocolFee": "1000",
@@ -655,28 +655,28 @@
       "address": "0x1d74611f3ef04e7252f7651526711a937aa1f75e",
       "name": "USDB/WETH",
       "initialized": true,
-      "price": "1556670570746918155199276395",
-      "tick": "-78600",
+      "price": "1523878202277627047257410689",
+      "tick": "-79026",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "152408691689871753974074",
-      "totalFeeGrowth0Token": "763188070413470434519781313089759461274",
-      "totalFeeGrowth1Token": "172187335912602812576756618549305075203",
-      "communityFeePending0": "219378469479123134",
-      "communityFeePending1": "101631657301731",
+      "liquidity": "6745789646053705937095",
+      "totalFeeGrowth0Token": "763402876805613758421171309064745604474",
+      "totalFeeGrowth1Token": "172187405205971782085407321442392855486",
+      "communityFeePending0": "159466910728792765",
+      "communityFeePending1": "44950509517376",
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0x4300000000000000000000000000000000000004",
       "plugin": "0x5Cf2611Cee97833d0705bCE41eE47587B9EAD11A",
       "communityVault": "0x942015E51564427B120588F5EDe00c5112b8Fd54",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x942015E51564427B120588F5EDe00c5112b8Fd54",
@@ -698,28 +698,28 @@
       "address": "0xc066a3e5d7c22bd3beaf74d4c0925520b455bb6f",
       "name": "WETH/WBTC",
       "initialized": true,
-      "price": "148990613411337150340561",
-      "tick": "-263693",
+      "price": "149519582962191000099326",
+      "tick": "-263622",
       "lastFee": "800",
       "lastFeePercent": "0.08%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "49314685040227",
-      "totalFeeGrowth0Token": "445952900297462330210918877164856696901462",
-      "totalFeeGrowth1Token": "2477855178002848895358565761101",
-      "communityFeePending0": "81397846751431",
-      "communityFeePending1": "287",
+      "liquidity": "49247064593019",
+      "totalFeeGrowth0Token": "463064633271295191556838063603847381214011",
+      "totalFeeGrowth1Token": "2540412797348329933393887092342",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xF7bc58b8D8f97ADC129cfC4c9f45Ce3C0E1D2692",
       "plugin": "0xf4DcFCc8d29A2b3D141a0B17F42Ba2781e7cC13F",
       "communityVault": "0x6f02B0BbBfDe5c63bc857c3A0db75b59Fe390035",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x6f02B0BbBfDe5c63bc857c3A0db75b59Fe390035",
@@ -746,8 +746,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "593396552983",
       "totalFeeGrowth0Token": "30102717665018227783658169615583901160898",
@@ -760,9 +760,9 @@
       "communityVault": "0x247132bdd44CFa4b5833AbC321D19bAcb9E1352E",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x247132bdd44CFa4b5833AbC321D19bAcb9E1352E",
@@ -789,8 +789,8 @@
       "lastFee": "152",
       "lastFeePercent": "0.015200000000000002%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "19422990509367",
       "totalFeeGrowth0Token": "196718025790387439821865608798428894993108",
@@ -801,11 +801,11 @@
       "token1": "0xEB466342C4d449BC9f53A865D5Cb90586f405215",
       "plugin": "0xCc48EFC3aC6e7b7DBc014aeA59824b7A0433C5ef",
       "communityVault": "0x601f9FD805890d4a2c4b46a257652EdD5C466fc5",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x601f9FD805890d4a2c4b46a257652EdD5C466fc5",
@@ -832,8 +832,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "57666764600591173",
       "totalFeeGrowth0Token": "2115341466098965105194740653695254",
@@ -846,9 +846,9 @@
       "communityVault": "0x7297F6AaeEd6c968A06acA8a00352016d2A4f217",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x7297F6AaeEd6c968A06acA8a00352016d2A4f217",
@@ -875,10 +875,10 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "489173408136816774443",
+      "liquidity": "341854547070218142056",
       "totalFeeGrowth0Token": "2317736344109278746402239259190611",
       "totalFeeGrowth1Token": "12736684414846834639985493200956441",
       "communityFeePending0": "0",
@@ -887,11 +887,11 @@
       "token1": "0x9E0d7D79735e1c63333128149c7b616a0dC0bBDb",
       "plugin": "0x8e1180883b6B32a86d47aD371d8df1149D572242",
       "communityVault": "0xE615e8cc1E7523AE8e8ECe917a1F8328668C7D55",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xE615e8cc1E7523AE8e8ECe917a1F8328668C7D55",
@@ -918,8 +918,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "60518222794756761109390091348411019",
@@ -932,9 +932,9 @@
       "communityVault": "0x0eC216BABc00ee8E3C75A0F2B3A88EDA76f2F65E",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x0eC216BABc00ee8E3C75A0F2B3A88EDA76f2F65E",
@@ -961,8 +961,8 @@
       "lastFee": "3000",
       "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "379100802442723044314694679532715538",
@@ -975,9 +975,9 @@
       "communityVault": "0x7420b911b130AD29a0564379c6125fA6479bdfbb",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x7420b911b130AD29a0564379c6125fA6479bdfbb",
@@ -1004,8 +1004,8 @@
       "lastFee": "188",
       "lastFeePercent": "0.018799999999999997%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "35761306031984767721730884641589167822",
@@ -1018,9 +1018,9 @@
       "communityVault": "0x08CD5eE6429f5E6017E8431514D10A5aDf12f70B",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x08CD5eE6429f5E6017E8431514D10A5aDf12f70B",
@@ -1047,8 +1047,8 @@
       "lastFee": "2976",
       "lastFeePercent": "0.2976%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "246534178371751827602",
       "totalFeeGrowth0Token": "466220390693941035770672374402447327",
@@ -1061,9 +1061,9 @@
       "communityVault": "0x9246b8b74a9e95Edd7fB0Da51142816D1Ccf79F9",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x9246b8b74a9e95Edd7fB0Da51142816D1Ccf79F9",
@@ -1090,8 +1090,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "3588990795997564354309794",
       "totalFeeGrowth0Token": "10662113391362910942584891148634898",
@@ -1102,11 +1102,11 @@
       "token1": "0x4fEE793d435c6D2c10C135983BB9d6D4fC7B9BBd",
       "plugin": "0x1e2eE36c0116acE0e3200054229A808E294ADA71",
       "communityVault": "0x75b69C79C2aAE452b125537CFF134AC2cBf28510",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x75b69C79C2aAE452b125537CFF134AC2cBf28510",
@@ -1133,8 +1133,8 @@
       "lastFee": "800",
       "lastFeePercent": "0.08%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "12969092420237659985",
       "totalFeeGrowth0Token": "2979971289183598251947969878310284",
@@ -1147,9 +1147,9 @@
       "communityVault": "0x5Af2f048F7051406Cb436439F8B8Ff5B7b81CD26",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x5Af2f048F7051406Cb436439F8B8Ff5B7b81CD26",
@@ -1171,28 +1171,28 @@
       "address": "0x886369748d1d66747b8f51ab38de00dea13f0101",
       "name": "fDAO/WETH",
       "initialized": true,
-      "price": "231490718393085502389377982",
-      "tick": "-116717",
-      "lastFee": "2955",
-      "lastFeePercent": "0.29550000000000004%",
+      "price": "235868444268287388060437494",
+      "tick": "-116343",
+      "lastFee": "3000",
+      "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "2677683102347277611922",
       "totalFeeGrowth0Token": "464424985045947329564773616289445808349",
       "totalFeeGrowth1Token": "3769662728729240583761018406596511",
       "communityFeePending0": "0",
-      "communityFeePending1": "22940120053607",
+      "communityFeePending1": "222829284838387",
       "token0": "0x3B0cFFdA9a5aB64135C227638e777cEec0C243A8",
       "token1": "0x4300000000000000000000000000000000000004",
       "plugin": "0x5978890991fE2372d963a299AEBe9A97f2402F2F",
       "communityVault": "0xD11440169Eacc0EF00e3d9317cD325AD9e7E5ec3",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xD11440169Eacc0EF00e3d9317cD325AD9e7E5ec3",
@@ -1219,8 +1219,8 @@
       "lastFee": "800",
       "lastFeePercent": "0.08%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "260793671070857679",
       "totalFeeGrowth0Token": "22860291896541177365617399795373302",
@@ -1233,9 +1233,9 @@
       "communityVault": "0xCf5C408a148A62123045ECF9e4b10A7aa0bF13F2",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xCf5C408a148A62123045ECF9e4b10A7aa0bF13F2",
@@ -1262,8 +1262,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "60546845880665234182",
       "totalFeeGrowth0Token": "266242079381242106008170860794",
@@ -1276,9 +1276,9 @@
       "communityVault": "0x1D49733E397b26198D00720450C9403f66710b39",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x1D49733E397b26198D00720450C9403f66710b39",
@@ -1305,8 +1305,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "1337756686180468320217972827318900534224",
@@ -1319,9 +1319,9 @@
       "communityVault": "0x82fa130440F06BB00cCFC19F55E94ba0F4Acb0d0",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x82fa130440F06BB00cCFC19F55E94ba0F4Acb0d0",
@@ -1348,8 +1348,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "15203717937053508",
       "totalFeeGrowth0Token": "1509006294438011118343573112810630",
@@ -1362,9 +1362,9 @@
       "communityVault": "0xD77021662795fEEbd382E960FfB9752Ab7f4E4d1",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xD77021662795fEEbd382E960FfB9752Ab7f4E4d1",
@@ -1391,8 +1391,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -1405,9 +1405,9 @@
       "communityVault": "0x01eb792050afE34e088C038f1723954F7129CB1e",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x01eb792050afE34e088C038f1723954F7129CB1e",
@@ -1434,10 +1434,10 @@
       "lastFee": "114",
       "lastFeePercent": "0.0114%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "248532784446473991228",
+      "liquidity": "248532784446473990767",
       "totalFeeGrowth0Token": "5113440096944841553513723488791967",
       "totalFeeGrowth1Token": "4132374336444612510162751091946448",
       "communityFeePending0": "0",
@@ -1446,11 +1446,11 @@
       "token1": "0x5A7a183B6B44Dc4EC2E3d2eF43F98C5152b1d76d",
       "plugin": "0xa472BE7F487e373DCbdAfc7C13fAA31fBA988903",
       "communityVault": "0xFa798118b9930F700b76C1AE2D4B382e53fECaEb",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xFa798118b9930F700b76C1AE2D4B382e53fECaEb",
@@ -1477,8 +1477,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "776655236768784695150022270095980",
@@ -1491,9 +1491,9 @@
       "communityVault": "0x505d5A7c7546828F758718c8452992ca18DfCf19",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x505d5A7c7546828F758718c8452992ca18DfCf19",
@@ -1520,8 +1520,8 @@
       "lastFee": "9693",
       "lastFeePercent": "0.9693%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "2420229516989190",
       "totalFeeGrowth0Token": "1269189941078477777938727021441204283090",
@@ -1534,9 +1534,9 @@
       "communityVault": "0x7151826988c6C7516Ca751E219ea2b073b404Db6",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x7151826988c6C7516Ca751E219ea2b073b404Db6",
@@ -1563,8 +1563,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "212816386782162511420922456465884629881",
@@ -1577,9 +1577,9 @@
       "communityVault": "0x4f7b543b913215A3c2E9255f3091B6866E07F1eD",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x4f7b543b913215A3c2E9255f3091B6866E07F1eD",
@@ -1606,8 +1606,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "311137565161409315695072044109253",
@@ -1620,9 +1620,9 @@
       "communityVault": "0x482AAb22C5A076C6777F3fA2164370b64106Fed7",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x482AAb22C5A076C6777F3fA2164370b64106Fed7",
@@ -1644,28 +1644,28 @@
       "address": "0x9304ba542df9bc61dd1c97c073ed35f81cab6149",
       "name": "weETH/WETH",
       "initialized": true,
-      "price": "81259876828284098618620398283",
-      "tick": "506",
+      "price": "81257144091618712309159657330",
+      "tick": "505",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "3547339185323106372368",
-      "totalFeeGrowth0Token": "9461448479276117869093564738769491",
-      "totalFeeGrowth1Token": "124403499854077571464351094097963099",
-      "communityFeePending0": "0",
+      "liquidity": "2154142542750645504275",
+      "totalFeeGrowth0Token": "9462468855256811618900480751897530",
+      "totalFeeGrowth1Token": "124403549626756786008168132519473703",
+      "communityFeePending0": "96009345036",
       "communityFeePending1": "0",
       "token0": "0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A",
       "token1": "0x4300000000000000000000000000000000000004",
       "plugin": "0x1796e94EEBE68e6A2b8CB03B3ac2Ef0f5a71286b",
       "communityVault": "0x22Cb8F41F38FA15C3587607Bf25b788dd45b336a",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x22Cb8F41F38FA15C3587607Bf25b788dd45b336a",
@@ -1687,28 +1687,28 @@
       "address": "0xe53b1da56f90c9529f2db1bb8711c3f1cc6f03bd",
       "name": "WETH/wrsETH",
       "initialized": true,
-      "price": "78168468792138473608511172192",
-      "tick": "-270",
+      "price": "78160046672914507823641860716",
+      "tick": "-272",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "1859696782784050586033",
-      "totalFeeGrowth0Token": "9912400422220285266183562650779509",
-      "totalFeeGrowth1Token": "153461983824987450340830378941889006",
+      "liquidity": "1346906840170250427865",
+      "totalFeeGrowth0Token": "9917479940797462716450538141343838",
+      "totalFeeGrowth1Token": "153463306700535327598214835267345288",
       "communityFeePending0": "0",
       "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd",
       "plugin": "0xf34CeD82c02D75101593BC33c59aF26F9e919Bdc",
       "communityVault": "0xC1CD8385Fe4594Da58dF065bC969fC91A73404d4",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xC1CD8385Fe4594Da58dF065bC969fC91A73404d4",
@@ -1730,28 +1730,28 @@
       "address": "0x635512a1333ad0822f5ba4fd6479daa1df8b77e1",
       "name": "ezETH/WETH",
       "initialized": true,
-      "price": "80245184292518778471737767853",
-      "tick": "255",
+      "price": "80235695378200537962554463661",
+      "tick": "252",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "4741275291286345939229",
-      "totalFeeGrowth0Token": "12944879084058953103464051369125975",
-      "totalFeeGrowth1Token": "11949269612455711305257512128534829",
-      "communityFeePending0": "0",
-      "communityFeePending1": "2027147701668",
+      "liquidity": "3692306470798302653784",
+      "totalFeeGrowth0Token": "12945552230099535250326706354080284",
+      "totalFeeGrowth1Token": "11949708323280374701386243481415840",
+      "communityFeePending0": "39143262455751",
+      "communityFeePending1": "1421489650472",
       "token0": "0x2416092f143378750bb29b79eD961ab195CcEea5",
       "token1": "0x4300000000000000000000000000000000000004",
       "plugin": "0x23e10D6BF7A083F60E8277249a6a7a0ba9987b09",
       "communityVault": "0x8d429949e0457f69A8cA466F3c4c0180BBAeEa30",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x8d429949e0457f69A8cA466F3c4c0180BBAeEa30",
@@ -1778,8 +1778,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "333395180942716530",
       "totalFeeGrowth0Token": "518511049277667802111970304215859",
@@ -1792,9 +1792,9 @@
       "communityVault": "0x1D4Ea1D9cd429EF4e0bb5b8ab8b86C7e6B2371bA",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x1D4Ea1D9cd429EF4e0bb5b8ab8b86C7e6B2371bA",
@@ -1821,8 +1821,8 @@
       "lastFee": "3000",
       "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "951284938189267067778567269686984",
@@ -1835,9 +1835,9 @@
       "communityVault": "0x989d611C2C1cf6ECABca3EE764D348665e7669A9",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x989d611C2C1cf6ECABca3EE764D348665e7669A9",
@@ -1864,8 +1864,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "33431381656725974",
       "totalFeeGrowth0Token": "12557882575413035903214821790215147",
@@ -1878,9 +1878,9 @@
       "communityVault": "0x91E755566F9D6D14335207a94E9e009D3EA99549",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x91E755566F9D6D14335207a94E9e009D3EA99549",
@@ -1907,10 +1907,10 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "692691986524806048719",
+      "liquidity": "345777540322344829642",
       "totalFeeGrowth0Token": "5047344519143122446460884677350276",
       "totalFeeGrowth1Token": "49626998713107795098748870609551842",
       "communityFeePending0": "72794962424",
@@ -1919,11 +1919,11 @@
       "token1": "0x4300000000000000000000000000000000000004",
       "plugin": "0x089fD922053151F8e64d0B798Ab9Eb5b995f4832",
       "communityVault": "0x2329e369943b5ff97C49893339607F5B7F68B19f",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x2329e369943b5ff97C49893339607F5B7F68B19f",
@@ -1950,8 +1950,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "85381829828375457",
       "totalFeeGrowth0Token": "128575844673937025882056969863683592822",
@@ -1964,9 +1964,9 @@
       "communityVault": "0x0cd5e22bb0D1e20911e21A43D6B21E8a7867fd78",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x0cd5e22bb0D1e20911e21A43D6B21E8a7867fd78",
@@ -1993,8 +1993,8 @@
       "lastFee": "3077",
       "lastFeePercent": "0.3077%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "26628102800896940507703227382904",
@@ -2007,9 +2007,9 @@
       "communityVault": "0x42406A62eb213276656EDE70A745D73942F5E4e0",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x42406A62eb213276656EDE70A745D73942F5E4e0",
@@ -2036,8 +2036,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "9299166729607707097",
       "totalFeeGrowth0Token": "94172461387832471568135549965",
@@ -2050,9 +2050,9 @@
       "communityVault": "0xcAd1C88c906c591E2dff228728755381fa3f2032",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xcAd1C88c906c591E2dff228728755381fa3f2032",
@@ -2079,8 +2079,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "425080929266950184351623155898034132",
@@ -2093,9 +2093,9 @@
       "communityVault": "0xa26E5308a7cAF5D85786058530a7Bcfbaaa198de",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xa26E5308a7cAF5D85786058530a7Bcfbaaa198de",
@@ -2122,8 +2122,8 @@
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "18622504645100180",
       "totalFeeGrowth0Token": "2382544097431510941933596495133865",
@@ -2136,9 +2136,9 @@
       "communityVault": "0xf687d94E86bb2253d054a19aa6f86E1afcdC2987",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xf687d94E86bb2253d054a19aa6f86E1afcdC2987",
@@ -2160,28 +2160,28 @@
       "address": "0x28d7de5e9592cbd951dc3b22325fdfa89972f6db",
       "name": "USDB/sFRAX",
       "initialized": true,
-      "price": "76211150399728324364252662589",
-      "tick": "-777",
-      "lastFee": "111",
-      "lastFeePercent": "0.0111%",
+      "price": "76040483741007594032254885627",
+      "tick": "-822",
+      "lastFee": "100",
+      "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "437321393058884739553813",
-      "totalFeeGrowth0Token": "23665926509123977016098213631222703",
-      "totalFeeGrowth1Token": "19752210584189906327782193679412754",
+      "liquidity": "425991100419306498970396",
+      "totalFeeGrowth0Token": "23737674533547305557295165731418432",
+      "totalFeeGrowth1Token": "19752471764472187174207427067578204",
       "communityFeePending0": "0",
-      "communityFeePending1": "0",
+      "communityFeePending1": "36329461344245",
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0xe4796cCB6bB5DE2290C417Ac337F2b66CA2E770E",
       "plugin": "0x3cd33717c95e6618EbCd1f9d042188fFdCf04E44",
       "communityVault": "0x84E493e925a5298101D69D879F06Ec668CdA01Be",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x84E493e925a5298101D69D879F06Ec668CdA01Be",
@@ -2203,18 +2203,18 @@
       "address": "0x4a28f50f15efedf44af0d376fdc2e319fa8ccef8",
       "name": "WETH/ANDY",
       "initialized": true,
-      "price": "590131867237940007515245434",
-      "tick": "-98000",
+      "price": "585714321586713962129606742",
+      "tick": "-98151",
       "lastFee": "50",
       "lastFeePercent": "0.005%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "1468265534077930",
-      "totalFeeGrowth0Token": "77501785173813177167212975505359826828",
-      "totalFeeGrowth1Token": "7925381042411428852307691267625543",
-      "communityFeePending0": "15814380527",
+      "liquidity": "1585937590470462",
+      "totalFeeGrowth0Token": "77676312803820334584600356337712536625",
+      "totalFeeGrowth1Token": "7935508221843311433531483855945389",
+      "communityFeePending0": "0",
       "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xd43D8aDAC6A4C7d9Aeece7c3151FcA8f23752cf8",
@@ -2222,9 +2222,9 @@
       "communityVault": "0x0a1eCbF7aAF4E62C643E863b69C26C0F42A07269",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x0a1eCbF7aAF4E62C643E863b69C26C0F42A07269",
@@ -2246,28 +2246,28 @@
       "address": "0xd0cd894c605a9eedacbc0fa9bd8440627a5d37b1",
       "name": "USDB/USDe",
       "initialized": true,
-      "price": "79132382585797833923937025450",
-      "tick": "-25",
+      "price": "79137694760872155036368429133",
+      "tick": "-23",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "5402546762435826533810713",
-      "totalFeeGrowth0Token": "2880961785158111022398158282974878",
-      "totalFeeGrowth1Token": "2843981653486120866261298732121747",
+      "liquidity": "5141723119205435729663550",
+      "totalFeeGrowth0Token": "2881676821001709594278044833981796",
+      "totalFeeGrowth1Token": "2846748559171445815592470119645738",
       "communityFeePending0": "0",
       "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
       "plugin": "0xddE3D8e6cC56462aBb666cc21EAD866DD36a995e",
       "communityVault": "0x1A591185dEDC7F233b31e57Bd8832167AeF39D71",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x1A591185dEDC7F233b31e57Bd8832167AeF39D71",
@@ -2294,8 +2294,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "3660656179488900451219660642900683",
@@ -2308,9 +2308,9 @@
       "communityVault": "0xd0a0fB02c1F96b985887618E79F7eC6dc8fA7ba6",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xd0a0fB02c1F96b985887618E79F7eC6dc8fA7ba6",
@@ -2337,8 +2337,8 @@
       "lastFee": "3000",
       "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "1890795545941230218412621496994422",
@@ -2351,9 +2351,9 @@
       "communityVault": "0x77b266F6277eBDC2BDc7Aaa8A001815059c82bf2",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x77b266F6277eBDC2BDc7Aaa8A001815059c82bf2",
@@ -2375,28 +2375,28 @@
       "address": "0xc8252c4f9136209ec47534bf1c0781307ec9a86f",
       "name": "WETH/BLAST",
       "initialized": true,
-      "price": "46938590517968785536014553602211",
-      "tick": "127691",
+      "price": "46424023153094013492919956477202",
+      "tick": "127471",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "27059273486087644014730",
-      "totalFeeGrowth0Token": "3194000643308616719740209278189964",
-      "totalFeeGrowth1Token": "673269882613529412578125722460412143408",
-      "communityFeePending0": "63338679168039",
-      "communityFeePending1": "23939692846081049576",
+      "liquidity": "194124565596975965961227",
+      "totalFeeGrowth0Token": "3224786779888125773829527553776141",
+      "totalFeeGrowth1Token": "684243197390851025305701246605166197180",
+      "communityFeePending0": "433605843356271",
+      "communityFeePending1": "92737344654006966315",
       "token0": "0x4300000000000000000000000000000000000004",
       "token1": "0xb1a5700fA2358173Fe465e6eA4Ff52E36e88E2ad",
       "plugin": "0x5274281288283460d72f4A7883855eB8a3e11025",
       "communityVault": "0x7a5D2b331fE816D3920B3ad419B80f392c54E393",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x7a5D2b331fE816D3920B3ad419B80f392c54E393",
@@ -2418,28 +2418,28 @@
       "address": "0x4c577f4873061003d6c83eaac20e24397ff5b89b",
       "name": "USDB/BLAST",
       "initialized": true,
-      "price": "922103960436949419652048713372",
-      "tick": "49088",
+      "price": "892856857248191844101146554015",
+      "tick": "48444",
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
-      "liquidity": "808253165086644564445034",
-      "totalFeeGrowth0Token": "141070578160580947934397158529403756",
-      "totalFeeGrowth1Token": "12036689796595433761527803608085145748",
-      "communityFeePending0": "3071111312375072",
-      "communityFeePending1": "1047608527021023607",
+      "liquidity": "3580169266451785383387945",
+      "totalFeeGrowth0Token": "141701532945446473490746525385520105",
+      "totalFeeGrowth1Token": "12110155949739011819628296412158615441",
+      "communityFeePending0": "0",
+      "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000003",
       "token1": "0xb1a5700fA2358173Fe465e6eA4Ff52E36e88E2ad",
       "plugin": "0xD2D105b8f56139df7099188c3B573dA1eC2c1695",
       "communityVault": "0xeA24569BB092ddC5A908fA77E01f9F7577375DAD",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xeA24569BB092ddC5A908fA77E01f9F7577375DAD",
@@ -2466,8 +2466,8 @@
       "lastFee": "3000",
       "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "13597764748073789153593537203825712",
@@ -2480,9 +2480,9 @@
       "communityVault": "0x6B612981E5a39aD030e747a6a46fc8A71425a811",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x6B612981E5a39aD030e747a6a46fc8A71425a811",
@@ -2509,8 +2509,8 @@
       "lastFee": "3039",
       "lastFeePercent": "0.3039%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "1229362967707614491330048851125300",
@@ -2521,11 +2521,11 @@
       "token1": "0x73d23F3778a90Be8846E172354A115543dF2a7E4",
       "plugin": "0xb919b1f5af17852981aC897FE28A083D319FFF24",
       "communityVault": "0x609Ea9CB4D630d9E591b4dE02A2D2c903F0E741e",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x609Ea9CB4D630d9E591b4dE02A2D2c903F0E741e",
@@ -2552,8 +2552,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -2564,11 +2564,11 @@
       "token1": "0x52056ED29Fe015f4Ba2e3b079D10C0B87f46e8c6",
       "plugin": "0xb61B4277fC94c33d2A8371646bBbbB607ab6a5D7",
       "communityVault": "0xFF4afA0aBc9B12a198946565Ff13541ae571AB7c",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xFF4afA0aBc9B12a198946565Ff13541ae571AB7c",
@@ -2595,8 +2595,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -2607,11 +2607,11 @@
       "token1": "0xD2012fc1B913cE50732ebcaa7E601fe37Ac728C6",
       "plugin": "0xA919E444C041B500ad34307C507e261FdD704D36",
       "communityVault": "0xCe96cB1D5bAeFB49dFd77f7355487736E2760324",
-      "tickSpacing": "60",
+      "tickSpacing": "1",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xCe96cB1D5bAeFB49dFd77f7355487736E2760324",
@@ -2638,8 +2638,8 @@
       "lastFee": "3036",
       "lastFeePercent": "0.3036%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "160284359464784390712102174414403213899",
@@ -2652,9 +2652,9 @@
       "communityVault": "0x169CBD13287ACCd322B4B14082BF71f8D46c67d1",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x169CBD13287ACCd322B4B14082BF71f8D46c67d1",
@@ -2681,8 +2681,8 @@
       "lastFee": "4085",
       "lastFeePercent": "0.40850000000000003%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "2458671862747534269423522648508056739",
@@ -2695,9 +2695,9 @@
       "communityVault": "0xa7404206E78774DF407822339D93cA8bC92691f8",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xa7404206E78774DF407822339D93cA8bC92691f8",
@@ -2724,8 +2724,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -2738,9 +2738,9 @@
       "communityVault": "0x2a7397FecD1aa3569CB48e0C95b2453f24511836",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x2a7397FecD1aa3569CB48e0C95b2453f24511836",
@@ -2767,8 +2767,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "57821881643278429368169228614503587",
@@ -2781,9 +2781,9 @@
       "communityVault": "0xD103A5e3dB4DF83473665e936528f546269F7906",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xD103A5e3dB4DF83473665e936528f546269F7906",
@@ -2810,8 +2810,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "63291697234016956419261242140004973082549",
@@ -2824,9 +2824,9 @@
       "communityVault": "0x975b9E2e3524bb9b041C5Ac245fd82a5AA7EB3A1",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x975b9E2e3524bb9b041C5Ac245fd82a5AA7EB3A1",
@@ -2848,17 +2848,17 @@
       "address": "0xa35203ffb424c8845807c0174f5fb0334235a313",
       "name": "WETH/HYPERS",
       "initialized": true,
-      "price": "48509705515008071423836413424915",
-      "tick": "128350",
+      "price": "47799551546335468591531051989267",
+      "tick": "128055",
       "lastFee": "3000",
       "lastFeePercent": "0.3%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "1472406620942618712692",
-      "totalFeeGrowth0Token": "47043780359363962311534906478985820",
-      "totalFeeGrowth1Token": "9833302447214126101264369640265952812376",
+      "totalFeeGrowth0Token": "47067432168579539480191288907348873",
+      "totalFeeGrowth1Token": "9836884713119063868789621194182444574082",
       "communityFeePending0": "0",
       "communityFeePending1": "0",
       "token0": "0x4300000000000000000000000000000000000004",
@@ -2867,9 +2867,9 @@
       "communityVault": "0xaf9b93e54fAf86EC334c45a87DF7700aa7DB0b85",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xaf9b93e54fAf86EC334c45a87DF7700aa7DB0b85",
@@ -2896,8 +2896,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -2910,9 +2910,9 @@
       "communityVault": "0xeaF6881B6854259485E1E2Bdef8839E593047B2B",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xeaF6881B6854259485E1E2Bdef8839E593047B2B",
@@ -2939,8 +2939,8 @@
       "lastFee": "15000",
       "lastFeePercent": "1.5%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "36664234320483366618922193857894581",
@@ -2953,9 +2953,9 @@
       "communityVault": "0xa9548dd732BC0dE1389d6e20fAe7b66a39CF8b73",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xa9548dd732BC0dE1389d6e20fAe7b66a39CF8b73",
@@ -2982,8 +2982,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -2996,9 +2996,9 @@
       "communityVault": "0x8Cb1510AbD37e8c5aA65A8361470A377E6329d18",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x8Cb1510AbD37e8c5aA65A8361470A377E6329d18",
@@ -3025,8 +3025,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -3039,9 +3039,9 @@
       "communityVault": "0xca4e91c949857100B49A28A1f4eB07A9f067fd54",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0xca4e91c949857100B49A28A1f4eB07A9f067fd54",
@@ -3068,8 +3068,8 @@
       "lastFee": "100",
       "lastFeePercent": "0.01%",
       "pluginConfig": "193",
-      "communityFee": "100",
-      "communityFeePercent": "10%",
+      "communityFee": "1000",
+      "communityFeePercent": "100%",
       "unlocked": true,
       "liquidity": "0",
       "totalFeeGrowth0Token": "0",
@@ -3082,9 +3082,9 @@
       "communityVault": "0x9052412456527af39BB9a45990d866ddE8CA5CF5",
       "tickSpacing": "60",
       "protocolFeeState": {
-        "protocolFee": "100",
-        "protocolFeePercent": "10%",
-        "isCustom": false
+        "protocolFee": "1000",
+        "protocolFeePercent": "100%",
+        "isCustom": true
       },
       "feesVaultInfo": {
         "address": "0x9052412456527af39BB9a45990d866ddE8CA5CF5",
@@ -3321,7 +3321,7 @@
     "0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
     "0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
     "0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
-    "0x0FafA9074aBf128db1467af2FC592815b14508cd": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
+    "0x081d528D4dc4a2f3424C6Bdde43F950007cEe944": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
     "0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
     "0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
     "0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",

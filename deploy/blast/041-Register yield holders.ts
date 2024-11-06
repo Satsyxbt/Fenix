@@ -1,0 +1,216 @@
+import {
+  AliasDeployedContracts,
+  deploy,
+  deployNewImplementationAndUpgradeProxy,
+  getBlastGovernorAddress,
+  getDeployedContractAddress,
+  getDeployedContractsAddressList,
+  getProxyAdminAddress,
+  logTx,
+} from '../../utils/Deploy';
+import { ethers } from 'hardhat';
+import { InstanceName } from '../../utils/Names';
+import { GaugeType } from '../../utils/Constants';
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+  const DeployedContracts = await getDeployedContractsAddressList();
+
+  let BlastRebasingTokensGovernorUpgradeable_Proxy = await ethers.getContractAt(
+    InstanceName.BlastRebasingTokensGovernorUpgradeable,
+    DeployedContracts[AliasDeployedContracts.BlastRebasingTokensGovernorUpgradeable_Proxy],
+  );
+
+  const USDB_HOLDERS = [
+    '0xF4F76fc7ae409862ECA9ffdb1767638E7DCD6E8B',
+    '0x808B627825bA0a47aeFdAf9fbd19e33Fda4D9125',
+    '0xc48452A293cbdd741d5359747868645F88afbaB8',
+    '0xB5909f3C47557d0eef11503199Fc12c1252aB15a',
+    '0x16df850a9104081a0c62c3dF7f8867970d2212F2',
+    '0x1514f6eD2a44e7947e484d6Cb7fE4Dee2FF86318',
+    '0xD49AD1DD6C5eaE53ABDaFEAED1866330C42CcAE4',
+    '0xaf7773DA4b9E914b3762dcEbd22772d5edEf6559',
+    '0xe4E4f83095c9Bf01c8879204043ad2bcF3045be3',
+    '0x3C7fD63caB763a10B2754b1464e09d37a9FC79E7',
+    '0xD284eCaf7a4692a76CC9A54720efdC6Ea40c16f9',
+    '0xd28bF68F9E6Ab02BD896784a3CB9F7FB1bCD94E4',
+    '0x41861DC6924c0e9faE75340b64799e21f15F2831',
+    '0xDBC42D26D8C0D9a47CD7CC77BA74c8bE9A9de829',
+    '0xead8E7765e307BB1dd094af687304c60c63fBa2b',
+    '0xaaFF182d62Cd62140c9F453F9eB35ba98a90Eae8',
+    '0xf7d4D3CD7b8a94125D53F7985f4dc3A4dc02b1F0',
+    '0x31faC7a3BA2788666386Dbd9028B5471F4Caa6D1',
+    '0x1d74611f3ef04e7252f7651526711a937aa1f75e',
+    '0x942015E51564427B120588F5EDe00c5112b8Fd54',
+    '0x1fe38ea700f0b8b013be01e58b02b1da3956379a',
+    '0x601f9FD805890d4a2c4b46a257652EdD5C466fc5',
+    '0xf63e385e854e082c78df0627b411fdb78877faa1',
+    '0x7420b911b130AD29a0564379c6125fA6479bdfbb',
+    '0x6a1de1841c5c3712e3bc7c75ce3d57dedec6915f',
+    '0x75b69C79C2aAE452b125537CFF134AC2cBf28510',
+    '0x28d7de5e9592cbd951dc3b22325fdfa89972f6db',
+    '0x84E493e925a5298101D69D879F06Ec668CdA01Be',
+    '0xd0cd894c605a9eedacbc0fa9bd8440627a5d37b1',
+    '0x1A591185dEDC7F233b31e57Bd8832167AeF39D71',
+    '0x7f7d282846cb4806f9121b0b5ef61afaae64f257',
+    '0xd0a0fB02c1F96b985887618E79F7eC6dc8fA7ba6',
+    '0x4c577f4873061003d6c83eaac20e24397ff5b89b',
+    '0xeA24569BB092ddC5A908fA77E01f9F7577375DAD',
+    '0x74b1ff6b82e734ca5469e7e874ca0a2d4d35a151',
+    '0x609Ea9CB4D630d9E591b4dE02A2D2c903F0E741e',
+    '0x008cac102e95e4f42710bb94d5f14d3af9052916',
+    '0xFF4afA0aBc9B12a198946565Ff13541ae571AB7c',
+    '0x8964391b91a7a5bbe86094a5a6eeca5d6ec988f7',
+    '0xa7404206E78774DF407822339D93cA8bC92691f8',
+    '0x99b70e3811ca251b42aeaad5a7dd1343950ef542',
+    '0x2a7397FecD1aa3569CB48e0C95b2453f24511836',
+    '0xb3b4484bdfb6885f96421c3399b666a1c9d27fca',
+    '0xa9548dd732BC0dE1389d6e20fAe7b66a39CF8b73',
+    '0xb7c9062c306f70f7325ef1ab8b158aacafd59c97',
+    '0x9052412456527af39BB9a45990d866ddE8CA5CF5',
+  ];
+  const WETH_HOLDERS = [
+    '0xF4F76fc7ae409862ECA9ffdb1767638E7DCD6E8B',
+    '0x808B627825bA0a47aeFdAf9fbd19e33Fda4D9125',
+    '0xc48452A293cbdd741d5359747868645F88afbaB8',
+    '0x8C22d23eC102C9e098C8e0B9eD4eA01aA0B4Be35',
+    '0x9e8aA5b40Ef1ac9d8Da8006f8F756235229F363c',
+    '0x9703d2fcC03fdF993d809fD6a57E45E5ee1f1a93',
+    '0xb485fDABB73274EE573700AAF37e92b6273a82c2',
+    '0x5776BFBc811C66DBA4E4f84d26Af8109697b50A3',
+    '0x443788c6a00477655601e7aFdc0A4803AB1b633d',
+    '0xb1Dc140E98F8f90f286E958127966CBe1BAa2745',
+    '0x6826Ca5D674e3DfFAc76DdC2885546A49Fa1bFD9',
+    '0xB93622e18F0a85BC2D58925fd383E478bB798b51',
+    '0x5CFd0c2F2eCDa7D4d0475928CE2a83448F66e89c',
+    '0x333FC836eeDEA9D8E85E4c4C52b0743194110D6C',
+    '0xDBd792E612B715c9c8cB9993A1EA6dA235580052',
+    '0x814cC56A446e8Ec9f8f1b6a7427Da043881580B6',
+    '0x2746935608F1C473379a6a3a0e8723Df20cE10B4',
+    '0x1BaeA7E1b156938d3F034CAC53C805ad0384a002',
+    '0x1d74611f3ef04e7252f7651526711a937aa1f75e',
+    '0x942015E51564427B120588F5EDe00c5112b8Fd54',
+    '0xc066a3e5d7c22bd3beaf74d4c0925520b455bb6f',
+    '0x6f02B0BbBfDe5c63bc857c3A0db75b59Fe390035',
+    '0x86d1da56fc79accc0daf76ca75668a4d98cb90a7',
+    '0x247132bdd44CFa4b5833AbC321D19bAcb9E1352E',
+    '0xc5910a7f3b0119ac1a3ad7a268cce4a62d8c882d',
+    '0x7297F6AaeEd6c968A06acA8a00352016d2A4f217',
+    '0x3bafe103742da10a4fece8fc5e800df07d645439',
+    '0xE615e8cc1E7523AE8e8ECe917a1F8328668C7D55',
+    '0xf2bb3403e80adc9272c43b386c76e54d5bb604a5',
+    '0x0eC216BABc00ee8E3C75A0F2B3A88EDA76f2F65E',
+    '0x117106000ceb709ba3ec885027d111463204d6b6',
+    '0x9246b8b74a9e95Edd7fB0Da51142816D1Ccf79F9',
+    '0xcf68cdfea89f9e6964d4c2bd8a42eba5da9f945d',
+    '0x5Af2f048F7051406Cb436439F8B8Ff5B7b81CD26',
+    '0x886369748d1d66747b8f51ab38de00dea13f0101',
+    '0xD11440169Eacc0EF00e3d9317cD325AD9e7E5ec3',
+    '0x8e57e61b7524a2f56fd01bbfe5de9bb96ed186b4',
+    '0xCf5C408a148A62123045ECF9e4b10A7aa0bF13F2',
+    '0xe3fac59382987466d7f812df56c50739b99a907a',
+    '0x1D49733E397b26198D00720450C9403f66710b39',
+    '0x24b711e1d32e28a143e1a9cfdfe03a39d1acc771',
+    '0x82fa130440F06BB00cCFC19F55E94ba0F4Acb0d0',
+    '0x7113c00b5275b0b9c16686e5ac1164978b505c5d',
+    '0xD77021662795fEEbd382E960FfB9752Ab7f4E4d1',
+    '0xbad7a5de96b7df589252ced73426d4b59f90b466',
+    '0x01eb792050afE34e088C038f1723954F7129CB1e',
+    '0x46f2aa2aa7d31ddd237d620e52a33a8d5af2a5ab',
+    '0xFa798118b9930F700b76C1AE2D4B382e53fECaEb',
+    '0x3a8fa7bdbb3bd2a523796b145e5dd23b45019dbe',
+    '0x505d5A7c7546828F758718c8452992ca18DfCf19',
+    '0x21d5d5998c3d0feea70b5980fdac9dd6b8a12761',
+    '0x7151826988c6C7516Ca751E219ea2b073b404Db6',
+    '0xb50a80bba0ff07f4bc3434c593e86663fe05abe2',
+    '0x4f7b543b913215A3c2E9255f3091B6866E07F1eD',
+    '0x54bb102e85ee68a234fa06ece299346941d68d07',
+    '0x482AAb22C5A076C6777F3fA2164370b64106Fed7',
+    '0x9304ba542df9bc61dd1c97c073ed35f81cab6149',
+    '0x22Cb8F41F38FA15C3587607Bf25b788dd45b336a',
+    '0xe53b1da56f90c9529f2db1bb8711c3f1cc6f03bd',
+    '0xC1CD8385Fe4594Da58dF065bC969fC91A73404d4',
+    '0x635512a1333ad0822f5ba4fd6479daa1df8b77e1',
+    '0x8d429949e0457f69A8cA466F3c4c0180BBAeEa30',
+    '0x5083e43b015296c75de0af519917c035309e80e4',
+    '0x1D4Ea1D9cd429EF4e0bb5b8ab8b86C7e6B2371bA',
+    '0x28abbaadfacd46196217c23bc6402a0a458973a5',
+    '0x989d611C2C1cf6ECABca3EE764D348665e7669A9',
+    '0xbcf0265f4bd3cb293b709fab0bf5c83c7eeb6b74',
+    '0x91E755566F9D6D14335207a94E9e009D3EA99549',
+    '0x1eba6f6cfdb86e965040bf9e75d3ded9a3fd22a5',
+    '0x2329e369943b5ff97C49893339607F5B7F68B19f',
+    '0x90f2eaf2db0d8400c9f565aa3c139ddffbe857d0',
+    '0x0cd5e22bb0D1e20911e21A43D6B21E8a7867fd78',
+    '0x3acde0b7f51703c2fbf0a382f831123560b742b9',
+    '0x42406A62eb213276656EDE70A745D73942F5E4e0',
+    '0x047d5d8911d18aa5e64e666e53af2b47b46ab363',
+    '0xcAd1C88c906c591E2dff228728755381fa3f2032',
+    '0x9508122abdd654b68c7dbf5bdba329b852e4a512',
+    '0xa26E5308a7cAF5D85786058530a7Bcfbaaa198de',
+    '0xc1fd5e0b3388c66dfad458ded01dcddae68cb03e',
+    '0xf687d94E86bb2253d054a19aa6f86E1afcdC2987',
+    '0x4a28f50f15efedf44af0d376fdc2e319fa8ccef8',
+    '0x0a1eCbF7aAF4E62C643E863b69C26C0F42A07269',
+    '0x8921e94efaca5f39a3a1f7b62e645518082d6a88',
+    '0x77b266F6277eBDC2BDc7Aaa8A001815059c82bf2',
+    '0xc8252c4f9136209ec47534bf1c0781307ec9a86f',
+    '0x7a5D2b331fE816D3920B3ad419B80f392c54E393',
+    '0x3de72e4996ffedf9b6e4615dd43bbe1c8735eac0',
+    '0x6B612981E5a39aD030e747a6a46fc8A71425a811',
+    '0x2db9d4ebe4b94637e0cf2383a4d283fcb9aba93f',
+    '0xCe96cB1D5bAeFB49dFd77f7355487736E2760324',
+    '0x9553d38eb05415ca1d34d51e5adb2f24d962df9a',
+    '0x169CBD13287ACCd322B4B14082BF71f8D46c67d1',
+    '0x4fe43b6b73407bc3f1a3336e05c0b9be6e399626',
+    '0xD103A5e3dB4DF83473665e936528f546269F7906',
+    '0x3e00b9640c28906f8480cf714dac76c313af35ae',
+    '0x975b9E2e3524bb9b041C5Ac245fd82a5AA7EB3A1',
+    '0xa35203ffb424c8845807c0174f5fb0334235a313',
+    '0xaf9b93e54fAf86EC334c45a87DF7700aa7DB0b85',
+    '0x2e3281e50479d6c42328ba6f2e4afd971e43ca2d',
+    '0x8Cb1510AbD37e8c5aA65A8361470A377E6329d18',
+  ];
+
+  for await (const holder of USDB_HOLDERS) {
+    let isRegistered = await BlastRebasingTokensGovernorUpgradeable_Proxy.isRegisteredTokenHolder(
+      '0x4300000000000000000000000000000000000003',
+      holder,
+    );
+
+    if (isRegistered) {
+      console.log(`SKIP: USDB holder already registered: ${holder}`);
+    } else {
+      console.log(`REGISTERING: Token 'USDB' holder not registered: ${holder}`);
+
+      await logTx(
+        BlastRebasingTokensGovernorUpgradeable_Proxy,
+        BlastRebasingTokensGovernorUpgradeable_Proxy.addTokenHolder('0x4300000000000000000000000000000000000003', holder),
+      );
+    }
+  }
+
+  for await (const holder of WETH_HOLDERS) {
+    let isRegistered = await BlastRebasingTokensGovernorUpgradeable_Proxy.isRegisteredTokenHolder(
+      '0x4300000000000000000000000000000000000004',
+      holder,
+    );
+
+    if (isRegistered) {
+      console.log(`SKIP: WETH holder already registered: ${holder}`);
+    } else {
+      console.log(`REGISTERING: Token 'WETH' holder not registered: ${holder}`);
+
+      await logTx(
+        BlastRebasingTokensGovernorUpgradeable_Proxy,
+        BlastRebasingTokensGovernorUpgradeable_Proxy.addTokenHolder('0x4300000000000000000000000000000000000004', holder),
+      );
+    }
+  }
+}
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
