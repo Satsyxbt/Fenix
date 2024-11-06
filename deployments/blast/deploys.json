@@ -9,7 +9,7 @@
   "BribeUpgradeable_Implementation": "0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a",
   "GaugeFactoryUpgradeable_Implementation": "0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1",
   "GaugeUpgradeable_Implementation": "0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995",
-  "MinterUpgradeable_Implementation": "0x0FafA9074aBf128db1467af2FC592815b14508cd",
+  "MinterUpgradeable_Implementation": "0x081d528D4dc4a2f3424C6Bdde43F950007cEe944",
   "FenixRaiseUpgradeable_Implementation": "0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c",
   "VeBoostUpgradeable_Implementation": "0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7",
   "VeFnxDistributorUpgradeable_Implementation": "0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c",

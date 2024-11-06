@@ -135,3 +135,24 @@ MinimalLinearVestingUpgradeable_Proxy (0x4B9F15E357456364f715AddC6f120148767fc53
 GaugeUpgradeable_V2Pools_Implementation (0x67d391Aa49ddD09E57b0b9226e2891e408621e9b): No match found
 GaugeUpgradeable_V3Pools_Implementation (0x58D12813E77B87c67ccC9312598c8E1d35B96E23): No match found
 veFNXClaimer (0x3191EF613f297b53f593fEa5044ce7A6B19985A5): Match with artifact veFNXClaimer
+
+
+
+Warning: Address for MinterUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x0FafA9074aBf128db1467af2FC592815b14508cd
+        New address: 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944
+
+
+        Starting deployment of MinterUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+MinterUpgradeable deployed at 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944
+Save to deploys.json deployed address of MinterUpgradeable_Implementation:0x081d528D4dc4a2f3424C6Bdde43F950007cEe944
+Verifying TransparentUpgradeableProxy at 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/MinterUpgradeable.sol:MinterUpgradeable at 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract MinterUpgradeable on the block explorer.
+https://blastscan.io/address/0x081d528D4dc4a2f3424C6Bdde43F950007cEe944#code
+

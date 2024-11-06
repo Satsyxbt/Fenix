@@ -95,7 +95,7 @@
 | **FeesVaultFactoryUpgradeable_Implementation** | `0x17409D1648422596B447BC3FcEE92a5f291e4604` |
 | **BribeFactoryUpgradeable_Implementation** | `0x32c981701cBdbA2C295427459f87fCceF57a0dA8` |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
-| **MinterUpgradeable_Implementation** | `0x0FafA9074aBf128db1467af2FC592815b14508cd` |
+| **MinterUpgradeable_Implementation** | `0x0FafA9074aBf128db1467af2FC592815b14508cd (in future 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944)`  |
 | **VotingEscrowUpgradeable_Implementation** | `0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F`|
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
@@ -105,8 +105,8 @@
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c` |
-| **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0xa1d61F8893dc1341Af9ce6F2289cEe869a220153 (in future 0x1D099397B2049Ce63eE051801E5A774A4E60F6cd)`|
-| **VoterUpgradeable_Implementation** | `0xc6552a3E87b416FBE211b91cE1A7886336f20456 (in future 0x932C74DD5504D94AaF5d62195966E00F6d897364)`|
+| **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
+| **VoterUpgradeable_Implementation** | `0x932C74DD5504D94AaF5d62195966E00F6d897364`|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
