@@ -34,6 +34,8 @@ contract MinterUpgradeable is IMinter, BlastGovernorClaimableSetup, Ownable2Step
     IVoter public voter;
     IVotingEscrow public ve;
 
+    uint256 public startEmissionDistributionTimestamp;
+
     constructor(address blastGovernor_) {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
         _disableInitializers();
@@ -67,6 +69,12 @@ contract MinterUpgradeable is IMinter, BlastGovernorClaimableSetup, Ownable2Step
         assert(fenix.totalSupply() == 7_500_000e18);
         fenix.mint(msg.sender, 67_500_000e18);
         weekly = 2_250_000e18;
+    }
+
+    function shiftStartByOneWeek() external onlyOwner reinitializer(3) {
+        require(isStarted && weekly == 2_250_000e18 && fenix.totalSupply() == 75_000_000e18, "Invalid contract state for call");
+        startEmissionDistributionTimestamp = active_period + 2 * WEEK;
+        lastInflationPeriod = lastInflationPeriod + WEEK;
     }
 
     function start() external onlyOwner {
@@ -137,28 +145,30 @@ contract MinterUpgradeable is IMinter, BlastGovernorClaimableSetup, Ownable2Step
             _period = (block.timestamp / WEEK) * WEEK;
             active_period = _period;
 
-            if (!isFirstMint) {
-                weekly = weekly_emission();
-            } else {
-                isFirstMint = false;
+            if (block.timestamp >= startEmissionDistributionTimestamp) {
+                if (!isFirstMint) {
+                    weekly = weekly_emission();
+                } else {
+                    isFirstMint = false;
+                }
+
+                uint256 weeklyCache = weekly;
+                uint256 teamEmissions = (weeklyCache * teamRate) / PRECISION;
+
+                uint256 gauge = weeklyCache - teamEmissions;
+
+                uint256 currentBalance = fenix.balanceOf(address(this));
+                if (currentBalance < weeklyCache) {
+                    fenix.mint(address(this), weeklyCache - currentBalance);
+                }
+
+                require(fenix.transfer(owner(), teamEmissions));
+
+                fenix.approve(address(voter), gauge);
+                voter.notifyRewardAmount(gauge);
+
+                emit Mint(msg.sender, weeklyCache, circulating_supply());
             }
-
-            uint256 weeklyCache = weekly;
-            uint256 teamEmissions = (weeklyCache * teamRate) / PRECISION;
-
-            uint256 gauge = weeklyCache - teamEmissions;
-
-            uint256 currentBalance = fenix.balanceOf(address(this));
-            if (currentBalance < weeklyCache) {
-                fenix.mint(address(this), weeklyCache - currentBalance);
-            }
-
-            require(fenix.transfer(owner(), teamEmissions));
-
-            fenix.approve(address(voter), gauge);
-            voter.notifyRewardAmount(gauge);
-
-            emit Mint(msg.sender, weeklyCache, circulating_supply());
         }
         return _period;
     }

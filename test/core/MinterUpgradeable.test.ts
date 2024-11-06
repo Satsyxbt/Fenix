@@ -469,4 +469,38 @@ describe('MinterUpgradeable Contract', function () {
       });
     });
   });
+  describe('After patch initilaSupply', async () => {
+    describe('shiftStartByOneWeek', async () => {
+      it('should revert if isStarted not called before', async () => {
+        expect(await minter.isStarted()).to.be.false;
+        await expect(minter.shiftStartByOneWeek()).to.be.revertedWith('Invalid contract state for call');
+      });
+      it('should revert if weekly & totalSupply is diff', async () => {
+        await minter.start();
+        expect(await minter.isStarted()).to.be.true;
+        await expect(minter.shiftStartByOneWeek()).to.be.revertedWith('Invalid contract state for call');
+      });
+
+      it('should reverted if already called', async () => {
+        await minter.start();
+        await minter.patchInitialSupply();
+        await minter.shiftStartByOneWeek();
+        await expect(minter.shiftStartByOneWeek()).to.be.revertedWith(ERRORS.Initializable.Initialized);
+      });
+
+      it('should reverted if call from not owner', async () => {
+        await minter.start();
+        await minter.patchInitialSupply();
+        await minter.shiftStartByOneWeek();
+        await expect(minter.connect(signers.otherUser1).shiftStartByOneWeek()).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+      });
+
+      it('success call after patch initial supply and isStarted call', async () => {
+        await minter.start();
+        await minter.patchInitialSupply();
+        expect(await minter.isStarted()).to.be.true;
+        await expect(minter.shiftStartByOneWeek()).to.be.not.reverted;
+      });
+    });
+  });
 });
