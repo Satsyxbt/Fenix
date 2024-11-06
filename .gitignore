@@ -24,3 +24,5 @@ docs/modules/api
 # Foundry
 /out
 /cache_forge
+
+/temp

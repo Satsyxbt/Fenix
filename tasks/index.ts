@@ -7,3 +7,4 @@ import './fees-vaults';
 import './extract-abis-to-docs';
 import './get-state';
 import './check-match-fees-vault';
+import './gauge-middleman-params-check';

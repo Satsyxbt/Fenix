@@ -300,35 +300,90 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      }
+    ],
     "name": "claimWithCHR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      }
+    ],
     "name": "claimWithCHRNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      }
+    ],
     "name": "claimWithELCHR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      }
+    ],
     "name": "claimWithSPCHR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "withPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managedTokenIdForAttach_",
+        "type": "uint256"
+      }
+    ],
     "name": "claimWithVECHR",
     "outputs": [],
     "stateMutability": "nonpayable",
