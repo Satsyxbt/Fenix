@@ -21,7 +21,7 @@
   "MDCBlastMock": "0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01",
   "BlastGovernorUpgradeable_Implementation": "0x032a4Bdd9c98abf3c8d4D29a540c29f57b393252",
   "BlastGovernorUpgradeable_Proxy": "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228",
-  "BlastRebasingTokensGovernorUpgradeable_Implementation": "0x2ECcA22fb93674e45D37Ada6Ce21a67884709682",
+  "BlastRebasingTokensGovernorUpgradeable_Implementation": "0x9d830b8452818Bf9f5834B26E395eEb3A51d7693",
   "BlastRebasingTokensGovernorUpgradeable_Proxy": "0x76da5656DEa3D8A8111aB749042f98103198332F",
   "VeFnxSplitMerklAidropUpgradeable_Proxy": "0x4BcC88B000C02075115275d5BB1e4133Ed1BD068",
   "VeFnxSplitMerklAidropUpgradeable_Implementation": "0xc32160bC7841aedB9b594DB6641320746bb6aAB1",

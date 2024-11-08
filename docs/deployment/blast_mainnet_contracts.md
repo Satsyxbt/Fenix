@@ -95,7 +95,7 @@
 | **FeesVaultFactoryUpgradeable_Implementation** | `0x17409D1648422596B447BC3FcEE92a5f291e4604` |
 | **BribeFactoryUpgradeable_Implementation** | `0x32c981701cBdbA2C295427459f87fCceF57a0dA8` |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
-| **MinterUpgradeable_Implementation** | `0x0FafA9074aBf128db1467af2FC592815b14508cd (in future 0x081d528D4dc4a2f3424C6Bdde43F950007cEe944)`  |
+| **MinterUpgradeable_Implementation** | `0x081d528D4dc4a2f3424C6Bdde43F950007cEe944`  |
 | **VotingEscrowUpgradeable_Implementation** | `0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F`|
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
