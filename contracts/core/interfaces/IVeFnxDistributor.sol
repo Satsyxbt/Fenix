@@ -2,10 +2,24 @@
 pragma solidity >=0.8.0;
 
 /**
- * @title Interface for VeBoost
- * @dev Interface for boosting functionality within the Fenix ecosystem.
+ * @title Interface for VeFnxDistributor
+ * @dev Interface for airdtop contract veFnxDistributor
  */
 interface IVeFnxDistributor {
+    /**
+     * @dev Struct representing the details of an airdrop.
+     * @param recipient Address of the recipient of veFnx tokens.
+     * @param withPermanentLock Indicates if the veFnx tokens should be permanently locked.
+     * @param amount The amount of FNX tokens to lock for veFnx.
+     * @param managedTokenIdForAttach The managed token ID for attaching veFnx.
+     */
+    struct AidropRow {
+        address recipient;
+        bool withPermanentLock;
+        uint256 amount;
+        uint256 managedTokenIdForAttach;
+    }
+
     /**
      * @notice Emitted after successfully distributing veFnx to a recipient.
      * @param recipient Address of the recipient receiving the veFnx tokens.
@@ -13,22 +27,18 @@ interface IVeFnxDistributor {
      * @param lockDuration The duration for which FNX tokens are locked, expressed in seconds.
      * @param amount The amount of FNX tokens locked on behalf of the recipient.
      */
-    event AridropVeFnx(address indexed recipient, uint256 tokenId, uint256 lockDuration, uint256 amount);
-
-    /// @notice Indicates a mismatch in the lengths of the recipients and amounts arrays provided to `distributeVeFnx`.
-    error ArraysLengthMismatch();
-
-    /// @notice Indicates that the contract's balance of FNX is insufficient to cover the total distribution.
-    error InsufficientBalance();
+    event AirdropVeFnx(address indexed recipient, uint256 tokenId, uint256 lockDuration, uint256 amount);
 
     /**
-     * @notice Distributes veFnx to the specified recipients by locking FNX tokens on their behalf.
-     * @param recipients_ Array of recipient addresses to receive veFnx tokens.
-     * @param amounts_ Array of amounts of FNX tokens to be locked for each recipient.
-     * @dev Ensures the lengths of the recipients and amounts arrays match, checks for sufficient balance, and locks FNX tokens to distribute veFnx tokens.
-     * Emits an `AridropVeFnx` event for each distribution.
-     *
-     * Resets allowance to zero after distributions.
+     * @dev Emitted when tokens are recovered by the owner.
+     * @param token Address of the recovered token.
+     * @param recoverAmount Amount of tokens recovered.
      */
-    function distributeVeFnx(address[] calldata recipients_, uint256[] calldata amounts_) external;
+    event RecoverToken(address indexed token, uint256 indexed recoverAmount);
+
+    /**
+     * @notice Distributes veFnx tokens to specified recipients by locking FNX tokens in the Voting Escrow contract.
+     * @param rows_ An array of AidropRow structs representing the recipients and amounts to be distributed.
+     */
+    function distributeVeFnx(AidropRow[] calldata rows_) external;
 }

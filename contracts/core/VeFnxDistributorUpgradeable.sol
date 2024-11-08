@@ -19,12 +19,21 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorClaimabl
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 internal constant _LOCK_DURATION = 182 days; // Lock duration for veFnx tokens
+    /// @notice Address of the FNX token contract
+    address public fenix;
 
-    address public fenix; // Address of the FNX token contract
-    address public votingEscrow; // Address of the Voting Escrow contract
+    /// @notice Address of the Voting Escrow contract
+    address public votingEscrow;
+
+    /// @notice Indicates that the contract's balance of FNX is insufficient to cover the total distribution.
+    error InsufficientBalance();
+
+    /// @notice Indicates that the recipient address is zero.
+    error ZeroRecipientAddress();
 
     /**
      * @dev Initializes the contract by disabling the initializer of the inherited upgradeable contract.
+     * @param blastGovernor_ Address of the Blast Governor contract.
      */
     constructor(address blastGovernor_) {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
@@ -51,24 +60,24 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorClaimabl
     }
 
     /**
-     * @notice Distributes veFnx to the specified recipients by locking FNX tokens on their behalf.
-     * @param recipients_ Array of recipient addresses to receive veFnx tokens.
-     * @param amounts_ Array of amounts of FNX tokens to be locked for each recipient.
-     * @dev Ensures the lengths of the recipients and amounts arrays match, checks for sufficient balance, and locks FNX tokens to distribute veFnx tokens.
-     * Emits an `AridropVeFnx` event for each distribution. Resets allowance to zero after distributions.
+     * @notice Distributes veFnx tokens to specified recipients by locking FNX in the Voting Escrow contract.
+     * @param rows_ An array of AidropRow structs representing the recipients and amounts to be distributed.
+     * @dev The function locks FNX tokens for each recipient in the Voting Escrow contract, creating veFnx tokens.
+     * It checks if the total amount to be distributed is available in the contract's balance.
+     * Emits an {AirdropVeFnx} event for each successful distribution.
+     * @custom:error ZeroRecipientAddress Thrown if the recipient address is zero.
+     * @custom:error InsufficientBalance Thrown if the contract's FNX balance is insufficient for the total distribution.
      */
-    function distributeVeFnx(address[] calldata recipients_, uint256[] calldata amounts_) external override onlyOwner {
-        if (recipients_.length != amounts_.length) {
-            revert ArraysLengthMismatch();
-        }
-
+    function distributeVeFnx(AidropRow[] calldata rows_) external override onlyOwner {
         IERC20Upgradeable fenixCache = IERC20Upgradeable(fenix);
         IVotingEscrow veCache = IVotingEscrow(votingEscrow);
 
         uint256 totalDistributionSum;
-
-        for (uint256 i; i < amounts_.length; ) {
-            totalDistributionSum += amounts_[i];
+        for (uint256 i; i < rows_.length; ) {
+            if (rows_[i].recipient == address(0)) {
+                revert ZeroRecipientAddress();
+            }
+            totalDistributionSum += rows_[i].amount;
             unchecked {
                 i++;
             }
@@ -77,34 +86,41 @@ contract VeFnxDistributorUpgradeable is IVeFnxDistributor, BlastGovernorClaimabl
         if (totalDistributionSum > fenixCache.balanceOf(address(this))) revert InsufficientBalance();
 
         fenixCache.safeApprove(address(veCache), totalDistributionSum);
-
-        for (uint256 i; i < amounts_.length; ) {
-            uint256 tokenId = veCache.createLockFor(amounts_[i], _LOCK_DURATION, recipients_[i], false, false, 0);
-            emit AridropVeFnx(recipients_[i], tokenId, _LOCK_DURATION, amounts_[i]);
-
+        for (uint256 i; i < rows_.length; ) {
+            AidropRow memory row = rows_[i];
+            uint256 tokenId = veCache.createLockFor(
+                row.amount,
+                _LOCK_DURATION,
+                row.recipient,
+                false,
+                row.withPermanentLock,
+                row.managedTokenIdForAttach
+            );
+            emit AirdropVeFnx(row.recipient, tokenId, _LOCK_DURATION, row.amount);
             unchecked {
                 i++;
             }
         }
-
-        fenixCache.safeApprove(address(veCache), 0);
     }
 
     /**
-     * @dev Checked provided address on zero value, throw AddressZero error in case when addr_ is zero
-     *
-     * @param addr_ The address which will checked on zero
+     * @notice Allows the owner to recover tokens mistakenly sent to the contract.
+     * @param token_ Address of the token to recover.
+     * @param recoverAmount_ Amount of the token to recover.
+     * @dev Only callable by the contract owner. Emits a {RecoverToken} event upon success.
+     */
+    function recoverTokens(address token_, uint256 recoverAmount_) external onlyOwner {
+        IERC20Upgradeable(token_).safeTransfer(msg.sender, recoverAmount_);
+        emit RecoverToken(token_, recoverAmount_);
+    }
+
+    /**
+     * @dev Checks if the provided address is zero and reverts with ZeroRecipientAddress error if it is.
+     * @param addr_ The address to be checked.
      */
     function _checkAddressZero(address addr_) internal pure {
         if (addr_ == address(0)) {
             revert AddressZero();
         }
     }
-
-    /**
-     * @dev This empty reserved space is put in place to allow future versions to add new
-     * variables without shifting down storage in the inheritance chain.
-     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-     */
-    uint256[50] private __gap;
 }
