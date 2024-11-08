@@ -24,6 +24,13 @@ contract ERC20RebasingMock is ERC20Mock {
     }
 
     function claim(address recipient, uint256 amount) external returns (uint256) {
+        _mint(recipient, amount);
         return amount;
+    }
+
+    mapping(address => uint256) public getClaimableAmount;
+
+    function __mock_setClamaibleAmount(address holder_, uint256 amount_) external {
+        getClaimableAmount[holder_] = amount_;
     }
 }

@@ -8,3 +8,10 @@ export const GaugeType = {
   V2PairsGauge: 1,
   V3PairsGauge: 2,
 };
+
+export const YieldDistributionDirection = {
+  Others: 0,
+  Incentives: 1,
+  Rise: 2,
+  Bribes: 3,
+};
