@@ -34,6 +34,7 @@
 | **BribeFactoryUpgradeable_Proxy** | `0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e` |
 | **MinimalLinearVestingUpgradeable_Proxy** | `0x4B9F15E357456364f715AddC6f120148767fc530`|
 | **VeFnxSplitMerklAidropUpgradeable_Proxy** | `0x311F7981d7159De374c378Be0815DC4257b50468` |
+| **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |
 
 ### Migration
 | Contract Name | Address |
@@ -121,4 +122,3 @@
 | **VeArtProxyUpgradeable_Implementation** | `0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8` |
 | **UtilsUpgradeable_Proxy** | `0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F` |
 | **PairFactoryUpgradeable_Implementation** | `0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9` |
-| **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |
