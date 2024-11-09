@@ -22,3 +22,30 @@ ProxyAdmin.upgrade(proxy: 0x76da5656DEa3D8A8111aB749042f98103198332F, newLogic: 
 	Transaction hash: 0x98941f538a1543e8bedd6bfd33fd2c6c5e94763642c109fb1ee0ad35240e1688
 	Called Contract(0x76da5656DEa3D8A8111aB749042f98103198332F).grantRole(role: "0xe5292c35dd73d3ecf109bb52686ec1c2c228bb5d9493a375f195a8dca9731543", account: "0x7d15dB508dD097a5b0dEAA366B6A86DEe6367B33")
 	Transaction hash: 0x23ea804985d49be9b7cfdfa9e52d39c2cb0d583ee9c567071223e2984a37bab1
+
+
+
+Starting deployment of VeFnxDistributorUpgradeable...
+        Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+VeFnxDistributorUpgradeable deployed at 0xDE303e84118ed3fFbe5424123a0189DA166A3858
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Implementation:0xDE303e84118ed3fFbe5424123a0189DA166A3858
+Verifying TransparentUpgradeableProxy at 0x24bD5d1b199A609143f1d1C095b5eA33a2ba3823...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x24bD5d1b199A609143f1d1C095b5eA33a2ba3823
+for verification on the block explorer. Waiting for verification result...
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xDE303e84118ed3fFbe5424123a0189DA166A3858
+        Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0xC69d09854EED4692603BA40e47Ed180f043a1414
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Proxy:0xC69d09854EED4692603BA40e47Ed180f043a1414
+Verifying TransparentUpgradeableProxy at 0xC69d09854EED4692603BA40e47Ed180f043a1414...
+Timeout for 10s before verify proccess...
+The contract 0xC69d09854EED4692603BA40e47Ed180f043a1414 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0xC69d09854EED4692603BA40e47Ed180f043a1414#code
+
+
+        Called Contract(0xC69d09854EED4692603BA40e47Ed180f043a1414).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", fenix_: "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6", votingEscrow_: "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34")
+        Transaction hash: 0xcd580a6be3a39f913b8856d8e65048846b0bc3d06f8b32aa0bf5ba9f9241741c

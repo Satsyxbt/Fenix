@@ -104,7 +104,7 @@
 | **GaugeUpgradeable_V2Pools_Implementation** | `0x67d391Aa49ddD09E57b0b9226e2891e408621e9b` |
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
-| **VeFnxDistributorUpgradeable_Implementation** | `0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c` |
+| **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
 | **VoterUpgradeable_Implementation** | `0x932C74DD5504D94AaF5d62195966E00F6d897364`|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
@@ -121,4 +121,4 @@
 | **VeArtProxyUpgradeable_Implementation** | `0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8` |
 | **UtilsUpgradeable_Proxy** | `0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F` |
 | **PairFactoryUpgradeable_Implementation** | `0x0b3F38F9a1C62065234e234Ac8a9Edc6743563E9` |
-| **VeFnxDistributorUpgradeable_Proxy** | `0x4d8513df0A19aa65398cB8495AeA319F4F81448e` |
+| **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |

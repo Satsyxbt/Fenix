@@ -1,0 +1,33 @@
+Starting deployment of VeFnxDistributorUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VeFnxDistributorUpgradeable deployed at 0x9d15070F302F3392674C33403C4396312EA566E9
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Implementation:0x9d15070F302F3392674C33403C4396312EA566E9
+Warning: Address for VeFnxDistributorUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x19FDEF46fC1fcbE51eD0a482B26d7C8412fA316c
+        New address: 0x9d15070F302F3392674C33403C4396312EA566E9
+Verifying TransparentUpgradeableProxy at 0x9d15070F302F3392674C33403C4396312EA566E9...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x9d15070F302F3392674C33403C4396312EA566E9
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxDistributorUpgradeable on the block explorer.
+https://blastscan.io/address/0x9d15070F302F3392674C33403C4396312EA566E9#code
+
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0x9d15070F302F3392674C33403C4396312EA566E9
+        Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Proxy:0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9
+Warning: Address for VeFnxDistributorUpgradeable_Proxy is already in the list. It will be replaced.
+        Existing address: 0x4d8513df0A19aa65398cB8495AeA319F4F81448e
+        New address: 0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9
+Verifying TransparentUpgradeableProxy at 0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9...
+Timeout for 10s before verify proccess...
+The contract 0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9 has already been verified on Etherscan.
+https://blastscan.io/address/0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9#code
+        Called Contract(0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", fenix_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", votingEscrow_: "0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9")
+        Transaction hash: 0x91740e002d208aa15c5f373d5498f3f3ef6c636e9387c75987931729e94d2ed2
+        Called Contract(0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9).transferOwnership(newOwner: "0x5F62E0beE355204b0E476b81Ba3f75f7c3933623")
+        Transaction hash: 0xb18a4923a9ae02c26ebba46071b6c6b061d0e1350dbfa8e4fa3c6d6ab3891efa

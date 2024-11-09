@@ -40,6 +40,7 @@ External:
 | **VeFnxSplitMerklAidropUpgradeable_Proxy**        |  0x4BcC88B000C02075115275d5BB1e4133Ed1BD068|
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy | 0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938  |
 | MDCBlastMock                                     | 0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01   |
+| **VeFnxDistributorUpgradeable_Proxy** | 0xC69d09854EED4692603BA40e47Ed180f043a1414 |
 
 ## Implementations for Proxy
 | Contract Name                                           | Address                                      |
@@ -74,7 +75,7 @@ External:
 | VeBoostUpgradeable_Implementation                       | 0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590   |
 | CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0x47a95acbFC949802916151050Dea668aB9AC427a   |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation | 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8  |
-
+| VeFnxDistributorUpgradeable_Implementation | 0xDE303e84118ed3fFbe5424123a0189DA166A3858 |
   
 ### Tokens
 - `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` - fnUSDT
