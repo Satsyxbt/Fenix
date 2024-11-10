@@ -1,0 +1,17 @@
+Starting deployment of TransparentUpgradeableProxy...
+        Logic address: 0xA4C830D9C19b6b881408cf74e00Cff1ad3800270
+        Admin address: 0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5
+        Data: 0x
+TransparentUpgradeableProxy deployed at 0xF886dB527edA423a160B89eDe5505E644C581E9e
+Save to deploys.json deployed address of MinimalLinearVestingUpgradeable_Proxy:0xF886dB527edA423a160B89eDe5505E644C581E9e
+Warning: Address for MinimalLinearVestingUpgradeable_Proxy is already in the list. It will be replaced.
+        Existing address: 0x4B9F15E357456364f715AddC6f120148767fc530
+        New address: 0xF886dB527edA423a160B89eDe5505E644C581E9e
+Verifying TransparentUpgradeableProxy at 0xF886dB527edA423a160B89eDe5505E644C581E9e...
+Timeout for 10s before verify proccess...
+The contract 0xF886dB527edA423a160B89eDe5505E644C581E9e has already been verified on Etherscan.
+https://blastscan.io/address/0xF886dB527edA423a160B89eDe5505E644C581E9e#code
+        Called Contract(0xF886dB527edA423a160B89eDe5505E644C581E9e).initialize(blastGovernor_: "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1", token_: "0x52f847356b38720B55ee18Cb3e094ca11C85A192", startTimestamp_: "1733819901", duration_: "15724800")
+        Transaction hash: 0xaa893df2fb3f77f464b11d75049f7e05d57094af6039e8cc97ed6de0d557e0f9
+        Called Contract(0xF886dB527edA423a160B89eDe5505E644C581E9e).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+        Transaction hash: 0xaea2716a6dd957772869d6b2b76527b4bd318dc64012f1825dadc5f203eb554d

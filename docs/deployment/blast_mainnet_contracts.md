@@ -32,7 +32,7 @@
 | **GaugeFactory_V2Pools_Proxy** | `0x4515bf577F5C0D2B42b2528d5dD8C4eC47EFA408` |
 | **GaugeFactory_V3Pools_Proxy** | `0xa2bDf4b9b208a5CD99675Ba8D87c40dE1911Fbe9` |
 | **BribeFactoryUpgradeable_Proxy** | `0xFD91dC9a8C3268fc556838baEd5871BE3Af6f32e` |
-| **MinimalLinearVestingUpgradeable_Proxy** | `0x4B9F15E357456364f715AddC6f120148767fc530`|
+| **MinimalLinearVestingUpgradeable_Proxy** | `0xF886dB527edA423a160B89eDe5505E644C581E9e`|
 | **VeFnxSplitMerklAidropUpgradeable_Proxy** | `0x311F7981d7159De374c378Be0815DC4257b50468` |
 | **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |
 
