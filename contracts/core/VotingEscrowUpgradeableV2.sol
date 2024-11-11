@@ -170,6 +170,36 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
+     * @dev See {IVotingEscrow-depositToAttachedNFT}.
+     */
+    function depositToAttachedNFT(uint256 tokenId_, uint256 amount_) external override nonReentrant {
+        (nftStates[tokenId_]).depositToAttachedNFTCheck();
+
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        uint256 managedTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId_);
+        if (!managedNFTManagerCache.isManagedNFT(managedTokenId)) {
+            revert NotManagedNft();
+        }
+
+        IERC20Upgradeable(token).safeTransferFrom(_msgSender(), address(this), amount_);
+
+        uint256 supplyBefore = supply;
+        supply += amount_;
+        permanentTotalSupply += amount_;
+
+        LockedBalance memory oldLocked = nftStates[managedTokenId].locked;
+        _updateNftLocked(
+            managedTokenId,
+            LockedBalance(oldLocked.amount + LibVotingEscrowUtils.toInt128(amount_), oldLocked.end, oldLocked.isPermanentLocked)
+        );
+        IManagedNFTManager(managedNFTManager).onDepositToAttachedNFT(tokenId_, amount_);
+        IVoter(voter).onDepositToManagedNFT(tokenId_, managedTokenId);
+
+        emit DepositToAttachedNFT(_msgSender(), tokenId_, managedTokenId, amount_);
+        emit Supply(supplyBefore, supplyBefore + amount_);
+    }
+
+    /**
      * @dev See {IVotingEscrow-depositWithIncreaseUnlockTime}.
      */
     function depositWithIncreaseUnlockTime(

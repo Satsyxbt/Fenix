@@ -31,7 +31,7 @@ const LOW_CONTRACT_SIZE_COMPILER_SETTINGS: SolcUserConfig = {
     viaIR: true,
     optimizer: {
       enabled: true,
-      runs: 700,
+      runs: 656,
     },
     metadata: {
       bytecodeHash: 'none',

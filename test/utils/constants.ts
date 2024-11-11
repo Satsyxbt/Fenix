@@ -8,6 +8,7 @@ export const ONE = BigInt(1);
 export const BLAST_PREDEPLOYED_ADDRESS = '0x4300000000000000000000000000000000000002';
 export const WETH_PREDEPLOYED_ADDRESS = '0x4200000000000000000000000000000000000023';
 export const USDB_PREDEPLOYED_ADDRESS = '0x4200000000000000000000000000000000000022';
+export const WEEK = 86400 * 7;
 export const GaugeType = {
   None: 0,
   V2PairsGauge: 1,
@@ -18,6 +19,7 @@ export const BEACON_IMPLEMENTATION_SLOT = '0xa3f0ad74e5423aebfd80d3ef4346578335a
 export function getAccessControlError(role: string, address: string) {
   return `AccessControl: account ${address.toLowerCase()} is missing role ${role.toLowerCase()}`;
 }
+
 export const GasMode = {
   VOID: 0,
   CLAIMABLE: 1,
