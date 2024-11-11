@@ -239,12 +239,12 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                 IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
 
                 // get external
-                _bribe = state.internalBribe;
+                _bribe = state.externalBribe;
                 Pairs[j]._externalBribeAddress = _bribe;
                 //Pairs[j].externalBribeReward = _getNextEpochRewards(_bribe);
 
                 // get internal
-                _bribe = state.externalBribe;
+                _bribe = state.internalBribe;
                 Pairs[j]._internalBribeAddress = _bribe;
                 //Pairs[j].internalBribeReward = _getNextEpochRewards(_bribe);
             }
