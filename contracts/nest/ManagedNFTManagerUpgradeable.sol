@@ -103,6 +103,16 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
     }
 
     /**
+     * @dev Ensures that the function can only be called by the designated voting escrow address.
+     */
+    modifier onlyVotingEscrow() {
+        if (_msgSender() != votingEscrow) {
+            revert AccessDenied();
+        }
+        _;
+    }
+
+    /**
      * @dev Constructor that disables initialization on implementation.
      */
     constructor(address blastGovernor_) {
@@ -166,6 +176,29 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
         bool isDisable = !managedTokensInfo[managedTokenId_].isDisabled;
         managedTokensInfo[managedTokenId_].isDisabled = isDisable;
         emit ToggleDisableManagedNFT(msg.sender, managedTokenId_, isDisable);
+    }
+
+    /**
+     * @notice Handles the deposit of tokens to an NFT attached to a managed token.
+     * @dev Called by the Voting Escrow contract when tokens are deposited to an NFT that is attached to a managed NFT.
+     *      The function verifies the token is attached, checks if it is disabled, and updates the token's state.
+     * @param tokenId_ The token ID of the user's NFT.
+     * @param amount_ The amount of tokens to deposit.
+     * @custom:error IncorrectUserNFT Thrown if the provided token ID is not attached or if it is a managed token itself.
+     * @custom:error ManagedNFTIsDisabled Thrown if the managed token is currently disabled.
+     */
+    function onDepositToAttachedNFT(uint256 tokenId_, uint256 amount_) external onlyVotingEscrow {
+        if (!tokensInfo[tokenId_].isAttached || managedTokensInfo[tokenId_].isManaged) {
+            revert IncorrectUserNFT();
+        }
+        uint256 managedTokenId = tokensInfo[tokenId_].attachedManagedTokenId;
+
+        if (managedTokensInfo[managedTokenId].isDisabled) {
+            revert ManagedNFTIsDisabled();
+        }
+
+        tokensInfo[tokenId_].amount += amount_;
+        IManagedNFTStrategy(IVotingEscrow(votingEscrow).ownerOf(managedTokenId)).onAttach(tokenId_, amount_);
     }
 
     /**

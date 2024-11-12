@@ -70,6 +70,11 @@ describe('VotingEscrow_V2', function () {
   });
 
   describe('Access restricted functionality', async () => {
+    describe('onDepositToManagedNFT', async () => {
+      it('fail if call from not VotinEscrow', async () => {
+        await expect(Voter.connect(signers.otherUser1).onDepositToManagedNFT(1, 1)).to.be.revertedWithCustomError(Voter, 'AccessDenied');
+      });
+    });
     describe('#setDistributionWindowDuration', async () => {
       it('fail if call from not VoterAdmin', async () => {
         await expect(Voter.connect(signers.otherUser1).setDistributionWindowDuration(3600)).to.be.revertedWith(

@@ -50,6 +50,16 @@ library LibVotingEscrowValidation {
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token does not exist, is attached, or has expired.
      */
+    function depositToAttachedNFTCheck(IVotingEscrow.TokenState memory self_) internal pure {
+        checkExist(self_);
+        checkAttached(self_);
+    }
+
+    /**
+     * @notice Validates the conditions for depositing into a token.
+     * @param self_ The state of the token to validate.
+     * @dev Reverts if the token does not exist, is attached, or has expired.
+     */
     function depositCheck(IVotingEscrow.TokenState memory self_) internal view {
         checkExist(self_);
         checkNotAttached(self_);

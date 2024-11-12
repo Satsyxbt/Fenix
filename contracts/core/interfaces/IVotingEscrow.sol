@@ -89,6 +89,15 @@ interface IVotingEscrow is IERC721Upgradeable {
     event Deposit(address indexed provider, uint256 tokenId, uint256 value, uint256 indexed locktime, DepositType deposit_type, uint256 ts);
 
     /**
+     * @notice Emitted when tokens are deposited to an attached NFT.
+     * @param provider The address of the user making the deposit.
+     * @param tokenId The ID of the NFT receiving the deposit.
+     * @param managedTokenId The ID of the managed token receiving the voting power.
+     * @param value The amount of tokens deposited.
+     */
+    event DepositToAttachedNFT(address indexed provider, uint256 tokenId, uint256 managedTokenId, uint256 value);
+
+    /**
      * @notice Emitted when a withdrawal is made from a lock.
      * @param provider The address of the entity making the withdrawal.
      * @param tokenId The ID of the token associated with the withdrawal.
@@ -244,6 +253,18 @@ interface IVotingEscrow is IERC721Upgradeable {
      * Emits second a {Deposit} event on successful unlock time increase.
      */
     function depositWithIncreaseUnlockTime(uint256 tokenId_, uint256 amount_, uint256 lockDuration_) external;
+
+    /**
+     * @notice Deposits tokens to an attached NFT, updating voting power.
+     * @dev The function transfers the token amount to this contract, updates the locked balance, and notifies the managed NFT.
+     *      Only callable by the NFT's owner or approved operator.
+     * @param tokenId_ The ID of the NFT receiving the deposit.
+     * @param amount_ The amount of tokens to deposit.
+     * @custom:event DepositToAttachedNFT Emitted when tokens are deposited to an attached NFT.
+     * @custom:event Supply Emitted when the total supply of voting power is updated.
+     * @custom:error NotManagedNft Thrown if the managed token ID is invalid.
+     */
+    function depositToAttachedNFT(uint256 tokenId_, uint256 amount_) external;
 
     /**
      * @notice Withdraws tokens from a specified NFT lock.

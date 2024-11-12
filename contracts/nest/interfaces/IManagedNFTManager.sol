@@ -128,4 +128,15 @@ interface IManagedNFTManager {
      * @param tokenId_ The user's NFT token ID.
      */
     function onDettachFromManagedNFT(uint256 tokenId_) external;
+
+    /**
+     * @notice Handles the deposit of tokens to an NFT attached to a managed token.
+     * @dev Called by the Voting Escrow contract when tokens are deposited to an NFT that is attached to a managed NFT.
+     *      The function verifies the token is attached, checks if it is disabled, and updates the token's state.
+     * @param tokenId_ The token ID of the user's NFT.
+     * @param amount_ The amount of tokens to deposit.
+     * @custom:error IncorrectUserNFT Thrown if the provided token ID is not attached or if it is a managed token itself.
+     * @custom:error ManagedNFTIsDisabled Thrown if the managed token is currently disabled.
+     */
+    function onDepositToAttachedNFT(uint256 tokenId_, uint256 amount_) external;
 }

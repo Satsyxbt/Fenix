@@ -309,7 +309,57 @@ describe('ManagedNFTManager Contract', function () {
       expect(await managedNFTManager.managedTokensInfo(tokenId)).to.be.deep.eq([true, false, ZERO_ADDRESS]);
     });
   });
+  describe('onDepositToAttachedNFT', async () => {
+    describe('fail if', async () => {
+      beforeEach(async () => {
+        managedNFTManager = await deployManagedNFTManager(
+          signers.deployer,
+          signers.proxyAdmin.address,
+          signers.blastGovernor.address,
+          signers.fenixTeam.address,
+          signers.fenixTeam.address,
+        );
+        await deployed.votingEscrow.updateAddress('managedNFTManager', managedNFTManager.target);
+        await deployed.voter.updateAddress('managedNFTManager', managedNFTManager.target);
+        strategyFactory = (await ethers.getContractAt(
+          'CompoundVeFNXManagedNFTStrategyFactoryUpgradeable',
+          (
+            await deployTransaperntUpgradeableProxy(
+              signers.deployer,
+              signers.proxyAdmin.address,
+              await (
+                await ethers.deployContract('CompoundVeFNXManagedNFTStrategyFactoryUpgradeable', [signers.blastGovernor.address])
+              ).getAddress(),
+            )
+          ).target,
+        )) as CompoundVeFNXManagedNFTStrategyFactoryUpgradeable;
 
+        await strategyFactory.initialize(
+          signers.blastGovernor.address,
+          (
+            await ethers.deployContract('CompoundVeFNXManagedNFTStrategyUpgradeable', [signers.blastGovernor.address])
+          ).target,
+          (
+            await ethers.deployContract('SingelTokenVirtualRewarderUpgradeable', [signers.blastGovernor.address])
+          ).target,
+          managedNFTManager.target,
+          routerV2PathProvider.target,
+        );
+      });
+      it('fail if call from not votingEscrow', async () => {
+        await expect(managedNFTManager.connect(signers.otherUser1).onDepositToAttachedNFT(1, 1)).to.be.revertedWithCustomError(
+          managedNFTManager,
+          'AccessDenied',
+        );
+      });
+      it('fail if lock not attached', async () => {
+        await expect(managedNFTManager.connect(signers.fenixTeam).onDepositToAttachedNFT(1, 1)).to.be.revertedWithCustomError(
+          managedNFTManager,
+          'IncorrectUserNFT',
+        );
+      });
+    });
+  });
   describe('attach & dettach', async () => {
     describe('fail if', async () => {
       beforeEach(async () => {

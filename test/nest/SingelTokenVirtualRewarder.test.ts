@@ -121,7 +121,63 @@ describe('SingelTokenVirtualRewarder Contract', function () {
     it('fail if call with zero amount param', async () => {
       await expect(rewarder.connect(strategy).deposit(1, 0)).to.be.revertedWithCustomError(rewarder, 'ZeroAmount');
     });
+    describe('correct multi time user deposit', async () => {
+      let depositedAmount = ethers.parseEther('1');
+      let tokenId = 1;
 
+      beforeEach(async () => {
+        expect(await rewarder.balanceOf(tokenId)).to.be.eq(ZERO);
+        expect(await rewarder.totalSupply()).to.be.eq(ZERO);
+        expect(await rewarder.tokensInfo(tokenId)).to.be.deep.eq([0, 0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 0)).to.be.deep.eq([0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 1)).to.be.deep.eq([0, 0]);
+      });
+
+      it(`correct deposit one time and emit  event`, async () => {
+        let tx = await rewarder.connect(strategy).deposit(tokenId, depositedAmount);
+        await expect(tx)
+          .to.be.emit(rewarder, 'Deposit')
+          .withArgs(tokenId, depositedAmount, await currentEpoch());
+        expect(await rewarder.balanceOf(tokenId)).to.be.eq(depositedAmount);
+        expect(await rewarder.balanceCheckpoints(tokenId, 0)).to.be.deep.eq([0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 1)).to.be.deep.eq([await currentEpoch(), depositedAmount]);
+        expect(await rewarder.tokensInfo(tokenId)).to.be.deep.eq([depositedAmount, 1, 0]);
+        expect(await rewarder.totalSupply()).to.be.eq(depositedAmount);
+      });
+      it(`corret deposit multi time `, async () => {
+        let tx = await rewarder.connect(strategy).deposit(tokenId, depositedAmount);
+        await expect(tx)
+          .to.be.emit(rewarder, 'Deposit')
+          .withArgs(tokenId, depositedAmount, await currentEpoch());
+        expect(await rewarder.balanceOf(tokenId)).to.be.eq(depositedAmount);
+        expect(await rewarder.balanceCheckpoints(tokenId, 0)).to.be.deep.eq([0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 1)).to.be.deep.eq([await currentEpoch(), depositedAmount]);
+        expect(await rewarder.tokensInfo(tokenId)).to.be.deep.eq([depositedAmount, 1, 0]);
+        expect(await rewarder.totalSupply()).to.be.eq(depositedAmount);
+        tx = await rewarder.connect(strategy).deposit(tokenId, depositedAmount / BigInt(2));
+        await expect(tx)
+          .to.be.emit(rewarder, 'Deposit')
+          .withArgs(tokenId, depositedAmount / BigInt(2), await currentEpoch());
+        expect(await rewarder.balanceOf(tokenId)).to.be.eq(depositedAmount + depositedAmount / BigInt(2));
+        expect(await rewarder.balanceCheckpoints(tokenId, 0)).to.be.deep.eq([0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 1)).to.be.deep.eq([
+          await currentEpoch(),
+          depositedAmount + depositedAmount / BigInt(2),
+        ]);
+        expect(await rewarder.tokensInfo(tokenId)).to.be.deep.eq([depositedAmount + depositedAmount / BigInt(2), 1, 0]);
+        expect(await rewarder.totalSupply()).to.be.eq(depositedAmount + depositedAmount / BigInt(2));
+
+        tx = await rewarder.connect(strategy).deposit(tokenId, depositedAmount / BigInt(2));
+        await expect(tx)
+          .to.be.emit(rewarder, 'Deposit')
+          .withArgs(tokenId, depositedAmount / BigInt(2), await currentEpoch());
+        expect(await rewarder.balanceOf(tokenId)).to.be.eq(depositedAmount + depositedAmount);
+        expect(await rewarder.balanceCheckpoints(tokenId, 0)).to.be.deep.eq([0, 0]);
+        expect(await rewarder.balanceCheckpoints(tokenId, 1)).to.be.deep.eq([await currentEpoch(), depositedAmount + depositedAmount]);
+        expect(await rewarder.tokensInfo(tokenId)).to.be.deep.eq([depositedAmount + depositedAmount, 1, 0]);
+        expect(await rewarder.totalSupply()).to.be.eq(depositedAmount + depositedAmount);
+      });
+    });
     describe('correct first user deposit', async () => {
       let tx: any;
       let depositedAmount = BigInt(10);

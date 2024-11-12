@@ -310,6 +310,16 @@ interface IVoter {
     function claimBribes(address[] memory _bribes, address[][] memory _tokens) external;
 
     /**
+     * @notice Handles the deposit of voting power to a managed NFT.
+     * @dev This function is called after tokens are deposited into the Voting Escrow contract for a managed NFT.
+     *      Only callable by the Voting Escrow contract.
+     * @param tokenId_ The ID of the token that has received the deposit.
+     * @param managedTokenId_ The ID of the managed token receiving the voting power.
+     * @custom:error AccessDenied Thrown if the caller is not the Voting Escrow contract.
+     */
+    function onDepositToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external;
+
+    /**
      * @notice Attaches a tokenId to a managed tokenId.
      * @param tokenId_ The user's tokenId to be attached.
      * @param managedTokenId_ The managed tokenId to attach to.
