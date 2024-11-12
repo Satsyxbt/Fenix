@@ -27,7 +27,22 @@
   },
   {
     "inputs": [],
+    "name": "AmountMoreThenAvailabelToSwapByThisDirection",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientAvailableAmountToWithdraw",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidAddressKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPercentageSum",
     "type": "error"
   },
   {
@@ -38,6 +53,16 @@
   {
     "inputs": [],
     "name": "NotRegisteredBefore",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SwapNotAvailableForDirection",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroTokensToClaim",
     "type": "error"
   },
   {
@@ -71,25 +96,37 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "token",
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "address[]",
-        "name": "holders",
-        "type": "address[]"
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "totalClaimedAmount",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "totalClaimedAmount",
+        "name": "toOthersYieldDirectionDistributed",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toIncentivesYieldDirectionDistributed",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toRiseYieldDirectionDistributed",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toBribesYieldDirectionDistributed",
         "type": "uint256"
       }
     ],
@@ -107,9 +144,9 @@
       },
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "direction",
+        "type": "uint8"
       },
       {
         "indexed": true,
@@ -250,7 +287,57 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "direction",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isAvailableToSwapToTargetTokens",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateDirectionAvailableToSwapToTargetToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "toOthersPercentage",
+        "type": "uint256"
+      },
+      {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "toIncentivesPercentage",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "toRisePercentage",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "toBribesPercentage",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateYieldDistributionPercentage",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "caller",
         "type": "address"
@@ -260,6 +347,12 @@
         "internalType": "address",
         "name": "recipient",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "direction",
+        "type": "uint8"
       },
       {
         "indexed": true,
@@ -292,7 +385,33 @@
   },
   {
     "inputs": [],
+    "name": "TOKEN_CLAIMER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "TOKEN_HOLDER_ADDER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "TOKEN_SWAPER_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -342,11 +461,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "recipient_",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "offset_",
         "type": "uint256"
@@ -376,11 +490,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "recipient_",
-        "type": "address"
-      },
-      {
         "internalType": "address[]",
         "name": "holders_",
         "type": "address[]"
@@ -400,13 +509,13 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "token_",
-        "type": "address"
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "yieldDirectionType_",
+        "type": "uint8"
       },
       {
         "internalType": "address",
-        "name": "recipient_",
+        "name": "token_",
         "type": "address"
       },
       {
@@ -449,6 +558,100 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "direction_",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "token_",
+        "type": "address"
+      }
+    ],
+    "name": "getYieldDirectionTokenInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "totalAccumulated",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "available",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IBlastRebasingTokensGovernor.TokenAccountingInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "tokens_",
+        "type": "address[]"
+      }
+    ],
+    "name": "getYieldDirectionsInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+            "name": "direction",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "distributionPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAvailableToSwapToTargetTokens",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "totalAccumulated",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "available",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IBlastRebasingTokensGovernor.TokenAccountingInfoView[]",
+            "name": "tokensInfo",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IBlastRebasingTokensGovernor.YieldDistributionDiresctionsInfoView[]",
+        "name": "array",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -688,6 +891,52 @@
   {
     "inputs": [
       {
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "yieldDirectionType_",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "isAvailableToSwapToTargetTokens_",
+        "type": "bool"
+      }
+    ],
+    "name": "setDirectionAvailableToSwapToTargetToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "toOthersPercentage_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "toIncentivesPercentage_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "toRisePercentage_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "toBribesPercentage_",
+        "type": "uint256"
+      }
+    ],
+    "name": "setYieldDistributionDirectionsPercentage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes4",
         "name": "interfaceId",
         "type": "bytes4"
@@ -743,6 +992,11 @@
   {
     "inputs": [
       {
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "yieldDirectionType_",
+        "type": "uint8"
+      },
+      {
         "internalType": "address",
         "name": "token_",
         "type": "address"
@@ -761,6 +1015,30 @@
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "yieldDistributionDirectionInfo",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "distributionPercentage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isAvailableToSwapToTargetTokens",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

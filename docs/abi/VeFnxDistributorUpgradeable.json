@@ -17,12 +17,12 @@
   },
   {
     "inputs": [],
-    "name": "ArraysLengthMismatch",
+    "name": "InsufficientBalance",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "InsufficientBalance",
+    "name": "ZeroRecipientAddress",
     "type": "error"
   },
   {
@@ -53,7 +53,7 @@
         "type": "uint256"
       }
     ],
-    "name": "AridropVeFnx",
+    "name": "AirdropVeFnx",
     "type": "event"
   },
   {
@@ -108,6 +108,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "recoverAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RecoverToken",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "acceptOwnership",
     "outputs": [],
@@ -117,14 +136,31 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "recipients_",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "amounts_",
-        "type": "uint256[]"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "withPermanentLock",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "managedTokenIdForAttach",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVeFnxDistributor.AidropRow[]",
+        "name": "rows_",
+        "type": "tuple[]"
       }
     ],
     "name": "distributeVeFnx",
@@ -192,6 +228,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "recoverAmount_",
+        "type": "uint256"
+      }
+    ],
+    "name": "recoverTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
