@@ -54,6 +54,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
         address _gauge;
         address _externalBribeAddress;
         address _internalBribeAddress;
+        uint256 emissionReward;
         uint totalVotesOnGauge; // Weight of votes of a pair     Eg   12000veCHR voted
         uint totalVotesOnGaugeByUser; // Weight of votes of a pair from the user     Eg   you voted 1200veCHR on this pair
         Bribes externalBribeReward;
@@ -184,6 +185,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                     }
                 }
                 IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+                Pairs[j].emissionReward = IGauge(_gauge).earned(_user);
 
                 // get external
                 _bribe = state.externalBribe;
@@ -237,6 +239,7 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
                     }
                 }
                 IVoter.GaugeState memory state = voter.getGaugeState(_gauge);
+                Pairs[j].emissionReward = IGauge(_gauge).earned(_user);
 
                 // get external
                 _bribe = state.externalBribe;
