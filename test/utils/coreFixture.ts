@@ -28,7 +28,6 @@ import {
   Fenix,
   PairFactoryUpgradeable,
   TransparentUpgradeableProxy,
-  VeArtProxyUpgradeable,
   VotingEscrowUpgradeableV2,
   PairFactoryUpgradeable__factory,
   FeesVaultUpgradeable,
@@ -51,6 +50,7 @@ import {
   VoterUpgradeableV2__factory,
   CompoundVeFNXManagedNFTStrategyUpgradeable,
   SingelTokenVirtualRewarderUpgradeable,
+  VeArtProxy,
 } from '../../typechain-types';
 import { setCode } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import { BLAST_PREDEPLOYED_ADDRESS, GaugeType, USDB_PREDEPLOYED_ADDRESS, WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from './constants';
@@ -61,6 +61,7 @@ import {
   AlgebraFactoryUpgradeable,
 } from '../../lib/fenix-dex-v3/src/core/typechain';
 import { NonfungiblePositionManager, SwapRouter } from '@cryptoalgebra/integral-periphery/typechain';
+import { ART_RPOXY_PARTS } from '../../utils/ArtProxy';
 
 export type SignersList = {
   deployer: HardhatEthersSigner;
@@ -78,8 +79,7 @@ export type CoreFixtureDeployed = {
   voter: VoterUpgradeableV2;
   fenix: Fenix;
   minter: MinterUpgradeable;
-  veArtProxy: VeArtProxyUpgradeable;
-  veArtProxyImplementation: VeArtProxyUpgradeable;
+  veArtProxy: VeArtProxy;
   votingEscrow: VotingEscrowUpgradeableV2;
   v2PairFactory: PairFactoryUpgradeable;
   v2PairImplementation: Pair;
@@ -178,16 +178,17 @@ export async function deployFenixToken(deployer: HardhatEthersSigner, governor: 
   return await factory.connect(deployer).deploy(governor, minter);
 }
 
-export async function deployArtProxy(
-  deployer: HardhatEthersSigner,
-  proxyAdmin: string,
-): Promise<{ instance: VeArtProxyUpgradeable; implementation: VeArtProxyUpgradeable }> {
-  const factory = await ethers.getContractFactory('VeArtProxyUpgradeable');
-  const implementation = await factory.connect(deployer).deploy();
-  const proxy = await deployTransaperntUpgradeableProxy(deployer, proxyAdmin, await implementation.getAddress());
-  const attached = factory.attach(proxy.target) as any as VeArtProxyUpgradeable;
-
-  return { instance: attached, implementation: implementation };
+export async function deployArtProxy(deployer: HardhatEthersSigner, votingEscrow: string, managedNFTManager: string): Promise<VeArtProxy> {
+  const staticProxy = await ethers.deployContract('VeArtProxyStatic', [
+    ART_RPOXY_PARTS.lockedIcon,
+    ART_RPOXY_PARTS.unlockedIcon,
+    ART_RPOXY_PARTS.transferablePart,
+    ART_RPOXY_PARTS.notTransferablePart,
+  ]);
+  await staticProxy.setStartPart(ART_RPOXY_PARTS.startPart);
+  await staticProxy.setEndPart(ART_RPOXY_PARTS.endPart);
+  const factory = await ethers.getContractFactory('VeArtProxy');
+  return await factory.connect(deployer).deploy(staticProxy.target, votingEscrow, managedNFTManager);
 }
 
 export async function deployVotingEscrow(
@@ -429,7 +430,6 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
   const signers = await getSigners();
 
   const fenix = await deployFenixToken(signers.deployer, signers.blastGovernor.address, signers.deployer.address);
-  const resultArtProxy = await deployArtProxy(signers.deployer, signers.proxyAdmin.address);
 
   const voter = await deployVoterWithoutInitialize(signers.deployer, signers.proxyAdmin.address);
 
@@ -438,7 +438,7 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
     signers.proxyAdmin.address,
     signers.blastGovernor.address,
     await fenix.getAddress(),
-    await resultArtProxy.instance.getAddress(),
+    ethers.ZeroAddress,
   );
 
   const minter = await deployMinter(
@@ -541,13 +541,14 @@ export async function completeFixture(): Promise<CoreFixtureDeployed> {
 
   await voter.updateAddress('managedNFTManager', managedNFTManager);
 
+  const resultArtProxy = await deployArtProxy(signers.deployer, votingEscrow.target.toString(), managedNFTManager.target.toString());
+
   return {
     signers: signers,
     voter: voter,
     fenix: fenix,
     minter: minter,
-    veArtProxy: resultArtProxy.instance,
-    veArtProxyImplementation: resultArtProxy.implementation,
+    veArtProxy: resultArtProxy,
     votingEscrow: votingEscrow,
     v2PairFactory: v2PairFactory,
     v2PairImplementation: v2PairImplementation,

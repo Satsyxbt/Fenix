@@ -5,13 +5,20 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 library NumberFormatter {
     using Strings for uint256;
 
-    function formatNumber(uint256 number, uint8 decimals) internal pure returns (string memory) {
+    function formatNumber(uint256 number, uint8 decimals, uint8 limitFractionNumbers) internal pure returns (string memory) {
         uint256 integerPart = number / 10 ** decimals;
         uint256 fractionalPart = number % 10 ** decimals;
         if (decimals == 0) {
             return withThousandSeparators(integerPart);
         }
-        return string(abi.encodePacked(withThousandSeparators(integerPart), ".", toStringWithLeadingZeros(fractionalPart, decimals)));
+        return
+            string(
+                abi.encodePacked(
+                    withThousandSeparators(integerPart),
+                    ".",
+                    limitFactionNumbers(toStringWithLeadingZeros(fractionalPart, decimals), limitFractionNumbers)
+                )
+            );
     }
 
     function withThousandSeparators(uint256 value) internal pure returns (string memory) {
@@ -32,6 +39,24 @@ library NumberFormatter {
             result[j - 1] = strBytes[i];
             unchecked {
                 j++;
+                i++;
+            }
+        }
+
+        return string(result);
+    }
+
+    function limitFactionNumbers(string memory strValue, uint8 limit) internal pure returns (string memory) {
+        bytes memory result = new bytes(limit);
+        bytes memory strBytes = bytes(strValue);
+        for (uint256 i; i < limit; ) {
+            if (strBytes.length > i) {
+                result[i] = strBytes[i];
+            } else {
+                result[i] = "0";
+            }
+
+            unchecked {
                 i++;
             }
         }

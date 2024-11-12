@@ -29,7 +29,7 @@
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
   "MinimalLinearVestingUpgradeable_Implementation": "0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7",
   "MinimalLinearVestingUpgradeable_Proxy": "0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820",
-  "VotingEscrowUpgradeable_Implementation": "0x3124aD28Bd19a2c001A151FFCedc3Ca0C80331cf",
+  "VotingEscrowUpgradeable_Implementation": "0xd8808140f6ea77238d5EFb7aa3E1c525994CbaDc",
   "VotingEscrowUpgradeable_Proxy": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
   "VoterUpgradeable_Implementation": "0xbD52AC3c10E41a325ba32E95F67C8D51c7A83B98",
   "VoterUpgradeable_Proxy": "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43",
@@ -62,5 +62,7 @@
   "GaugeUpgradeable_V3Pools_Implementation": "0x25a92F38002802388f4f489AA57C502DFD3c7338",
   "veFNXClaimer": "0x89A4a91aA2C5abC72531D9075AD890d23b234F58",
   "VeFnxDistributorUpgradeable_Implementation": "0xDE303e84118ed3fFbe5424123a0189DA166A3858",
-  "VeFnxDistributorUpgradeable_Proxy": "0xC69d09854EED4692603BA40e47Ed180f043a1414"
+  "VeFnxDistributorUpgradeable_Proxy": "0xC69d09854EED4692603BA40e47Ed180f043a1414",
+  "VeArtProxyStatic": "0xbDf98125C4012D0E8871B4686b5cFC8d1e70EE4e",
+  "VeArtProxy": "0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9"
 }

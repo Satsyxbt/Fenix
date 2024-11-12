@@ -44,6 +44,17 @@ describe('NumberFormmater Contract', function () {
       expect(await numberFormmater.withThousandSeparators(BigInt('112345678998765432100123'))).to.be.eq('112,345,678,998,765,432,100,123');
     });
   });
+  it('#limitFactionNumbers', async () => {
+    expect(await numberFormmater.limitFactionNumbers('', 0)).to.be.eq('');
+    expect(await numberFormmater.limitFactionNumbers('1', 0)).to.be.eq('');
+    expect(await numberFormmater.limitFactionNumbers('1', 1)).to.be.eq('1');
+    expect(await numberFormmater.limitFactionNumbers('1', 2)).to.be.eq('10');
+    expect(await numberFormmater.limitFactionNumbers('1', 3)).to.be.eq('100');
+    expect(await numberFormmater.limitFactionNumbers('12', 0)).to.be.eq('');
+    expect(await numberFormmater.limitFactionNumbers('12', 1)).to.be.eq('1');
+    expect(await numberFormmater.limitFactionNumbers('12', 2)).to.be.eq('12');
+    expect(await numberFormmater.limitFactionNumbers('12', 3)).to.be.eq('120');
+  });
   describe('#toStringWithLeadingZeros', async () => {
     it('Decimals 0 should return just one 0', async () => {
       expect(await numberFormmater.toStringWithLeadingZeros(BigInt('0'), 0)).to.be.eq('0');
@@ -68,36 +79,42 @@ describe('NumberFormmater Contract', function () {
   });
 
   describe('#formatNumber', async () => {
-    describe('Decimals 18, async() =>', async () => {
+    it('check limitFactionNumbers', async () => {
+      expect(await numberFormmater.formatNumber(ethers.parseEther('123456789.876543210'), 18, 0)).to.be.eq('123,456,789.');
+      expect(await numberFormmater.formatNumber(ethers.parseEther('123456789.876543210'), 18, 2)).to.be.eq('123,456,789.87');
+      expect(await numberFormmater.formatNumber(ethers.parseEther('123456789.87'), 18, 1)).to.be.eq('123,456,789.8');
+      expect(await numberFormmater.formatNumber(ethers.parseEther('123456789.87'), 18, 3)).to.be.eq('123,456,789.870');
+    });
+    describe('Decimals 18, 18 fractional limit async() =>', async () => {
       const TESTS: Array<any> = [
-        [BigInt(0), '0.0'],
+        [BigInt(0), '0.000000000000000000'],
         [BigInt(1), '0.000000000000000001'],
         [BigInt(99), '0.000000000000000099'],
-        [BigInt(100), '0.0000000000000001'],
-        [BigInt(1e6), '0.000000000001'],
-        [ethers.parseEther('0.001'), '0.001'],
-        [ethers.parseEther('1'), '1.0'],
-        [ethers.parseEther('1.1111111'), '1.1111111'],
-        [ethers.parseEther('123456789.12345670012'), '123,456,789.12345670012'],
+        [BigInt(100), '0.000000000000000100'],
+        [BigInt(1e6), '0.000000000001000000'],
+        [ethers.parseEther('0.001'), '0.001000000000000000'],
+        [ethers.parseEther('1'), '1.000000000000000000'],
+        [ethers.parseEther('1.1111111'), '1.111111100000000000'],
+        [ethers.parseEther('123456789.12345670012'), '123,456,789.123456700120000000'],
       ];
       for (const iterator of TESTS) {
         it(`Should return correct string: ${iterator}`, async () => {
-          expect(await numberFormmater.formatNumber(iterator[0], 18)).to.be.eq(iterator[1]);
+          expect(await numberFormmater.formatNumber(iterator[0], 18, 18)).to.be.eq(iterator[1]);
         });
       }
     });
     describe('Decimals 6, async() =>', async () => {
       const TESTS: Array<any> = [
-        [BigInt(0), '0.0'],
+        [BigInt(0), '0.000000'],
         [BigInt(1), '0.000001'],
         [BigInt(99), '0.000099'],
-        [BigInt(100), '0.0001'],
-        [BigInt(1e6), '1.0'],
-        ['1223456787600400', '1,223,456,787.6004'],
+        [BigInt(100), '0.000100'],
+        [BigInt(1e6), '1.000000'],
+        ['1223456787600400', '1,223,456,787.600400'],
       ];
       for (const iterator of TESTS) {
         it(`Should return correct string: ${iterator}`, async () => {
-          expect(await numberFormmater.formatNumber(iterator[0], 6)).to.be.eq(iterator[1]);
+          expect(await numberFormmater.formatNumber(iterator[0], 6, 6)).to.be.eq(iterator[1]);
         });
       }
     });
@@ -113,7 +130,7 @@ describe('NumberFormmater Contract', function () {
       ];
       for (const iterator of TESTS) {
         it(`Should return correct string: ${iterator}`, async () => {
-          expect(await numberFormmater.formatNumber(iterator[0], 0)).to.be.eq(iterator[1]);
+          expect(await numberFormmater.formatNumber(iterator[0], 0, 2)).to.be.eq(iterator[1]);
         });
       }
     });
