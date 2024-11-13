@@ -164,7 +164,11 @@ describe('VotingEscrowV2 Contract', function () {
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(managedNFTId)).to.be.eq(ethers.parseEther('3'));
 
-        await votingEscrow.connect(signers.otherUser2).withdraw(2);
+        let tx = await votingEscrow.connect(signers.otherUser2).withdraw(2);
+        await expect(tx)
+          .to.be.emit(votingEscrow, 'Withdraw')
+          .withArgs(signers.otherUser2, 2, ethers.parseEther('20'), (await tx.getBlock())?.timestamp);
+        await expect(tx).to.be.emit(votingEscrow, 'Transfer').withArgs(signers.otherUser2.address, ethers.ZeroAddress, 2);
 
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(1)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(2)).to.be.eq(ZERO);

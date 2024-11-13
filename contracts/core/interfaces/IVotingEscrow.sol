@@ -107,6 +107,14 @@ interface IVotingEscrow is IERC721Upgradeable {
     event Withdraw(address indexed provider, uint256 tokenId, uint256 value, uint256 ts);
 
     /**
+     * @notice Emitted when two veNFT locks are merged.
+     * @param provider The address of the entity initiating the merge.
+     * @param tokenIdFrom The ID of the token being merged from.
+     * @param tokenIdTo The ID of the token being merged into.
+     */
+    event Merge(address indexed provider, uint256 tokenIdFrom, uint256 tokenIdTo);
+
+    /**
      * @notice Emitted when the total supply of voting power changes.
      * @param prevSupply The previous total supply of voting power.
      * @param supply The new total supply of voting power.

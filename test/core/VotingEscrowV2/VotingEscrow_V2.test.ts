@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
   ERC20Mock,
+  Fenix,
   ManagedNFTManagerMock,
   ManagedNFTManagerUpgradeable,
   VeArtProxy,
@@ -638,7 +639,12 @@ describe('VotingEscrow_V2', function () {
       let nftStateBefore = await VotingEscrow.nftStates(2);
 
       expect(await VotingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('2') / 26n);
-      await VotingEscrow.connect(signers.user1).merge(1, 2);
+      let tx = await VotingEscrow.connect(signers.user1).merge(1, 2);
+      await expect(tx).to.be.emit(VotingEscrow, 'Merge').withArgs(signers.user1.address, 1, 2);
+      await expect(tx).to.be.emit(VotingEscrow, 'Transfer').withArgs(signers.user1.address, ethers.ZeroAddress, 1);
+      await expect(tx)
+        .to.be.emit(VotingEscrow, 'Withdraw')
+        .withArgs(signers.user1.address, 1, ethers.parseEther('1'), (await tx.getBlock())?.timestamp);
 
       expect((await VotingEscrow.nftStates(2)).locked.end).to.be.eq(nftStateBefore.locked.end);
       expect(await VotingEscrow.balanceOf(signers.user1.address)).to.be.eq(1);
@@ -656,6 +662,7 @@ describe('VotingEscrow_V2', function () {
     it('success merge locks when to token is permanent locked', async () => {
       await VotingEscrow.connect(signers.user1).lockPermanent(2);
       await VotingEscrow.connect(signers.user1).merge(1, 2);
+
       expect((await VotingEscrow.nftStates(2)).locked.end).to.be.eq(0);
       expect((await VotingEscrow.nftStates(2)).locked.isPermanentLocked).to.be.true;
       expect((await VotingEscrow.nftStates(2)).locked.amount).to.be.eq(ethers.parseEther('2'));
@@ -1187,6 +1194,10 @@ describe('VotingEscrow_V2', function () {
           });
 
           it('emit events', async () => {
+            await expect(tx)
+              .to.be.emit(VotingEscrow, 'Withdraw')
+              .withArgs(signers.user1.address, nftId, ONE_ETHER, (await tx.getBlock())?.timestamp);
+            await expect(tx).to.be.emit(VotingEscrow, 'Transfer').withArgs(signers.user1.address, ethers.ZeroAddress, nftId);
             await expect(tx).to.be.emit(token, 'Transfer').withArgs(VotingEscrow.target, signers.user1.address, ONE_ETHER);
           });
 
@@ -1212,6 +1223,10 @@ describe('VotingEscrow_V2', function () {
 
             it('emit events', async () => {
               await expect(tx).to.be.emit(token, 'Transfer').withArgs(VotingEscrow.target, signers.user1.address, ONE_ETHER);
+              await expect(tx).to.be.emit(VotingEscrow, 'Transfer').withArgs(signers.user1.address, ethers.ZeroAddress, nftId2);
+              await expect(tx)
+                .to.be.emit(VotingEscrow, 'Withdraw')
+                .withArgs(signers.user1.address, nftId2, ONE_ETHER, (await tx.getBlock())?.timestamp);
             });
 
             it('should fail if try withdraw nft again', async () => {

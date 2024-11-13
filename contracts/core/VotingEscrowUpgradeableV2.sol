@@ -251,6 +251,7 @@ contract VotingEscrowUpgradeableV2 is
             DepositType.MERGE_TYPE,
             false
         );
+        emit Merge(_msgSender(), tokenFromId_, tokenToId_);
     }
 
     /**
@@ -576,6 +577,7 @@ contract VotingEscrowUpgradeableV2 is
         supply -= amount;
         _burn(tokenId_);
         _updateNftLocked(tokenId_, LockedBalance(0, 0, false));
+        emit Withdraw(_msgSender(), tokenId_, amount, block.timestamp);
         emit Supply(supplyBefore, supplyBefore - amount);
     }
 
