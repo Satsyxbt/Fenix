@@ -14,8 +14,8 @@
   "VeBoostUpgradeable_Implementation": "0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7",
   "VeFnxDistributorUpgradeable_Implementation": "0x9d15070F302F3392674C33403C4396312EA566E9",
   "VeFnxSplitMerklAidropUpgradeable_Implementation": "0x1D099397B2049Ce63eE051801E5A774A4E60F6cd",
-  "VoterUpgradeable_Implementation": "0x932C74DD5504D94AaF5d62195966E00F6d897364",
-  "VotingEscrowUpgradeable_Implementation": "0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F",
+  "VoterUpgradeable_Implementation": "0xA709D35d4192B9e055B132a3316a38765dA87c2D",
+  "VotingEscrowUpgradeable_Implementation": "0xb83B559BfdD062feC4A0B2db6A938E7B25d08407",
   "Pair_Implementation": "0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb",
   "PerpetualsGaugeUpgradeable_Implementation": "0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622",
   "PerpetualsTradersRewarderUpgradeable_Implementation": "0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564",
@@ -25,9 +25,9 @@
   "CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation": "0xdC2a9AA0c13576CE714DCF4e81145D486444F103",
   "CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation": "0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1",
   "RouterV2PathProviderUpgradeable_Implementation": "0xbD7852f7e21bc23944A2809315385733C734369c",
-  "ManagedNFTManagerUpgradeable_Implementation": "0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89",
+  "ManagedNFTManagerUpgradeable_Implementation": "0x5db6c3B0F80D28ca0c4b96167C5957c44561171d",
   "PairAPIUpgradeable_Implementation": "0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71",
-  "RewardAPIUpgradeable_Implementation": "0xd45d0795a2918669a44CcbE1398d3af70Acb5699",
+  "RewardAPIUpgradeable_Implementation": "0xd791D71Fe726E226C1A9d04b73EecB4Eaa666E76",
   "VeNFTAPIUpgradeable_Implementation": "0x38Fec988ebCd4159d655295Aa37C321382dBb766",
   "UtilsUpgradeable_Implementation": "0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f",
   "Fenix": "0x52f847356b38720B55ee18Cb3e094ca11C85A192",
@@ -64,5 +64,7 @@
   "MinimalLinearVestingUpgradeable_Proxy": "0xF886dB527edA423a160B89eDe5505E644C581E9e",
   "GaugeUpgradeable_V2Pools_Implementation": "0x67d391Aa49ddD09E57b0b9226e2891e408621e9b",
   "GaugeUpgradeable_V3Pools_Implementation": "0x58D12813E77B87c67ccC9312598c8E1d35B96E23",
-  "veFNXClaimer": "0x3191EF613f297b53f593fEa5044ce7A6B19985A5"
+  "veFNXClaimer": "0x3191EF613f297b53f593fEa5044ce7A6B19985A5",
+  "VeArtProxyStatic": "0xd4B31701DDBdC69bb4e8aB7118d73151CaC5c90F",
+  "VeArtProxy": "0xafDC3756E08305Cb4F856B3511A72eD5D50d5b11"
 }
