@@ -85,6 +85,8 @@
 
 ### Withdraw
 
+**!!! IMPORTANT: has not been emit in the past, you need to track it through Transfer to zero address (Burn ERC721), tracking the only of this event will not cover the moments before it appears**
+
 ```solidity
     /**
      * @notice Emitted when a withdrawal is made from a lock.
@@ -108,6 +110,8 @@
 **Methods Emitting**:
 - `withdraw`
   - **Possible Emissions**: 1 per method call.
+- `merge`
+  - **Possible Emissions**: 1 per method call. (For a fromTokenId that is merging)
 
 ### Supply
 
@@ -176,5 +180,32 @@
 
 **Methods Emitting**:
 - `unlockPermanent`
+  - **Possible Emissions**: 1 per method call.
+
+
+### Merge
+
+**!!! IMPORTANT: has not been emit out in the past, you need to track it through Transfer to zero address (Burn ERC721) and Deposit with Merge type, tracking the only of this event will not cover the moments before it appears**
+
+```solidity
+    /**
+     * @notice Emitted when two veNFT locks are merged.
+     * @param provider The address of the entity initiating the merge.
+     * @param tokenIdFrom The ID of the token being merged from.
+     * @param tokenIdTo The ID of the token being merged into.
+     */
+    event Merge(address indexed provider, uint256 tokenIdFrom, uint256 tokenIdTo);
+```
+
+**Description**: Emitted when two NFTs are merged into one.
+
+- `provider` (address): The address of the user who initiated the merge.
+- `tokenIdFrom` (uint256): The ID of the NFT that is being merged from.
+- `tokenIdTo` (uint256): The ID of the NFT that is being merged into.
+
+**When Emitted**: When a user merges two voting escrow NFTs to combine their locked balances and voting power.
+
+**Methods Emitting**:
+- `merge`
   - **Possible Emissions**: 1 per method call.
 
