@@ -1,0 +1,154 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "artProxyStatic_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "votingEscrow_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "managedNftManager_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "artProxyStatic",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "balance_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "votingPower_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lockedEnd_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isPermanentLock_",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "isTransferable_",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "isAttached_",
+        "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "nestStrategyName_",
+        "type": "string"
+      }
+    ],
+    "name": "generateSVG",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "svg",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "managedNftManager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "toDateString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId_",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "output",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "votingEscrow",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
