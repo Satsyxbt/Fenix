@@ -33,7 +33,6 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
   .setAction(async function (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) {
     const deployData = await getDeployedContractsAddressList(hre);
     const [deployer] = await hre.ethers.getSigners();
-
     const PairFactory = await hre.ethers.getContractAt(
       InstanceName.PairFactoryUpgradeable,
       deployData[AliasDeployedContracts.PairFactoryUpgradeable_Proxy],
@@ -76,14 +75,21 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       deployData[AliasDeployedContracts.GaugeFactory_V3Pools_Proxy],
     );
 
+    console.log('Start getting data....');
+
     const gaugeFactoryV2PoolsState = await getGaugeFactoryState(hre, GaugeFactory_V2Pools_Proxy);
     const gaugeFactoryV3PoolsState = await getGaugeFactoryState(hre, GaugeFactory_V3Pools_Proxy);
 
     const votingEscrowState = await getVotingEscrowState(VotingEscrowUpgradeable);
+
+    console.log('getVoterState data....');
+
     const voterState = await getVoterState(VoterUpgradeable);
     const veFnxSplitMerklAidropState = await getVeFnxSplitMerklAidropState(VeFnxSplitMerklAidropUpgradeable);
 
     const veBoostState = await getVeBoostState(hre, VeBoostUpgradeable);
+
+    console.log('getPairFactoryState data....');
 
     const pairFactoryState = await getPairFactoryState(PairFactory);
     const pairsInfo = await Promise.all(
@@ -101,6 +107,8 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
       minimalLinearVestingState = await getMinimalLinearVestingState(MinimalLinearVestingUpgradeable);
     } catch {}
 
+    console.log('getMinterState data....');
+
     const minterState = await getMinterState(MinterUpgradeable);
     const bribeFactoryState = await getBribeFactoryState(hre, BribeFactoryUpgradeable);
 
@@ -110,6 +118,7 @@ task('get-state', 'Get all relevant state information including PairFactory, pai
     )) as any as AlgebraFactoryUpgradeable;
 
     const algebraFactoryState = await getAlgebraFactoryState(AlgebraFactory);
+    console.log('theGraphUrl data....');
 
     const theGraphUrl = Config.chains[hre.network.name].algebraTheGraph;
     let poolsInfo: any[] = [];

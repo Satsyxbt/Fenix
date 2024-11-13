@@ -691,6 +691,8 @@ export type VoterUpgradeableState = {
   index: bigint;
   voteDelay: bigint;
   distributionWindowDuration: bigint;
+  v2Gauges: string[];
+  v3Gauges: string[];
 };
 
 export async function getVoterState(voter: VoterUpgradeableV2): Promise<VoterUpgradeableState> {
@@ -724,6 +726,16 @@ export async function getVoterState(voter: VoterUpgradeableV2): Promise<VoterUpg
     voter.distributionWindowDuration(),
   ]);
 
+  let v2Gauges: string[] = [];
+  let v3Gauges: string[] = [];
+
+  let counter = await voter.poolsCounts();
+  for (let i = 0; i < counter.v2PoolsCount; i++) {
+    v2Gauges.push(await voter.poolToGauge(await voter.v2Pools(i)));
+  }
+  for (let i = 0; i < counter.v3PoolsCount; i++) {
+    v3Gauges.push(await voter.poolToGauge(await voter.v3Pools(i)));
+  }
   return {
     address: voter.target.toString(),
     votingEscrow,
@@ -739,6 +751,8 @@ export async function getVoterState(voter: VoterUpgradeableV2): Promise<VoterUpg
     index,
     voteDelay,
     distributionWindowDuration,
+    v2Gauges,
+    v3Gauges,
   };
 }
 
