@@ -29,7 +29,7 @@
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
   "MinimalLinearVestingUpgradeable_Implementation": "0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7",
   "MinimalLinearVestingUpgradeable_Proxy": "0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820",
-  "VotingEscrowUpgradeable_Implementation": "0xd8808140f6ea77238d5EFb7aa3E1c525994CbaDc",
+  "VotingEscrowUpgradeable_Implementation": "0x7a101c0E93841bBE924d40C7B1cFfFfe2a69Dfd3",
   "VotingEscrowUpgradeable_Proxy": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
   "VoterUpgradeable_Implementation": "0xbD52AC3c10E41a325ba32E95F67C8D51c7A83B98",
   "VoterUpgradeable_Proxy": "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43",

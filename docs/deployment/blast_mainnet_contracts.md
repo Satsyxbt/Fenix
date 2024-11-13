@@ -98,7 +98,7 @@
 | **BribeFactoryUpgradeable_Implementation** | `0x32c981701cBdbA2C295427459f87fCceF57a0dA8` |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
 | **MinterUpgradeable_Implementation** | `0x081d528D4dc4a2f3424C6Bdde43F950007cEe944`  |
-| **VotingEscrowUpgradeable_Implementation** | `0x8AE906Ca9FCEF9FB07f436371F4dA9BA28f86C0F` (Future: 0xb83B559BfdD062feC4A0B2db6A938E7B25d08407)||
+| **VotingEscrowUpgradeable_Implementation** | `0xb83B559BfdD062feC4A0B2db6A938E7B25d08407` (Future: 0x7a101c0E93841bBE924d40C7B1cFfFfe2a69Dfd3)||
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
 | **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` |
@@ -108,14 +108,14 @@
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
-| **VoterUpgradeable_Implementation** | `0x932C74DD5504D94AaF5d62195966E00F6d897364` (Future: 0xA709D35d4192B9e055B132a3316a38765dA87c2D)|
+| **VoterUpgradeable_Implementation** | `0xA709D35d4192B9e055B132a3316a38765dA87c2D`|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
 | **SingelTokenVirtualRewarderUpgradeable_Implementation** | `0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196` |
 | **CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation** | `0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1` |
 | **RouterV2PathProviderUpgradeable_Implementation** | `0xbD7852f7e21bc23944A2809315385733C734369c` |
-| **ManagedNFTManagerUpgradeable_Implementation** | `0xCDA71d2F336Eb92341A9cd31E520a07C7eD99B89` (Future: 0x5db6c3B0F80D28ca0c4b96167C5957c44561171d|
+| **ManagedNFTManagerUpgradeable_Implementation** | `0x5db6c3B0F80D28ca0c4b96167C5957c44561171d`|
 | **PairAPIUpgradeable_Implementation** | `0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71` |
 | **RewardAPIUpgradeable_Implementation** | `0xd45d0795a2918669a44CcbE1398d3af70Acb5699` (Future: 0xd791D71Fe726E226C1A9d04b73EecB4Eaa666E76)|
 | **VeNFTAPIUpgradeable_Implementation** | `0x38Fec988ebCd4159d655295Aa37C321382dBb766`|

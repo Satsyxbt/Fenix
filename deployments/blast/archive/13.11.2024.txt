@@ -40,3 +40,19 @@ https://blastscan.io/address/0x5db6c3B0F80D28ca0c4b96167C5957c44561171d#code
 
 Starting deployment of RewardAPIUpgradeable...
 	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+
+
+
+Starting deployment of VotingEscrowUpgradeableV2...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+VotingEscrowUpgradeableV2 deployed at 0xB72a3A9CC6C996f594249701D1f6062ec9939E32
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Implementation:0xB72a3A9CC6C996f594249701D1f6062ec9939E32
+Verifying TransparentUpgradeableProxy at 0xB72a3A9CC6C996f594249701D1f6062ec9939E32...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV2.sol:VotingEscrowUpgradeableV2 at 0xB72a3A9CC6C996f594249701D1f6062ec9939E32
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeableV2 on the block explorer.
+https://blastscan.io/address/0xB72a3A9CC6C996f594249701D1f6062ec9939E32#code
+

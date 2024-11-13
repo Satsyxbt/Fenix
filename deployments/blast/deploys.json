@@ -15,7 +15,7 @@
   "VeFnxDistributorUpgradeable_Implementation": "0x9d15070F302F3392674C33403C4396312EA566E9",
   "VeFnxSplitMerklAidropUpgradeable_Implementation": "0x1D099397B2049Ce63eE051801E5A774A4E60F6cd",
   "VoterUpgradeable_Implementation": "0xA709D35d4192B9e055B132a3316a38765dA87c2D",
-  "VotingEscrowUpgradeable_Implementation": "0xb83B559BfdD062feC4A0B2db6A938E7B25d08407",
+  "VotingEscrowUpgradeable_Implementation": "0xB72a3A9CC6C996f594249701D1f6062ec9939E32",
   "Pair_Implementation": "0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb",
   "PerpetualsGaugeUpgradeable_Implementation": "0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622",
   "PerpetualsTradersRewarderUpgradeable_Implementation": "0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564",
