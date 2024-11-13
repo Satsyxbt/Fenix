@@ -6,10 +6,10 @@ import {
   ERC20Mock,
   ManagedNFTManagerMock,
   ManagedNFTManagerUpgradeable,
-  VeArtProxyUpgradeable,
+  VeArtProxy,
   VotingEscrowUpgradeableV2,
 } from '../../../typechain-types';
-import completeFixture, { deployERC20MockToken, mockBlast } from '../../utils/coreFixture';
+import completeFixture, { deployArtProxy, deployERC20MockToken, mockBlast } from '../../utils/coreFixture';
 
 import { ContractTransactionResponse } from 'ethers';
 import { ERRORS, ONE, ONE_ETHER, VotingEscrowDepositType } from '../../utils/constants';
@@ -47,7 +47,6 @@ async function fixture() {
   await mockBlast();
   let signers = await ethers.getSigners();
   let VotingEscrow_Implementation = await ethers.deployContract('VotingEscrowUpgradeableV2', [signers[1].address]);
-  let VeArtProxyUpgradeable = await ethers.deployContract('VeArtProxyUpgradeable');
 
   let VotingEscrow = (await ethers.deployContract('TransparentUpgradeableProxy', [
     VotingEscrow_Implementation.target,
@@ -56,6 +55,7 @@ async function fixture() {
   ])) as any;
   VotingEscrow = await ethers.getContractAt('VotingEscrowUpgradeableV2', VotingEscrow.target);
   let ManagedNFTManagerMock = await ethers.deployContract('ManagedNFTManagerMock');
+
   return {
     signers: {
       deployer: signers[0],
@@ -67,7 +67,6 @@ async function fixture() {
     },
     VotingEscrow_Implementation: VotingEscrow_Implementation,
     VotingEscrow: VotingEscrow,
-    VeArtProxyUpgradeable: VeArtProxyUpgradeable,
     ManagedNFTManagerMock: ManagedNFTManagerMock,
   };
 }
@@ -75,7 +74,7 @@ async function fixture() {
 describe('VotingEscrow_V2', function () {
   let VotingEscrow: VotingEscrowUpgradeableV2;
   let VotingEscrow_Implementation: VotingEscrowUpgradeableV2;
-  let VeArtProxyUpgradeable: VeArtProxyUpgradeable;
+  let VeArtProxyUpgradeable: VeArtProxy;
   let signers: Signers;
   let token: ERC20Mock;
   let initializeTx: ContractTransactionResponse;
@@ -86,13 +85,15 @@ describe('VotingEscrow_V2', function () {
     const deployed = await fixture();
     VotingEscrow = deployed.VotingEscrow;
     VotingEscrow_Implementation = deployed.VotingEscrow_Implementation;
-    VeArtProxyUpgradeable = deployed.VeArtProxyUpgradeable;
+
     managedNFTManager = deployed.ManagedNFTManagerMock;
     signers = deployed.signers;
     voter = signers.others[0];
     veBoost = signers.others[1];
     token = await deployERC20MockToken(signers.deployer, 'MOK', 'MOK', 18);
     initializeTx = await VotingEscrow.initialize(signers.blastGovernor.address, token.target);
+    VeArtProxyUpgradeable = await deployArtProxy(signers.deployer, VotingEscrow.target.toString(), managedNFTManager.target.toString());
+
     await VotingEscrow.updateAddress('voter', voter.address);
     await VotingEscrow.updateAddress('veBoost', veBoost.address);
     await VotingEscrow.updateAddress('artProxy', VeArtProxyUpgradeable.target);
@@ -945,7 +946,7 @@ describe('VotingEscrow_V2', function () {
       await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, 2 * WEEK, signers.user1.address, false, false, 0);
       // skip equal voting poower etc, only tokenId with common data
       expect((await VotingEscrow.tokenURI(1)).length).to.be.greaterThan(40);
-      expect((await VotingEscrow.tokenURI(1)).slice(0, 40)).to.be.eq((await VeArtProxyUpgradeable.tokenURI(1, 1, 1, 1)).slice(0, 40));
+      expect((await VotingEscrow.tokenURI(1)).slice(0, 40)).to.be.eq((await VeArtProxyUpgradeable.tokenURI(1)).slice(0, 40));
     });
   });
 

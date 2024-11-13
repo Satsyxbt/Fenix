@@ -31,14 +31,27 @@ const LOW_CONTRACT_SIZE_COMPILER_SETTINGS: SolcUserConfig = {
     viaIR: true,
     optimizer: {
       enabled: true,
-      runs: 656,
+      runs: 540,
     },
     metadata: {
       bytecodeHash: 'none',
     },
   },
 };
-
+const LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS: SolcUserConfig = {
+  version: '0.8.19',
+  settings: {
+    evmVersion: 'paris',
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 1,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+};
 const config: HardhatUserConfig = {
   sourcify: {
     enabled: false,
@@ -96,6 +109,8 @@ const config: HardhatUserConfig = {
     compilers: [DEFAULT_COMPILER_SETTINGS],
     overrides: {
       'contracts/core/VotingEscrowUpgradeableV2.sol': LOW_CONTRACT_SIZE_COMPILER_SETTINGS,
+      'contracts/core/VeArtProxy.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,
+      'contracts/core/VeArtProxyStatic.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,
     },
   },
   warnings: {

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "../integration/BlastGovernorClaimableSetup.sol";
 import "../nest/interfaces/IManagedNFTManager.sol";
 import "./interfaces/IVotingEscrow.sol";
-import "./interfaces/IVeArtProxyUpgradeable.sol";
+import "./interfaces/IVeArtProxy.sol";
 import "./interfaces/IVeBoost.sol";
 import "./interfaces/IVoter.sol";
 import "./libraries/LibVotingEscrowValidation.sol";
@@ -376,18 +376,22 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
+     * @dev See {IVotingEscrow-isTransferable}.
+     */
+    function isTransferable(uint256 tokenId_) public view override returns (bool) {
+        _requireMinted(tokenId_);
+        return
+            !(nftStates[tokenId_].isVoted ||
+                nftStates[tokenId_].isAttached ||
+                IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_));
+    }
+
+    /**
      * @dev See {IERC721-tokenURI}.
      */
     function tokenURI(uint256 tokenId_) public view override returns (string memory) {
         _requireMinted(tokenId_);
-        LockedBalance memory locked = nftStates[tokenId_].locked;
-        return
-            IVeArtProxyUpgradeable(artProxy).tokenURI(
-                tokenId_,
-                balanceOfNftIgnoreOwnershipChange(tokenId_),
-                locked.end,
-                LibVotingEscrowUtils.toUint256(locked.amount)
-            );
+        return IVeArtProxy(artProxy).tokenURI(tokenId_);
     }
 
     /**

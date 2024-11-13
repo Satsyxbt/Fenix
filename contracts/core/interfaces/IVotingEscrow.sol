@@ -155,6 +155,14 @@ interface IVotingEscrow is IERC721Upgradeable {
     function isApprovedOrOwner(address sender, uint256 tokenId) external view returns (bool);
 
     /**
+     * @notice Checks if a specific NFT token is transferable.
+     * @dev The token is considered non-transferable if it is a managed NFT, currently voted, or attached to another NFT.
+     * @param tokenId_ The ID of the NFT to check.
+     * @return bool True if the token is transferable, false otherwise.
+     */
+    function isTransferable(uint256 tokenId_) external view returns (bool);
+
+    /**
      * @notice Retrieves the state of a specific NFT.
      * @param tokenId_ The ID of the NFT to query.
      * @return The current state of the specified NFT.

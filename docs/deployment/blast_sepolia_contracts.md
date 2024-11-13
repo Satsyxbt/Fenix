@@ -41,12 +41,14 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy | 0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938  |
 | MDCBlastMock                                     | 0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01   |
 | **VeFnxDistributorUpgradeable_Proxy** | 0xC69d09854EED4692603BA40e47Ed180f043a1414 |
+| VeArtProxy | 0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9| 
+| VeArtProxyStatic | 0xbDf98125C4012D0E8871B4686b5cFC8d1e70EE4e |
+
 
 ## Implementations for Proxy
 | Contract Name                                           | Address                                      |
 | ------------------------------------------------------- | -------------------------------------------- |
 | MinterUpgradeable_Implementation                        | 0x2823d09A5b1B162f5192C4B10Fa85B015bFAD4fB   |
-| VeArtProxyUpgradeable_Implementation                    | 0x716D5F63654F1F072e7DFAB8190D03FbFf4213BD   |
 | AlgebraFNXPriceProviderUpgradeable_Implementation        | 0x9Ac737DB1768272C8711B168560a41e989A6f77A   |
 | PairFactoryUpgradeable_Implementation                   | 0xbdaf5fc15D03FE670C974a2083a3892d21762449   |
 | Pair_Implementation                                     | 0x71F9683e343309d7D7A235199f891a254CeC9eF7   |
@@ -61,7 +63,7 @@ External:
 | VeFnxSplitMerklAidropUpgradeable_Implementation         | 0xc32160bC7841aedB9b594DB6641320746bb6aAB1   |
 | UtilsUpgradeable_Implementation                         | 0x7A2A229bB0FC58628448437Cc94db06FF1730550   |
 | MinimalLinearVestingUpgradeable_Implementation          | 0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7   |
-| VotingEscrowUpgradeable_Implementation                  | 0x3124aD28Bd19a2c001A151FFCedc3Ca0C80331cf   |
+| VotingEscrowUpgradeable_Implementation                  | 0xd8808140f6ea77238d5EFb7aa3E1c525994CbaDc   |
 | VoterUpgradeable_Implementation                         | 0xbD52AC3c10E41a325ba32E95F67C8D51c7A83B98   |
 | BribeUpgradeable_Implementation                         | 0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D   |
 | BribeFactoryUpgradeable_Implementation                  | 0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca   |
