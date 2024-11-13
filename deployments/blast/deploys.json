@@ -28,7 +28,7 @@
   "ManagedNFTManagerUpgradeable_Implementation": "0x5db6c3B0F80D28ca0c4b96167C5957c44561171d",
   "PairAPIUpgradeable_Implementation": "0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71",
   "RewardAPIUpgradeable_Implementation": "0xd791D71Fe726E226C1A9d04b73EecB4Eaa666E76",
-  "VeNFTAPIUpgradeable_Implementation": "0x38Fec988ebCd4159d655295Aa37C321382dBb766",
+  "VeNFTAPIUpgradeable_Implementation": "0xD5926da7196096101E7cd4742bA0f853C2b8db0E",
   "UtilsUpgradeable_Implementation": "0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f",
   "Fenix": "0x52f847356b38720B55ee18Cb3e094ca11C85A192",
   "VeArtProxyUpgradeable_Proxy": "0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8",

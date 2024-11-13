@@ -244,9 +244,10 @@ contract VeNFTAPIUpgradeable is OwnableUpgradeable {
                     array[i].prevEpochInfo.tokenBalanceInStrategy = rewarder.balanceOfAt(tokenId, prevEpoch);
                     array[i].prevEpochInfo.strategyTotalSupply = rewarder.totalSupplyAt(prevEpoch);
                     array[i].prevEpochInfo.strategyEpochRewards = rewarder.rewardsPerEpoch(prevEpoch);
-                    array[i].prevEpochInfo.tokenEpochReward =
-                        (array[i].prevEpochInfo.strategyEpochRewards * array[i].prevEpochInfo.tokenBalanceInStrategy) /
-                        array[i].prevEpochInfo.strategyTotalSupply;
+                    array[i].prevEpochInfo.tokenEpochReward = array[i].prevEpochInfo.strategyTotalSupply == 0
+                        ? 0
+                        : (array[i].prevEpochInfo.strategyEpochRewards * array[i].prevEpochInfo.tokenBalanceInStrategy) /
+                            array[i].prevEpochInfo.strategyTotalSupply;
 
                     array[i].success = true;
                 }
