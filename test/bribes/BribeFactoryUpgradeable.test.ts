@@ -227,7 +227,45 @@ describe('BribeFactoryUpgradeable Contract', function () {
         expect(await bribeFactory.isDefaultRewardToken(token18.target)).to.be.false;
       });
     });
+    describe('#setRewardClaimPause', async () => {
+      it('fail if try call from not owner', async () => {
+        await expect(bribeFactory.connect(signers.otherUser1).setRewardClaimPause(false)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+      });
+      it('success change isRewardClaimPause and emit events', async () => {
+        expect(await bribeFactory.isRewardClaimPause()).to.be.false;
+        await expect(bribeFactory.setRewardClaimPause(true)).to.be.emit(bribeFactory, 'PauseRewardClaim').withArgs(true);
+        expect(await bribeFactory.isRewardClaimPause()).to.be.true;
+        await expect(bribeFactory.setRewardClaimPause(false)).to.be.emit(bribeFactory, 'PauseRewardClaim').withArgs(false);
+        expect(await bribeFactory.isRewardClaimPause()).to.be.false;
+      });
 
+      describe('isRewardClaimPause has effect on child bribe contracts', async () => {
+        let bribe: BribeUpgradeable;
+
+        beforeEach(async () => {
+          await bribeFactory.setRewardClaimPause(true);
+          expect(await bribeFactory.isRewardClaimPause()).to.be.true;
+          let deployedBribeAddress = await bribeFactory.createBribe.staticCall(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+          await bribeFactory.createBribe(ethers.ZeroAddress, ethers.ZeroAddress, 'Bribe');
+          bribe = await ethers.getContractAt('BribeUpgradeable', deployedBribeAddress);
+        });
+
+        describe('should fail if call during reward claim pause', async () => {
+          it('getReward(uint256 tokenId, address[] memory tokens)', async () => {
+            await expect(bribe['getReward(uint256,address[])'](0, [])).to.be.revertedWithCustomError(bribe, 'RewardClaimPaused');
+          });
+          it('getReward(address[] memory tokens)', async () => {
+            await expect(bribe['getReward(address[])']([])).to.be.revertedWithCustomError(bribe, 'RewardClaimPaused');
+          });
+          it('getRewardForOwner(uint256 tokenId, address[] memory tokens)', async () => {
+            await expect(bribe.getRewardForOwner(0, [])).to.be.revertedWithCustomError(bribe, 'RewardClaimPaused');
+          });
+          it('getRewardForAddress', async () => {
+            await expect(bribe.getRewardForAddress(ethers.ZeroAddress, [])).to.be.revertedWithCustomError(bribe, 'RewardClaimPaused');
+          });
+        });
+      });
+    });
     it('#getDefaultRewardTokens() should return correct current default reward tokens list', async () => {
       expect(await bribeFactory.getDefaultRewardTokens()).to.be.deep.eq([]);
       await bribeFactory.pushDefaultRewardToken(token18.target);

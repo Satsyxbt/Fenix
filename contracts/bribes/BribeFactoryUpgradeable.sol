@@ -14,6 +14,7 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorClaimableSetup, 
     address public defaultBlastGovernor;
     address[] public defaultRewardToken;
     mapping(address => bool) public override isDefaultRewardToken;
+    bool public override isRewardClaimPause;
 
     constructor(address blastGovernor_) {
         __BlastGovernorClaimableSetup_init(blastGovernor_);
@@ -47,6 +48,11 @@ contract BribeFactoryUpgradeable is IBribeFactory, BlastGovernorClaimableSetup, 
         last_bribe = newLastBribe;
 
         return newLastBribe;
+    }
+
+    function setRewardClaimPause(bool isPaused_) external onlyOwner {
+        isRewardClaimPause = isPaused_;
+        emit PauseRewardClaim(isPaused_);
     }
 
     function bribeOwner() external view returns (address) {
