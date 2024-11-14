@@ -6,7 +6,7 @@
   "BlastRebasingTokensGovernorUpgradeable_Proxy": "0x71B83044626c8F6Ef38F051673562Fe025F8ec1F",
   "FeesVaultFactoryUpgradeable_Implementation": "0x17409D1648422596B447BC3FcEE92a5f291e4604",
   "BribeFactoryUpgradeable_Implementation": "0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961",
-  "BribeUpgradeable_Implementation": "0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC",
+  "BribeUpgradeable_Implementation": "0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC",
   "GaugeFactoryUpgradeable_Implementation": "0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1",
   "GaugeUpgradeable_Implementation": "0x4B231AD9490Eb819C7Dc4c61c7054C58B644A995",
   "MinterUpgradeable_Implementation": "0x081d528D4dc4a2f3424C6Bdde43F950007cEe944",

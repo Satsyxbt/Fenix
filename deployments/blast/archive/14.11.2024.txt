@@ -29,3 +29,20 @@ for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract BribeUpgradeable on the block explorer.
 https://blastscan.io/address/0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC#code
+
+
+Starting deployment of BribeUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BribeUpgradeable deployed at 0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC
+Save to deploys.json deployed address of BribeUpgradeable_Implementation:0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC
+Warning: Address for BribeUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC
+        New address: 0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC
+Verifying TransparentUpgradeableProxy at 0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://blastscan.io/address/0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC#code
