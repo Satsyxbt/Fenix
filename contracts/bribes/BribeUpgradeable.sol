@@ -35,14 +35,22 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     mapping(address => mapping(address => uint256)) public userTimestamp;
 
     //uint256 private _totalSupply;
-    mapping(uint256 => uint256) private _totalSupply;
-    mapping(address => mapping(uint256 => uint256)) private _balances; //owner -> timestamp -> amount
+    mapping(uint256 => uint256) internal _totalSupply;
+    mapping(address => mapping(uint256 => uint256)) internal _balances; //owner -> timestamp -> amount
 
     error RewardClaimPaused();
+    error RewardClaimNotPaused();
 
     modifier whenNotRewardClaimPaused() {
         if (IBribeFactory(bribeFactory).isRewardClaimPause()) {
             revert RewardClaimPaused();
+        }
+        _;
+    }
+
+    modifier whenRewardClaimPaused() {
+        if (!IBribeFactory(bribeFactory).isRewardClaimPause()) {
+            revert RewardClaimNotPaused();
         }
         _;
     }
@@ -224,6 +232,23 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
+
+    function fixVotingPowerForPreviusEpoch(
+        uint256 tokenId_,
+        uint256 newBalance_
+    ) external virtual onlyAllowed whenRewardClaimPaused reinitializer(2) {
+        uint256 targetEpoch = (block.timestamp / WEEK) * WEEK - WEEK;
+        require(targetEpoch == 1730937600, "invalid epoch to fix");
+        address tokenOwner = IVotingEscrow(ve).ownerOf(tokenId_);
+        uint256 balance = _balances[tokenOwner][targetEpoch];
+        _totalSupply[targetEpoch] -= balance;
+        _totalSupply[targetEpoch] += newBalance_;
+        _balances[tokenOwner][targetEpoch] = newBalance_;
+        if (balance > 0) {
+            emit Withdrawn(tokenId_, balance);
+        }
+        emit Staked(tokenId_, newBalance_);
+    }
 
     /// @notice User votes deposit
     /// @dev    called on voter.vote() or voter.poke()
