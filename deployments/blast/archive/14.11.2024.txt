@@ -1,0 +1,31 @@
+Starting deployment of BribeFactoryUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BribeFactoryUpgradeable deployed at 0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961
+Save to deploys.json deployed address of BribeFactoryUpgradeable_Implementation:0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961
+Warning: Address for BribeFactoryUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x32c981701cBdbA2C295427459f87fCceF57a0dA8
+        New address: 0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961
+Verifying TransparentUpgradeableProxy at 0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeFactoryUpgradeable.sol:BribeFactoryUpgradeable at 0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961      
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeFactoryUpgradeable on the block explorer.
+https://blastscan.io/address/0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961#code
+
+Starting deployment of BribeUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BribeUpgradeable deployed at 0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC
+Save to deploys.json deployed address of BribeUpgradeable_Implementation:0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC     
+Warning: Address for BribeUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a
+        New address: 0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC
+Verifying TransparentUpgradeableProxy at 0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/BribeUpgradeable.sol:BribeUpgradeable at 0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeUpgradeable on the block explorer.
+https://blastscan.io/address/0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC#code
