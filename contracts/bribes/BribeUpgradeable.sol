@@ -38,6 +38,15 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     mapping(uint256 => uint256) private _totalSupply;
     mapping(address => mapping(uint256 => uint256)) private _balances; //owner -> timestamp -> amount
 
+    error RewardClaimPaused();
+
+    modifier whenNotRewardClaimPaused() {
+        if (IBribeFactory(bribeFactory).isRewardClaimPause()) {
+            revert RewardClaimPaused();
+        }
+        _;
+    }
+
     /* ========== CONSTRUCTOR ========== */
 
     constructor(address blastGovernor_) {
@@ -253,7 +262,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     }
 
     /// @notice Claim the TOKENID rewards
-    function getReward(uint256 tokenId, address[] memory tokens) external nonReentrant {
+    function getReward(uint256 tokenId, address[] memory tokens) external nonReentrant whenNotRewardClaimPaused {
         require(IVotingEscrow(ve).isApprovedOrOwner(msg.sender, tokenId));
         uint256 _userLastTime;
         uint256 reward = 0;
@@ -271,7 +280,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     }
 
     /// @notice Claim the rewards given msg.sender
-    function getReward(address[] memory tokens) external nonReentrant {
+    function getReward(address[] memory tokens) external nonReentrant whenNotRewardClaimPaused {
         uint256 _userLastTime;
         uint256 reward = 0;
         address _owner = msg.sender;
@@ -288,7 +297,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     }
 
     /// @notice Claim rewards from voter
-    function getRewardForOwner(uint256 tokenId, address[] memory tokens) public nonReentrant {
+    function getRewardForOwner(uint256 tokenId, address[] memory tokens) public nonReentrant whenNotRewardClaimPaused {
         require(msg.sender == voter);
         uint256 _userLastTime;
         uint256 reward = 0;
@@ -306,7 +315,7 @@ contract BribeUpgradeable is IBribe, BlastGovernorClaimableSetup, ReentrancyGuar
     }
 
     /// @notice Claim rewards from voter
-    function getRewardForAddress(address _owner, address[] memory tokens) public nonReentrant {
+    function getRewardForAddress(address _owner, address[] memory tokens) public nonReentrant whenNotRewardClaimPaused {
         require(msg.sender == voter);
         uint256 _userLastTime;
         uint256 reward = 0;

@@ -22,6 +22,7 @@ interface IBribeFactory {
 
     event AddDefaultRewardToken(address indexed token);
     event RemoveDefaultRewardToken(address indexed token);
+    event PauseRewardClaim(bool indexed isPaused_);
 
     function createBribe(address _token0, address _token1, string memory _type) external returns (address);
 
@@ -34,4 +35,6 @@ interface IBribeFactory {
     function getDefaultRewardTokens() external view returns (address[] memory);
 
     function getBribeRewardTokens(address bribe_) external view returns (address[] memory);
+
+    function isRewardClaimPause() external view returns (bool);
 }
