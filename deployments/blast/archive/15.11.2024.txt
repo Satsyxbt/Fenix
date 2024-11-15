@@ -1,0 +1,34 @@
+Compiled 1 Solidity file successfully (evm target: paris).
+Starting deployment of ProxyAdmin...
+	Constructor arguments: []
+ProxyAdmin deployed at 0x455410479e890272C7b7190b63c9C4544039B480
+Save to deploys.json deployed address of GetInformationAggregatorUpgradeable_ProxyAdmin:0x455410479e890272C7b7190b63c9C4544039B480
+Verifying TransparentUpgradeableProxy at 0x455410479e890272C7b7190b63c9C4544039B480...
+Timeout for 10s before verify proccess...
+The contract 0x455410479e890272C7b7190b63c9C4544039B480 has already been verified on Etherscan.
+https://blastscan.io/address/0x455410479e890272C7b7190b63c9C4544039B480#code
+Starting deployment of GetInformationAggregatorUpgradeable...
+	Constructor arguments: []
+GetInformationAggregatorUpgradeable deployed at 0x10E8119936E05834373f53f778fCf4f59e474BbC
+Save to deploys.json deployed address of GetInformationAggregatorUpgradeable_Implementation:0x10E8119936E05834373f53f778fCf4f59e474BbC
+Verifying TransparentUpgradeableProxy at 0x10E8119936E05834373f53f778fCf4f59e474BbC...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/utils/GetInformationAggregatorUpgradeable.sol:GetInformationAggregatorUpgradeable at 0x10E8119936E05834373f53f778fCf4f59e474BbC
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract GetInformationAggregatorUpgradeable on the block explorer.
+https://blastscan.io/address/0x10E8119936E05834373f53f778fCf4f59e474BbC#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x10E8119936E05834373f53f778fCf4f59e474BbC
+	Admin address: 0x455410479e890272C7b7190b63c9C4544039B480
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x00Cb611513C13F86903021379a99c567b34bDD87
+Save to deploys.json deployed address of GetInformationAggregatorUpgradeable_Proxy:0x00Cb611513C13F86903021379a99c567b34bDD87
+Verifying TransparentUpgradeableProxy at 0x00Cb611513C13F86903021379a99c567b34bDD87...
+Timeout for 10s before verify proccess...
+The contract 0x00Cb611513C13F86903021379a99c567b34bDD87 has already been verified on Etherscan.
+https://blastscan.io/address/0x00Cb611513C13F86903021379a99c567b34bDD87#code
+	Successful transaction
+	Transaction hash: 0x1d2096b5c7abf78f5ca98c4f8c02f39312b02ae36dbfe6b0c528068de24c4c34

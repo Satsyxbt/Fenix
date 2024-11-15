@@ -15,3 +15,11 @@ export const YieldDistributionDirection = {
   Rise: 2,
   Bribes: 3,
 };
+
+export const GetInformationAddressKey = {
+  NONE: 0,
+  VOTING_ESCROW: 1,
+  VOTER: 2,
+  PAIR_FACTORY: 3,
+  MANAGED_NFT_MANAGER: 4,
+};

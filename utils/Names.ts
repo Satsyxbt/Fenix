@@ -70,6 +70,9 @@ export enum AliasDeployedContracts {
   BasePluginV1Factory_Proxy = 'BasePluginV1Factory_Proxy',
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
   veFNXClaimer = 'veFNXClaimer',
+  GetInformationAggregatorUpgradeable_ProxyAdmin = 'GetInformationAggregatorUpgradeable_ProxyAdmin',
+  GetInformationAggregatorUpgradeable_Proxy = 'GetInformationAggregatorUpgradeable_Proxy',
+  GetInformationAggregatorUpgradeable_Implementation = 'GetInformationAggregatorUpgradeable_Implementation',
 }
 
 enum ThirdPart {
@@ -77,6 +80,7 @@ enum ThirdPart {
 }
 
 enum ContractsInstanceName {
+  GetInformationAggregatorUpgradeable = 'GetInformationAggregatorUpgradeable',
   UtilsUpgradeable = 'UtilsUpgradeable',
   ProxyAdmin = 'ProxyAdmin',
   BribeUpgradeable = 'BribeUpgradeable',

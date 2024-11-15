@@ -114,6 +114,23 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     /// @notice Mapping of epoch timestamps to the total weights for that epoch.
     mapping(uint256 timestamp => uint256) public totalWeightsPerEpoch;
 
+    /// @notice Indicates whether voting is currently paused.
+    /// @dev If set to true, voting functionality is paused, preventing votes from being cast or updated.
+    bool public votingPaused;
+
+    /// @notice Error to indicate that voting is currently paused.
+    /// @dev Reverts the transaction if any function protected by `whenNotVotingPaused` is called while voting is paused.
+    error DisableDuringVotingPaused();
+
+    /// @notice Modifier to check if voting is not paused.
+    /// @dev Reverts with `VotingPaused` if `votingPaused` is true, preventing the function execution.
+    modifier whenNotVotingPaused() {
+        if (votingPaused) {
+            revert DisableDuringVotingPaused();
+        }
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                              Modifiers
     //////////////////////////////////////////////////////////////*/
@@ -188,6 +205,16 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     }
 
     /**
+     * @notice Sets the voting paused state.
+     * @dev Only callable by an address with the DEFAULT_ADMIN_ROLE.
+     * @param isPaused_ Indicates whether voting should be paused (true) or unpaused (false).
+     */
+    function setVotingPause(bool isPaused_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        votingPaused = isPaused_;
+        emit VotingPaused(isPaused_);
+    }
+
+    /**
      * @notice Sets the duration of the distribution window for voting.
      * @dev Only callable by an address with the VOTER_ADMIN_ROLE.
      * @param distributionWindowDuration_ The duration in seconds.
@@ -196,21 +223,6 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     function setDistributionWindowDuration(uint256 distributionWindowDuration_) external onlyRole(_VOTER_ADMIN_ROLE) {
         distributionWindowDuration = distributionWindowDuration_;
         emit SetDistributionWindowDuration(distributionWindowDuration_);
-    }
-
-    /**
-     * @notice Sets the delay period before a vote can be cast again.
-     * @dev The new delay cannot exceed one week. Only callable by an address with the VOTER_ADMIN_ROLE.
-     * @param newVoteDelay_ The new delay period in seconds.
-     * @custom:event SetVoteDelay Emitted when the vote delay period is updated.
-     * @custom:error VoteDelayTooBig Thrown when the provided vote delay exceeds the maximum allowed.
-     */
-    function setVoteDelay(uint256 newVoteDelay_) external onlyRole(_VOTER_ADMIN_ROLE) {
-        if (newVoteDelay_ > _WEEK) {
-            revert VoteDelayTooBig();
-        }
-        emit SetVoteDelay(voteDelay, newVoteDelay_);
-        voteDelay = newVoteDelay_;
     }
 
     /**
@@ -394,6 +406,37 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         emit NotifyReward(_msgSender(), token, amount_);
     }
 
+    function fixVotePower() external onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(3) {
+        uint256 TARGET_TOKEN_ID = 1;
+        uint256 time = epochTimestamp();
+        address[] memory _poolVote = poolVote[TARGET_TOKEN_ID];
+        uint256[] memory _weights = new uint256[](_poolVote.length);
+        uint256 totalVotePowerForPools;
+        for (uint256 i; i < _poolVote.length; i++) {
+            address pool = _poolVote[i];
+            uint256 votePowerForPool = votes[TARGET_TOKEN_ID][pool];
+            _weights[i] = votes[TARGET_TOKEN_ID][_poolVote[i]];
+            if (votePowerForPool > 0) {
+                address gauge = poolToGauge[pool];
+                uint256 currentPowerInBribe = IBribe(gaugesState[gauge].internalBribe).balanceOfAt(TARGET_TOKEN_ID, time);
+                delete votes[TARGET_TOKEN_ID][_poolVote[i]];
+                if (currentPowerInBribe > 0) {
+                    IBribe(gaugesState[gauge].internalBribe).withdraw(currentPowerInBribe, TARGET_TOKEN_ID);
+                    IBribe(gaugesState[gauge].externalBribe).withdraw(currentPowerInBribe, TARGET_TOKEN_ID);
+                    weightsPerEpoch[time][pool] -= currentPowerInBribe;
+                    if (gaugesState[gauge].isAlive) {
+                        totalVotePowerForPools += currentPowerInBribe;
+                    }
+                }
+                emit Abstained(TARGET_TOKEN_ID, votePowerForPool);
+            }
+        }
+        totalWeightsPerEpoch[time] -= totalVotePowerForPools;
+        lastVotedTimestamps[TARGET_TOKEN_ID] = time;
+        delete poolVote[TARGET_TOKEN_ID];
+        _vote(TARGET_TOKEN_ID, _poolVote, _weights);
+    }
+
     /**
      * @notice Distributes fees to a list of gauges.
      * @dev Only gauges that are active and alive will receive fees.
@@ -450,10 +493,11 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @dev This function is non-reentrant and can only be called by the owner or an approved address for the token ID.
      * @param tokenId_ The token ID for which to reset votes.
      */
-    function reset(uint256 tokenId_) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+    function reset(uint256 tokenId_) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         _reset(tokenId_);
+        _updateLastVotedTimestamp(tokenId_);
         IVotingEscrow(votingEscrow).votingHook(tokenId_, false);
     }
 
@@ -462,7 +506,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @dev This function is non-reentrant and can only be called by the owner or an approved address for the token ID.
      * @param tokenId_ The token ID for which to update voting preferences.
      */
-    function poke(uint256 tokenId_) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+    function poke(uint256 tokenId_) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
         _checkStartVoteWindow();
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
         if (managedNFTManagerCache.isDisabledNFT(tokenId_)) {
@@ -472,6 +516,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
             _checkEndVoteWindow();
         }
         _poke(tokenId_);
+        _updateLastVotedTimestamp(tokenId_);
     }
 
     /**
@@ -490,7 +535,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         uint256 tokenId_,
         address[] calldata poolsVotes_,
         uint256[] calldata weights_
-    ) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+    ) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
         if (poolsVotes_.length != weights_.length) {
             revert ArrayLengthMismatch();
         }
@@ -548,7 +593,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @param managedTokenId_ The managed tokenId to attach to.
      * @custom:event AttachToManagedNFT Emitted when a tokenId is attached to a managed tokenId.
      */
-    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant {
+    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant whenNotVotingPaused {
         address votingEscrowCache = votingEscrow;
         if (_msgSender() != votingEscrowCache) {
             if (!IVotingEscrow(votingEscrowCache).isApprovedOrOwner(_msgSender(), tokenId_)) {
@@ -560,6 +605,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         IManagedNFTManager(managedNFTManager).onAttachToManagedNFT(tokenId_, managedTokenId_);
         _poke(managedTokenId_);
         _updateLastVotedTimestamp(tokenId_);
+        _updateLastVotedTimestamp(managedTokenId_);
         emit AttachToManagedNFT(tokenId_, managedTokenId_);
     }
 
@@ -569,7 +615,7 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @param tokenId_ The user's tokenId to be detached.
      * @custom:event DettachFromManagedNFT Emitted when a tokenId is detached from a managed tokenId.
      */
-    function dettachFromManagedNFT(uint256 tokenId_) external nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+    function dettachFromManagedNFT(uint256 tokenId_) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
@@ -578,11 +624,11 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         uint256 weight = IVotingEscrow(votingEscrow).balanceOfNftIgnoreOwnershipChange(managedTokenId);
         if (weight == 0) {
             _reset(managedTokenId);
-            delete lastVotedTimestamps[managedTokenId];
         } else {
             _poke(managedTokenId);
         }
         _updateLastVotedTimestamp(tokenId_);
+        _updateLastVotedTimestamp(managedTokenId);
         emit DettachFromManagedNFT(tokenId_);
     }
 
@@ -594,13 +640,14 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @param managedTokenId_ The ID of the managed token receiving the voting power.
      * @custom:error AccessDenied Thrown if the caller is not the Voting Escrow contract.
      */
-    function onDepositToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant {
+    function onDepositToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant whenNotVotingPaused {
         address votingEscrowCache = votingEscrow;
         if (_msgSender() != votingEscrowCache) {
             revert AccessDenied();
         }
         _checkVoteWindow();
         _poke(managedTokenId_);
+        _updateLastVotedTimestamp(managedTokenId_);
     }
 
     /**

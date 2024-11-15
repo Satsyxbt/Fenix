@@ -169,7 +169,7 @@ abstract contract BaseManagedNFTStrategyUpgradeable is IManagedNFTStrategy, Init
      * @param bribes_ Array of bribe addresses.
      * @param tokens_ Array of arrays of token addresses corresponding to each bribe address.
      */
-    function claimBribes(address[] calldata bribes_, address[][] calldata tokens_) external {
+    function claimBribes(address[] calldata bribes_, address[][] calldata tokens_) public {
         IVoter(voter).claimBribes(bribes_, tokens_, managedTokenId);
     }
 

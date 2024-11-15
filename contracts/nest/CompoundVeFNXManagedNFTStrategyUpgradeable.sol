@@ -150,6 +150,34 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
     }
 
     /**
+     * @notice Claims bribes for the current strategy and recovers specified ERC20 tokens to a recipient.
+     * @dev This function allows the strategy to claim bribes from specified contracts and transfer
+     *      non-strategic ERC20 tokens back to the designated recipient in a single transaction.
+     * @param bribes_ The list of addresses representing bribe contracts from which to claim rewards.
+     * @param tokens_ A nested array where each entry corresponds to a list of token addresses to claim from the respective bribe contract.
+     * @param recipient_ The address to which recovered tokens should be sent.
+     * @param tokensToRecover_ The list of ERC20 token addresses to be recovered and transferred to the recipient.
+     *
+     * Emits:
+     * - Emits `Erc20Recover` for each recovered token.
+     */
+    function claimBribesWithERC20Recover(
+        address[] calldata bribes_,
+        address[][] calldata tokens_,
+        address recipient_,
+        address[] calldata tokensToRecover_
+    ) external {
+        _checkBuybackSwapPermissions();
+        claimBribes(bribes_, tokens_);
+        for (uint256 i; i < tokensToRecover_.length; ) {
+            _erc20Recover(recipient_, tokensToRecover_[i]);
+            unchecked {
+                i++;
+            }
+        }
+    }
+
+    /**
      * @notice Recovers ERC20 tokens accidentally sent to this contract, excluding the managed token (FENIX).
      * @dev Allows the admin to recover non-strategic ERC20 tokens sent to the contract.
      * @param token_ The address of the token to recover.
@@ -157,11 +185,22 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      */
     function erc20Recover(address token_, address recipient_) external {
         _checkBuybackSwapPermissions();
-
         if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
             revert IncorrectRecoverToken();
         }
+        _erc20Recover(token_, recipient_);
+    }
 
+    /**
+     * @dev Internal function to recover the full balance of an ERC20 token held by the contract
+     *      and transfer it to a specified recipient.
+     * @param token_ The address of the ERC20 token to recover.
+     * @param recipient_ The address where the recovered tokens will be sent.
+     *
+     * Emits:
+     * - `Erc20Recover` event with details of the token recovery, including the caller, recipient, token address, and recovered amount.
+     */
+    function _erc20Recover(address token_, address recipient_) internal {
         uint256 amount = IERC20Upgradeable(token_).balanceOf(address(this));
         IERC20Upgradeable(token_).safeTransfer(recipient_, amount);
         emit Erc20Recover(msg.sender, recipient_, token_, amount);

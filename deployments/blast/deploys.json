@@ -14,7 +14,7 @@
   "VeBoostUpgradeable_Implementation": "0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7",
   "VeFnxDistributorUpgradeable_Implementation": "0x9d15070F302F3392674C33403C4396312EA566E9",
   "VeFnxSplitMerklAidropUpgradeable_Implementation": "0x1D099397B2049Ce63eE051801E5A774A4E60F6cd",
-  "VoterUpgradeable_Implementation": "0xA709D35d4192B9e055B132a3316a38765dA87c2D",
+  "VoterUpgradeable_Implementation": "0xb9C4C2b2c978c39DA4d870cbA1D71b457FAAafAB",
   "VotingEscrowUpgradeable_Implementation": "0xB72a3A9CC6C996f594249701D1f6062ec9939E32",
   "Pair_Implementation": "0xca56B2c3F46C95b301B0c830283c065c2bF9D4bb",
   "PerpetualsGaugeUpgradeable_Implementation": "0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622",
@@ -66,5 +66,8 @@
   "GaugeUpgradeable_V3Pools_Implementation": "0x58D12813E77B87c67ccC9312598c8E1d35B96E23",
   "veFNXClaimer": "0x3191EF613f297b53f593fEa5044ce7A6B19985A5",
   "VeArtProxyStatic": "0xd4B31701DDBdC69bb4e8aB7118d73151CaC5c90F",
-  "VeArtProxy": "0xafDC3756E08305Cb4F856B3511A72eD5D50d5b11"
+  "VeArtProxy": "0xafDC3756E08305Cb4F856B3511A72eD5D50d5b11",
+  "GetInformationAggregatorUpgradeable_ProxyAdmin": "0x455410479e890272C7b7190b63c9C4544039B480",
+  "GetInformationAggregatorUpgradeable_Implementation": "0x699763De7D9b5db9108Fc8fEE9797334e2F0baF3",
+  "GetInformationAggregatorUpgradeable_Proxy": "0x00Cb611513C13F86903021379a99c567b34bDD87"
 }

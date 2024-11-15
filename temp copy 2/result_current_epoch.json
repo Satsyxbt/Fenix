@@ -1,0 +1,1141 @@
+{
+  "fromVotesSums": {
+    "sumsManagedNftTokenVotePower": "50489430574943138750479104",
+    "sumsManagedNftWeightsFromBribes": "6467918134294723993282600332",
+    "sumsNotManagedNftWeightsFromBribes": "829636887460730084964465",
+    "sumsNotManagedNftTokenVotePower": "7217661720314247236449209",
+    "sumsWithIgnoreFirstNFTVotePower": "34676979988849730408943246",
+    "sumsWithIgnoreFirstNFTWeightFromBribes": "28288955155996213257458502",
+    "sumsManagedNftTokenVotePowerFormatted": "50489430.574943138750479104",
+    "sumsManagedNftWeightsFromBribesFormatted": "6467918134.294723993282600332",
+    "sumsNotManagedNftWeightsFromBribesFormatted": "829636.887460730084964465",
+    "sumsNotManagedNftTokenVotePowerFormmated": "7217661.720314247236449209",
+    "sumsWithIgnoreFirstNFTVotePowerFormatted": "34676979.988849730408943246",
+    "sumsWithIgnoreFirstNFTWeightFromBribesFormatted": "28288955.155996213257458502"
+  },
+  "fromVotesTotalWeights": {
+    "fromVotes": "6468747771182184723367564797",
+    "fromVoterWeightTotal": "6420235411849715558127114651",
+    "fromExternalBribesSum": "6420235411849715558127114651",
+    "fromVoterWeightPerEpochSum": "6420235411849715558127114651"
+  },
+  "fromVotesPoolToTotalWeights": {
+    "0x1D74611f3EF04E7252f7651526711a937Aa1f75e": {
+      "weightFromVotes": "3478389381017754962154247700",
+      "weightFromVoter": "3465799020106720092817913072",
+      "weightFromBribe": "3465799020106720092817913072",
+      "withProblem": true
+    },
+    "0x2e3281E50479d6C42328bA6F2E4aFd971e43Ca2d": {
+      "weightFromVotes": "1313336705323449242083327587",
+      "weightFromVoter": "1283513032776259789679996897",
+      "weightFromBribe": "1283513032776259789679996897",
+      "withProblem": true
+    },
+    "0x4c577F4873061003D6C83EAaC20E24397Ff5b89b": {
+      "weightFromVotes": "64405601360261885101092978",
+      "weightFromVoter": "64174540337197808545313191",
+      "weightFromBribe": "64174540337197808545313191",
+      "withProblem": true
+    },
+    "0x558c091E64910BA62A58c279a55FEFC864251d98": {
+      "weightFromVotes": "322025594150455843445177444",
+      "weightFromVoter": "320873425620698361434363031",
+      "weightFromBribe": "320873425620698361434363031",
+      "withProblem": true
+    },
+    "0x635512a1333AD0822F5bA4fd6479DaA1dF8B77E1": {
+      "weightFromVotes": "64404588160261885101092978",
+      "weightFromVoter": "64174287037197808545313191",
+      "weightFromBribe": "64174287037197808545313191",
+      "withProblem": true
+    },
+    "0x9304ba542df9bC61DD1C97C073ed35F81cAb6149": {
+      "weightFromVotes": "128809176320523770202195539",
+      "weightFromVoter": "128348574074395617090635890",
+      "weightFromBribe": "128348574074395617090635890",
+      "withProblem": true
+    },
+    "0xb3B4484bdFb6885f96421c3399B666a1c9D27Fca": {
+      "weightFromVotes": "644063893800288799040816593",
+      "weightFromVoter": "641759667273499230287187741",
+      "weightFromBribe": "641759667273499230287187741",
+      "withProblem": true
+    },
+    "0xC8252c4F9136209Ec47534bf1C0781307ec9a86F": {
+      "weightFromVotes": "257621992304466581946003635",
+      "weightFromVoter": "256699855251794193657405170",
+      "weightFromBribe": "256699855251794193657405170",
+      "withProblem": true
+    },
+    "0xd0CD894c605a9EEDaCbc0FA9BD8440627a5D37b1": {
+      "weightFromVotes": "128809176320523770202195539",
+      "weightFromVoter": "128348574074395617090635890",
+      "weightFromBribe": "128348574074395617090635890",
+      "withProblem": true
+    },
+    "0xe53B1da56F90C9529F2db1bb8711c3f1CC6F03Bd": {
+      "weightFromVotes": "64404588160261885101092978",
+      "weightFromVoter": "64174287037197808545313191",
+      "weightFromBribe": "64174287037197808545313191",
+      "withProblem": true
+    },
+    "0x6A1DE1841c5c3712E3Bc7C75Ce3d57DEDEC6915F": {
+      "weightFromVotes": "209479193804510599139290",
+      "weightFromVoter": "159982780029388719684316",
+      "weightFromBribe": "159982780029388719684316",
+      "withProblem": true
+    },
+    "0xc5910a7f3b0119ac1a3ad7A268CcE4A62d8C882D": {
+      "weightFromVotes": "107195300750000000000000",
+      "weightFromVoter": "107195300750000000000000",
+      "weightFromBribe": "107195300750000000000000"
+    },
+    "0x1eba6F6CfDb86e965040BF9e75d3dED9A3fd22A5": {
+      "weightFromVotes": "108727749100000000000000",
+      "weightFromVoter": "108727749100000000000000",
+      "weightFromBribe": "108727749100000000000000"
+    },
+    "0x28D7De5e9592cbd951Dc3B22325fdfA89972f6db": {
+      "weightFromVotes": "112653000729594797615324",
+      "weightFromVoter": "111893100729594797615324",
+      "weightFromBribe": "111893100729594797615324",
+      "withProblem": true
+    },
+    "0x4a28F50f15eFEdF44af0D376fDC2e319fA8Ccef8": {
+      "weightFromVotes": "205271114992783172494037",
+      "weightFromVoter": "205271114992783172494037",
+      "weightFromBribe": "205271114992783172494037"
+    },
+    "0x5CFd0c2F2eCDa7D4d0475928CE2a83448F66e89c": {
+      "weightFromVotes": "203415225920500000000000",
+      "weightFromVoter": "203415225920500000000000",
+      "weightFromBribe": "203415225920500000000000"
+    },
+    "0x886369748d1d66747b8F51aB38De00DEa13f0101": {
+      "weightFromVotes": "297204729615488112451407",
+      "weightFromVoter": "241522909813741434621942",
+      "weightFromBribe": "241522909813741434621942",
+      "withProblem": true
+    },
+    "0xb485fDABB73274EE573700AAF37e92b6273a82c2": {
+      "weightFromVotes": "217640708423222308621768",
+      "weightFromVoter": "216652838423222308621768",
+      "weightFromBribe": "216652838423222308621768",
+      "withProblem": true
+    },
+    "0x3C7fD63caB763a10B2754b1464e09d37a9FC79E7": {
+      "weightFromVotes": "1000000000000000000",
+      "weightFromVoter": "1000000000000000000",
+      "weightFromBribe": "1000000000000000000"
+    },
+    "0xb7C9062c306f70f7325Ef1ab8B158AacAFD59C97": {
+      "weightFromVotes": "202500000000000000000000",
+      "weightFromVoter": "202500000000000000000000",
+      "weightFromBribe": "202500000000000000000000"
+    },
+    "0x94D3a9Fe1265e3eb1D89849c325D931924CEC88f": {
+      "weightFromVotes": "101250000000000000000000",
+      "weightFromVoter": "101250000000000000000000",
+      "weightFromBribe": "101250000000000000000000"
+    },
+    "0xaaFF182d62Cd62140c9F453F9eB35ba98a90Eae8": {
+      "weightFromVotes": "101250000000000000000000",
+      "weightFromVoter": "101250000000000000000000",
+      "weightFromBribe": "101250000000000000000000"
+    },
+    "0x117106000cEB709bA3eC885027D111463204D6B6": {
+      "weightFromVotes": "1000000000000000000",
+      "weightFromVoter": "1000000000000000000",
+      "weightFromBribe": "1000000000000000000"
+    },
+    "0xb50a80bba0FF07f4Bc3434c593e86663fE05ABe2": {
+      "weightFromVotes": "205485240600000000000000",
+      "weightFromVoter": "205485240600000000000000",
+      "weightFromBribe": "205485240600000000000000"
+    },
+    "0x3Bafe103742dA10a4FECe8FC5e800df07D645439": {
+      "weightFromVotes": "202500000000000000000000",
+      "weightFromVoter": "202500000000000000000000",
+      "weightFromBribe": "202500000000000000000000"
+    },
+    "0x5559543e730881939c04c3717198404f5bEBc73B": {
+      "weightFromVotes": "202500000000000000000000",
+      "weightFromVoter": "202500000000000000000000",
+      "weightFromBribe": "202500000000000000000000"
+    }
+  },
+  "fromGeneralDiff": {
+    "sum": "6420235411849715558127114651",
+    "sumFromBribes": "6420235411849715558127114651",
+    "diffFromVoterToBribe": {},
+    "diffFromVoterToBribeLength": 0
+  },
+  "checkInternalAndExternalBribes": [],
+  "votesPowerDiffFromSumWeight": {
+    "diff": {
+      "1": {
+        "currentEpochTokenVotePower": "23030112306407655577985067",
+        "sumWeightFromBribe": "6440458816026188510110106295",
+        "isManagedNft": "true",
+        "currentOwner": "0xa99abd8aFAb7c16F17F8304BC2f0017c3d2eb2A0"
+      },
+      "6": {
+        "currentEpochTokenVotePower": "5819923305847359510",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "8": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "9": {
+        "currentEpochTokenVotePower": "4000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "13": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "14": {
+        "currentEpochTokenVotePower": "11000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "15": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "16": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "17": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "24": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "25": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "26": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "27": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "28": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "29": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "30": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "31": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "32": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "33": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "34": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "35": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "37": {
+        "currentEpochTokenVotePower": "2794577037539330955",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "38": {
+        "currentEpochTokenVotePower": "1063807806774098955",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "39": {
+        "currentEpochTokenVotePower": "2679192422154982155",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "40": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "41": {
+        "currentEpochTokenVotePower": "2000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "42": {
+        "currentEpochTokenVotePower": "2000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "43": {
+        "currentEpochTokenVotePower": "2000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "44": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "45": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "46": {
+        "currentEpochTokenVotePower": "931525679170011615",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "47": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "48": {
+        "currentEpochTokenVotePower": "1324589819895788085",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "49": {
+        "currentEpochTokenVotePower": "1324589819895788085",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "50": {
+        "currentEpochTokenVotePower": "1324589819895788085",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "51": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "52": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "53": {
+        "currentEpochTokenVotePower": "26000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "54": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "55": {
+        "currentEpochTokenVotePower": "393064013527734829",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "56": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "57": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "58": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "59": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "60": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "68": {
+        "currentEpochTokenVotePower": "1000000000000000000",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "70": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "94": {
+        "currentEpochTokenVotePower": "22430017461360387688054",
+        "sumWeightFromBribe": "32200670991316135201335",
+        "isManagedNft": "false",
+        "currentOwner": "0x8b0473E5f2871d420b7891c01a45eF84eE2d523D"
+      },
+      "116": {
+        "currentEpochTokenVotePower": "43917093651053335359339",
+        "sumWeightFromBribe": "44103514915686981225536",
+        "isManagedNft": "false",
+        "currentOwner": "0x47628677D8Aa6f5E11e37779576852e0209D6aE7"
+      },
+      "137": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "15029231611069771572217",
+        "isManagedNft": "false",
+        "currentOwner": "0xECCb9B9C6fb7590a4d0588953B3170A1a84E3341"
+      },
+      "138": {
+        "currentEpochTokenVotePower": "14597578221042553522247",
+        "sumWeightFromBribe": "15029231611069771572217",
+        "isManagedNft": "false",
+        "currentOwner": "0xECCb9B9C6fb7590a4d0588953B3170A1a84E3341"
+      },
+      "181": {
+        "currentEpochTokenVotePower": "1273279880352156516119",
+        "sumWeightFromBribe": "1287598142437336520679",
+        "isManagedNft": "false",
+        "currentOwner": "0x4236CAD967f018f4d87FD9C9aa0Fb56E4F6fE9c2"
+      },
+      "190": {
+        "currentEpochTokenVotePower": "7472466074087066763634",
+        "sumWeightFromBribe": "7485787601376851535010",
+        "isManagedNft": "false",
+        "currentOwner": "0x420D0D6F47742C28195694351db8DbcC8D445939"
+      },
+      "218": {
+        "currentEpochTokenVotePower": "2621686134265614071964",
+        "sumWeightFromBribe": "2688244568187203088756",
+        "isManagedNft": "false",
+        "currentOwner": "0x3C85813263BAdE9eCE7191926133b59B7ae527D4"
+      },
+      "283": {
+        "currentEpochTokenVotePower": "30973588724810309446365",
+        "sumWeightFromBribe": "31370390932294335031845",
+        "isManagedNft": "false",
+        "currentOwner": "0x00204aCd48E582f710652B264145102eDB0166A6"
+      },
+      "315": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "319": {
+        "currentEpochTokenVotePower": "52511461767852140027568",
+        "sumWeightFromBribe": "53469613364638937709936",
+        "isManagedNft": "false",
+        "currentOwner": "0x52349a2C4eA4e4B94ada3D75C9d3A318C024706f"
+      },
+      "347": {
+        "currentEpochTokenVotePower": "13727218322663319040776",
+        "sumWeightFromBribe": "13823548423222308621768",
+        "isManagedNft": "false",
+        "currentOwner": "0xF7c802E795C749066E917F30b34C6488e5b10Da3"
+      },
+      "378": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "2422121448581078260128",
+        "isManagedNft": "false",
+        "currentOwner": "0xaB1a27Ed3c6832B864E1fA2bE09b3336A7Ea620d"
+      },
+      "388": {
+        "currentEpochTokenVotePower": "2373209485802715497056",
+        "sumWeightFromBribe": "2422121448581078260128",
+        "isManagedNft": "false",
+        "currentOwner": "0xaB1a27Ed3c6832B864E1fA2bE09b3336A7Ea620d"
+      },
+      "469": {
+        "currentEpochTokenVotePower": "1401875899927171568119",
+        "sumWeightFromBribe": "1411044335455763258319",
+        "isManagedNft": "false",
+        "currentOwner": "0xFa537C114EDd1D85a6019222C1c0e90707d2088d"
+      },
+      "483": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "484": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "485": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "505": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "528": {
+        "currentEpochTokenVotePower": "31799567638799969295650",
+        "sumWeightFromBribe": "32785685123193201927950",
+        "isManagedNft": "false",
+        "currentOwner": "0x62d76Bf057B4d5fe2509b6e95318057DBd6B4c27"
+      },
+      "557": {
+        "currentEpochTokenVotePower": "2298291093534167378380",
+        "sumWeightFromBribe": "2304977041780976979740",
+        "isManagedNft": "false",
+        "currentOwner": "0x4928a120fA7a380259FbFC6bA131C545311F9D00"
+      },
+      "569": {
+        "currentEpochTokenVotePower": "735300760206661416924",
+        "sumWeightFromBribe": "3733504993068220715735",
+        "isManagedNft": "false",
+        "currentOwner": "0xf2e4a05cBae83fb3173BECEe7a31686e8A6ae3Ce"
+      },
+      "584": {
+        "currentEpochTokenVotePower": "7224473847754542289916",
+        "sumWeightFromBribe": "32200670991316135201335",
+        "isManagedNft": "false",
+        "currentOwner": "0x8b0473E5f2871d420b7891c01a45eF84eE2d523D"
+      },
+      "585": {
+        "currentEpochTokenVotePower": "2533000000000000000000",
+        "sumWeightFromBribe": "32200670991316135201335",
+        "isManagedNft": "false",
+        "currentOwner": "0x8b0473E5f2871d420b7891c01a45eF84eE2d523D"
+      },
+      "601": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "392102098308910357923",
+        "isManagedNft": "false",
+        "currentOwner": "0xb2Ae7773e14d857D1202cfc2A6A5a2A3de1525F5"
+      },
+      "602": {
+        "currentEpochTokenVotePower": "381030059060581668183",
+        "sumWeightFromBribe": "392102098308910357923",
+        "isManagedNft": "false",
+        "currentOwner": "0xb2Ae7773e14d857D1202cfc2A6A5a2A3de1525F5"
+      },
+      "603": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "392102098308910357923",
+        "isManagedNft": "false",
+        "currentOwner": "0xb2Ae7773e14d857D1202cfc2A6A5a2A3de1525F5"
+      },
+      "608": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "44103514915686981225536",
+        "isManagedNft": "false",
+        "currentOwner": "0x47628677D8Aa6f5E11e37779576852e0209D6aE7"
+      },
+      "609": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "44103514915686981225536",
+        "isManagedNft": "false",
+        "currentOwner": "0x47628677D8Aa6f5E11e37779576852e0209D6aE7"
+      },
+      "666": {
+        "currentEpochTokenVotePower": "27945758928571416641943",
+        "sumWeightFromBribe": "28791077152014639724317",
+        "isManagedNft": "false",
+        "currentOwner": "0xAB2eF8AF693D09c1f32C44e4AA3d4393eA647d5D"
+      },
+      "683": {
+        "currentEpochTokenVotePower": "185457110474349414588015",
+        "sumWeightFromBribe": "186609647911903774498665",
+        "isManagedNft": "false",
+        "currentOwner": "0xe18793cC7f72b7e7442108C66e0cCabE4F678112"
+      },
+      "784": {
+        "currentEpochTokenVotePower": "2919514878577139120811",
+        "sumWeightFromBribe": "3733504993068220715735",
+        "isManagedNft": "false",
+        "currentOwner": "0xf2e4a05cBae83fb3173BECEe7a31686e8A6ae3Ce"
+      },
+      "795": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "796": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "797": {
+        "currentEpochTokenVotePower": "2000000000000000000",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "798": {
+        "currentEpochTokenVotePower": "3000000000000000000",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "854": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "869": {
+        "currentEpochTokenVotePower": "2408963866860424659774",
+        "sumWeightFromBribe": "2422121448581078260128",
+        "isManagedNft": "false",
+        "currentOwner": "0xaB1a27Ed3c6832B864E1fA2bE09b3336A7Ea620d"
+      },
+      "934": {
+        "currentEpochTokenVotePower": "70919473675234478734292",
+        "sumWeightFromBribe": "72250074532797916051028",
+        "isManagedNft": "false",
+        "currentOwner": "0xC3D4FEd7ad9976fb210a85Ffeb122E2141050133"
+      },
+      "980": {
+        "currentEpochTokenVotePower": "939973417781282589",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "996": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "997": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "998": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "999": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1000": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1001": {
+        "currentEpochTokenVotePower": "9062028579059249090",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1002": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1003": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1004": {
+        "currentEpochTokenVotePower": "969986708880549271",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1005": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1006": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1007": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1027": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1028": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "1356187805243617617",
+        "isManagedNft": "false",
+        "currentOwner": "0x9140D359f2855E6540609dd4A93773ED1f45f509"
+      },
+      "1056": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "86168400341939496280",
+        "isManagedNft": "false",
+        "currentOwner": "0x1EbB73f5F47Bcc3D7dC1dabf7284875E3AE40E07"
+      },
+      "1057": {
+        "currentEpochTokenVotePower": "84299640994205481598",
+        "sumWeightFromBribe": "86168400341939496280",
+        "isManagedNft": "false",
+        "currentOwner": "0x1EbB73f5F47Bcc3D7dC1dabf7284875E3AE40E07"
+      },
+      "1086": {
+        "currentEpochTokenVotePower": "246055461459485795509",
+        "sumWeightFromBribe": "250867020787896746611",
+        "isManagedNft": "false",
+        "currentOwner": "0x5738Ecb652e12c4AC148A7394bea7af18F4b0DDB"
+      },
+      "1292": {
+        "currentEpochTokenVotePower": "2321071635000121422605",
+        "sumWeightFromBribe": "2382462586877410647413",
+        "isManagedNft": "false",
+        "currentOwner": "0xBa93b1dB4b9a686A31889A450A701B5899304D9A"
+      },
+      "1335": {
+        "currentEpochTokenVotePower": "2321071318087982635467",
+        "sumWeightFromBribe": "2369182066789396842385",
+        "isManagedNft": "false",
+        "currentOwner": "0x8a702Ec3948Fc97313D47F2A95dC516A30f93f81"
+      },
+      "1375": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "32200670991316135201335",
+        "isManagedNft": "false",
+        "currentOwner": "0x8b0473E5f2871d420b7891c01a45eF84eE2d523D"
+      },
+      "1448": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "2369182066789396842385",
+        "isManagedNft": "false",
+        "currentOwner": "0x8a702Ec3948Fc97313D47F2A95dC516A30f93f81"
+      },
+      "1449": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1483": {
+        "currentEpochTokenVotePower": "5815255043872739315064",
+        "sumWeightFromBribe": "5824103259189595230648",
+        "isManagedNft": "false",
+        "currentOwner": "0x2D7dAE92460eCeEf480F875599b672F685a71B5E"
+      },
+      "1537": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1551": {
+        "currentEpochTokenVotePower": "2424966136286116512",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1576": {
+        "currentEpochTokenVotePower": "0",
+        "sumWeightFromBribe": "72250074532797916051028",
+        "isManagedNft": "false",
+        "currentOwner": "0xC3D4FEd7ad9976fb210a85Ffeb122E2141050133"
+      },
+      "1591": {
+        "currentEpochTokenVotePower": "2349932272588020267",
+        "sumWeightFromBribe": "6897752022257351437",
+        "isManagedNft": "false",
+        "currentOwner": "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4"
+      },
+      "1631": {
+        "currentEpochTokenVotePower": "1779262409989119814883",
+        "sumWeightFromBribe": "1785175926599696719205",
+        "isManagedNft": "false",
+        "currentOwner": "0x28165971E4d592CA6C45A3786786Ec2f6b4b8D23"
+      }
+    },
+    "sumWeightsTokensInBribesByOwner": {
+      "0xa99abd8aFAb7c16F17F8304BC2f0017c3d2eb2A0": {
+        "tokens": [
+          "1"
+        ],
+        "tokensVotingPowerSum": "23030112306407655577985067",
+        "bribesWeightSum": "6440458816026188510110106295"
+      },
+      "0xb279Cb42Ab3d598Eb3A864399C11a52a5f506bA4": {
+        "tokens": [
+          "6",
+          "8",
+          "17",
+          "45",
+          "46",
+          "47",
+          "59",
+          "70",
+          "315",
+          "483",
+          "484",
+          "485",
+          "795",
+          "796",
+          "797",
+          "798",
+          "1007",
+          "1027",
+          "1449",
+          "1537",
+          "1551",
+          "1591"
+        ],
+        "tokensVotingPowerSum": "16526347393891507904",
+        "bribesWeightSum": "151750544489661731614"
+      },
+      "0x9140D359f2855E6540609dd4A93773ED1f45f509": {
+        "tokens": [
+          "9",
+          "13",
+          "14",
+          "15",
+          "16",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "53",
+          "54",
+          "55",
+          "56",
+          "57",
+          "58",
+          "60",
+          "68",
+          "505",
+          "854",
+          "980",
+          "996",
+          "997",
+          "998",
+          "999",
+          "1000",
+          "1001",
+          "1002",
+          "1003",
+          "1004",
+          "1005",
+          "1006",
+          "1028"
+        ],
+        "tokensVotingPowerSum": "69876399445404592099",
+        "bribesWeightSum": "71877953677911733701"
+      },
+      "0x8b0473E5f2871d420b7891c01a45eF84eE2d523D": {
+        "tokens": [
+          "94",
+          "584",
+          "585",
+          "1375"
+        ],
+        "tokensVotingPowerSum": "32187491309114929977970",
+        "bribesWeightSum": "128802683965264540805340"
+      },
+      "0x47628677D8Aa6f5E11e37779576852e0209D6aE7": {
+        "tokens": [
+          "116",
+          "608",
+          "609"
+        ],
+        "tokensVotingPowerSum": "43917093651053335359339",
+        "bribesWeightSum": "132310544747060943676608"
+      },
+      "0xECCb9B9C6fb7590a4d0588953B3170A1a84E3341": {
+        "tokens": [
+          "137",
+          "138"
+        ],
+        "tokensVotingPowerSum": "14597578221042553522247",
+        "bribesWeightSum": "30058463222139543144434"
+      },
+      "0x4236CAD967f018f4d87FD9C9aa0Fb56E4F6fE9c2": {
+        "tokens": [
+          "181"
+        ],
+        "tokensVotingPowerSum": "1273279880352156516119",
+        "bribesWeightSum": "1287598142437336520679"
+      },
+      "0x420D0D6F47742C28195694351db8DbcC8D445939": {
+        "tokens": [
+          "190"
+        ],
+        "tokensVotingPowerSum": "7472466074087066763634",
+        "bribesWeightSum": "7485787601376851535010"
+      },
+      "0x3C85813263BAdE9eCE7191926133b59B7ae527D4": {
+        "tokens": [
+          "218"
+        ],
+        "tokensVotingPowerSum": "2621686134265614071964",
+        "bribesWeightSum": "2688244568187203088756"
+      },
+      "0x00204aCd48E582f710652B264145102eDB0166A6": {
+        "tokens": [
+          "283"
+        ],
+        "tokensVotingPowerSum": "30973588724810309446365",
+        "bribesWeightSum": "31370390932294335031845"
+      },
+      "0x52349a2C4eA4e4B94ada3D75C9d3A318C024706f": {
+        "tokens": [
+          "319"
+        ],
+        "tokensVotingPowerSum": "52511461767852140027568",
+        "bribesWeightSum": "53469613364638937709936"
+      },
+      "0xF7c802E795C749066E917F30b34C6488e5b10Da3": {
+        "tokens": [
+          "347"
+        ],
+        "tokensVotingPowerSum": "13727218322663319040776",
+        "bribesWeightSum": "13823548423222308621768"
+      },
+      "0xaB1a27Ed3c6832B864E1fA2bE09b3336A7Ea620d": {
+        "tokens": [
+          "378",
+          "388",
+          "869"
+        ],
+        "tokensVotingPowerSum": "4782173352663140156830",
+        "bribesWeightSum": "7266364345743234780384"
+      },
+      "0xFa537C114EDd1D85a6019222C1c0e90707d2088d": {
+        "tokens": [
+          "469"
+        ],
+        "tokensVotingPowerSum": "1401875899927171568119",
+        "bribesWeightSum": "1411044335455763258319"
+      },
+      "0x62d76Bf057B4d5fe2509b6e95318057DBd6B4c27": {
+        "tokens": [
+          "528"
+        ],
+        "tokensVotingPowerSum": "31799567638799969295650",
+        "bribesWeightSum": "32785685123193201927950"
+      },
+      "0x4928a120fA7a380259FbFC6bA131C545311F9D00": {
+        "tokens": [
+          "557"
+        ],
+        "tokensVotingPowerSum": "2298291093534167378380",
+        "bribesWeightSum": "2304977041780976979740"
+      },
+      "0xf2e4a05cBae83fb3173BECEe7a31686e8A6ae3Ce": {
+        "tokens": [
+          "569",
+          "784"
+        ],
+        "tokensVotingPowerSum": "3654815638783800537735",
+        "bribesWeightSum": "7467009986136441431470"
+      },
+      "0xb2Ae7773e14d857D1202cfc2A6A5a2A3de1525F5": {
+        "tokens": [
+          "601",
+          "602",
+          "603"
+        ],
+        "tokensVotingPowerSum": "381030059060581668183",
+        "bribesWeightSum": "1176306294926731073769"
+      },
+      "0xAB2eF8AF693D09c1f32C44e4AA3d4393eA647d5D": {
+        "tokens": [
+          "666"
+        ],
+        "tokensVotingPowerSum": "27945758928571416641943",
+        "bribesWeightSum": "28791077152014639724317"
+      },
+      "0xe18793cC7f72b7e7442108C66e0cCabE4F678112": {
+        "tokens": [
+          "683"
+        ],
+        "tokensVotingPowerSum": "185457110474349414588015",
+        "bribesWeightSum": "186609647911903774498665"
+      },
+      "0xC3D4FEd7ad9976fb210a85Ffeb122E2141050133": {
+        "tokens": [
+          "934",
+          "1576"
+        ],
+        "tokensVotingPowerSum": "70919473675234478734292",
+        "bribesWeightSum": "144500149065595832102056"
+      },
+      "0x1EbB73f5F47Bcc3D7dC1dabf7284875E3AE40E07": {
+        "tokens": [
+          "1056",
+          "1057"
+        ],
+        "tokensVotingPowerSum": "84299640994205481598",
+        "bribesWeightSum": "172336800683878992560"
+      },
+      "0x5738Ecb652e12c4AC148A7394bea7af18F4b0DDB": {
+        "tokens": [
+          "1086"
+        ],
+        "tokensVotingPowerSum": "246055461459485795509",
+        "bribesWeightSum": "250867020787896746611"
+      },
+      "0xBa93b1dB4b9a686A31889A450A701B5899304D9A": {
+        "tokens": [
+          "1292"
+        ],
+        "tokensVotingPowerSum": "2321071635000121422605",
+        "bribesWeightSum": "2382462586877410647413"
+      },
+      "0x8a702Ec3948Fc97313D47F2A95dC516A30f93f81": {
+        "tokens": [
+          "1335",
+          "1448"
+        ],
+        "tokensVotingPowerSum": "2321071318087982635467",
+        "bribesWeightSum": "4738364133578793684770"
+      },
+      "0x2D7dAE92460eCeEf480F875599b672F685a71B5E": {
+        "tokens": [
+          "1483"
+        ],
+        "tokensVotingPowerSum": "5815255043872739315064",
+        "bribesWeightSum": "5824103259189595230648"
+      },
+      "0x28165971E4d592CA6C45A3786786Ec2f6b4b8D23": {
+        "tokens": [
+          "1631"
+        ],
+        "tokensVotingPowerSum": "1779262409989119814883",
+        "bribesWeightSum": "1785175926599696719205"
+      }
+    }
+  }
+}

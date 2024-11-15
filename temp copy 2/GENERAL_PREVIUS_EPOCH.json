@@ -1,0 +1,1835 @@
+{
+  "poolsCount": "73",
+  "totalWeightsPerEpoch": "54894155006448109194649136",
+  "totalWeightsPerEpochFormatted": "54894155.006448109194649136",
+  "epoch": "1730937600",
+  "emisisonPerEpoch": "2283750000000000000000000",
+  "emissionPerEpochFormatted": "2283750.0",
+  "poolsEpochVoteInfo": [
+    {
+      "name": "V3 AlgebraPool - USDB/USDz",
+      "pool": "0x008cac102E95E4f42710bb94d5f14d3aF9052916",
+      "gauge": "0xEE1be109e3dD8DAF1fFe209fEa39a597bceA507b",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x0eb5E9b05b7784761756171993374AAa5BBFA8A4",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x80AFBc0B1f90863c57e13664daD697c281da3a56",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/SSS",
+      "pool": "0x047d5D8911D18aa5E64e666E53AF2B47b46ab363",
+      "gauge": "0x0771BF44a2ADBadd8e62C3F701F4e2634CB593d5",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x59B5eF5d54fab2098fc6699e6f7796786F7fC6FE",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xE3434DB44c33e72664bCfA45671497AFFeCb98a6",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/DEUS",
+      "pool": "0x117106000cEB709bA3eC885027D111463204D6B6",
+      "gauge": "0xD3C7255B81CFaa7541C0297ee8eB16972D9b5257",
+      "weightsPerEpoch": "624502252601976610535703",
+      "emissionToGauge": "25981036035844536216317",
+      "weightsPerEpochFormatted": "624502.252601976610535703",
+      "emissionToGaugeFormatted": "25981.036035844536216317",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x188790644fB7Ec4E313CEfddA28b5FE801Cd637e",
+        "totalSupply": "2036847297093117280358388",
+        "totalSupplyFormatted": "2036847.297093117280358388"
+      },
+      "externalBribe": {
+        "bribe": "0xb2c7c1bEe2453bd2a4a18E8cceF5a064Ed31CE9F",
+        "totalSupply": "2036847297093117280358388",
+        "totalSupplyFormatted": "2036847.297093117280358388"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Mock2/Mock1",
+      "pool": "0x15916242e683948271e9130dA06FE102Aa74B51E",
+      "gauge": "0x2524571D8519ccd199e6Ad52406313337B5892C0",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x7443B0710e0aff07B147B82264d4413904d1CE6E",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x69b996A73F904D5d87167d3c1cF9Dfd0324F8C31",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Wrapped Ether",
+      "pool": "0x1D74611f3EF04E7252f7651526711a937Aa1f75e",
+      "gauge": "0x5472cb9f34FD3E7344159518a7E44b54595195B1",
+      "weightsPerEpoch": "26452657005327080988993603",
+      "emissionToGauge": "1100504332907930709578083",
+      "weightsPerEpochFormatted": "26452657.005327080988993603",
+      "emissionToGaugeFormatted": "1100504.332907930709578083",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xdAeC786C6248cf42878559588FFe6D62d4e3d277",
+        "totalSupply": "15245589067929773005053377",
+        "totalSupplyFormatted": "15245589.067929773005053377"
+      },
+      "externalBribe": {
+        "bribe": "0xbd3FB8f73A862E0f310A0bDd8b8DA7460e58Dfa5",
+        "totalSupply": "15245589067929773005053377",
+        "totalSupplyFormatted": "15245589.067929773005053377"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Staked Frax Ether/Wrapped Ether",
+      "pool": "0x1eba6F6CfDb86e965040BF9e75d3dED9A3fd22A5",
+      "gauge": "0x7f7753A5b9f4966E45E717f07C9288cd6A0E6AD9",
+      "weightsPerEpoch": "135199396401749585704160",
+      "emissionToGauge": "5624672089336781239017",
+      "weightsPerEpochFormatted": "135199.39640174958570416",
+      "emissionToGaugeFormatted": "5624.672089336781239017",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x01a47751fCdC94b16A4D9415620A53E08c8aeF26",
+        "totalSupply": "1854300889413496382440111",
+        "totalSupplyFormatted": "1854300.889413496382440111"
+      },
+      "externalBribe": {
+        "bribe": "0x3029895C8119e248864C7c92219cD280E3F72807",
+        "totalSupply": "1854300889413496382440111",
+        "totalSupplyFormatted": "1854300.889413496382440111"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Axelar Wrapped USDC",
+      "pool": "0x1FE38EA700F0B8B013bE01e58B02b1Da3956379A",
+      "gauge": "0x0D31610FA32f8892174c58879d0c5c13958C93aA",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x9C5f59f344a6F7356aA2699c7771eF71A865d9ba",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xf26Bd638dF87be3b43879257D934e88020621E3e",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - AIWAIFU/Wrapped Ether",
+      "pool": "0x21d5d5998c3D0Feea70b5980FDac9dD6B8A12761",
+      "gauge": "0xE0DA93D91C27370166a7021B694a9A1617Bcf269",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x436FdEfea34f17F3DEff24e61bCEf7CAc3DbD916",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xE0C11d8B818F2e8BdefeAFFb8eFD81b5Db969bF5",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - PEW/Wrapped Ether",
+      "pool": "0x24b711e1D32E28A143E1A9cfdfe03A39d1acC771",
+      "gauge": "0xd21EA23BC4a5Bf561bf4c779bAfdF424C530AC44",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xcEd0D2D6F5e78bDbE169b32E56732f23EaeA368E",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xf4655e466Fa8766b48Af56eA5B7Da69c8e1838AE",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/eesee",
+      "pool": "0x28abbAADfACD46196217c23bc6402A0A458973a5",
+      "gauge": "0xaB0AAf0c7F5A7F294Bee1E865703A62B90729740",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x02242166ed9442740fd2B4daf6B21F50A205BF59",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xb26591A9249d8ca4642b5643c6D3EFBb9B4c9298",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Staked FRAX",
+      "pool": "0x28D7De5e9592cbd951Dc3B22325fdfA89972f6db",
+      "gauge": "0x0CD50bb325d6f8Fc9399a1831Fb632c9CD01704F",
+      "weightsPerEpoch": "135161692332722419524490",
+      "emissionToGauge": "5623103494872932104361",
+      "weightsPerEpochFormatted": "135161.69233272241952449",
+      "emissionToGaugeFormatted": "5623.103494872932104361",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xC9b77843E67b9357112da22DCa0B209003816b53",
+        "totalSupply": "1854306970164412208856346",
+        "totalSupplyFormatted": "1854306.970164412208856346"
+      },
+      "externalBribe": {
+        "bribe": "0x60Cc52ad791653d10AF86b9aF4bce202637fD758",
+        "totalSupply": "1854306970164412208856346",
+        "totalSupplyFormatted": "1854306.970164412208856346"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/StakeStone Ether",
+      "pool": "0x2DB9d4ebE4B94637e0Cf2383a4d283Fcb9aba93F",
+      "gauge": "0x40121ef394E47ACee206796df884D7078368DfE2",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xdF818cd50Bd711e1f428033AB67608359317043D",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x3b2d9F281621679D2eF092E5DF218004Ed7fa7f8",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Fenix",
+      "pool": "0x2e3281E50479d6C42328bA6F2E4aFd971e43Ca2d",
+      "gauge": "0xb935bF556d84E7D21eCd7F0AbAaAb3a2cD1b5272",
+      "weightsPerEpoch": "10776635323805045753192560",
+      "emissionToGauge": "448338095701606851251257",
+      "weightsPerEpochFormatted": "10776635.32380504575319256",
+      "emissionToGaugeFormatted": "448338.095701606851251257",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xed441533b4909130ffF0115d6F19F9AA2932f089",
+        "totalSupply": "6398188357361740556728817",
+        "totalSupplyFormatted": "6398188.357361740556728817"
+      },
+      "externalBribe": {
+        "bribe": "0x88398F700901235C6C6D19b10C69f5c312b21F24",
+        "totalSupply": "6398188357361740556728817",
+        "totalSupplyFormatted": "6398188.357361740556728817"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/OLE token powering both DistrictOne and OpenLeverage",
+      "pool": "0x3A8fa7BDbb3BD2a523796B145E5dD23b45019dbE",
+      "gauge": "0xaE3a90C425af52C902F3F7a707197C7E9f5D8F3D",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x03e8565D6dF9A69Cb36429ABF1052bcB011cF139",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x7F9a59066595133880E09c37Fdcf205C5dC13aE1",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Blast Pepe",
+      "pool": "0x3Acde0B7f51703c2fbf0A382f831123560B742b9",
+      "gauge": "0x41e5172c70b8b052F667F0d2a8AEfD3b33f27f94",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x1FE9BbF42E5ED201A24CdB23F4C30dE7997C5269",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x7732E83F89ca784198Fec136338910D29c6dB106",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Pirex Ether OFT",
+      "pool": "0x3Bafe103742dA10a4FECe8FC5e800df07D645439",
+      "gauge": "0xf09f94c02ec3184a9E430aAC45bF7b28dAdb8372",
+      "weightsPerEpoch": "202530378159981560031142",
+      "emissionToGauge": "8425828780286848821890",
+      "weightsPerEpochFormatted": "202530.378159981560031142",
+      "emissionToGaugeFormatted": "8425.82878028684882189",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xD2F2D31Ff0010E743Ba4e021Baa7614ebEC652D0",
+        "totalSupply": "202530378159981560031142",
+        "totalSupplyFormatted": "202530.378159981560031142"
+      },
+      "externalBribe": {
+        "bribe": "0xc5d538629F1936Ee5ADB649c39855DD468e2c16b",
+        "totalSupply": "202530378159981560031142",
+        "totalSupplyFormatted": "202530.378159981560031142"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/USDz",
+      "pool": "0x3de72e4996fFEdF9B6E4615Dd43Bbe1c8735Eac0",
+      "gauge": "0x0a87C0f29204258Eb7B130048A60fE040FB98505",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x00FF135A3d816ECD8914F93530a3c76b9A2b62AB",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xC5020d888B955B5bd209A19f77367017b7331C68",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Hypersound/Wrapped Ether",
+      "pool": "0x3E00B9640c28906F8480CF714dAc76c313Af35aE",
+      "gauge": "0x97AcCecA6a2415D48b703FCB9Af19DfeF8F9c48B",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x0Fb26b0a06ACc48514BBF4bBABB07369b50471E0",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xEC2590f0fB7b8Ccb80DAea0Bb715b4A636d6963D",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/InceptionLRT restaked ETH",
+      "pool": "0x46f2aA2Aa7d31ddD237d620e52A33A8d5aF2a5Ab",
+      "gauge": "0x27f250288B27520FdA72AfC75a88FBE525d6323e",
+      "weightsPerEpoch": "158667895955579945681",
+      "emissionToGauge": "6601027146624108834",
+      "weightsPerEpochFormatted": "158.667895955579945681",
+      "emissionToGaugeFormatted": "6.601027146624108834",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x137101d1B92d6BF5c084A633D986d42A35912090",
+        "totalSupply": "158667895955579945681",
+        "totalSupplyFormatted": "158.667895955579945681"
+      },
+      "externalBribe": {
+        "bribe": "0x7523C76d956D4953Ecfb4F45E45838116D0B7d79",
+        "totalSupply": "158667895955579945681",
+        "totalSupplyFormatted": "158.667895955579945681"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Andy",
+      "pool": "0x4a28F50f15eFEdF44af0D376fDC2e319fA8Ccef8",
+      "gauge": "0x18983E3fBbd3D76eA191F5eb3026A109B08F4865",
+      "weightsPerEpoch": "202597767553831141136046",
+      "emissionToGauge": "8428632367083765597720",
+      "weightsPerEpochFormatted": "202597.767553831141136046",
+      "emissionToGaugeFormatted": "8428.63236708376559772",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x11B6D2a46735611182D4C3932715FB260198A0CF",
+        "totalSupply": "202597767553831141136046",
+        "totalSupplyFormatted": "202597.767553831141136046"
+      },
+      "externalBribe": {
+        "bribe": "0xD5A0B6e3EcaB3Be055740aFC71DFB3600C8Eff8f",
+        "totalSupply": "202597767553831141136046",
+        "totalSupplyFormatted": "202597.767553831141136046"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Blast",
+      "pool": "0x4c577F4873061003D6C83EAaC20E24397Ff5b89b",
+      "gauge": "0x7A461380ff21336eE16f1aFAc3825e674aDAF2cc",
+      "weightsPerEpoch": "475721502593159557513718",
+      "emissionToGauge": "19791341745209693213971",
+      "weightsPerEpochFormatted": "475721.502593159557513718",
+      "emissionToGaugeFormatted": "19791.341745209693213971",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x73c58D3aFd8Bd374C87c8F5dF439e83eA47FD5AF",
+        "totalSupply": "725756468270416496135367",
+        "totalSupplyFormatted": "725756.468270416496135367"
+      },
+      "externalBribe": {
+        "bribe": "0x741e31360FBc9577a3C8d7bA4D464D775dC93e58",
+        "totalSupply": "725756468270416496135367",
+        "totalSupplyFormatted": "725756.468270416496135367"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/WrappedHypersound",
+      "pool": "0x4FE43B6B73407bC3f1A3336E05c0b9bE6e399626",
+      "gauge": "0xE6fDcD283DC058B595d5c9cC28c8aE28b3F35038",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x38a900700FB63EC8E4a69032572509Fbdef01580",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xe8465De6d632997F4e2453a8F1e89E1474a93042",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Bag",
+      "pool": "0x5083e43B015296C75dE0Af519917C035309E80e4",
+      "gauge": "0x6B89bD330cb0FC6b572f08541cA822ca2E849205",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x88755dED6f23CedaF383760CfD532F8fd509eAE3",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x163b9ba18c21e1D6996ab19f59ba67e3fb8319d8",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/EARLY Token",
+      "pool": "0x54bB102E85eE68a234fA06eCE299346941d68d07",
+      "gauge": "0xfE8dc0A4dD63A9653F4a311538BC383a4b4A6f04",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x09a6603d14e84C6D1D62C9BAAE71b649f5B1c2B2",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x73134FC0Ff6a615FA6BF68ecB15d16D92BB16Cce",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Fenix/Blast",
+      "pool": "0x558c091E64910BA62A58c279a55FEFC864251d98",
+      "gauge": "0xf2ac8831c7111980d0595A7Cf771505DB25C3cC5",
+      "weightsPerEpoch": "2375809892053748970028315",
+      "emissionToGauge": "98840319890895779975329",
+      "weightsPerEpochFormatted": "2375809.892053748970028315",
+      "emissionToGaugeFormatted": "98840.319890895779975329",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xFAeA306492cB9382909E6947B348f0e4Bd2acFb7",
+        "totalSupply": "1281198150442922670912380",
+        "totalSupplyFormatted": "1281198.15044292267091238"
+      },
+      "externalBribe": {
+        "bribe": "0x1522587d2FCba2c2983178e87D5F669714dFEa8a",
+        "totalSupply": "1281198150442922670912380",
+        "totalSupplyFormatted": "1281198.15044292267091238"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Renzo Restaked ETH/Wrapped Ether",
+      "pool": "0x635512a1333AD0822F5bA4fd6479DaA1dF8B77E1",
+      "gauge": "0x9671f8710C058FCA1B85cDe843fD65761F113ad1",
+      "weightsPerEpoch": "473204536719711268270689",
+      "emissionToGauge": "19686628942675209697940",
+      "weightsPerEpochFormatted": "473204.536719711268270689",
+      "emissionToGaugeFormatted": "19686.62894267520969794",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x5Ef4374594Dc6635d8237Fa69A5C337393aeB359",
+        "totalSupply": "254282188397546008447502",
+        "totalSupplyFormatted": "254282.188397546008447502"
+      },
+      "externalBribe": {
+        "bribe": "0xEDe840FF86D9159C0062f7cA7C8f09ac2970Acd1",
+        "totalSupply": "254282188397546008447502",
+        "totalSupplyFormatted": "254282.188397546008447502"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/USD+",
+      "pool": "0x6A1DE1841c5c3712E3Bc7C75Ce3d57DEDEC6915F",
+      "gauge": "0xDcf2267E82DDA230eA8c4EE62A2a3eaa0F30fF8f",
+      "weightsPerEpoch": "116488590461572504350262",
+      "emissionToGauge": "4846250360086006521158",
+      "weightsPerEpochFormatted": "116488.590461572504350262",
+      "emissionToGaugeFormatted": "4846.250360086006521158",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x7cFc24F375d1E0A0C1F2D359628380c362B0ddb9",
+        "totalSupply": "521498174934254016475255",
+        "totalSupplyFormatted": "521498.174934254016475255"
+      },
+      "externalBribe": {
+        "bribe": "0xcC4C0158d815096c154306322534C30463c93cEf",
+        "totalSupply": "521498174934254016475255",
+        "totalSupplyFormatted": "521498.174934254016475255"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Juice",
+      "pool": "0x7113c00b5275b0B9c16686e5AC1164978b505c5D",
+      "gauge": "0x1f0749A9f7179B127b459d4fE1E41f2De9036759",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xE7444ACeB046885D3C576fF90A6B68fa639D683D",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x38DBd71F3FB857C52D708A8Ed3C972eA10371372",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Staked USDz",
+      "pool": "0x74b1fF6b82e734ca5469E7e874cA0a2d4d35a151",
+      "gauge": "0x82CC03E27B4E1268B20935e84AB5ad9b0574e48A",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xA6078183637D7e553cF3152613D90B60B4284189",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x996ea303C5F1f5DC54988186BEB2438dd499b9C9",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Kalax Token/USDB",
+      "pool": "0x7F7d282846Cb4806f9121B0B5Ef61afaAe64F257",
+      "gauge": "0xfe0C944355ec6BBA1ab1D5fe798cB449eE18bf4f",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x96dDE41141870e4ac468dF2A0D5b863a44B3F6Ed",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x17E28374bD2d93f60348234df53fC737122Dac9E",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Axelar Wrapped USDC",
+      "pool": "0x86D1DA56fC79aCcc0dAf76Ca75668a4d98Cb90A7",
+      "gauge": "0x1a59AD96c2ab144018BB422515566F9F1F0FfCC6",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x69FC3ddA04FaB448bFd0221079f91bf9BB858A59",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x7bcb76F5c06e5B20F8b836725113B7578b61Ebf1",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Fang Dao/Wrapped Ether",
+      "pool": "0x886369748d1d66747b8F51aB38De00DEa13f0101",
+      "gauge": "0x04420f9532422FaDf9439cCad927200005492689",
+      "weightsPerEpoch": "1358841032747712626070748",
+      "emissionToGauge": "56531578055497291497453",
+      "weightsPerEpochFormatted": "1358841.032747712626070748",
+      "emissionToGaugeFormatted": "56531.578055497291497453",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xC9cf13bb1DbE5b9E6c94413FF2414f4dFA2832C2",
+        "totalSupply": "4485339885597041929292074",
+        "totalSupplyFormatted": "4485339.885597041929292074"
+      },
+      "externalBribe": {
+        "bribe": "0x2f627A7fEB4F81cd32Fc1d1B5327Bcc0BeFE8C08",
+        "totalSupply": "4485339885597041929292074",
+        "totalSupplyFormatted": "4485339.885597041929292074"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/pSTAKE Finance",
+      "pool": "0x8921E94efacA5F39A3a1f7B62E645518082D6a88",
+      "gauge": "0x223efB0C6DF25f9Bb1DDa234863561Cd69C11f46",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xC60198BA745d95CB76C4f419e1a791f7A578a54F",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x000ED497bAD492162fb482E3E439F426093431e0",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Core Markets/USDB",
+      "pool": "0x8964391B91A7A5bbe86094a5A6EECA5D6Ec988f7",
+      "gauge": "0xc8e0BB79710EAB107C962Ece49b188C2303ad962",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x1A38495798c40d3f2f5d10dc337474DD29589C18",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x90F7D18565393eBdc7766704538935DA5A82214d",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/PacMoon",
+      "pool": "0x8e57e61B7524a2F56FD01BbFE5De9bb96ed186B4",
+      "gauge": "0x26796D55dF4D9e9FaB6fd6d9525cf5D30f4bd88D",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x61680BC728Fe6Ff86311464997418a16a2B2493a",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xC7845408fa7048D00Dc075BAA5AB0393BDe5F9Ad",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Pump/Wrapped Ether",
+      "pool": "0x90f2eaF2dB0D8400c9f565aa3C139DdFFBe857D0",
+      "gauge": "0x97E7a0a0Ec9cF6DAF7d3791D38De09C5fE86b1CA",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x6e98BA2c27bBaFe22e8B65700C7A190dE68De10a",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x4664508E76140E62676D16b1EaE56445c0e68AB5",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped eETH/Wrapped Ether",
+      "pool": "0x9304ba542df9bC61DD1C97C073ed35F81cAb6149",
+      "gauge": "0x016A46DaB2b0E89a014514Bf7379Eacbfe2B4752",
+      "weightsPerEpoch": "945969969193959015940561",
+      "emissionToGauge": "39354989923661975127810",
+      "weightsPerEpochFormatted": "945969.969193959015940561",
+      "emissionToGaugeFormatted": "39354.98992366197512781",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x286552E4081079c9610D7A3D8641Ea1f1DAC51a9",
+        "totalSupply": "508125272549628496294187",
+        "totalSupplyFormatted": "508125.272549628496294187"
+      },
+      "externalBribe": {
+        "bribe": "0x06A9d4de38aB9F33BE77e66B47D0A591E008B799",
+        "totalSupply": "508125272549628496294187",
+        "totalSupplyFormatted": "508125.272549628496294187"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/bWOOL",
+      "pool": "0x9508122abdd654B68c7Dbf5bDBA329B852e4a512",
+      "gauge": "0x3C767e0Cb498E5497648e5bf87a94124814bd5b7",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xABF6905D0635f8a6B3ffbB0cB1A4ba1F55d3DC53",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x4E0f2637fe568052F055698a53444a8C9046Bcb8",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Core Markets/Wrapped Ether",
+      "pool": "0x9553D38Eb05415CA1D34d51e5Adb2f24D962df9a",
+      "gauge": "0xd8882D416e71492363f9A8dF5e5F177202088dcA",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xb1A08A21f97D23B63670bfB30c7c169Dfd91f963",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x33586d17F6d9aEaCf891C1D02fB8a53e34506F8c",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/WrappedHypersound",
+      "pool": "0x99B70e3811cA251b42aEaAD5A7Dd1343950Ef542",
+      "gauge": "0x41e9490Eb743608F4CcC5FB73eB312E0Cce19eC0",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x81CDa8cC109fBBcE11b1D8d338B173bDf46696BD",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x9739C4554EC899fF66070E22D2417dB8c1b130e9",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Hypersound",
+      "pool": "0xA35203fFB424c8845807C0174F5FB0334235A313",
+      "gauge": "0xB00844C4Ca5bab31bC7C7b41bAB828aC34eFE075",
+      "weightsPerEpoch": "822980725554229340060",
+      "emissionToGauge": "34238294254892875122",
+      "weightsPerEpochFormatted": "822.98072555422934006",
+      "emissionToGaugeFormatted": "34.238294254892875122",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xc71591E23879b67b0699f26CAaF83993e3d093a6",
+        "totalSupply": "24641922774542201512600",
+        "totalSupplyFormatted": "24641.9227745422015126"
+      },
+      "externalBribe": {
+        "bribe": "0xEd1F8ABC262A34f912DbDe1eb43E3568f6C0E765",
+        "totalSupply": "24641922774542201512600",
+        "totalSupplyFormatted": "24641.9227745422015126"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/Fenix",
+      "pool": "0xb3B4484bdFb6885f96421c3399B666a1c9D27Fca",
+      "gauge": "0x0e82dd4570C41c83596d7303e6196De7e9f45B75",
+      "weightsPerEpoch": "4721243930059367494050360",
+      "emissionToGauge": "196416919506394856973090",
+      "weightsPerEpochFormatted": "4721243.93005936749405036",
+      "emissionToGaugeFormatted": "196416.91950639485697309",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x42BDbF8f3FE242D458755c6Ff9D1BDfebC2d1835",
+        "totalSupply": "2532020446837714895818489",
+        "totalSupplyFormatted": "2532020.446837714895818489"
+      },
+      "externalBribe": {
+        "bribe": "0x011acD526c81684824096a4e379b5868cE7BED2c",
+        "totalSupply": "2532020446837714895818489",
+        "totalSupplyFormatted": "2532020.446837714895818489"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - KAP Games/Wrapped Ether",
+      "pool": "0xb50a80bba0FF07f4Bc3434c593e86663fE05ABe2",
+      "gauge": "0xe78c9c4636fC637Ca80164ce7e99fbA95b269340",
+      "weightsPerEpoch": "256546006863079696294048",
+      "emissionToGauge": "10673029635026486806967",
+      "weightsPerEpochFormatted": "256546.006863079696294048",
+      "emissionToGaugeFormatted": "10673.029635026486806967",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x1862508E8d0dA0ed24469BaDCfb5b08FE173Ace0",
+        "totalSupply": "1229794984555919118079383",
+        "totalSupplyFormatted": "1229794.984555919118079383"
+      },
+      "externalBribe": {
+        "bribe": "0x12508FcF8e22a7f1Af9247f934Fb1696C47a5Bd8",
+        "totalSupply": "1229794984555919118079383",
+        "totalSupplyFormatted": "1229794.984555919118079383"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - MORE/USDB",
+      "pool": "0xb7C9062c306f70f7325Ef1ab8B158AacAFD59C97",
+      "gauge": "0x600581634F01628072d9460FD3fE6637586045b2",
+      "weightsPerEpoch": "393348234417917777216695",
+      "emissionToGauge": "16364383972144218067717",
+      "weightsPerEpochFormatted": "393348.234417917777216695",
+      "emissionToGaugeFormatted": "16364.383972144218067717",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xD26B07348cF70506Ae599Da39370a2b610dF16ce",
+        "totalSupply": "3921791734343919110849636",
+        "totalSupplyFormatted": "3921791.734343919110849636"
+      },
+      "externalBribe": {
+        "bribe": "0x625ead6b481c54E68A63a91eC9F2d0dcF33660f0",
+        "totalSupply": "3921791734343919110849636",
+        "totalSupplyFormatted": "3921791.734343919110849636"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Orbit Protocol/Wrapped Ether",
+      "pool": "0xBAd7a5de96B7DF589252CED73426d4b59f90b466",
+      "gauge": "0xF4407F6655FE9E787698a60Fb67E815bc856a6e1",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x06c4A93c4BA3b9c4Db8DB2a97ED66E911a3Cc0EA",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xaC3099a411AD4DD95d08F8Adb7ddB29C5E4081b3",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Ankr Staked ETH/Wrapped Ether",
+      "pool": "0xbcF0265F4BD3CB293B709fAb0bF5c83c7EEB6B74",
+      "gauge": "0x067F1848da29E0Fe30aFF8F2b9C2bfF5235aDfB5",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x8f1f5d34520BC6B600554e9ac04eb01Bad632286",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xc33eF228C9131f9d5e32142c80f77f9D65a68ca4",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Wrapped BTC",
+      "pool": "0xC066A3e5D7c22Bd3BEaF74d4C0925520B455bB6F",
+      "gauge": "0x413BAc561C0E455C1506703B20AdfBd2AB847119",
+      "weightsPerEpoch": "4279873424444286696607",
+      "emissionToGauge": "178054675072902092324",
+      "weightsPerEpochFormatted": "4279.873424444286696607",
+      "emissionToGaugeFormatted": "178.054675072902092324",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x47Ad6014CeCDe5023ef9b7F4E3A9056Fc2a1d083",
+        "totalSupply": "5505848382848079381958",
+        "totalSupplyFormatted": "5505.848382848079381958"
+      },
+      "externalBribe": {
+        "bribe": "0xa89d8821f18C3082dc8b175daF70bdf25A72ca39",
+        "totalSupply": "5505848382848079381958",
+        "totalSupplyFormatted": "5505.848382848079381958"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Yield Token",
+      "pool": "0xc1fd5e0b3388C66dfaD458ded01dCDdAE68cB03E",
+      "gauge": "0x0A8a919ce6Ca6B111aC7BF69Cf9ee57952DB15c6",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x48545FBe0A6199C9d5C6AF3aD6E7b12d5B47b84d",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x69a43E3080909BeD0b50228EAEBD9d4aa71D2844",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/USD+",
+      "pool": "0xc5910a7f3b0119ac1a3ad7A268CcE4A62d8C882D",
+      "gauge": "0xaDfbb89F8Ca4Fe9da3022523d48e13f7a9f425D3",
+      "weightsPerEpoch": "106338500000000000000000",
+      "emissionToGauge": "4423978278679646402869",
+      "weightsPerEpochFormatted": "106338.5",
+      "emissionToGaugeFormatted": "4423.978278679646402869",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x2EFD1fFB025C93e37Ed3De0630A346eaf48f37b1",
+        "totalSupply": "106338500000000000000000",
+        "totalSupplyFormatted": "106338.5"
+      },
+      "externalBribe": {
+        "bribe": "0x040bEF6d35f43F79A9B372cb3E36c4dE83b7f4DE",
+        "totalSupply": "106338500000000000000000",
+        "totalSupplyFormatted": "106338.5"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Blast",
+      "pool": "0xC8252c4F9136209Ec47534bf1C0781307ec9a86F",
+      "gauge": "0xAb333FB261e5CB91C7295Ee713164F595b25fa26",
+      "weightsPerEpoch": "2682966855428106002452522",
+      "emissionToGauge": "111618906518630374867442",
+      "weightsPerEpochFormatted": "2682966.855428106002452522",
+      "emissionToGaugeFormatted": "111618.906518630374867442",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x1104a729daDde1243DAdB0Ef8f979999b1A62a14",
+        "totalSupply": "2507615657127611534666721",
+        "totalSupplyFormatted": "2507615.657127611534666721"
+      },
+      "externalBribe": {
+        "bribe": "0x9785E2456239Dd867BA576f13B2EAB54E958D3f7",
+        "totalSupply": "2507615657127611534666721",
+        "totalSupplyFormatted": "2507615.657127611534666721"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Duo USD/Duo ETH",
+      "pool": "0xCE274E4AE83BAaDd1d3b88e1Ed24886e05ACA345",
+      "gauge": "0x785F375b933E2DA179164e8C6c7CA0E92dD86d75",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x9ACa662b09b4b508DEAb51aDbE4441087074085e",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x45B5226f7B55D900559FecC42257BBfF9d9574F0",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/MCLB",
+      "pool": "0xCf68cdFea89f9E6964d4c2bD8a42EBA5da9F945D",
+      "gauge": "0xDe8aBF12032d5F65D77Ed3d7Cdd344842b40343b",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x8b8f6448ff8B1c07916A04DD903d8fAa293d3Ae4",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x521a3de0Ac3d0b1F244343531B3B6614DEc74a39",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - USDB/USDe",
+      "pool": "0xd0CD894c605a9EEDaCbc0FA9BD8440627a5D37b1",
+      "gauge": "0xD7fa37229215672cfC75F03F44E48fd524dd9277",
+      "weightsPerEpoch": "942262441189582627818433",
+      "emissionToGauge": "39200746414876750227514",
+      "weightsPerEpochFormatted": "942262.441189582627818433",
+      "emissionToGaugeFormatted": "39200.746414876750227514",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x87FF99d8980155679883B93bc545DFF84154F7c5",
+        "totalSupply": "504417744545252108172059",
+        "totalSupplyFormatted": "504417.744545252108172059"
+      },
+      "externalBribe": {
+        "bribe": "0x48d6F83FB73c58E010fc26549597295531620dF6",
+        "totalSupply": "504417744545252108172059",
+        "totalSupplyFormatted": "504417.744545252108172059"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/Baja",
+      "pool": "0xE3fAc59382987466d7F812dF56C50739b99a907A",
+      "gauge": "0xcbA584d0cFcb2cb4c22E899f1f8A678F5a405Ca2",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x6D539F79002FF45D27bd4c941d17e98Ec299b6D0",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xD818d06DE212Fdddf5622dC54f6cE0Dbe07e5635",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Wrapped Ether/rsETHWrapper",
+      "pool": "0xe53B1da56F90C9529F2db1bb8711c3f1CC6F03Bd",
+      "gauge": "0x8b431A9CDcff940F06aaea7179205aF6e04eA905",
+      "weightsPerEpoch": "474972357932971104926898",
+      "emissionToGauge": "19760175237272656683420",
+      "weightsPerEpochFormatted": "474972.357932971104926898",
+      "emissionToGaugeFormatted": "19760.17523727265668342",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xb854507Dd724B3461d717cbeAeb7Ee5a4c0bA3c4",
+        "totalSupply": "256050009610805845103711",
+        "totalSupplyFormatted": "256050.009610805845103711"
+      },
+      "externalBribe": {
+        "bribe": "0x3882518e7c0052C6dAFF9633BeC87e42c45cccd6",
+        "totalSupply": "256050009610805845103711",
+        "totalSupplyFormatted": "256050.009610805845103711"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Duo ETH/Wrapped Ether",
+      "pool": "0xF2BB3403E80adC9272C43B386C76e54d5BB604A5",
+      "gauge": "0x04f7cED1d985c3468Ff6AeeCE28d9D390cF7fce5",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xc8c33A34cC9296a4432db8A82Ca22B131cc03905",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x4085559303d4b36CEC132d400911faa91e9CBC0b",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "V3 AlgebraPool - Duo USD/USDB",
+      "pool": "0xf63E385E854E082C78Df0627b411FDb78877faA1",
+      "gauge": "0x46c9B535B4bf58e96449C19112D1c8b7895d0b3E",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x19fAD64023dB5E95467E3959244f188Dd165330C",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x015Aa1374e6c70b57BDC512c91aE5bc0524f539B",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - USDB/IBEX",
+      "pool": "0x3C7fD63caB763a10B2754b1464e09d37a9FC79E7",
+      "gauge": "0x46B942959d40217c29e73b2212E68cfE18Bd60BE",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0xF5780b47Ce014b78c13549F3c131A9e5C426A1cB",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x3d23765bA0f5FA3f7100Fa97Bb4718F82F38755F",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - USDB/sUSDz",
+      "pool": "0x41861DC6924c0e9faE75340b64799e21f15F2831",
+      "gauge": "0x2D63D3A7dA75F62C9635E54696EE6A3d169A197f",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x19f09739775c619dd424b4dbBDeC8A53E345414c",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0xbB47AEefc3AA78db312D0119b7e3A2e53b064cD8",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - WETH/GOLD",
+      "pool": "0x5CFd0c2F2eCDa7D4d0475928CE2a83448F66e89c",
+      "gauge": "0x192A1e8f4c9BAD3F2344d5D8a5a2eC8184d8Ce9D",
+      "weightsPerEpoch": "209214292201818347882622",
+      "emissionToGauge": "8703898252186939859584",
+      "weightsPerEpochFormatted": "209214.292201818347882622",
+      "emissionToGaugeFormatted": "8703.898252186939859584",
+      "gaugeState": {
+        "rewardRate": "13469751576187857",
+        "rewardRateFormatted": "0.013469751576187857",
+        "rewardForDuration": "8146505753278415913600",
+        "rewardForDurationFormatted": "8146.5057532784159136"
+      },
+      "internalBribe": {
+        "bribe": "0x5e8C1BCa6C4C9b6332fD50f75E062aeB86d46F48",
+        "totalSupply": "318304171089784400580937",
+        "totalSupplyFormatted": "318304.171089784400580937"
+      },
+      "externalBribe": {
+        "bribe": "0x59359AE641012b68Ac0bD10CEbee958e7c34c994",
+        "totalSupply": "318304171089784400580937",
+        "totalSupplyFormatted": "318304.171089784400580937"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - WETH/IBEX",
+      "pool": "0x8C22d23eC102C9e098C8e0B9eD4eA01aA0B4Be35",
+      "gauge": "0xeDc8413F3ed944c845E9C7cbb0A9A2f251d89f12",
+      "weightsPerEpoch": "9902240268587655318046",
+      "emissionToGauge": "411960821889519739745",
+      "weightsPerEpochFormatted": "9902.240268587655318046",
+      "emissionToGaugeFormatted": "411.960821889519739745",
+      "gaugeState": {
+        "rewardRate": "637531571394433",
+        "rewardRateFormatted": "0.000637531571394433",
+        "rewardForDuration": "385579094379353078400",
+        "rewardForDurationFormatted": "385.5790943793530784"
+      },
+      "internalBribe": {
+        "bribe": "0x0b323Fb6d871bE8a39C922009C7Ea806a3e105c9",
+        "totalSupply": "952501844001332259969597",
+        "totalSupplyFormatted": "952501.844001332259969597"
+      },
+      "externalBribe": {
+        "bribe": "0xF30EA86Dca356fB377Dc0802400Cf4Cc6F797E8F",
+        "totalSupply": "952501844001332259969597",
+        "totalSupplyFormatted": "952501.844001332259969597"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - PREON/STAR",
+      "pool": "0x94D3a9Fe1265e3eb1D89849c325D931924CEC88f",
+      "gauge": "0x97C173401B7040DFb0fdC9Be64B4B68eCEe08CcC",
+      "weightsPerEpoch": "133093823134622368285043",
+      "emissionToGauge": "5537074366988437538272",
+      "weightsPerEpochFormatted": "133093.823134622368285043",
+      "emissionToGaugeFormatted": "5537.074366988437538272",
+      "gaugeState": {
+        "rewardRate": "8568920961762412",
+        "rewardRateFormatted": "0.008568920961762412",
+        "rewardForDuration": "5182483397673906777600",
+        "rewardForDurationFormatted": "5182.4833976739067776"
+      },
+      "internalBribe": {
+        "bribe": "0xC0E677af718982EdFb5a25df534B8c009544478E",
+        "totalSupply": "1921550470936069436935155",
+        "totalSupplyFormatted": "1921550.470936069436935155"
+      },
+      "externalBribe": {
+        "bribe": "0xBF4183A5704D533b4Bc68b33749129Cd70491A5D",
+        "totalSupply": "1921550470936069436935155",
+        "totalSupplyFormatted": "1921550.470936069436935155"
+      }
+    },
+    {
+      "name": "StableV1 AMM - USDB/STAR",
+      "pool": "0xaaFF182d62Cd62140c9F453F9eB35ba98a90Eae8",
+      "gauge": "0xE50C5E4b7D781788d4fF0373dfC5Cd2d04F40297",
+      "weightsPerEpoch": "101250000000000000000000",
+      "emissionToGauge": "4212282482039094009136",
+      "weightsPerEpochFormatted": "101250.0",
+      "emissionToGaugeFormatted": "4212.282482039094009136",
+      "gaugeState": {
+        "rewardRate": "6518734130139734",
+        "rewardRateFormatted": "0.006518734130139734",
+        "rewardForDuration": "3942530401908511123200",
+        "rewardForDurationFormatted": "3942.5304019085111232"
+      },
+      "internalBribe": {
+        "bribe": "0xd2a6Fd445CA8E99C9d2709d2E87Aa856D9f2C5bA",
+        "totalSupply": "101250000000000000000000",
+        "totalSupplyFormatted": "101250.0"
+      },
+      "externalBribe": {
+        "bribe": "0x23e87010E3a6979fb11A659e2e5B60326C607946",
+        "totalSupply": "101250000000000000000000",
+        "totalSupplyFormatted": "101250.0"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - WETH/GAAA",
+      "pool": "0xb1Dc140E98F8f90f286E958127966CBe1BAa2745",
+      "gauge": "0x5238dA4ED2fA5e2950F355B49Bccb10292F41d01",
+      "weightsPerEpoch": "50095067056767676767",
+      "emissionToGauge": "2084094552096752606",
+      "weightsPerEpochFormatted": "50.095067056767676767",
+      "emissionToGaugeFormatted": "2.084094552096752606",
+      "gaugeState": {
+        "rewardRate": "3225248625921",
+        "rewardRateFormatted": "0.000003225248625921",
+        "rewardForDuration": "1950630368957020800",
+        "rewardForDurationFormatted": "1.9506303689570208"
+      },
+      "internalBribe": {
+        "bribe": "0xEcFfB8E152cb6ABF50Ea1145413eD57563Bf1748",
+        "totalSupply": "50095067056767676767",
+        "totalSupplyFormatted": "50.095067056767676767"
+      },
+      "externalBribe": {
+        "bribe": "0x1D3DEf06818f6436128e4CcE2a85EC42334Bb72A",
+        "totalSupply": "50095067056767676767",
+        "totalSupplyFormatted": "50.095067056767676767"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - WETH/SDK",
+      "pool": "0xb485fDABB73274EE573700AAF37e92b6273a82c2",
+      "gauge": "0xc00268FFD3F1E631C0cb408fCF90163078987821",
+      "weightsPerEpoch": "224159028137194613951009",
+      "emissionToGauge": "9325640962105809778415",
+      "weightsPerEpochFormatted": "224159.028137194613951009",
+      "emissionToGaugeFormatted": "9325.640962105809778415",
+      "gaugeState": {
+        "rewardRate": "14431931923919838",
+        "rewardRateFormatted": "0.014431931923919838",
+        "rewardForDuration": "8728432427586718022400",
+        "rewardForDurationFormatted": "8728.4324275867180224"
+      },
+      "internalBribe": {
+        "bribe": "0x052fFC7D75E46E3478Fb03D6c3f4570EC6EfaBd3",
+        "totalSupply": "1066447609380543181383278",
+        "totalSupplyFormatted": "1066447.609380543181383278"
+      },
+      "externalBribe": {
+        "bribe": "0x33e6E16Ef750812d833c3Eb0f0EBaDe69676eefB",
+        "totalSupply": "1066447609380543181383278",
+        "totalSupplyFormatted": "1066447.609380543181383278"
+      }
+    },
+    {
+      "name": "StableV1 AMM - USDB/USD+",
+      "pool": "0xB5909f3C47557d0eef11503199Fc12c1252aB15a",
+      "gauge": "0xDc425F42B743e3AA267606d792e7Ce9C1Bb1163A",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x8C1722e781e9ce5156C6A103c9d6Ad1e042B1862",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x147f0aAeBb8b0A1f8b0d32E505B11b52db2207C5",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "StableV1 AMM - USDB/DOLA",
+      "pool": "0xD49AD1DD6C5eaE53ABDaFEAED1866330C42CcAE4",
+      "gauge": "0x330C690bcfFE9B1b7FE98887FeCf5e3E39B50028",
+      "weightsPerEpoch": "56578726932767676767",
+      "emissionToGauge": "2353832891999711268",
+      "weightsPerEpochFormatted": "56.578726932767676767",
+      "emissionToGaugeFormatted": "2.353832891999711268",
+      "gaugeState": {
+        "rewardRate": "3642683242434",
+        "rewardRateFormatted": "0.000003642683242434",
+        "rewardForDuration": "2203094825024083200",
+        "rewardForDurationFormatted": "2.2030948250240832"
+      },
+      "internalBribe": {
+        "bribe": "0xfeCc1e8040ea02d3Bd8f67Eae8e5e33Ed1ee0FB3",
+        "totalSupply": "56578726932767676767",
+        "totalSupplyFormatted": "56.578726932767676767"
+      },
+      "externalBribe": {
+        "bribe": "0x7842cA7e3e37F12F5126FCCA744817d5da50D2bA",
+        "totalSupply": "56578726932767676767",
+        "totalSupplyFormatted": "56.578726932767676767"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - USDB/WETH",
+      "pool": "0xF4F76fc7ae409862ECA9ffdb1767638E7DCD6E8B",
+      "gauge": "0xbfaC653362C13F7803fF57fdDFc923927922CCB8",
+      "weightsPerEpoch": "50095067056767676767",
+      "emissionToGauge": "2084094552096752606",
+      "weightsPerEpochFormatted": "50.095067056767676767",
+      "emissionToGaugeFormatted": "2.084094552096752606",
+      "gaugeState": {
+        "rewardRate": "3225248625921",
+        "rewardRateFormatted": "0.000003225248625921",
+        "rewardForDuration": "1950630368957020800",
+        "rewardForDurationFormatted": "1.9506303689570208"
+      },
+      "internalBribe": {
+        "bribe": "0x5F9247dC9Ce6e99AC3B761EB81eAD689cb4a982D",
+        "totalSupply": "50095067056767676767",
+        "totalSupplyFormatted": "50.095067056767676767"
+      },
+      "externalBribe": {
+        "bribe": "0x745C43415792e9BE39986E9C3fF441368cf219fA",
+        "totalSupply": "50095067056767676767",
+        "totalSupplyFormatted": "50.095067056767676767"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - WETH/BALL",
+      "pool": "0x814cC56A446e8Ec9f8f1b6a7427Da043881580B6",
+      "gauge": "0x7A261334C8e37B4241B5a35A460593b84e8aba27",
+      "weightsPerEpoch": "2511958181109105261019",
+      "emissionToGauge": "104504468561981925311",
+      "weightsPerEpochFormatted": "2511.958181109105261019",
+      "emissionToGaugeFormatted": "104.504468561981925311",
+      "gaugeState": {
+        "rewardRate": "161726296579552",
+        "rewardRateFormatted": "0.000161726296579552",
+        "rewardForDuration": "97812064171313049600",
+        "rewardForDurationFormatted": "97.8120641713130496"
+      },
+      "internalBribe": {
+        "bribe": "0xf892eC2a38d9F2F97375447f20cB552b51A9D8ed",
+        "totalSupply": "2511958181109105261019",
+        "totalSupplyFormatted": "2511.958181109105261019"
+      },
+      "externalBribe": {
+        "bribe": "0x5a1288Fd0e4E2d2AE38Cd0Ea12B21274756e3be9",
+        "totalSupply": "2511958181109105261019",
+        "totalSupplyFormatted": "2511.958181109105261019"
+      }
+    },
+    {
+      "name": "StableV1 AMM - USDB/USDz",
+      "pool": "0x2a781b8192677100A739157124ef2a12E9268627",
+      "gauge": "0xA16b48ED40CD2abdA2Fff29cc6b00Aebd3c94ee0",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x505dBd5a319788E3259B8B67a13f107b8e16f6EF",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x745998C08f521aFa9bdAD01d6724860F497752e6",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    },
+    {
+      "name": "StableV1 AMM - USDz/DOLA",
+      "pool": "0x5559543e730881939c04c3717198404f5bEBc73B",
+      "gauge": "0xe4373793DDfcc042156E68064Eb358B58f99Fa42",
+      "weightsPerEpoch": "202500000000000000000000",
+      "emissionToGauge": "8424564964078188018272",
+      "weightsPerEpochFormatted": "202500.0",
+      "emissionToGaugeFormatted": "8424.564964078188018272",
+      "gaugeState": {
+        "rewardRate": "13037468260279469",
+        "rewardRateFormatted": "0.013037468260279469",
+        "rewardForDuration": "7885060803817022851200",
+        "rewardForDurationFormatted": "7885.0608038170228512"
+      },
+      "internalBribe": {
+        "bribe": "0xDd3423d136892Ec0a440B1857C626Ba64abDae77",
+        "totalSupply": "202500000000000000000000",
+        "totalSupplyFormatted": "202500.0"
+      },
+      "externalBribe": {
+        "bribe": "0x1d2ec914F6D092e7881b0e70FE47254BE1c1d845",
+        "totalSupply": "202500000000000000000000",
+        "totalSupplyFormatted": "202500.0"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - DETH/WETH",
+      "pool": "0xcB0e3bD2aDc621489dFeF404821b5B11f840Fa58",
+      "gauge": "0x8E883FECB9778b15813C99e2Ba34DDb3E2b80fdD",
+      "weightsPerEpoch": "153107707774500000887795",
+      "emissionToGauge": "6369707805666045967162",
+      "weightsPerEpochFormatted": "153107.707774500000887795",
+      "emissionToGaugeFormatted": "6369.707805666045967162",
+      "gaugeState": {
+        "rewardRate": "9857466076613273",
+        "rewardRateFormatted": "0.009857466076613273",
+        "rewardForDuration": "5961795483135707510400",
+        "rewardForDurationFormatted": "5961.7954831357075104"
+      },
+      "internalBribe": {
+        "bribe": "0x8EC1C2a79C48C81C1C53c3f2a3D7FF861a40Cdf4",
+        "totalSupply": "3670035800055494281797614",
+        "totalSupplyFormatted": "3670035.800055494281797614"
+      },
+      "externalBribe": {
+        "bribe": "0x7e2F7E8326c59E77A7B8D4b81bBA6366d96CA117",
+        "totalSupply": "3670035800055494281797614",
+        "totalSupplyFormatted": "3670035.800055494281797614"
+      }
+    },
+    {
+      "name": "VolatileV1 AMM - fDAO/WETH",
+      "pool": "0x4a5eb8FA9F2cE583B47C804b28F80e89eC146760",
+      "gauge": "0x1febB3cB673db2Cb624361cF9C2A4d9Db867c2B0",
+      "weightsPerEpoch": "0",
+      "emissionToGauge": "0",
+      "weightsPerEpochFormatted": "0.0",
+      "emissionToGaugeFormatted": "0.0",
+      "gaugeState": {
+        "rewardRate": "0",
+        "rewardRateFormatted": "0.0",
+        "rewardForDuration": "0",
+        "rewardForDurationFormatted": "0.0"
+      },
+      "internalBribe": {
+        "bribe": "0x71D67C9aFdd83139Ad70D59b8c82b1eAf9A9a8cd",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      },
+      "externalBribe": {
+        "bribe": "0x7C4D662Ed764289C588C0071A3Cf73305b01FC74",
+        "totalSupply": "0",
+        "totalSupplyFormatted": "0.0"
+      }
+    }
+  ]
+}

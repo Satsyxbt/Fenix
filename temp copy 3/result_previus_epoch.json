@@ -1,0 +1,310 @@
+{
+  "fromVotesTotalWeights": {
+    "fromVotes": "64314834093252724096557523",
+    "fromVoterWeightTotal": "54894155006448109194649136",
+    "fromExternalBribesSum": "54894155006448109194649131",
+    "fromVoterWeightPerEpochSum": "54894155006448109194649136"
+  },
+  "fromVotesPoolToTotalWeights": {
+    "0x117106000cEB709bA3eC885027D111463204D6B6": {
+      "weightFromVotes": "2101181589129199009283127",
+      "weightFromVoter": "624502252601976610535703",
+      "weightFromBribe": "2036847297093117280358388",
+      "withProblem": true
+    },
+    "0x1D74611f3EF04E7252f7651526711a937Aa1f75e": {
+      "weightFromVotes": "15309788202456867927687777",
+      "weightFromVoter": "26452657005327080988993603",
+      "weightFromBribe": "15245589067929773005053377",
+      "withProblem": true
+    },
+    "0x1eba6F6CfDb86e965040BF9e75d3dED9A3fd22A5": {
+      "weightFromVotes": "1855652468478269425663518",
+      "weightFromVoter": "135199396401749585704160",
+      "weightFromBribe": "1854300889413496382440111",
+      "withProblem": true
+    },
+    "0x28D7De5e9592cbd951Dc3B22325fdfA89972f6db": {
+      "weightFromVotes": "1855658549229185252079753",
+      "weightFromVoter": "135161692332722419524490",
+      "weightFromBribe": "1854306970164412208856346",
+      "withProblem": true
+    },
+    "0x4c577F4873061003D6C83EAaC20E24397Ff5b89b": {
+      "weightFromVotes": "734113791860804853627729",
+      "weightFromVoter": "475721502593159557513718",
+      "weightFromBribe": "725756468270416496135367",
+      "withProblem": true
+    },
+    "0x6A1DE1841c5c3712E3Bc7C75Ce3d57DEDEC6915F": {
+      "weightFromVotes": "524448368819772615628111",
+      "weightFromVoter": "116488590461572504350262",
+      "weightFromBribe": "521498174934254016475255",
+      "withProblem": true
+    },
+    "0x886369748d1d66747b8F51aB38De00DEa13f0101": {
+      "weightFromVotes": "11808238353978129929715917",
+      "weightFromVoter": "1358841032747712626070748",
+      "weightFromBribe": "4485339885597041929292074",
+      "withProblem": true
+    },
+    "0xA35203fFB424c8845807C0174F5FB0334235A313": {
+      "weightFromVotes": "24841341659120054352716",
+      "weightFromVoter": "822980725554229340060",
+      "weightFromBribe": "24641922774542201512600",
+      "withProblem": true
+    },
+    "0xb50a80bba0FF07f4Bc3434c593e86663fE05ABe2": {
+      "weightFromVotes": "1238491518793775840965986",
+      "weightFromVoter": "256546006863079696294048",
+      "weightFromBribe": "1229794984555919118079383",
+      "withProblem": true
+    },
+    "0xb7C9062c306f70f7325Ef1ab8B158AacAFD59C97": {
+      "weightFromVotes": "3988188515807960054687942",
+      "weightFromVoter": "393348234417917777216695",
+      "weightFromBribe": "3921791734343919110849636",
+      "withProblem": true
+    },
+    "0xC066A3e5D7c22Bd3BEaF74d4C0925520B455bB6F": {
+      "weightFromVotes": "7107820065235538360290",
+      "weightFromVoter": "4279873424444286696607",
+      "weightFromBribe": "5505848382848079381958",
+      "withProblem": true
+    },
+    "0xC8252c4F9136209Ec47534bf1C0781307ec9a86F": {
+      "weightFromVotes": "2755342486623302534437360",
+      "weightFromVoter": "2682966855428106002452522",
+      "weightFromBribe": "2507615657127611534666721",
+      "withProblem": true
+    },
+    "0x5CFd0c2F2eCDa7D4d0475928CE2a83448F66e89c": {
+      "weightFromVotes": "323238876147859896190677",
+      "weightFromVoter": "209214292201818347882622",
+      "weightFromBribe": "318304171089784400580937",
+      "withProblem": true
+    },
+    "0x8C22d23eC102C9e098C8e0B9eD4eA01aA0B4Be35": {
+      "weightFromVotes": "955568966886806748274021",
+      "weightFromVoter": "9902240268587655318046",
+      "weightFromBribe": "952501844001332259969597",
+      "withProblem": true
+    },
+    "0x94D3a9Fe1265e3eb1D89849c325D931924CEC88f": {
+      "weightFromVotes": "1933491555210777172909510",
+      "weightFromVoter": "133093823134622368285043",
+      "weightFromBribe": "1921550470936069436935155",
+      "withProblem": true
+    },
+    "0xb485fDABB73274EE573700AAF37e92b6273a82c2": {
+      "weightFromVotes": "1082763837121188688172608",
+      "weightFromVoter": "224159028137194613951009",
+      "weightFromBribe": "1066447609380543181383278",
+      "withProblem": true
+    },
+    "0xcB0e3bD2aDc621489dFeF404821b5B11f840Fa58": {
+      "weightFromVotes": "3692690218805097014583379",
+      "weightFromVoter": "153107707774500000887795",
+      "weightFromBribe": "3670035800055494281797614",
+      "withProblem": true
+    },
+    "0xc5910a7f3b0119ac1a3ad7A268CcE4A62d8C882D": {
+      "weightFromVotes": "106338500000000000000000",
+      "weightFromVoter": "106338500000000000000000",
+      "weightFromBribe": "106338500000000000000000"
+    },
+    "0x4a28F50f15eFEdF44af0D376fDC2e319fA8Ccef8": {
+      "weightFromVotes": "202677535107662282272092",
+      "weightFromVoter": "202597767553831141136046",
+      "weightFromBribe": "202597767553831141136046",
+      "withProblem": true
+    },
+    "0x2e3281E50479d6C42328bA6F2E4aFd971e43Ca2d": {
+      "weightFromVotes": "7930105663408008404501060",
+      "weightFromVoter": "10776635323805045753192560",
+      "weightFromBribe": "6398188357361740556728817",
+      "withProblem": true
+    },
+    "0x558c091E64910BA62A58c279a55FEFC864251d98": {
+      "weightFromVotes": "1298734410339096038289133",
+      "weightFromVoter": "2375809892053748970028315",
+      "weightFromBribe": "1281198150442922670912380",
+      "withProblem": true
+    },
+    "0xb3B4484bdFb6885f96421c3399B666a1c9D27Fca": {
+      "weightFromVotes": "2538651780171048229151805",
+      "weightFromVoter": "4721243930059367494050360",
+      "weightFromBribe": "2532020446837714895818489",
+      "withProblem": true
+    },
+    "0x46f2aA2Aa7d31ddD237d620e52A33A8d5aF2a5Ab": {
+      "weightFromVotes": "158667895955579945681",
+      "weightFromVoter": "158667895955579945681",
+      "weightFromBribe": "158667895955579945681"
+    },
+    "0x635512a1333AD0822F5bA4fd6479DaA1dF8B77E1": {
+      "weightFromVotes": "254481607282123861287618",
+      "weightFromVoter": "473204536719711268270689",
+      "weightFromBribe": "254282188397546008447502",
+      "withProblem": true
+    },
+    "0xd0CD894c605a9EEDaCbc0FA9BD8440627a5D37b1": {
+      "weightFromVotes": "504577279652914390444152",
+      "weightFromVoter": "942262441189582627818433",
+      "weightFromBribe": "504417744545252108172059",
+      "withProblem": true
+    },
+    "0x814cC56A446e8Ec9f8f1b6a7427Da043881580B6": {
+      "weightFromVotes": "9791042718634138771984",
+      "weightFromVoter": "2511958181109105261019",
+      "weightFromBribe": "2511958181109105261019",
+      "withProblem": true
+    },
+    "0xe53B1da56F90C9529F2db1bb8711c3f1CC6F03Bd": {
+      "weightFromVotes": "263948726033272255917947",
+      "weightFromVoter": "474972357932971104926898",
+      "weightFromBribe": "256050009610805845103711",
+      "withProblem": true
+    },
+    "0x3Bafe103742dA10a4FECe8FC5e800df07D645439": {
+      "weightFromVotes": "202530378159981560031142",
+      "weightFromVoter": "202530378159981560031142",
+      "weightFromBribe": "202530378159981560031142"
+    },
+    "0x9304ba542df9bC61DD1C97C073ed35F81cAb6149": {
+      "weightFromVotes": "508125272549628496294187",
+      "weightFromVoter": "945969969193959015940561",
+      "weightFromBribe": "508125272549628496294187",
+      "withProblem": true
+    },
+    "0xb1Dc140E98F8f90f286E958127966CBe1BAa2745": {
+      "weightFromVotes": "50095067056767676767",
+      "weightFromVoter": "50095067056767676767",
+      "weightFromBribe": "50095067056767676767"
+    },
+    "0xD49AD1DD6C5eaE53ABDaFEAED1866330C42CcAE4": {
+      "weightFromVotes": "56578726932767676767",
+      "weightFromVoter": "56578726932767676767",
+      "weightFromBribe": "56578726932767676767"
+    },
+    "0xF4F76fc7ae409862ECA9ffdb1767638E7DCD6E8B": {
+      "weightFromVotes": "50095067056767676767",
+      "weightFromVoter": "50095067056767676767",
+      "weightFromBribe": "50095067056767676767"
+    },
+    "0xaaFF182d62Cd62140c9F453F9eB35ba98a90Eae8": {
+      "weightFromVotes": "101250000000000000000000",
+      "weightFromVoter": "101250000000000000000000",
+      "weightFromBribe": "101250000000000000000000"
+    },
+    "0x5559543e730881939c04c3717198404f5bEBc73B": {
+      "weightFromVotes": "202500000000000000000000",
+      "weightFromVoter": "202500000000000000000000",
+      "weightFromBribe": "202500000000000000000000"
+    }
+  },
+  "fromGeneralDiff": {
+    "sum": "54894155006448109194649136",
+    "sumFromBribes": "54894155006448109194649131",
+    "diffFromVoterToBribe": {
+      "0x117106000cEB709bA3eC885027D111463204D6B6": {
+        "diffWeightFromVoterToBribe": "Voter +1412345044491140669822685",
+        "diffWeightFromVoterToBribeFormatted": "1412345.044491140669822685"
+      },
+      "0x1D74611f3EF04E7252f7651526711a937Aa1f75e": {
+        "diffWeightFromVoterToBribe": "Voter -11207067937397307983940226",
+        "diffWeightFromVoterToBribeFormatted": "11207067.937397307983940226"
+      },
+      "0x1eba6F6CfDb86e965040BF9e75d3dED9A3fd22A5": {
+        "diffWeightFromVoterToBribe": "Voter +1719101493011746796735951",
+        "diffWeightFromVoterToBribeFormatted": "1719101.493011746796735951"
+      },
+      "0x28D7De5e9592cbd951Dc3B22325fdfA89972f6db": {
+        "diffWeightFromVoterToBribe": "Voter +1719145277831689789331856",
+        "diffWeightFromVoterToBribeFormatted": "1719145.277831689789331856"
+      },
+      "0x2e3281E50479d6C42328bA6F2E4aFd971e43Ca2d": {
+        "diffWeightFromVoterToBribe": "Voter -4378446966443305196463743",
+        "diffWeightFromVoterToBribeFormatted": "4378446.966443305196463743"
+      },
+      "0x4c577F4873061003D6C83EAaC20E24397Ff5b89b": {
+        "diffWeightFromVoterToBribe": "Voter +250034965677256938621649",
+        "diffWeightFromVoterToBribeFormatted": "250034.965677256938621649"
+      },
+      "0x558c091E64910BA62A58c279a55FEFC864251d98": {
+        "diffWeightFromVoterToBribe": "Voter -1094611741610826299115935",
+        "diffWeightFromVoterToBribeFormatted": "1094611.741610826299115935"
+      },
+      "0x635512a1333AD0822F5bA4fd6479DaA1dF8B77E1": {
+        "diffWeightFromVoterToBribe": "Voter -218922348322165259823187",
+        "diffWeightFromVoterToBribeFormatted": "218922.348322165259823187"
+      },
+      "0x6A1DE1841c5c3712E3Bc7C75Ce3d57DEDEC6915F": {
+        "diffWeightFromVoterToBribe": "Voter +405009584472681512124993",
+        "diffWeightFromVoterToBribeFormatted": "405009.584472681512124993"
+      },
+      "0x886369748d1d66747b8F51aB38De00DEa13f0101": {
+        "diffWeightFromVoterToBribe": "Voter +3126498852849329303221326",
+        "diffWeightFromVoterToBribeFormatted": "3126498.852849329303221326"
+      },
+      "0x9304ba542df9bC61DD1C97C073ed35F81cAb6149": {
+        "diffWeightFromVoterToBribe": "Voter -437844696644330519646374",
+        "diffWeightFromVoterToBribeFormatted": "437844.696644330519646374"
+      },
+      "0xA35203fFB424c8845807C0174F5FB0334235A313": {
+        "diffWeightFromVoterToBribe": "Voter +23818942048987972172540",
+        "diffWeightFromVoterToBribeFormatted": "23818.94204898797217254"
+      },
+      "0xb3B4484bdFb6885f96421c3399B666a1c9D27Fca": {
+        "diffWeightFromVoterToBribe": "Voter -2189223483221652598231871",
+        "diffWeightFromVoterToBribeFormatted": "2189223.483221652598231871"
+      },
+      "0xb50a80bba0FF07f4Bc3434c593e86663fE05ABe2": {
+        "diffWeightFromVoterToBribe": "Voter +973248977692839421785335",
+        "diffWeightFromVoterToBribeFormatted": "973248.977692839421785335"
+      },
+      "0xb7C9062c306f70f7325Ef1ab8B158AacAFD59C97": {
+        "diffWeightFromVoterToBribe": "Voter +3528443499926001333632941",
+        "diffWeightFromVoterToBribeFormatted": "3528443.499926001333632941"
+      },
+      "0xC066A3e5D7c22Bd3BEaF74d4C0925520B455bB6F": {
+        "diffWeightFromVoterToBribe": "Voter +1225974958403792685351",
+        "diffWeightFromVoterToBribeFormatted": "1225.974958403792685351"
+      },
+      "0xC8252c4F9136209Ec47534bf1C0781307ec9a86F": {
+        "diffWeightFromVoterToBribe": "Voter -175351198300494467785801",
+        "diffWeightFromVoterToBribeFormatted": "175351.198300494467785801"
+      },
+      "0xd0CD894c605a9EEDaCbc0FA9BD8440627a5D37b1": {
+        "diffWeightFromVoterToBribe": "Voter -437844696644330519646374",
+        "diffWeightFromVoterToBribeFormatted": "437844.696644330519646374"
+      },
+      "0xe53B1da56F90C9529F2db1bb8711c3f1CC6F03Bd": {
+        "diffWeightFromVoterToBribe": "Voter -218922348322165259823187",
+        "diffWeightFromVoterToBribeFormatted": "218922.348322165259823187"
+      },
+      "0x5CFd0c2F2eCDa7D4d0475928CE2a83448F66e89c": {
+        "diffWeightFromVoterToBribe": "Voter +109089878887966052698315",
+        "diffWeightFromVoterToBribeFormatted": "109089.878887966052698315"
+      },
+      "0x8C22d23eC102C9e098C8e0B9eD4eA01aA0B4Be35": {
+        "diffWeightFromVoterToBribe": "Voter +942599603732744604651551",
+        "diffWeightFromVoterToBribeFormatted": "942599.603732744604651551"
+      },
+      "0x94D3a9Fe1265e3eb1D89849c325D931924CEC88f": {
+        "diffWeightFromVoterToBribe": "Voter +1788456647801447068650112",
+        "diffWeightFromVoterToBribeFormatted": "1788456.647801447068650112"
+      },
+      "0xb485fDABB73274EE573700AAF37e92b6273a82c2": {
+        "diffWeightFromVoterToBribe": "Voter +842288581243348567432269",
+        "diffWeightFromVoterToBribeFormatted": "842288.581243348567432269"
+      },
+      "0xcB0e3bD2aDc621489dFeF404821b5B11f840Fa58": {
+        "diffWeightFromVoterToBribe": "Voter +3516928092280994280909819",
+        "diffWeightFromVoterToBribeFormatted": "3516928.092280994280909819"
+      }
+    },
+    "diffFromVoterToBribeLength": 24
+  },
+  "checkInternalAndExternalBribes": []
+}
