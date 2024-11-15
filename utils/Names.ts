@@ -71,6 +71,9 @@ export enum AliasDeployedContracts {
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
   veFNXClaimer = 'veFNXClaimer',
   OpenOceanVeNftDirectBuyer = 'OpenOceanVeNftDirectBuyer',
+  GetInformationAggregatorUpgradeable_ProxyAdmin = 'GetInformationAggregatorUpgradeable_ProxyAdmin',
+  GetInformationAggregatorUpgradeable_Proxy = 'GetInformationAggregatorUpgradeable_Proxy',
+  GetInformationAggregatorUpgradeable_Implementation = 'GetInformationAggregatorUpgradeable_Implementation',
 }
 
 enum ThirdPart {
@@ -78,6 +81,7 @@ enum ThirdPart {
 }
 
 enum ContractsInstanceName {
+  GetInformationAggregatorUpgradeable = 'GetInformationAggregatorUpgradeable',
   UtilsUpgradeable = 'UtilsUpgradeable',
   ProxyAdmin = 'ProxyAdmin',
   BribeUpgradeable = 'BribeUpgradeable',

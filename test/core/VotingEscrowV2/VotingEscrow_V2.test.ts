@@ -951,9 +951,10 @@ describe('VotingEscrow_V2', function () {
       await token.mint(signers.user1.address, ethers.parseEther('2'));
       await token.connect(signers.user1).approve(VotingEscrow.target, ethers.parseEther('2'));
       await VotingEscrow.connect(signers.user1).createLockFor(ONE_ETHER, 2 * WEEK, signers.user1.address, false, false, 0);
+      let res = await VotingEscrow.tokenURI(1);
       // skip equal voting poower etc, only tokenId with common data
-      expect((await VotingEscrow.tokenURI(1)).length).to.be.greaterThan(40);
-      expect((await VotingEscrow.tokenURI(1)).slice(0, 40)).to.be.eq((await VeArtProxyUpgradeable.tokenURI(1)).slice(0, 40));
+      expect(res.length).to.be.greaterThan(40);
+      expect(res.slice(0, 40)).to.be.eq((await VeArtProxyUpgradeable.tokenURI(1)).slice(0, 40));
     });
   });
 

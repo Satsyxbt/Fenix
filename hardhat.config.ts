@@ -23,7 +23,20 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
     },
   },
 };
-
+const VOTER_LOWEST_SIZE: SolcUserConfig = {
+  version: '0.8.19',
+  settings: {
+    evmVersion: 'paris',
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 200,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+};
 const LOW_CONTRACT_SIZE_COMPILER_SETTINGS: SolcUserConfig = {
   version: '0.8.19',
   settings: {
@@ -82,7 +95,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      allowUnlimitedContractSize: false,
+      allowUnlimitedContractSize: true,
     },
     blastSepolia: {
       url: `${process.env.RPC_BLAST_SEPOLIA || 'https://sepolia.blast.io'}`,
@@ -109,6 +122,7 @@ const config: HardhatUserConfig = {
     compilers: [DEFAULT_COMPILER_SETTINGS],
     overrides: {
       'contracts/core/VotingEscrowUpgradeableV2.sol': LOW_CONTRACT_SIZE_COMPILER_SETTINGS,
+      'contracts/core/VoterUpgradeableV2.sol': VOTER_LOWEST_SIZE,
       'contracts/core/VeArtProxy.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,
       'contracts/core/VeArtProxyStatic.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,
     },

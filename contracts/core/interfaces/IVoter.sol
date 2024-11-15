@@ -149,6 +149,11 @@ interface IVoter {
      */
     event UpdateAddress(string key, address indexed value);
 
+    /// @notice Event emitted when voting is paused or unpaused.
+    /// @dev Emits the current paused state of voting.
+    /// @param paused Indicates whether voting is paused (true) or unpaused (false).
+    event VotingPaused(bool indexed paused);
+
     /**
      * @notice Emitted when the distribution window duration is set or updated.
      * @param duration New duration of the distribution window in seconds.
@@ -180,12 +185,6 @@ interface IVoter {
      * @param distributionWindowDuration_ The duration in seconds.
      */
     function setDistributionWindowDuration(uint256 distributionWindowDuration_) external;
-
-    /**
-     * @notice Sets the delay period before a vote can be cast again.
-     * @param newVoteDelay_ The new delay period in seconds.
-     */
-    function setVoteDelay(uint256 newVoteDelay_) external;
 
     /**
      * @notice Disables a gauge, preventing further rewards distribution.

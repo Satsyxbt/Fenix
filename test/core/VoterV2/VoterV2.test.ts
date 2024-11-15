@@ -88,19 +88,6 @@ describe('VotingEscrow_V2', function () {
       });
     });
 
-    describe('#setVoteDelay', async () => {
-      it('fail if call from not VoterAdmin', async () => {
-        await expect(Voter.connect(signers.otherUser1).setVoteDelay(3600)).to.be.revertedWith(
-          getAccessControlError(ethers.id('VOTER_ADMIN_ROLE'), signers.otherUser1.address),
-        );
-      });
-      it('success set new voteDelay window', async () => {
-        expect(await Voter.voteDelay()).to.be.eq(0);
-        await expect(Voter.setVoteDelay(155)).to.be.emit(Voter, 'SetVoteDelay').withArgs(0, 155);
-        expect(await Voter.voteDelay()).to.be.eq(155);
-      });
-    });
-
     describe('#killGauge', async () => {
       it('should fail if call from not GOVERNANCE_ROLE', async () => {
         await expect(Voter.connect(signers.otherUser1).killGauge(ethers.ZeroAddress)).to.be.revertedWith(
