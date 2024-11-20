@@ -93,6 +93,25 @@ interface ICompoundVeFNXManagedNFTStrategy is IManagedNFTStrategy, ISingelTokenB
     function totalSupply() external view returns (uint256);
 
     /**
+     * @notice Claims bribes for the current strategy and recovers specified ERC20 tokens to a recipient.
+     * @dev This function allows the strategy to claim bribes from specified contracts and transfer
+     *      non-strategic ERC20 tokens back to the designated recipient in a single transaction.
+     * @param bribes_ The list of addresses representing bribe contracts from which to claim rewards.
+     * @param tokens_ A nested array where each entry corresponds to a list of token addresses to claim from the respective bribe contract.
+     * @param recipient_ The address to which recovered tokens should be sent.
+     * @param tokensToRecover_ The list of ERC20 token addresses to be recovered and transferred to the recipient.
+     *
+     * Emits:
+     * - Emits `Erc20Recover` for each recovered token.
+     */
+    function claimBribesWithERC20Recover(
+        address[] calldata bribes_,
+        address[][] calldata tokens_,
+        address recipient_,
+        address[] calldata tokensToRecover_
+    ) external;
+
+    /**
      * @notice Initializes the contract with necessary blast governance and operational addresses, and sets specific strategy parameters.
      *
      * @param blastGovernor_ Address of the blast governor contract.

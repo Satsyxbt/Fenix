@@ -269,7 +269,39 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
       expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(ethers.parseEther('56')); // 55 for managed + 1 from user nft id
     });
   });
+  describe('#claimBribesWithERC20Recover', async () => {
+    it('fails if caller not admin', async () => {
+      await expect(
+        firstStrategy.connect(signers.otherUser1).claimBribesWithERC20Recover([], [], signers.otherUser1.address, []),
+      ).to.be.revertedWithCustomError(firstStrategy, 'AccessDenied');
+    });
+    it('fails if try recover fenix', async () => {
+      await expect(
+        firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser1.address, [deployed.fenix.target]),
+      ).to.be.revertedWithCustomError(firstStrategy, 'IncorrectRecoverToken');
+    });
+    it('fails if try recover router allowed tokens', async () => {
+      let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
+      await routerV2PathProvider.setAllowedTokenInInputRouters(token.target, true);
+      await expect(
+        firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser1.address, [token.target]),
+      ).to.be.revertedWithCustomError(firstStrategy, 'IncorrectRecoverToken');
+    });
+    it('success recover erc20 token', async () => {
+      let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
+      await token.mint(firstStrategy.target, 1e6);
 
+      expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
+      expect(await token.balanceOf(firstStrategy.target)).to.be.eq(1e6);
+
+      await expect(firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser2.address, [token.target]))
+        .to.be.emit(firstStrategy, 'Erc20Recover')
+        .withArgs(signers.deployer.address, signers.otherUser2.address, token.target, 1e6);
+
+      expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(1e6);
+      expect(await token.balanceOf(firstStrategy)).to.be.eq(ZERO);
+    });
+  });
   describe('#erc20Recover', async () => {
     it('fails if caller not admin', async () => {
       await expect(
