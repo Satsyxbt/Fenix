@@ -50,7 +50,7 @@
   "RewardAPIUpgradeable_Proxy": "0x43002697555743241155ee8b950F2075fD085F32",
   "VeBoostUpgradeable_Implementation": "0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590",
   "VeBoostUpgradeable_Proxy": "0x20ba4388a1ef501F1fD055a39c4e303eCf5a1660",
-  "CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation": "0x47a95acbFC949802916151050Dea668aB9AC427a",
+  "CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation": "0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67",
   "CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation": "0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8",
   "CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy": "0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938",
   "RouterV2": "0x6Da61bffe2aF0D40cDEF8Af4BF091D1F1D14B9A6",

@@ -25,7 +25,7 @@
 | **Fenix** | `0x52f847356b38720B55ee18Cb3e094ca11C85A192` |
 | **FeesVaultFactoryUpgradeable_Proxy** | `0x25D84140b5a611Fc8b13B0a73b7ac86d30C81edB` |
 | **FeesVaultUpgradeable_Implementation** |`0x17409D1648422596B447BC3FcEE92a5f291e4604` |
-| **VotingEscrowUpgradeable_Proxy** | `0xb72a3a9cc6c996f594249701d1f6062ec9939e32` |
+| **VotingEscrowUpgradeable_Proxy** | `0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9` |
 | **VoterUpgradeable_Proxy** | `0x56129f1c0aED4aDBeE862986FAcE5Ba8c9aC3d9B` |
 | **VeArtProxy** | `0xafDC3756E08305Cb4F856B3511A72eD5D50d5b11` |
 | **MinterUpgradeable_Proxy** | `0xa4FF6fe53212e8da028e0a34819006A26615D9f8` |
@@ -98,10 +98,10 @@
 | **BribeFactoryUpgradeable_Implementation** | `0x32c981701cBdbA2C295427459f87fCceF57a0dA8` |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
 | **MinterUpgradeable_Implementation** | `0x081d528D4dc4a2f3424C6Bdde43F950007cEe944`  |
-| **VotingEscrowUpgradeable_Implementation** | `0xb83B559BfdD062feC4A0B2db6A938E7B25d08407`|
+| **VotingEscrowUpgradeable_Implementation** | `0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9`|
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
-| **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` |
+| **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` (Future: 0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5) |
 | **BribeUpgradeable_Implementation** | `0x721B2c9b1c44B0A215803A872DF84E02dcAafD5a` |
 | **GaugeUpgradeable_V2Pools_Implementation** | `0x67d391Aa49ddD09E57b0b9226e2891e408621e9b` |
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
@@ -117,8 +117,8 @@
 | **RouterV2PathProviderUpgradeable_Implementation** | `0xbD7852f7e21bc23944A2809315385733C734369c` |
 | **ManagedNFTManagerUpgradeable_Implementation** | `0x5db6c3B0F80D28ca0c4b96167C5957c44561171d`|
 | **PairAPIUpgradeable_Implementation** | `0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71` |
-| **RewardAPIUpgradeable_Implementation** | `0xd45d0795a2918669a44CcbE1398d3af70Acb5699` (Future: 0xd791D71Fe726E226C1A9d04b73EecB4Eaa666E76)|
-| **VeNFTAPIUpgradeable_Implementation** | `0x38Fec988ebCd4159d655295Aa37C321382dBb766` (Future: 0xD5926da7196096101E7cd4742bA0f853C2b8db0E)|
+| **RewardAPIUpgradeable_Implementation** | `0xd791d71fe726e226c1a9d04b73eecb4eaa666e76`|
+| **VeNFTAPIUpgradeable_Implementation** | `0xD5926da7196096101E7cd4742bA0f853C2b8db0E`|
 | **UtilsUpgradeable_Implementation** | `0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f` |
 | **VeArtProxyUpgradeable_Implementation** | `0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8` |
 | **UtilsUpgradeable_Proxy** | `0x0c39cC69DD9f0a06360be1E8d46565eC24Ad7A4F` |

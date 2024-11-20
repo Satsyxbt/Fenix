@@ -1,0 +1,13 @@
+Starting deployment of CompoundVeFNXManagedNFTStrategyUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+CompoundVeFNXManagedNFTStrategyUpgradeable deployed at 0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation:0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5
+Verifying TransparentUpgradeableProxy at 0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyUpgradeable.sol:CompoundVeFNXManagedNFTStrategyUpgradeable at 0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyUpgradeable on the block explorer.
+https://blastscan.io/address/0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5#code
+

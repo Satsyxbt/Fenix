@@ -1,0 +1,20 @@
+Starting deployment of CompoundVeFNXManagedNFTStrategyUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+Warning: Address for CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x47a95acbFC949802916151050Dea668aB9AC427a
+        New address: 0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67
+CompoundVeFNXManagedNFTStrategyUpgradeable deployed at 0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation:0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67
+Verifying TransparentUpgradeableProxy at 0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyUpgradeable.sol:CompoundVeFNXManagedNFTStrategyUpgradeable at 0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67#code
+
+	Called Contract(0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938).changeStrategyImplementation(strategyImplementation_: "0x3AD0fc4e7a1e36E93F31667b2336ce7Fb777dd67")
+	Transaction hash: 0x18a5f5e663a60698bbac5596d14a9b758624385ba7eb2ac1decc32c04c83d039
+	Called Contract(0xcE0dc336D6059847f89cDac71F313607c0996225).multiUpgradeCall(targets_: "0x8DEE69B02652a4Cfab572b7D1dA65fe2F722f682,0x6E66f35999A40B469D09A9346cf7EA8037dC6DeA,0x60c9791eef471b851d8D33e459EAe4e3CD22AD62,0x4Dd49ECF06928D3871BA6c9E2942e9e7DC2Ff8d6")
+	Transaction hash: 0xb08a8067cc0cb40cf662b879567ff9050cc4e0850cba06ad672e151acb3795f7
