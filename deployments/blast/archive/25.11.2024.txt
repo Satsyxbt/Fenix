@@ -1,0 +1,15 @@
+Starting deployment of OpenOceanVeNftDirectBuyer...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1","0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9","0x52f847356b38720B55ee18Cb3e094ca11C85A192","0x6352a56caadC4F1E25CD6c75970Fa768A3304e64"]
+OpenOceanVeNftDirectBuyer deployed at 0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4
+Save to deploys.json deployed address of OpenOceanVeNftDirectBuyer:0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4
+Verifying TransparentUpgradeableProxy at 0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/OpenOceanVeNftDirectBuyer.sol:OpenOceanVeNftDirectBuyer at 0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract OpenOceanVeNftDirectBuyer on the block explorer.
+https://blastscan.io/address/0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4#code
+
+	Called Contract(0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4).transferOwnership(newOwner: "0x0907fb24626a06e383BD289A0e9C8560b8cCC4b5")
+	Transaction hash: 0x3976dda682468ab589d04cf2d33da6320cc635be435dc9fb650589b3edab787a

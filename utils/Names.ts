@@ -70,6 +70,7 @@ export enum AliasDeployedContracts {
   BasePluginV1Factory_Proxy = 'BasePluginV1Factory_Proxy',
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
   veFNXClaimer = 'veFNXClaimer',
+  OpenOceanVeNftDirectBuyer = 'OpenOceanVeNftDirectBuyer',
 }
 
 enum ThirdPart {
@@ -119,6 +120,7 @@ enum ContractsInstanceName {
   GaugeRewarder = 'GaugeRewarder',
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
   veFNXClaimer = 'veFNXClaimer',
+  OpenOceanVeNftDirectBuyer = 'OpenOceanVeNftDirectBuyer',
 }
 
 enum ContractsMocksInstanceName {

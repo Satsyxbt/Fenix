@@ -36,6 +36,7 @@
 | **VeFnxSplitMerklAidropUpgradeable_Proxy** | `0x311F7981d7159De374c378Be0815DC4257b50468` |
 | **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |
 | **VeArtStatic** | `0xd4B31701DDBdC69bb4e8aB7118d73151CaC5c90F` |
+| **OpenOceanVeNftDirectBuyer** | `0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4`|
 
 ### Migration
 | Contract Name | Address |
