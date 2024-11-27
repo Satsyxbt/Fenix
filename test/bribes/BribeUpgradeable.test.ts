@@ -36,8 +36,8 @@ describe('BribeFactoryUpgradeable Contract', function () {
     token5 = await deployERC20MockToken(signers.deployer, 'Token5', 'T5', 5);
 
     bribeFactory = deployed.bribeFactory;
-
-    let newImpl = await ethers.deployContract('BribeUpgradeableMockWithFixTargetEpoch', [signers.blastGovernor.address, 1731542400]);
+    let currentEpoch = (BigInt(await time.latest()) / (86400n * 7n)) * 86400n * 7n;
+    let newImpl = await ethers.deployContract('BribeUpgradeableMockWithFixTargetEpoch', [signers.blastGovernor.address, currentEpoch]);
     await bribeFactory.changeImplementation(newImpl.target);
 
     await deployed.v2PairFactory.createPair(token18.target, token9.target, false);

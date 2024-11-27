@@ -187,9 +187,6 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      */
     function erc20Recover(address token_, address recipient_) external {
         _checkBuybackSwapPermissions();
-        if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
-            revert IncorrectRecoverToken();
-        }
         _erc20Recover(token_, recipient_);
     }
 
@@ -203,6 +200,9 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      * - `Erc20Recover` event with details of the token recovery, including the caller, recipient, token address, and recovered amount.
      */
     function _erc20Recover(address token_, address recipient_) internal {
+        if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
+            revert IncorrectRecoverToken();
+        }
         uint256 amount = IERC20Upgradeable(token_).balanceOf(address(this));
         if (amount > 0) {
             IERC20Upgradeable(token_).safeTransfer(recipient_, amount);
