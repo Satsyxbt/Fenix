@@ -23,6 +23,25 @@ interface IVoter {
         uint256 index;
         uint256 lastDistributionTimestamp;
     }
+
+    /**
+     * @notice Parameters for creating a veNFT through VotingEscrow.
+     * @param percentageToLock The percentage (in 18 decimals) of the claimed reward tokens to be locked.
+     * @param lockDuration The duration (in seconds) for which the tokens will be locked.
+     * @param to The address that will receive the veNFT.
+     * @param shouldBoosted Indicates whether the veNFT should have boosted properties.
+     * @param withPermanentLock Indicates if the lock should be permanent.
+     * @param managedTokenIdForAttach The ID of the managed veNFT token to which this lock will be attached.
+     */
+    struct AggregateCreateLockParams {
+        uint256 percentageToLock;
+        uint256 lockDuration;
+        address to;
+        bool shouldBoosted;
+        bool withPermanentLock;
+        uint256 managedTokenIdForAttach;
+    }
+
     /**
      * @notice Parameters for claiming bribes using a specific tokenId.
      * @param tokenId The token ID to claim bribes for.

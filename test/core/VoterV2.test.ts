@@ -9,7 +9,7 @@ import {
   VoterUpgradeableV2,
 } from '../../typechain-types';
 import completeFixture, { CoreFixtureDeployed, deployTransaperntUpgradeableProxy, SignersList } from '../utils/coreFixture';
-import { WETH_PREDEPLOYED_ADDRESS, ZERO_ADDRESS } from '../utils/constants';
+import { ERRORS, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import { ethers } from 'hardhat';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 
@@ -113,8 +113,36 @@ describe('Voter change governance/admin functionality', function () {
           { bribes: [], tokens: [], tokenId: 0 },
           { users: [], proofs: [], tokens: [], amounts: [] },
           { inPureTokens: false, amount: 0, proofs: [], withPermanentLock: false, managedTokenIdForAttach: 0 },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ),
       ).to.be.not.reverted;
+    });
+
+    it('fail if percentageToLock more then 100% (1e18)', async () => {
+      await expect(
+        voter.aggregateClaim(
+          [],
+          { bribes: [], tokens: [] },
+          { bribes: [], tokens: [], tokenId: 0 },
+          { users: [], proofs: [], tokens: [], amounts: [] },
+          { inPureTokens: false, amount: 0, proofs: [], withPermanentLock: false, managedTokenIdForAttach: 0 },
+          {
+            percentageToLock: ethers.parseEther('1') + 1n,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+        ),
+      ).to.be.revertedWithCustomError(voter, 'InvalidPercentageToLock');
     });
     it('fail if in AggregateClaimBribesByTokenIdParams set not exist token id', async () => {
       await expect(
@@ -124,6 +152,14 @@ describe('Voter change governance/admin functionality', function () {
           { bribes: [ZERO_ADDRESS], tokens: [], tokenId: 5 },
           { users: [], proofs: [], tokens: [], amounts: [] },
           { inPureTokens: false, amount: 0, proofs: [], withPermanentLock: false, managedTokenIdForAttach: 0 },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ),
       ).to.be.revertedWith('ERC721: invalid token ID');
     });
@@ -135,6 +171,14 @@ describe('Voter change governance/admin functionality', function () {
           { bribes: [], tokens: [], tokenId: 0 },
           { users: [signers.otherUser1.address], proofs: [], tokens: [], amounts: [] },
           { inPureTokens: false, amount: 0, proofs: [], withPermanentLock: false, managedTokenIdForAttach: 0 },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ),
       ).to.be.revertedWith('users containes no only caller');
       await expect(
@@ -144,6 +188,14 @@ describe('Voter change governance/admin functionality', function () {
           { bribes: [], tokens: [], tokenId: 0 },
           { users: [signers.deployer.address, signers.otherUser1.address], proofs: [], tokens: [], amounts: [] },
           { inPureTokens: false, amount: 0, proofs: [], withPermanentLock: false, managedTokenIdForAttach: 0 },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ),
       ).to.be.revertedWith('users containes no only caller');
     });
@@ -191,6 +243,14 @@ describe('Voter change governance/admin functionality', function () {
             withPermanentLock: false,
             managedTokenIdForAttach: 0,
             proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('1')]),
+          },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
           },
         );
         await VeFnxSplitMerklAidropUpgradeable.pause();
@@ -255,6 +315,14 @@ describe('Voter change governance/admin functionality', function () {
             amount: ethers.parseEther('1'),
             proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('1')]),
           },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         );
 
         await expect(tx)
@@ -273,6 +341,266 @@ describe('Voter change governance/admin functionality', function () {
         expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
         expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(0);
         expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(0);
+      });
+
+      describe('success claim and convert FNX in lock', async () => {
+        let tree: StandardMerkleTree<(string | bigint)[]>;
+
+        beforeEach(async () => {
+          await voter.updateAddress('veFnxMerklAidrop', VeFnxSplitMerklAidropUpgradeable.target);
+
+          tree = StandardMerkleTree.of(
+            [
+              [signers.otherUser1.address, ethers.parseEther('100')],
+              [signers.otherUser2.address, ethers.parseEther('0.5')],
+            ],
+            ['address', 'uint256'],
+          );
+          await VeFnxSplitMerklAidropUpgradeable.setMerklRoot(tree.root);
+          await VeFnxSplitMerklAidropUpgradeable.unpause();
+          await deployed.fenix.transfer(VeFnxSplitMerklAidropUpgradeable.target, ethers.parseEther('200'));
+          expect(await deployed.fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(VeFnxSplitMerklAidropUpgradeable.target)).to.be.eq(ethers.parseEther('200'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser1.address)).to.be.eq(0);
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(0);
+          expect(await deployed.votingEscrow.supply()).to.be.eq(0);
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(0);
+          await VeFnxSplitMerklAidropUpgradeable.pause();
+          await VeFnxSplitMerklAidropUpgradeable.setPureTokensRate(ethers.parseEther('1'));
+          await VeFnxSplitMerklAidropUpgradeable.unpause();
+        });
+        it('should fail if user not approve tokens before claim with aggregate to lock', async () => {
+          await expect(
+            voter.connect(signers.otherUser1).aggregateClaim(
+              [],
+              { bribes: [], tokens: [] },
+              { bribes: [], tokens: [], tokenId: 0 },
+              { users: [], proofs: [], tokens: [], amounts: [] },
+              {
+                inPureTokens: true,
+                withPermanentLock: false,
+                managedTokenIdForAttach: 0,
+                amount: ethers.parseEther('100'),
+                proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('100')]),
+              },
+              {
+                percentageToLock: ethers.parseEther('1'),
+                lockDuration: 0,
+                to: signers.otherUser1.address,
+                shouldBoosted: false,
+                withPermanentLock: true,
+                managedTokenIdForAttach: 0,
+              },
+            ),
+          ).to.be.revertedWith(ERRORS.ERC20.InsufficientAllowance);
+        });
+
+        it('100% FNX in permanent lock', async () => {
+          await deployed.fenix.connect(signers.otherUser1).approve(voter.target, ethers.parseEther('100'));
+
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ethers.parseEther('100'));
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(0);
+
+          let tx = await voter.connect(signers.otherUser1).aggregateClaim(
+            [],
+            { bribes: [], tokens: [] },
+            { bribes: [], tokens: [], tokenId: 0 },
+            { users: [], proofs: [], tokens: [], amounts: [] },
+            {
+              inPureTokens: true,
+              withPermanentLock: false,
+              managedTokenIdForAttach: 0,
+              amount: ethers.parseEther('100'),
+              proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('100')]),
+            },
+            {
+              percentageToLock: ethers.parseEther('1'),
+              lockDuration: 0,
+              to: signers.otherUser1.address,
+              shouldBoosted: false,
+              withPermanentLock: true,
+              managedTokenIdForAttach: 0,
+            },
+          );
+          await expect(tx)
+            .to.be.emit(VeFnxSplitMerklAidropUpgradeable, 'Claim')
+            .withArgs(signers.otherUser1.address, ethers.parseEther('100'), ethers.parseEther('100'), 0, 0);
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(VeFnxSplitMerklAidropUpgradeable.target, signers.otherUser1.address, ethers.parseEther('100'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(signers.otherUser1.address, voter.target, ethers.parseEther('100'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(voter.target, deployed.votingEscrow.target, ethers.parseEther('100'));
+
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ZERO);
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+
+          expect(await deployed.fenix.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(VeFnxSplitMerklAidropUpgradeable.target)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(ethers.parseEther('100'));
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(1);
+          expect(await deployed.votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser1.address);
+          expect(await deployed.votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+
+          let nftState = await deployed.votingEscrow.getNftState(1);
+          expect(nftState.locked.isPermanentLocked).to.be.true;
+          expect(nftState.locked.amount).to.be.eq(ethers.parseEther('100'));
+        });
+        it('60% FNX in lock with 91 days unlock duration, and for other recipient', async () => {
+          await deployed.fenix.connect(signers.otherUser1).approve(voter.target, ethers.parseEther('60'));
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ethers.parseEther('60'));
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(0);
+
+          let tx = await voter.connect(signers.otherUser1).aggregateClaim(
+            [],
+            { bribes: [], tokens: [] },
+            { bribes: [], tokens: [], tokenId: 0 },
+            { users: [], proofs: [], tokens: [], amounts: [] },
+            {
+              inPureTokens: true,
+              withPermanentLock: false,
+              managedTokenIdForAttach: 0,
+              amount: ethers.parseEther('100'),
+              proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('100')]),
+            },
+            {
+              percentageToLock: ethers.parseEther('0.6'),
+              lockDuration: 91 * 86400,
+              to: signers.otherUser2.address,
+              shouldBoosted: false,
+              withPermanentLock: false,
+              managedTokenIdForAttach: 0,
+            },
+          );
+          await expect(tx)
+            .to.be.emit(VeFnxSplitMerklAidropUpgradeable, 'Claim')
+            .withArgs(signers.otherUser1.address, ethers.parseEther('100'), ethers.parseEther('100'), 0, 0);
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(VeFnxSplitMerklAidropUpgradeable.target, signers.otherUser1.address, ethers.parseEther('100'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(signers.otherUser1.address, voter.target, ethers.parseEther('60'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(voter.target, deployed.votingEscrow.target, ethers.parseEther('60'));
+
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ZERO);
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+
+          expect(await deployed.fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('40'));
+          expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(VeFnxSplitMerklAidropUpgradeable.target)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(ethers.parseEther('60'));
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(1);
+          expect(await deployed.votingEscrow.ownerOf(1)).to.be.eq(signers.otherUser2.address);
+          expect(await deployed.votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(0);
+          expect(await deployed.votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(1);
+
+          let nftState = await deployed.votingEscrow.getNftState(1);
+          expect(nftState.locked.isPermanentLocked).to.be.false;
+          expect(nftState.locked.amount).to.be.eq(ethers.parseEther('60'));
+
+          let blockTimestamp = (await tx.getBlock())?.timestamp!;
+          expect(nftState.locked.end).to.be.closeTo(Math.floor((blockTimestamp + 92 * 86400) / (86400 * 7)) * (86400 * 7), 86400 * 7);
+        });
+
+        it('10% FNX with attach to managed nft', async () => {
+          let mVeNftId = 1n;
+          let userTokenId_1 = 2n;
+
+          let strategy = await newStrategy();
+          await managedNFTManager.createManagedNFT(strategy);
+
+          await deployed.fenix.connect(signers.otherUser1).approve(voter.target, ethers.parseEther('10'));
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ethers.parseEther('10'));
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(mVeNftId);
+
+          let tx = await voter.connect(signers.otherUser1).aggregateClaim(
+            [],
+            { bribes: [], tokens: [] },
+            { bribes: [], tokens: [], tokenId: 0 },
+            { users: [], proofs: [], tokens: [], amounts: [] },
+            {
+              inPureTokens: true,
+              withPermanentLock: false,
+              managedTokenIdForAttach: 0,
+              amount: ethers.parseEther('100'),
+              proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('100')]),
+            },
+            {
+              percentageToLock: ethers.parseEther('0.1'),
+              lockDuration: 0,
+              to: signers.otherUser1.address,
+              shouldBoosted: false,
+              withPermanentLock: true,
+              managedTokenIdForAttach: mVeNftId,
+            },
+          );
+          await expect(tx)
+            .to.be.emit(VeFnxSplitMerklAidropUpgradeable, 'Claim')
+            .withArgs(signers.otherUser1.address, ethers.parseEther('100'), ethers.parseEther('100'), 0, 0);
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(VeFnxSplitMerklAidropUpgradeable.target, signers.otherUser1.address, ethers.parseEther('100'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(signers.otherUser1.address, voter.target, ethers.parseEther('10'));
+          await expect(tx)
+            .to.be.emit(deployed.fenix, 'Transfer')
+            .withArgs(voter.target, deployed.votingEscrow.target, ethers.parseEther('10'));
+
+          expect(await deployed.fenix.allowance(signers.otherUser1.address, voter.target)).to.be.eq(ZERO);
+          expect(await deployed.fenix.allowance(voter.target, deployed.votingEscrow.target)).to.be.eq(ZERO);
+
+          expect(await deployed.fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('90'));
+          expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(VeFnxSplitMerklAidropUpgradeable.target)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser1.address)).to.be.eq(ethers.parseEther('100'));
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser2.address)).to.be.eq(0);
+          expect(await VeFnxSplitMerklAidropUpgradeable.userClaimed(signers.otherUser3.address)).to.be.eq(0);
+          expect(await deployed.fenix.balanceOf(deployed.votingEscrow.target)).to.be.eq(ethers.parseEther('10'));
+          expect(await deployed.votingEscrow.lastMintedTokenId()).to.be.eq(userTokenId_1);
+          expect(await deployed.votingEscrow.ownerOf(userTokenId_1)).to.be.eq(signers.otherUser1.address);
+          expect(await deployed.votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+          expect(await deployed.votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+
+          expect(await managedNFTManager.getAttachedManagedTokenId(userTokenId_1)).to.be.eq(mVeNftId);
+
+          let nftState = await deployed.votingEscrow.nftStates(userTokenId_1);
+          expect(nftState.locked.isPermanentLocked).to.be.false;
+          expect(nftState.locked.end).to.be.eq(0);
+          expect(nftState.locked.amount).to.be.eq(0);
+          expect(nftState.isAttached).to.be.true;
+          expect(nftState.isVoted).to.be.false;
+
+          let mVeNftState = await deployed.votingEscrow.nftStates(mVeNftId);
+          expect(mVeNftState.locked.isPermanentLocked).to.be.true;
+          expect(mVeNftState.locked.end).to.be.eq(0);
+          expect(mVeNftState.locked.amount).to.be.eq(ethers.parseEther('10'));
+          expect(mVeNftState.isAttached).to.be.false;
+          expect(mVeNftState.isVoted).to.be.false;
+        });
       });
 
       it('success claim merkl aidrop in veNft form with permanent  lock = true', async () => {
@@ -311,6 +639,14 @@ describe('Voter change governance/admin functionality', function () {
             withPermanentLock: true,
             managedTokenIdForAttach: 0,
             proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('1')]),
+          },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
           },
         );
         await VeFnxSplitMerklAidropUpgradeable.pause();
@@ -389,6 +725,14 @@ describe('Voter change governance/admin functionality', function () {
             withPermanentLock: true,
             managedTokenIdForAttach: mVeNftId,
             proofs: tree.getProof([signers.otherUser1.address, ethers.parseEther('1')]),
+          },
+          {
+            percentageToLock: 0,
+            lockDuration: 0,
+            to: ethers.ZeroAddress,
+            shouldBoosted: false,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
           },
         );
         await VeFnxSplitMerklAidropUpgradeable.pause();
