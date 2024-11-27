@@ -410,37 +410,6 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         emit NotifyReward(_msgSender(), token, amount_);
     }
 
-    function fixVotePower() external onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(3) {
-        uint256 TARGET_TOKEN_ID = 1;
-        uint256 time = epochTimestamp();
-        address[] memory _poolVote = poolVote[TARGET_TOKEN_ID];
-        uint256[] memory _weights = new uint256[](_poolVote.length);
-        uint256 totalVotePowerForPools;
-        for (uint256 i; i < _poolVote.length; i++) {
-            address pool = _poolVote[i];
-            uint256 votePowerForPool = votes[TARGET_TOKEN_ID][pool];
-            _weights[i] = votes[TARGET_TOKEN_ID][_poolVote[i]];
-            if (votePowerForPool > 0) {
-                address gauge = poolToGauge[pool];
-                uint256 currentPowerInBribe = IBribe(gaugesState[gauge].internalBribe).balanceOfAt(TARGET_TOKEN_ID, time);
-                delete votes[TARGET_TOKEN_ID][_poolVote[i]];
-                if (currentPowerInBribe > 0) {
-                    IBribe(gaugesState[gauge].internalBribe).withdraw(currentPowerInBribe, TARGET_TOKEN_ID);
-                    IBribe(gaugesState[gauge].externalBribe).withdraw(currentPowerInBribe, TARGET_TOKEN_ID);
-                    weightsPerEpoch[time][pool] -= currentPowerInBribe;
-                    if (gaugesState[gauge].isAlive) {
-                        totalVotePowerForPools += currentPowerInBribe;
-                    }
-                }
-                emit Abstained(TARGET_TOKEN_ID, votePowerForPool);
-            }
-        }
-        totalWeightsPerEpoch[time] -= totalVotePowerForPools;
-        lastVotedTimestamps[TARGET_TOKEN_ID] = time;
-        delete poolVote[TARGET_TOKEN_ID];
-        _vote(TARGET_TOKEN_ID, _poolVote, _weights);
-    }
-
     /**
      * @notice Distributes fees to a list of gauges.
      * @dev Only gauges that are active and alive will receive fees.

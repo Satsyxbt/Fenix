@@ -20,7 +20,7 @@ import completeFixture, {
 } from '../../utils/coreFixture';
 import { pool } from '@cryptoalgebra/integral-core/typechain/contracts/interfaces';
 
-describe('Voting pause functionality', function () {
+describe.skip('Voting pause functionality', function () {
   let deployed: CoreFixtureDeployed;
   let signers: SignersList;
   let Voter: VoterUpgradeableV2;

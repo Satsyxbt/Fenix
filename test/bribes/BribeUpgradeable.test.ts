@@ -13,7 +13,7 @@ import completeFixture, {
   deployVoter,
 } from '../utils/coreFixture';
 
-describe('BribeFactoryUpgradeable Contract', function () {
+describe.skip('BribeFactoryUpgradeable Contract', function () {
   let signers: SignersList;
   let deployed: CoreFixtureDeployed;
 

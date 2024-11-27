@@ -13,7 +13,7 @@ contract BribeUpgradeableMockWithFixTargetEpoch is BribeUpgradeable {
     function fixVotingPowerForPreviusEpoch(
         uint256 tokenId_,
         uint256 newBalance_
-    ) external override onlyAllowed whenRewardClaimPaused reinitializer(2) {
+    ) external onlyAllowed whenRewardClaimPaused reinitializer(2) {
         uint256 targetEpoch = (block.timestamp / WEEK) * WEEK - WEEK;
         require(targetEpoch == __mock_targetEpoch, "invalid epoch to fix");
         address tokenOwner = IVotingEscrow(ve).ownerOf(tokenId_);
