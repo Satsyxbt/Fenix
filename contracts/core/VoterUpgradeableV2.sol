@@ -114,6 +114,11 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     /// @notice Mapping of epoch timestamps to the total weights for that epoch.
     mapping(uint256 timestamp => uint256) public totalWeightsPerEpoch;
 
+    /**
+     * @notice Error thrown when the provided `percentageToLock` is invalid.
+     */
+    error InvalidPercentageToLock();
+
     /*//////////////////////////////////////////////////////////////
                              Modifiers
     //////////////////////////////////////////////////////////////*/
@@ -604,47 +609,81 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     }
 
     /**
-     * @notice Aggregates multiple claim calls into a single transaction.
+     * @notice Aggregates multiple claim calls into a single transaction and optionally locks claimed tokens.
+     * @dev This method allows users to claim rewards, bribes, and airdrops from multiple sources,
+     *      and optionally locks a percentage of the claimed reward tokens into a veNFT.
      * @param gauges_ The array of gauge addresses to claim rewards from.
-     * @param bribes_ The parameters for claiming bribes without token ID.
-     * @param bribesByTokenId_ The parameters for claiming bribes with a token ID.
-     * @param merkl_ The parameters for claiming Merkl data.
+     * @param bribes_ The parameters for claiming bribes without specifying a token ID.
+     * @param bribesByTokenId_ The parameters for claiming bribes associated with a specific token ID.
+     * @param merkl_ The parameters for claiming rewards using Merkl distributor.
      * @param splitMerklAidrop_ The parameters for claiming VeFnx Merkl airdrop data.
+     * @param aggregateCreateLock_ The parameters for locking a percentage of the claimed rewards into a veNFT.
+     *
+     * Functionality:
+     * - Claims rewards from gauges.
+     * - Claims bribes, both with and without token IDs.
+     * - Claims Merkl-based airdrops.
+     * - Claims VeFnx-based Merkl airdrops.
+     * - Converts a specified percentage of claimed reward tokens into a veNFT lock.
      */
     function aggregateClaim(
         address[] calldata gauges_,
         AggregateClaimBribesParams calldata bribes_,
         AggregateClaimBribesByTokenIdParams calldata bribesByTokenId_,
         AggregateClaimMerklDataParams calldata merkl_,
-        AggregateClaimVeFnxMerklAirdrop calldata splitMerklAidrop_
+        AggregateClaimVeFnxMerklAirdrop calldata splitMerklAidrop_,
+        AggregateCreateLockParams calldata aggregateCreateLock_
     ) external {
-        if (gauges_.length > 0) {
-            claimRewards(gauges_);
-        }
-        if (bribes_.bribes.length > 0) {
-            claimBribes(bribes_.bribes, bribes_.tokens);
-        }
-        if (bribesByTokenId_.bribes.length > 0) {
-            claimBribes(bribesByTokenId_.bribes, bribesByTokenId_.tokens, bribesByTokenId_.tokenId);
-        }
-        if (merkl_.users.length > 0) {
-            for (uint256 i; i < merkl_.users.length; ) {
-                require(merkl_.users[i] == _msgSender(), "users containes no only caller");
-                unchecked {
-                    i++;
-                }
+        IERC20Upgradeable tokenCache = IERC20Upgradeable(token);
+        uint256 userBalanceBefore = aggregateCreateLock_.percentageToLock > 0 ? tokenCache.balanceOf(_msgSender()) : 0;
+        {
+            if (gauges_.length > 0) {
+                claimRewards(gauges_);
             }
-            IMerklDistributor(merklDistributor).claim(merkl_.users, merkl_.tokens, merkl_.amounts, merkl_.proofs);
+            if (bribes_.bribes.length > 0) {
+                claimBribes(bribes_.bribes, bribes_.tokens);
+            }
+            if (bribesByTokenId_.bribes.length > 0) {
+                claimBribes(bribesByTokenId_.bribes, bribesByTokenId_.tokens, bribesByTokenId_.tokenId);
+            }
+            if (merkl_.users.length > 0) {
+                for (uint256 i; i < merkl_.users.length; ) {
+                    require(merkl_.users[i] == _msgSender(), "users containes no only caller");
+                    unchecked {
+                        i++;
+                    }
+                }
+                IMerklDistributor(merklDistributor).claim(merkl_.users, merkl_.tokens, merkl_.amounts, merkl_.proofs);
+            }
+            if (splitMerklAidrop_.amount > 0) {
+                IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claimFor(
+                    _msgSender(),
+                    splitMerklAidrop_.inPureTokens,
+                    splitMerklAidrop_.amount,
+                    splitMerklAidrop_.withPermanentLock,
+                    splitMerklAidrop_.managedTokenIdForAttach,
+                    splitMerklAidrop_.proofs
+                );
+            }
         }
-        if (splitMerklAidrop_.amount > 0) {
-            IVeFnxSplitMerklAidrop(veFnxMerklAidrop).claimFor(
-                _msgSender(),
-                splitMerklAidrop_.inPureTokens,
-                splitMerklAidrop_.amount,
-                splitMerklAidrop_.withPermanentLock,
-                splitMerklAidrop_.managedTokenIdForAttach,
-                splitMerklAidrop_.proofs
-            );
+        if (aggregateCreateLock_.percentageToLock > 0) {
+            if (aggregateCreateLock_.percentageToLock > 1e18) {
+                revert InvalidPercentageToLock();
+            }
+            uint256 amount = ((tokenCache.balanceOf(_msgSender()) - userBalanceBefore) * aggregateCreateLock_.percentageToLock) / 1e18;
+            if (amount > 0) {
+                IVotingEscrow votingEscrowCache = IVotingEscrow(votingEscrow);
+                tokenCache.safeTransferFrom(_msgSender(), address(this), amount);
+                tokenCache.safeApprove(address(votingEscrowCache), amount);
+                votingEscrowCache.createLockFor(
+                    amount,
+                    aggregateCreateLock_.lockDuration,
+                    aggregateCreateLock_.to,
+                    aggregateCreateLock_.shouldBoosted,
+                    aggregateCreateLock_.withPermanentLock,
+                    aggregateCreateLock_.managedTokenIdForAttach
+                );
+            }
         }
     }
 
