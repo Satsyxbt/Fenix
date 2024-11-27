@@ -1,0 +1,304 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epoch_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "emisisonPerEpoch_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offset_",
+        "type": "uint256"
+      }
+    ],
+    "name": "getGeneralVotesPerEpoch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "poolsCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalWeightsPerEpoch",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "epoch",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "emisisonPerEpoch",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "pool",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "gauge",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "weightsPerEpoch",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "emissionToGauge",
+                "type": "uint256"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardRate",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardForDuration",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct GetInformationAggregatorUpgradeable.GaugeCurrentTotalVoteInfo",
+                "name": "gaugeState",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "bribe",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "totalSupply",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct GetInformationAggregatorUpgradeable.BribeTotalVoteInfo",
+                "name": "internalBribe",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "bribe",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "totalSupply",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct GetInformationAggregatorUpgradeable.BribeTotalVoteInfo",
+                "name": "externalBribe",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct GetInformationAggregatorUpgradeable.PoolEpochVoteInfo[]",
+            "name": "poolsEpochVoteInfo",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct GetInformationAggregatorUpgradeable.PoolsEpochVoteInfoGeneral",
+        "name": "result",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenIds_",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "epoch_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offset_",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTokenIdsVotesPerEpoch",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currentOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "isPermanentLocked",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAttached",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastVotedTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentEpochTokenVotePower",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "sumWeightFromBribe",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isManagedNFT",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "exists",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pool",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "weight",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "totalWeight",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct GetInformationAggregatorUpgradeable.TokenVoteInfo[]",
+            "name": "votes",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct GetInformationAggregatorUpgradeable.TokenVotesPerEpoch[]",
+        "name": "result",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GetInformationAggregatorUpgradeable.AddressKey",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "registry",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GetInformationAggregatorUpgradeable.AddressKey[]",
+        "name": "keys_",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "values_",
+        "type": "address[]"
+      }
+    ],
+    "name": "updateAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

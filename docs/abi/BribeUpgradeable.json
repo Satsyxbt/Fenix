@@ -16,6 +16,16 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "RewardClaimNotPaused",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RewardClaimPaused",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {

@@ -65,6 +65,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "bool",
+        "name": "isPaused_",
+        "type": "bool"
+      }
+    ],
+    "name": "PauseRewardClaim",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -342,6 +355,19 @@
   },
   {
     "inputs": [],
+    "name": "isRewardClaimPause",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "last_bribe",
     "outputs": [
       {
@@ -408,6 +434,19 @@
       }
     ],
     "name": "setDefaultBlastGovernor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "isPaused_",
+        "type": "bool"
+      }
+    ],
+    "name": "setRewardClaimPause",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

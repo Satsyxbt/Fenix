@@ -434,6 +434,34 @@
     "inputs": [
       {
         "internalType": "address[]",
+        "name": "bribes_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[][]",
+        "name": "tokens_",
+        "type": "address[][]"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient_",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "tokensToRecover_",
+        "type": "address[]"
+      }
+    ],
+    "name": "claimBribesWithERC20Recover",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
         "name": "gauges_",
         "type": "address[]"
       }
