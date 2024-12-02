@@ -31,7 +31,7 @@
   "MinimalLinearVestingUpgradeable_Proxy": "0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820",
   "VotingEscrowUpgradeable_Implementation": "0x7a101c0E93841bBE924d40C7B1cFfFfe2a69Dfd3",
   "VotingEscrowUpgradeable_Proxy": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
-  "VoterUpgradeable_Implementation": "0x220d645a3762C84A984afC9884005d69d8c774b4",
+  "VoterUpgradeable_Implementation": "0xf9A192556C2FF8329Ff9D0C4f610e46585735e79",
   "VoterUpgradeable_Proxy": "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43",
   "BribeUpgradeable_Implementation": "0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D",
   "BribeFactoryUpgradeable_Implementation": "0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca",
