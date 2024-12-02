@@ -857,13 +857,14 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
                         totalVotePowerForPools += votePowerForPool;
                     }
                 }
-                emit Abstained(tokenId_, votePowerForPool);
             }
         }
         if (lastVotedTime >= time) {
             totalWeightsPerEpoch[time] -= totalVotePowerForPools;
         }
         delete poolVote[tokenId_];
+
+        emit VoteReset(_msgSender(), tokenId_, time, totalVotePowerForPools);
     }
 
     /**
@@ -886,6 +887,8 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
         }
 
         uint256 time = epochTimestamp();
+        uint256[] memory voteWeights = new uint256[](pools_.length);
+
         for (uint256 i; i < pools_.length; i++) {
             address pool = pools_[i];
             address gauge = poolToGauge[pools_[i]];
@@ -901,12 +904,16 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
             votes[tokenId_][pool] = votePowerForPool;
             weightsPerEpoch[time][pool] += votePowerForPool;
             totalVoterPower += votePowerForPool;
+            voteWeights[i] = votePowerForPool;
+
             IBribe(gaugesState[gauge].internalBribe).deposit(votePowerForPool, tokenId_);
             IBribe(gaugesState[gauge].externalBribe).deposit(votePowerForPool, tokenId_);
-            emit Voted(_msgSender(), tokenId_, votePowerForPool);
         }
         if (totalVoterPower > 0) IVotingEscrow(votingEscrow).votingHook(tokenId_, true);
         totalWeightsPerEpoch[time] += totalVoterPower;
+        if (totalVoterPower > 0) {
+            emit VoteCast(_msgSender(), tokenId_, time, pools_, voteWeights, totalVoterPower);
+        }
     }
 
     /**

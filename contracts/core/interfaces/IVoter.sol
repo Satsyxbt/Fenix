@@ -124,19 +124,41 @@ interface IVoter {
     event GaugeRevived(address indexed gauge);
 
     /**
-     * @notice Emitted when a vote is cast.
-     * @param voter The address of the voter.
+     * @dev Emitted when a user casts votes for multiple pools using a specific token.
+     *
+     * @param voter The address of the user who cast the votes.
      * @param tokenId The ID of the token used for voting.
-     * @param weight The weight of the vote.
+     * @param epoch The epoch during which the votes were cast.
+     * @param pools An array of pool addresses that received votes.
+     * @param voteWeights An array representing the weight of votes allocated to each pool.
+     *
+     * Requirements:
+     * - `pools` and `voteWeights` arrays must have the same length.
+     *
+     * Note: The voting power represented in `voteWeights` is allocated across the specified `votedPools` for the given `epoch`.
+     *       The `totalVotingPower` represents the cumulative voting power used in this vote.
      */
-    event Voted(address indexed voter, uint256 tokenId, uint256 weight);
+    event VoteCast(
+        address indexed voter,
+        uint256 indexed tokenId,
+        uint256 indexed epoch,
+        address[] pools,
+        uint256[] voteWeights,
+        uint256 totalVotingPower
+    );
 
     /**
-     * @notice Emitted when a vote is reset.
-     * @param tokenId The ID of the token that had its vote reset.
-     * @param weight The weight of the vote that was reset.
+     * @dev Emitted when a user resets all votes for the current epoch.
+     *
+     * @param voter The address of the user who resets their votes.
+     * @param tokenId The ID of the token used for voting that is being reset.
+     * @param epoch The epoch during which the votes were reset.
+     * @param totalResetVotingPower The total voting power that was reset.
+     *
+     * Note: This event indicates that all previously cast votes for the specified `epoch` have been reset for the given `votingTokenId`.
+     *       The `totalResetVotingPower` represents the cumulative voting power that was removed during the reset.
      */
-    event Abstained(uint256 tokenId, uint256 weight);
+    event VoteReset(address indexed voter, uint256 indexed tokenId, uint256 indexed epoch, uint256 totalResetVotingPower);
 
     /**
      * @notice Emitted when rewards are notified for distribution.

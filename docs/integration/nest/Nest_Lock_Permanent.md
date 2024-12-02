@@ -14,7 +14,7 @@ The `unlockPermanent` function allows a user to remove the permanent lock from t
 Key Characteristics:
 
 * **Unlocking Permanently Locked Tokens**: Only tokens that have been permanently locked can be unlocked using this function.
-* **Voting Check**: Tokens that have been used for voting cannot be unlocked until they are abstained or voting is concluded.
+* **Voting Check**: Tokens that have been used for voting cannot be unlocked until they are reset or voting is concluded.
 * **End of Lock Adjustments**: The lock end is adjusted to the maximum allowable lock duration from the current time, effectively re-establishing a normal lock.
 
 **How to Use These Functions:**
