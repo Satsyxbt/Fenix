@@ -118,7 +118,7 @@
 | **RouterV2PathProviderUpgradeable_Implementation** | `0xbD7852f7e21bc23944A2809315385733C734369c` |
 | **ManagedNFTManagerUpgradeable_Implementation** | `0x5db6c3B0F80D28ca0c4b96167C5957c44561171d`|
 | **PairAPIUpgradeable_Implementation** | `0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71` |
-| **RewardAPIUpgradeable_Implementation** | `0xd791d71fe726e226c1a9d04b73eecb4eaa666e76`|
+| **RewardAPIUpgradeable_Implementation** | `0x2fA82cca7D2e73e4cF5f19cEB1aB866Dca40b2fb`|
 | **VeNFTAPIUpgradeable_Implementation** | `0xD5926da7196096101E7cd4742bA0f853C2b8db0E`|
 | **UtilsUpgradeable_Implementation** | `0xdFC1aA538166d2DeB49765Ee74841a6ea5278D5f` |
 | **VeArtProxyUpgradeable_Implementation** | `0xdc24C85A65580fF0d6c9178534e98ac4C8eCE8f8` |

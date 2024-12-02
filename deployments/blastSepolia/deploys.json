@@ -44,7 +44,7 @@
   "ManagedNFTManagerUpgradeable_Proxy": "0xcc5b8187F5bF5f344153a1045b1a4505ccd007f9",
   "PairAPIUpgradeable_Implementation": "0xA31f3c621b68435811baC8634A2a84746d5c2a67",
   "VeNFTAPIUpgradeable_Implementation": "0x11c3173830d4968C5F0ac00BC29489e41123554f",
-  "RewardAPIUpgradeable_Implementation": "0x124FB515Ef87Fa56Fb2d67915Bd4Fda4c877e618",
+  "RewardAPIUpgradeable_Implementation": "0x725D1540c0Fd73dBe34287490dd1C37414cf7E09",
   "PairAPIUpgradeable_Proxy": "0x6074fa138160aa81f3082FF1684a5d089D9B1f99",
   "VeNFTAPIUpgradeable_Proxy": "0x938DdfB6b96461287c4d5d919a559a8DD69f915C",
   "RewardAPIUpgradeable_Proxy": "0x43002697555743241155ee8b950F2075fD085F32",

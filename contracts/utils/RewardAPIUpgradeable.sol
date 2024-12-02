@@ -11,18 +11,19 @@ import "../dexV2/interfaces/IPair.sol";
 import "../gauges/interfaces/IGauge.sol";
 import "../bribes/interfaces/IBribe.sol";
 
+interface IExtendVoter is IVoter {
+    function pools(uint256 index) external view returns (address);
+
+    function totalWeightsPerEpoch(uint256 epoch) external view returns (uint256);
+}
+
 contract RewardAPIUpgradeable is OwnableUpgradeable {
     IPairFactory public pairFactory;
     IVoter public voter;
     address public underlyingToken;
-
     uint256 public constant MAX_PAIRS = 1000;
 
     mapping(address => bool) public notReward;
-
-    constructor() {
-        _disableInitializers();
-    }
 
     function initialize(address _voter) public initializer {
         __Ownable_init();
@@ -402,6 +403,95 @@ contract RewardAPIUpgradeable is OwnableUpgradeable {
             _toClaim[i].bribe = _bribe;
             _toClaim[i].tokens = _tokensReward;
             _toClaim[i].amounts = _amounts;
+        }
+    }
+
+    struct BribeAvailableRewards {
+        address[] tokens;
+        uint256[] amounts;
+        address bribe;
+    }
+
+    function getAvailableBribesRewards(
+        address user_,
+        uint256 limit_,
+        uint256 offset_
+    ) external view returns (BribeAvailableRewards[] memory array) {
+        IExtendVoter voterCache = IExtendVoter(address(voter));
+        (uint256 totalCount, , ) = voterCache.poolsCounts();
+        uint256 size = totalCount;
+        if (offset_ >= size) {
+            array = new BribeAvailableRewards[](0);
+            return array;
+        }
+        size -= offset_;
+        if (size > limit_) {
+            size = limit_;
+        }
+
+        BribeAvailableRewards[] memory fullArray = new BribeAvailableRewards[](size * 2);
+        uint256 counterBribeWithRewards;
+        for (uint256 i; i < size; ) {
+            address pool = voterCache.pools(i + offset_);
+            address gauge = voterCache.poolToGauge(pool);
+            IExtendVoter.GaugeState memory state = voterCache.getGaugeState(gauge);
+            address[] memory rewardTokens = IBribe(state.internalBribe).getRewardTokens();
+            BribeAvailableRewards memory internalBribeResult = _getBribeRewards(user_, IBribe(state.internalBribe), rewardTokens);
+            if (internalBribeResult.amounts.length > 0) {
+                fullArray[counterBribeWithRewards] = internalBribeResult;
+                counterBribeWithRewards++;
+            }
+            BribeAvailableRewards memory externalBribeResult = _getBribeRewards(user_, IBribe(state.externalBribe), rewardTokens);
+            if (externalBribeResult.amounts.length > 0) {
+                fullArray[counterBribeWithRewards] = externalBribeResult;
+                counterBribeWithRewards++;
+            }
+            unchecked {
+                i++;
+            }
+        }
+        array = new BribeAvailableRewards[](counterBribeWithRewards);
+        for (uint256 i; i < counterBribeWithRewards; ) {
+            array[i] = fullArray[i];
+            unchecked {
+                i++;
+            }
+        }
+    }
+
+    function getBribeRewards(address user_, IBribe bribe_) public view returns (BribeAvailableRewards memory result) {
+        return _getBribeRewards(user_, bribe_, bribe_.getRewardTokens());
+    }
+
+    function _getBribeRewards(
+        address user_,
+        IBribe bribe_,
+        address[] memory tokens_
+    ) internal view returns (BribeAvailableRewards memory result) {
+        uint256[] memory earnedAmounts = new uint256[](tokens_.length);
+        uint256 countGtZero;
+        for (uint256 i; i < tokens_.length; ) {
+            earnedAmounts[i] = bribe_.earned(user_, tokens_[i]);
+            if (earnedAmounts[i] > 0) {
+                countGtZero++;
+            }
+            unchecked {
+                i++;
+            }
+        }
+        result.bribe = address(bribe_);
+        result.amounts = new uint256[](countGtZero);
+        result.tokens = new address[](countGtZero);
+        uint256 j;
+        for (uint256 i; i < tokens_.length; ) {
+            if (earnedAmounts[i] > 0) {
+                result.amounts[j] = earnedAmounts[i];
+                result.tokens[j] = tokens_[i];
+                j++;
+            }
+            unchecked {
+                i++;
+            }
         }
     }
 }
