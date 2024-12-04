@@ -103,13 +103,13 @@
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
 | **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` |
-| **BribeUpgradeable_Implementation** | `0xf20C7F5FFE38Cd82EAa7e6C62cff383D07b6C8eC` (Future: 0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC) |
+| **BribeUpgradeable_Implementation** | `0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC` |
 | **GaugeUpgradeable_V2Pools_Implementation** | `0x67d391Aa49ddD09E57b0b9226e2891e408621e9b` |
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
-| **VoterUpgradeable_Implementation** | `0xA709D35d4192B9e055B132a3316a38765dA87c2D` (Future: 0xb9C4C2b2c978c39DA4d870cbA1D71b457FAAafAB)|
+| **VoterUpgradeable_Implementation** | `0xb9C4C2b2c978c39DA4d870cbA1D71b457FAAafAB` (Future: 0xD5331d90Abc4166838a421e9C79Ed2b8b939b588 )|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
