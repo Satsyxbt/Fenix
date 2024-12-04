@@ -79,6 +79,29 @@ interface IBlastRebasingTokensGovernor {
     }
 
     /**
+     * @dev Struct representing the details of an airdrop.
+     * @param recipient Address of the recipient of veFnx tokens.
+     * @param withPermanentLock Indicates if the veFnx tokens should be permanently locked.
+     * @param amount The amount of FNX tokens to lock for veFnx.
+     * @param managedTokenIdForAttach The managed token ID for attaching veFnx.
+     */
+    struct AidropRow {
+        address recipient;
+        bool withPermanentLock;
+        uint256 amount;
+        uint256 managedTokenIdForAttach;
+    }
+
+    /**
+     * @notice Emitted after successfully distributing veFnx to a recipient.
+     * @param recipient Address of the recipient receiving the veFnx tokens.
+     * @param tokenId The ID of the veFnx token created for the recipient.
+     * @param lockDuration The duration for which FNX tokens are locked, expressed in seconds.
+     * @param amount The amount of FNX tokens locked on behalf of the recipient.
+     */
+    event AirdropVeFnx(address indexed recipient, uint256 tokenId, uint256 lockDuration, uint256 amount);
+
+    /**
      * @dev Emitted when a rebasing token holder is added.
      * @param token The address of the rebasing token.
      * @param contractAddress The address of the added token holder contract.
@@ -251,6 +274,29 @@ interface IBlastRebasingTokensGovernor {
      * @custom:event Withdraw Emitted when tokens are withdrawn successfully.
      */
     function withdraw(YieldDistributionDirection yieldDirectionType_, address token_, address recipient_, uint256 amount_) external;
+
+    /**
+     * @notice Distributes FNX (target swap tokens) as veFNX to specified recipients.
+     * @dev Allows an authorized address to distribute FNX tokens by creating locked veFNX tokens for recipients.
+     * Tokens are locked for a duration of approximately 6 months.
+     *
+     * @param yieldDirectionType_ The yield distribution direction from which tokens are distributed.
+     * @param rows_ An array of `AidropRow` structs containing recipient addresses, amounts, and other parameters for veFNX distribution.
+     *
+     * Requirements:
+     * - The caller must have the `TOKEN_DISTRIBUTE_ROLE`.
+     * - Each recipient address in `rows_` must not be the zero address.
+     * - The total distribution amount must not exceed the available balance for the specified yield direction.
+     *
+     * Emits:
+     * - `AirdropVeFnx` for each recipient when tokens are successfully distributed as veFNX.
+     *
+     * Errors:
+     * - `ZeroRecipientAddress` if any recipient address in `rows_` is the zero address.
+     * - `ZeroTokensToClaim` if the available balance for the specified yield direction is zero.
+     * - `InsufficientAvailableAmountToDistribute` if the total distribution amount exceeds the available balance for the specified yield direction.
+     */
+    function distributeVeFnx(YieldDistributionDirection yieldDirectionType_, AidropRow[] calldata rows_) external;
 
     /**
      * @notice Claims from specified token holders.

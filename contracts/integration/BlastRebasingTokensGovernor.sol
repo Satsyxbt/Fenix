@@ -9,6 +9,8 @@ import {IBlastRebasingTokensGovernor} from "./interfaces/IBlastRebasingTokensGov
 import {IERC20Rebasing, YieldMode} from "./interfaces/IERC20Rebasing.sol";
 import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@cryptoalgebra/integral-periphery/contracts/interfaces/ISwapRouter.sol";
+import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
+import {IVeFnxDistributor} from "../core/interfaces/IVeFnxDistributor.sol";
 
 /**
  * @title BlastRebasingTokensGovernorUpgradeable
@@ -40,6 +42,11 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
     bytes32 public constant TOKEN_WITHDRAWER_ROLE = keccak256("TOKEN_WITHDRAWER_ROLE");
 
     /**
+     * @dev Role identifier for distribute in VeFNX tokens.
+     */
+    bytes32 public constant TOKEN_DISTRIBUTE_ROLE = keccak256("TOKEN_DISTRIBUTE_ROLE");
+
+    /**
      * @dev Mapping of rebasing tokens to their holders.
      */
     mapping(address => EnumerableSetUpgradeable.AddressSet) internal _rebasingTokensHolders;
@@ -58,6 +65,11 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
      * @notice Contains information for yield distribution for each direction.
      */
     mapping(YieldDistributionDirection => YieldDistributionInfo) public yieldDistributionDirectionInfo;
+
+    /**
+     * @dev Address of the VotingEscrwo contract to create locks.
+     */
+    address public votingEscrow;
 
     /**
      * @dev Error thrown when the token holder is already registered.
@@ -105,9 +117,19 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
     error InsufficientAvailableAmountToWithdraw();
 
     /**
+     * @dev Error thrown when attempting to distribute more than the available balance.
+     */
+    error InsufficientAvailableAmountToDistribute();
+
+    /**
      * @dev Error thrown when swap is not available for the specified direction.
      */
     error SwapNotAvailableForDirection();
+
+    /**
+     * @dev Indicates that the recipient address is zero.
+     */
+    error ZeroRecipientAddress();
 
     /**
      * @dev Modifier to check if the address is not zero.
@@ -153,6 +175,9 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
         } else if (key == 0x885b8950407e4dfe65c138144a8dabb9f50ea14dbf711eb2010a07b941b01a51) {
             // id('swapRouter')
             _swapRouter = value_;
+        } else if (key == 0xe3f64d02160148a2e7866923bda74a9e5818bb3ef772856be2a0b559e6a5932f) {
+            // id('votingEscrow')
+            votingEscrow = value_;
         } else {
             revert InvalidAddressKey();
         }
@@ -308,6 +333,76 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
         yieldDistributionDirectionInfo[yieldDirectionType_].tokensInfo[swapTargetTokenCache].available += amountOut;
 
         emit DirectV3Swap(_msgSender(), yieldDirectionType_, token_, swapTargetTokenCache, amount_, amountOut);
+    }
+
+    /**
+     * @notice Distributes FNX (target swap tokens) as veFNX to specified recipients.
+     * @dev Allows an authorized address to distribute FNX tokens by creating locked veFNX tokens for recipients.
+     * Tokens are locked for a duration of approximately 6 months.
+     *
+     * @param yieldDirectionType_ The yield distribution direction from which tokens are distributed.
+     * @param rows_ An array of `AidropRow` structs containing recipient addresses, amounts, and other parameters for veFNX distribution.
+     *
+     * Requirements:
+     * - The caller must have the `TOKEN_DISTRIBUTE_ROLE`.
+     * - Each recipient address in `rows_` must not be the zero address.
+     * - The total distribution amount must not exceed the available balance for the specified yield direction.
+     *
+     * Emits:
+     * - `AirdropVeFnx` for each recipient when tokens are successfully distributed as veFNX.
+     *
+     * Errors:
+     * - `ZeroRecipientAddress` if any recipient address in `rows_` is the zero address.
+     * - `ZeroTokensToClaim` if the available balance for the specified yield direction is zero.
+     * - `InsufficientAvailableAmountToDistribute` if the total distribution amount exceeds the available balance for the specified yield direction.
+     */
+    function distributeVeFnx(
+        YieldDistributionDirection yieldDirectionType_,
+        AidropRow[] calldata rows_
+    ) external virtual onlyRole(TOKEN_DISTRIBUTE_ROLE) {
+        IERC20Upgradeable fenixCache = IERC20Upgradeable(_swapTargetToken);
+        IVotingEscrow veCache = IVotingEscrow(votingEscrow);
+
+        uint256 totalDistributionSum;
+        for (uint256 i; i < rows_.length; ) {
+            if (rows_[i].recipient == address(0)) {
+                revert ZeroRecipientAddress();
+            }
+            totalDistributionSum += rows_[i].amount;
+            unchecked {
+                i++;
+            }
+        }
+
+        uint256 availableToClaim = yieldDistributionDirectionInfo[yieldDirectionType_].tokensInfo[address(fenixCache)].available;
+        if (availableToClaim == 0) {
+            revert ZeroTokensToClaim();
+        }
+        if (totalDistributionSum > availableToClaim) {
+            revert InsufficientAvailableAmountToDistribute();
+        }
+
+        yieldDistributionDirectionInfo[yieldDirectionType_].tokensInfo[address(fenixCache)].available -= totalDistributionSum;
+
+        fenixCache.safeApprove(address(veCache), totalDistributionSum);
+
+        uint256 lockDuration = 15724800;
+
+        for (uint256 i; i < rows_.length; ) {
+            AidropRow memory row = rows_[i];
+            uint256 tokenId = veCache.createLockFor(
+                row.amount,
+                lockDuration,
+                row.recipient,
+                false,
+                row.withPermanentLock,
+                row.managedTokenIdForAttach
+            );
+            emit AirdropVeFnx(row.recipient, tokenId, lockDuration, row.amount);
+            unchecked {
+                i++;
+            }
+        }
     }
 
     /**
