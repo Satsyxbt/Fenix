@@ -49,6 +49,30 @@ async function main() {
     BlastRebasingTokensGovernorUpgradeable,
     BlastRebasingTokensGovernorUpgradeable.setDirectionAvailableToSwapToTargetToken(YieldDistributionDirection.Rise, true),
   );
+
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.grantRole(
+      await BlastRebasingTokensGovernorUpgradeable.TOKEN_DISTRIBUTE_ROLE(),
+      '0x7d15dB508dD097a5b0dEAA366B6A86DEe6367B33',
+    ),
+  );
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.grantRole(
+      await BlastRebasingTokensGovernorUpgradeable.TOKEN_SWAPER_ROLE(),
+      '0x7d15dB508dD097a5b0dEAA366B6A86DEe6367B33',
+    ),
+  );
+
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.updateAddress('swapTargetToken', DeployedContracts[AliasDeployedContracts.Fenix]),
+  );
+  await logTx(
+    BlastRebasingTokensGovernorUpgradeable,
+    BlastRebasingTokensGovernorUpgradeable.updateAddress('swapRouter', '0xD952ACb88D36029A388555c19AA7031182f98932'),
+  );
 }
 
 main()
