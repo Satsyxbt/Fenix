@@ -398,7 +398,7 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
                 row.withPermanentLock,
                 row.managedTokenIdForAttach
             );
-            emit AirdropVeFnx(row.recipient, tokenId, lockDuration, row.amount);
+            emit AirdropVeFnx(yieldDirectionType_, row.recipient, tokenId, lockDuration, row.amount);
             unchecked {
                 i++;
             }
@@ -596,6 +596,7 @@ contract BlastRebasingTokensGovernorUpgradeable is IBlastRebasingTokensGovernor,
         uint256 toBribes = _distributeYield(YieldDistributionDirection.Bribes, token_, totalClaimedAmount);
         uint256 toIncentives = _distributeYield(YieldDistributionDirection.Incentives, token_, totalClaimedAmount);
         uint256 toRise = _distributeYield(YieldDistributionDirection.Rise, token_, totalClaimedAmount);
+
         emit Claim(_msgSender(), token_, totalClaimedAmount, toOthers, toIncentives, toRise, toBribes);
     }
 

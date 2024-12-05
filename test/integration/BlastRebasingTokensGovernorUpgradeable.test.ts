@@ -8,12 +8,18 @@ import { loadFixture, time } from '@nomicfoundation/hardhat-toolbox/network-help
 import { expect } from 'chai';
 import { ContractTransactionResponse, Signature } from 'ethers';
 import { ethers } from 'hardhat';
-import { BlastRebasingTokensGovernorUpgradeable, ERC20RebasingMock, Pair } from '../../typechain-types';
+import {
+  BlastRebasingTokensGovernorUpgradeable,
+  ERC20Mock,
+  ERC20RebasingMock,
+  Pair,
+  VotingEscrowUpgradeableV2,
+} from '../../typechain-types';
 import { YieldDistributionDirection } from '../../utils/Constants';
-import { ERRORS, getAccessControlError } from '../utils/constants';
-import completeFixture, { CoreFixtureDeployed, deployAlgebraCore, mockBlast } from '../utils/coreFixture';
+import { ERRORS, getAccessControlError, ONE, ONE_ETHER } from '../utils/constants';
+import completeFixture, { CoreFixtureDeployed, deployAlgebraCore, deployVotingEscrow, mockBlast } from '../utils/coreFixture';
 
-describe('BlastGovernorClaimableSetup Contract', function () {
+describe('BlastRebasingTokensGovernor Contract', function () {
   let deployer: HardhatEthersSigner;
   let proxyAdmin: HardhatEthersSigner;
   let blastGovernor: HardhatEthersSigner;
@@ -30,6 +36,7 @@ describe('BlastGovernorClaimableSetup Contract', function () {
   let USDB_FENIX_POOL: AlgebraPool;
   let swapRouter: SwapRouter;
   let manager: NonfungiblePositionManager;
+  let Fenix: ERC20RebasingMock;
 
   async function newInstance() {
     let proxy = await ethers.deployContract('TransparentUpgradeableProxy', [
@@ -81,9 +88,11 @@ describe('BlastGovernorClaimableSetup Contract', function () {
     await BlastRebasingTokensGovernor_Proxy.grantRole(await BlastRebasingTokensGovernor_Proxy.TOKEN_WITHDRAWER_ROLE(), deployer.address);
     await BlastRebasingTokensGovernor_Proxy.grantRole(await BlastRebasingTokensGovernor_Proxy.TOKEN_CLAIMER_ROLE(), deployer.address);
     await BlastRebasingTokensGovernor_Proxy.grantRole(await BlastRebasingTokensGovernor_Proxy.TOKEN_SWAPER_ROLE(), deployer.address);
+    await BlastRebasingTokensGovernor_Proxy.grantRole(await BlastRebasingTokensGovernor_Proxy.TOKEN_DISTRIBUTE_ROLE(), deployer.address);
 
     USDB = await ethers.deployContract('ERC20RebasingMock', ['USDB', 'USDB', 6]);
     WETH = await ethers.deployContract('ERC20RebasingMock', ['WETH', 'WETH', 18]);
+    Fenix = await ethers.deployContract('ERC20RebasingMock', ['F', 'F', 18]);
 
     await coreDeployed.v2PairFactory.createPair(USDB.target, WETH.target, false);
     await coreDeployed.v2PairFactory.createPair(USDB.target, WETH.target, true);
@@ -1109,6 +1118,214 @@ describe('BlastGovernorClaimableSetup Contract', function () {
         await expect(BlastRebasingTokensGovernor_Proxy.claim(WETH.target, 0, 0))
           .to.be.emit(BlastRebasingTokensGovernor_Proxy, 'Claim')
           .withArgs(deployer.address, WETH.target, 0, 0, 0, 0, 0);
+      });
+    });
+    describe('#distributeVeFnx', async () => {
+      it('Should fail if try call without specific role', async function () {
+        await expect(
+          BlastRebasingTokensGovernor_Proxy.connect(other).distributeVeFnx(YieldDistributionDirection.Rise, []),
+        ).to.be.revertedWith(getAccessControlError(await BlastRebasingTokensGovernor_Proxy.TOKEN_DISTRIBUTE_ROLE(), other.address));
+      });
+
+      it('Should fail if zero tokens available to claim/distribute  ', async () => {
+        await expect(BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [])).to.be.revertedWithCustomError(
+          BlastRebasingTokensGovernor_Proxy,
+          'ZeroTokensToClaim',
+        );
+      });
+
+      describe('---', async () => {
+        let VotingEscrow: VotingEscrowUpgradeableV2;
+        beforeEach(async () => {
+          await BlastRebasingTokensGovernor_Proxy.updateAddress('swapTargetToken', Fenix.target);
+          await BlastRebasingTokensGovernor_Proxy.updateAddress('votingEscrow', coreDeployed.votingEscrow.target);
+
+          await BlastRebasingTokensGovernor_Proxy.setYieldDistributionDirectionsPercentage(0, 0, ethers.parseEther('1'), 0);
+          let holder = await getNewHolder();
+
+          await Fenix.__mock_setClamaibleAmount(holder.target, ethers.parseEther('10'));
+
+          await expect(BlastRebasingTokensGovernor_Proxy.claimFromSpecifiedTokenHolders(Fenix.target, [holder.target]))
+            .to.be.emit(BlastRebasingTokensGovernor_Proxy, 'Claim')
+            .withArgs(deployer.address, Fenix.target, ethers.parseEther('10'), 0, 0, ethers.parseEther('10'), 0);
+
+          let tokenInfo = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+
+          expect(tokenInfo.available).to.be.eq(ethers.parseEther('10'));
+          expect(tokenInfo.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+          expect(await Fenix.balanceOf(BlastRebasingTokensGovernor_Proxy.target)).to.be.eq(ethers.parseEther('10'));
+
+          VotingEscrow = await deployVotingEscrow(
+            deployer,
+            coreDeployed.signers.proxyAdmin.address,
+            deployer.address,
+            Fenix.target.toString(),
+            ethers.ZeroAddress,
+          );
+
+          await VotingEscrow.updateAddress('voter', coreDeployed.voter.target);
+
+          await VotingEscrow.updateAddress('managedNFTManager', coreDeployed.managedNFTManager);
+
+          await BlastRebasingTokensGovernor_Proxy.updateAddress('votingEscrow', VotingEscrow.target);
+        });
+
+        it('Should fail if not enought available target token balance on contract for distribute', async () => {
+          await expect(
+            BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: ethers.parseEther('10') + 1n, withPermanentLock: false, managedTokenIdForAttach: 0 },
+            ]),
+          ).to.be.revertedWithCustomError(BlastRebasingTokensGovernor_Proxy, 'InsufficientAvailableAmountToDistribute');
+          let info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+          expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+          expect(info.available).to.be.eq(ethers.parseEther('10'));
+
+          await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+            { recipient: other.address, amount: ethers.parseEther('9'), withPermanentLock: false, managedTokenIdForAttach: 0 },
+          ]);
+
+          info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+          expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+          expect(info.available).to.be.eq(ethers.parseEther('1'));
+
+          await expect(
+            BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: ethers.parseEther('1') + 1n, withPermanentLock: false, managedTokenIdForAttach: 0 },
+            ]),
+          ).to.be.revertedWithCustomError(BlastRebasingTokensGovernor_Proxy, 'InsufficientAvailableAmountToDistribute');
+
+          await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+            { recipient: other.address, amount: ethers.parseEther('1'), withPermanentLock: false, managedTokenIdForAttach: 0 },
+          ]);
+
+          await expect(
+            BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: 1n, withPermanentLock: false, managedTokenIdForAttach: 0 },
+            ]),
+          ).to.be.revertedWithCustomError(BlastRebasingTokensGovernor_Proxy, 'ZeroTokensToClaim');
+
+          info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+          expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+          expect(info.available).to.be.eq(ethers.parseEther('0'));
+        });
+
+        describe('Correct distribute veFnx to recipients', async () => {
+          let startTokenId: bigint;
+          beforeEach(async () => {
+            startTokenId = await VotingEscrow.lastMintedTokenId();
+          });
+          it('should corect emit events', async () => {
+            let tx = await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
+              {
+                recipient: coreDeployed.signers.otherUser2.address,
+                amount: ONE_ETHER / BigInt(2),
+                withPermanentLock: false,
+                managedTokenIdForAttach: 0,
+              },
+            ]);
+            await expect(tx)
+              .to.be.emit(BlastRebasingTokensGovernor_Proxy, 'AirdropVeFnx')
+              .withArgs(YieldDistributionDirection.Rise, other.address, 1, 182 * 86400, ONE_ETHER);
+            await expect(tx)
+              .to.be.emit(BlastRebasingTokensGovernor_Proxy, 'AirdropVeFnx')
+              .withArgs(YieldDistributionDirection.Rise, coreDeployed.signers.otherUser2.address, 2, 182 * 86400, ONE_ETHER / BigInt(2));
+          });
+
+          it('should corect change balacnes', async () => {
+            let startVotingEscrowBalance = await Fenix.balanceOf(VotingEscrow.target);
+
+            await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
+              {
+                recipient: coreDeployed.signers.otherUser2.address,
+                amount: ONE_ETHER / BigInt(2),
+
+                withPermanentLock: false,
+                managedTokenIdForAttach: 0,
+              },
+            ]);
+
+            expect(await Fenix.balanceOf(BlastRebasingTokensGovernor_Proxy.target)).to.be.eq(ethers.parseEther('8.5'));
+            expect(await Fenix.balanceOf(VotingEscrow.target)).to.be.eq(startVotingEscrowBalance + ethers.parseEther('1.5'));
+
+            let info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+            expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+            expect(info.available).to.be.eq(ethers.parseEther('8.5'));
+          });
+
+          it('should clear approve after distribution', async () => {
+            expect(await Fenix.allowance(BlastRebasingTokensGovernor_Proxy.target, VotingEscrow.target)).to.be.eq(0);
+            await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              { recipient: other.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
+              {
+                recipient: coreDeployed.signers.otherUser2.address,
+                amount: ONE_ETHER / BigInt(2),
+
+                withPermanentLock: false,
+                managedTokenIdForAttach: 0,
+              },
+            ]);
+            expect(await Fenix.allowance(BlastRebasingTokensGovernor_Proxy.target, VotingEscrow.target)).to.be.eq(0);
+          });
+
+          it('should corect create VeFNX and transfer to recipients', async () => {
+            expect(await VotingEscrow.balanceOf(coreDeployed.signers.otherUser1.address)).to.be.eq(0);
+            expect(await VotingEscrow.balanceOf(coreDeployed.signers.otherUser2.address)).to.be.eq(0);
+            let info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+            expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+            expect(info.available).to.be.eq(ethers.parseEther('10'));
+
+            let tx = await BlastRebasingTokensGovernor_Proxy.distributeVeFnx(YieldDistributionDirection.Rise, [
+              {
+                recipient: coreDeployed.signers.otherUser1.address,
+                amount: ONE_ETHER,
+                withPermanentLock: false,
+                managedTokenIdForAttach: 0,
+              },
+              {
+                recipient: coreDeployed.signers.otherUser2.address,
+                amount: ONE_ETHER / BigInt(2),
+                withPermanentLock: true,
+                managedTokenIdForAttach: 0,
+              },
+            ]);
+
+            let calcEpoch = BigInt(await time.latest()) + BigInt(182 * 86400);
+            calcEpoch = (calcEpoch / BigInt(7 * 86400)) * BigInt(7 * 86400);
+            await expect(tx)
+              .to.be.emit(VotingEscrow, 'Deposit')
+              .withArgs(BlastRebasingTokensGovernor_Proxy.target, startTokenId + ONE, ONE_ETHER, calcEpoch, 1, () => {
+                return true;
+              });
+            await expect(tx)
+              .to.be.emit(VotingEscrow, 'Deposit')
+              .withArgs(BlastRebasingTokensGovernor_Proxy.target, startTokenId + ONE + ONE, ONE_ETHER / BigInt(2), calcEpoch, 1, () => {
+                return true;
+              });
+
+            expect(await VotingEscrow.ownerOf(startTokenId + ONE)).to.be.eq(coreDeployed.signers.otherUser1.address);
+            expect(await VotingEscrow.ownerOf(startTokenId + ONE + ONE)).to.be.eq(coreDeployed.signers.otherUser2.address);
+            expect(await VotingEscrow.supply()).to.be.eq(ethers.parseEther('1.5'));
+            expect(await VotingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('1.5'), ethers.parseEther('0.1'));
+
+            expect(await VotingEscrow.balanceOf(coreDeployed.signers.otherUser1.address)).to.be.eq(1);
+            expect(await VotingEscrow.balanceOf(coreDeployed.signers.otherUser2.address)).to.be.eq(1);
+
+            let locked1 = (await VotingEscrow.nftStates(startTokenId + ONE)).locked;
+            expect(locked1.end).to.be.eq(calcEpoch);
+            expect(locked1.amount).to.be.eq(ONE_ETHER);
+
+            let locked2 = (await VotingEscrow.nftStates(startTokenId + ONE + ONE)).locked;
+            expect(locked2.end).to.be.eq(0);
+            expect(locked2.isPermanentLocked).to.be.eq(true);
+            expect(locked2.amount).to.be.eq(ethers.parseEther('0.5'));
+
+            info = await BlastRebasingTokensGovernor_Proxy.getYieldDirectionTokenInfo(YieldDistributionDirection.Rise, Fenix.target);
+            expect(info.totalAccumulated).to.be.eq(ethers.parseEther('10'));
+            expect(info.available).to.be.eq(ethers.parseEther('8.5'));
+          });
+        });
       });
     });
   });

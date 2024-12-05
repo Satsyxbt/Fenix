@@ -94,12 +94,19 @@ interface IBlastRebasingTokensGovernor {
 
     /**
      * @notice Emitted after successfully distributing veFnx to a recipient.
+     * @param direction The yield distribution direction.
      * @param recipient Address of the recipient receiving the veFnx tokens.
      * @param tokenId The ID of the veFnx token created for the recipient.
      * @param lockDuration The duration for which FNX tokens are locked, expressed in seconds.
      * @param amount The amount of FNX tokens locked on behalf of the recipient.
      */
-    event AirdropVeFnx(address indexed recipient, uint256 tokenId, uint256 lockDuration, uint256 amount);
+    event AirdropVeFnx(
+        YieldDistributionDirection indexed direction,
+        address indexed recipient,
+        uint256 tokenId,
+        uint256 lockDuration,
+        uint256 amount
+    );
 
     /**
      * @dev Emitted when a rebasing token holder is added.
