@@ -2,7 +2,7 @@
   "ProxyAdmin": "0xdD75F0d1ccF1b2E115d87f0177b67c0F0F8429B5",
   "BlastGovernorUpgradeable_Implementation": "0x2A22fC295cf3771015e18c08F37A5D65E313349d",
   "BlastGovernorUpgradeable_Proxy": "0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1",
-  "BlastRebasingTokensGovernorUpgradeable_Implementation": "0x45882278Dc8D8DD2199aED9905A825C5acED2902",
+  "BlastRebasingTokensGovernorUpgradeable_Implementation": "0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d",
   "BlastRebasingTokensGovernorUpgradeable_Proxy": "0x71B83044626c8F6Ef38F051673562Fe025F8ec1F",
   "FeesVaultFactoryUpgradeable_Implementation": "0x17409D1648422596B447BC3FcEE92a5f291e4604",
   "BribeFactoryUpgradeable_Implementation": "0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961",

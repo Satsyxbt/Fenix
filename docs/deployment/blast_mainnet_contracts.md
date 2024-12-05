@@ -94,7 +94,7 @@
 | Contract Name | Address |
 | ------------- | ------- |
 | **BlastGovernorUpgradeable_Implementation** | `0x2A22fC295cf3771015e18c08F37A5D65E313349d` |
-| **BlastRebasingTokensGovernorUpgradeable_Implementation** | `0x45882278Dc8D8DD2199aED9905A825C5acED2902`|
+| **BlastRebasingTokensGovernorUpgradeable_Implementation** | `0x45882278Dc8D8DD2199aED9905A825C5acED2902` (Future: 0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d)|
 | **FeesVaultFactoryUpgradeable_Implementation** | `0x17409D1648422596B447BC3FcEE92a5f291e4604` |
 | **BribeFactoryUpgradeable_Implementation** | `0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961`  |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |

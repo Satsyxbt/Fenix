@@ -1,0 +1,13 @@
+Starting deployment of BlastRebasingTokensGovernorUpgradeable...
+	Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+BlastRebasingTokensGovernorUpgradeable deployed at 0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d
+Save to deploys.json deployed address of BlastRebasingTokensGovernorUpgradeable_Implementation:0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d
+Verifying TransparentUpgradeableProxy at 0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/integration/BlastRebasingTokensGovernor.sol:BlastRebasingTokensGovernorUpgradeable at 0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BlastRebasingTokensGovernorUpgradeable on the block explorer.
+https://blastscan.io/address/0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d#code
+
