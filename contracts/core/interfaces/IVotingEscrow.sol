@@ -143,6 +143,14 @@ interface IVotingEscrow is IERC721Upgradeable {
     event UnlockPermanent(address indexed sender, uint256 indexed tokenId);
 
     /**
+     * @dev Emitted when a veFNX NFT lock is burned and the underlying FNX is released for use in bribes.
+     * @param sender The address which initiated the burn-to-bribes operation.
+     * @param tokenId The identifier of the veFNX NFT that was burned.
+     * @param value The amount of FNX tokens released from the burned lock.
+     */
+    event BurnToBribes(address indexed sender, uint256 indexed tokenId, uint256 value);
+
+    /**
      * @notice Returns the address of the token used in voting escrow.
      * @return The address of the token.
      */
@@ -344,4 +352,19 @@ interface IVotingEscrow is IERC721Upgradeable {
      * Reverts with `NotManagedNft` if the target is not a managed NFT.
      */
     function onDettachFromManagedNFT(uint256 tokenId_, uint256 managedTokenId_, uint256 newBalance_) external;
+
+    /**
+     * @notice Burns a veFNX NFT to reclaim the underlying FNX tokens for use in bribes.
+     * @dev The caller must be the `customBribeRewardRouter`.
+     *      Before burning, the token is validated to ensure it is not attached,
+     *      has not voted, and is not permanently locked. Upon successful burning,
+     *      the NFT information is cleared and the underlying FNX is transferred
+     *      back to the caller. Finally, a `BurnToBribes` event is emitted.
+     * @param tokenId_ The ID of the veFNX NFT to be burned.
+     * @custom:reverts If the caller does not have the required permissions
+     *                 or if the token state does not allow it to be burned.
+     * @custom:emit BurnToBribes Emitted after successfully burning the token and
+     *                    transferring the FNX to the caller.
+     */
+    function burnToBribes(uint256 tokenId_) external;
 }

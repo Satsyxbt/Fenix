@@ -121,7 +121,7 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
     overrides: {
-      'contracts/core/VotingEscrowUpgradeableV2.sol': LOW_CONTRACT_SIZE_COMPILER_SETTINGS,
+      'contracts/core/VotingEscrowUpgradeableV2.sol': VOTER_LOWEST_SIZE,
       'contracts/core/VoterUpgradeableV2.sol': VOTER_LOWEST_SIZE,
       'contracts/core/VeArtProxy.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,
       'contracts/core/VeArtProxyStatic.sol': LOWEST_CONTRACT_SIZE_COMPILER_SETTINGS,

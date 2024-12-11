@@ -89,6 +89,20 @@ library LibVotingEscrowValidation {
     }
 
     /**
+     * @notice Validates whether a veFNX NFT can be burned to reclaim FNX for bribes.
+     * @dev The token must not be attached, must not have a recent voting history,
+     *      and must not be permanently locked.
+     * @param self_ The current state of the veFNX token to be validated.
+     * @custom:reverts If the token is attached, has voted, or is permanently locked,
+     *                 preventing it from being burned for bribes.
+     */
+    function burnToBribeCheck(IVotingEscrow.TokenState memory self_) internal pure {
+        checkNotAttached(self_);
+        checkNotVoted(self_);
+        checkNotPermanentLocked(self_);
+    }
+
+    /**
      * @notice Validates the conditions for merging the "to" token in a merge operation.
      * @param self_ The state of the token to validate.
      * @dev Reverts if the token is attached.

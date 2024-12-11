@@ -71,6 +71,9 @@ contract VotingEscrowUpgradeableV2 is
     /// @notice Mapping of epoch to slope changes, used in calculating voting power decay.
     mapping(uint256 => int128) public slope_changes;
 
+    /// @notice The address of the custom bribe reward token.
+    address public customBribeRewardRouter;
+
     /**
      * @notice Ensures that the caller is either the owner or approved for the specified NFT.
      * @param tokenId_ The ID of the NFT to check.
@@ -219,6 +222,21 @@ contract VotingEscrowUpgradeableV2 is
     }
 
     /**
+     * @dev See {IVotingEscrow-burnToBribes}.
+     */
+    function burnToBribes(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+        if (_msgSender() != customBribeRewardRouter || customBribeRewardRouter == address(0)) {
+            revert AccessDenied();
+        }
+        TokenState memory state = (nftStates[tokenId_]);
+        state.burnToBribeCheck();
+        _withdrawClearNftInfo(tokenId_, state);
+        uint256 amount = LibVotingEscrowUtils.toUint256(state.locked.amount);
+        IERC20Upgradeable(token).safeTransfer(_msgSender(), amount);
+        emit BurnToBribes(_msgSender(), tokenId_, amount);
+    }
+
+    /**
      * @dev See {IVotingEscrow-withdraw}.
      */
     function withdraw(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
@@ -285,6 +303,8 @@ contract VotingEscrowUpgradeableV2 is
             managedNFTManager = value_;
         } else if (key == 0xcd157ad64ba4487a43c0029709fe8958bbe8ff3d254a9ac569005f257b8dd4d8) {
             voter = value_;
+        } else if (key == 0x2ccd9962cad1f9d8aa1564f907eb2c44b2cf2bbb23f67c10692a77d1794607f9) {
+            customBribeRewardRouter = value_;
         } else {
             revert InvalidAddressKey();
         }
