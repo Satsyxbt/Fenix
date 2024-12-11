@@ -43,6 +43,8 @@ External:
 | **VeFnxDistributorUpgradeable_Proxy** | 0xC69d09854EED4692603BA40e47Ed180f043a1414 |
 | VeArtProxy | 0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9| 
 | VeArtProxyStatic | 0xbDf98125C4012D0E8871B4686b5cFC8d1e70EE4e |
+| CustomBribeRewardRouter_Proxy| 0x6309bc679485A60C60f2e415C893dEE315F87548 |
+| BribeVeFNXRewardToken_Proxy| 0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E |
 
 
 ## Implementations for Proxy
@@ -63,7 +65,7 @@ External:
 | VeFnxSplitMerklAidropUpgradeable_Implementation         | 0xc32160bC7841aedB9b594DB6641320746bb6aAB1   |
 | UtilsUpgradeable_Implementation                         | 0x7A2A229bB0FC58628448437Cc94db06FF1730550   |
 | MinimalLinearVestingUpgradeable_Implementation          | 0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7   |
-| VotingEscrowUpgradeable_Implementation                  | 0xd8808140f6ea77238d5EFb7aa3E1c525994CbaDc   |
+| VotingEscrowUpgradeable_Implementation                  | 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261   |
 | VoterUpgradeable_Implementation                         | 0xf9A192556C2FF8329Ff9D0C4f610e46585735e79   |
 | BribeUpgradeable_Implementation                         | 0x4b7EF81cB931b50b20FdB04439515aC52a1CFC2D   |
 | BribeFactoryUpgradeable_Implementation                  | 0xa76C4Cd922541d3b7680Dca1b4d025825605C1Ca   |
@@ -78,7 +80,9 @@ External:
 | CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0x47a95acbFC949802916151050Dea668aB9AC427a   |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation | 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8  |
 | VeFnxDistributorUpgradeable_Implementation | 0xDE303e84118ed3fFbe5424123a0189DA166A3858 |
-  
+|BribeVeFNXRewardToken_Implementation | 0x380D7770fdeb801623E7dc4D51a6F16b79432F08 |
+| CustomBribeRewardRouter_Implementation | 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46|
+
 ### Tokens
 - `0x9e0f170B90b66C8a0f32A2FDBfc06FC479970e3a` - fnUSDT
 - `0x9Fe9D260262331807D0aa0fb06Fda1fa1b5E2ce5` - fnTOK

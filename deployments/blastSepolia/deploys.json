@@ -29,7 +29,7 @@
   "UtilsUpgradeable_Proxy": "0xcE0dc336D6059847f89cDac71F313607c0996225",
   "MinimalLinearVestingUpgradeable_Implementation": "0x72B6a4200E66530C3e9D8Bc9bE4769119B5305E7",
   "MinimalLinearVestingUpgradeable_Proxy": "0x8Fe5b818D4d7a0c75d9fEF3dd823376322c57820",
-  "VotingEscrowUpgradeable_Implementation": "0x7a101c0E93841bBE924d40C7B1cFfFfe2a69Dfd3",
+  "VotingEscrowUpgradeable_Implementation": "0x2aF794B3b8bf8F11161722718920f0e4A7EcE261",
   "VotingEscrowUpgradeable_Proxy": "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34",
   "VoterUpgradeable_Implementation": "0xf9A192556C2FF8329Ff9D0C4f610e46585735e79",
   "VoterUpgradeable_Proxy": "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43",
@@ -64,5 +64,9 @@
   "VeFnxDistributorUpgradeable_Implementation": "0xDE303e84118ed3fFbe5424123a0189DA166A3858",
   "VeFnxDistributorUpgradeable_Proxy": "0xC69d09854EED4692603BA40e47Ed180f043a1414",
   "VeArtProxyStatic": "0xbDf98125C4012D0E8871B4686b5cFC8d1e70EE4e",
-  "VeArtProxy": "0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9"
+  "VeArtProxy": "0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9",
+  "BribeVeFNXRewardToken_Implementation": "0x380D7770fdeb801623E7dc4D51a6F16b79432F08",
+  "BribeVeFNXRewardToken_Proxy": "0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E",
+  "CustomBribeRewardRouter_Implementation": "0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46",
+  "CustomBribeRewardRouter_Proxy": "0x6309bc679485A60C60f2e415C893dEE315F87548"
 }

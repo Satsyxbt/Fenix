@@ -74,6 +74,10 @@ export enum AliasDeployedContracts {
   GetInformationAggregatorUpgradeable_ProxyAdmin = 'GetInformationAggregatorUpgradeable_ProxyAdmin',
   GetInformationAggregatorUpgradeable_Proxy = 'GetInformationAggregatorUpgradeable_Proxy',
   GetInformationAggregatorUpgradeable_Implementation = 'GetInformationAggregatorUpgradeable_Implementation',
+  BribeVeFNXRewardToken_Proxy = 'BribeVeFNXRewardToken_Proxy',
+  BribeVeFNXRewardToken_Implementation = 'BribeVeFNXRewardToken_Implementation',
+  CustomBribeRewardRouter_Proxy = 'CustomBribeRewardRouter_Proxy',
+  CustomBribeRewardRouter_Implementation = 'CustomBribeRewardRouter_Implementation',
 }
 
 enum ThirdPart {
@@ -125,6 +129,8 @@ enum ContractsInstanceName {
   ManualFNXPriceProvider = 'ManualFNXPriceProvider',
   veFNXClaimer = 'veFNXClaimer',
   OpenOceanVeNftDirectBuyer = 'OpenOceanVeNftDirectBuyer',
+  BribeVeFNXRewardToken = 'BribeVeFNXRewardToken',
+  CustomBribeRewardRouter = 'CustomBribeRewardRouter',
 }
 
 enum ContractsMocksInstanceName {

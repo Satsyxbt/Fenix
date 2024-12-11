@@ -1,0 +1,74 @@
+Start deploy new impelmentations...
+Starting deployment of VotingEscrowUpgradeableV2...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+VotingEscrowUpgradeableV2 deployed at 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261
+Save to deploys.json deployed address of VotingEscrowUpgradeable_Implementation:0x2aF794B3b8bf8F11161722718920f0e4A7EcE261
+Verifying TransparentUpgradeableProxy at 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VotingEscrowUpgradeableV2.sol:VotingEscrowUpgradeableV2 at 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VotingEscrowUpgradeableV2 on the block explorer.
+https://sepolia.blastscan.io/address/0x2aF794B3b8bf8F11161722718920f0e4A7EcE261#code
+
+Start deploy new impelmentations...
+Upgrading proxy at 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34 to new logic at 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261 using ProxyAdmin at 0x9502993595815b1Fa674C5133F42C3919a696bEc...
+Calling ProxyAdmin.upgrade(proxy: 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34, newLogic: 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261)...
+ProxyAdmin.upgrade(proxy: 0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34, newLogic: 0x2aF794B3b8bf8F11161722718920f0e4A7EcE261) transaction hash: 0xc21c3c0cebdff814070c74f6e35dbe6da3c0cb0f07eb247b3e12f8f5442fded8
+Starting deployment of BribeVeFNXRewardToken...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+BribeVeFNXRewardToken deployed at 0x380D7770fdeb801623E7dc4D51a6F16b79432F08
+Save to deploys.json deployed address of BribeVeFNXRewardToken_Implementation:0x380D7770fdeb801623E7dc4D51a6F16b79432F08
+Verifying TransparentUpgradeableProxy at 0x380D7770fdeb801623E7dc4D51a6F16b79432F08...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/rewards/BribeVeFNXRewardToken.sol:BribeVeFNXRewardToken at 0x380D7770fdeb801623E7dc4D51a6F16b79432F08
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract BribeVeFNXRewardToken on the block explorer.
+https://sepolia.blastscan.io/address/0x380D7770fdeb801623E7dc4D51a6F16b79432F08#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x380D7770fdeb801623E7dc4D51a6F16b79432F08
+	Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E
+Save to deploys.json deployed address of BribeVeFNXRewardToken_Proxy:0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E
+Verifying TransparentUpgradeableProxy at 0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E...
+Timeout for 10s before verify proccess...
+The contract 0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E#code
+	Called Contract(0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", votingEscrow_: "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34")
+	Transaction hash: 0x5aec7d8d9f3b9999dfbd9208c3291ecc460cd8d4f52450da3079387d3f0fa227
+Starting deployment of CustomBribeRewardRouter...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+CustomBribeRewardRouter deployed at 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46
+Save to deploys.json deployed address of CustomBribeRewardRouter_Implementation:0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46
+Verifying TransparentUpgradeableProxy at 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/bribes/rewards/CustomBribeRewardRouter.sol:CustomBribeRewardRouter at 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CustomBribeRewardRouter on the block explorer.
+https://sepolia.blastscan.io/address/0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46
+	Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x6309bc679485A60C60f2e415C893dEE315F87548
+Save to deploys.json deployed address of CustomBribeRewardRouter_Proxy:0x6309bc679485A60C60f2e415C893dEE315F87548
+Verifying TransparentUpgradeableProxy at 0x6309bc679485A60C60f2e415C893dEE315F87548...
+Timeout for 10s before verify proccess...
+The contract 0x6309bc679485A60C60f2e415C893dEE315F87548 has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x6309bc679485A60C60f2e415C893dEE315F87548#code
+	Called Contract(0x6309bc679485A60C60f2e415C893dEE315F87548).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", voter_: "0x7936D81EF0548bd8dC9fDa5d3C1204b8def8CB43", bribeVeFnxRewardToken_: "0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E")
+	Transaction hash: 0x3a081299f9d2dfaccbd222157f725173035822b4470334cd9c280e9709607f8d
+	Called Contract(0x7d31b330E84fF067B7c8A32cdD6166c7D517B46E).grantRole(role: "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6", account: "0x6309bc679485A60C60f2e415C893dEE315F87548")
+	Transaction hash: 0x9f9dee2b90d3c0f3b7442dabcd82642f4f0fb464c8ebde41c480f52a3a2a7f84
+	Called Contract(0x6309bc679485A60C60f2e415C893dEE315F87548).setupFuncEnable(funcSign_: "0x0eddae61", isEnable_: "true")
+	Transaction hash: 0xe8e9d82cdc8eee1c4db1bb66bb0710542de5df462fcbb0363176fe115a74f7f7
+	Called Contract(0x6309bc679485A60C60f2e415C893dEE315F87548).setupFuncEnable(funcSign_: "0x5bbec3a8", isEnable_: "true")
+	Transaction hash: 0x7c586bb3fe97f14c70891af2c9f4dfb478215e66674773b28fb3a7b7a6a7a662
