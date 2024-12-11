@@ -32,6 +32,11 @@
   },
   {
     "inputs": [],
+    "name": "InsufficientAvailableAmountToDistribute",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InsufficientAvailableAmountToWithdraw",
     "type": "error"
   },
@@ -62,6 +67,11 @@
   },
   {
     "inputs": [],
+    "name": "ZeroRecipientAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ZeroTokensToClaim",
     "type": "error"
   },
@@ -82,6 +92,43 @@
       }
     ],
     "name": "AddRebasingTokenHolder",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "direction",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lockDuration",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AirdropVeFnx",
     "type": "event"
   },
   {
@@ -398,6 +445,19 @@
   },
   {
     "inputs": [],
+    "name": "TOKEN_DISTRIBUTE_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "TOKEN_HOLDER_ADDER_ROLE",
     "outputs": [
       {
@@ -540,6 +600,46 @@
       }
     ],
     "name": "directV3Swap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IBlastRebasingTokensGovernor.YieldDistributionDirection",
+        "name": "yieldDirectionType_",
+        "type": "uint8"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "withPermanentLock",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "managedTokenIdForAttach",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IBlastRebasingTokensGovernor.AidropRow[]",
+        "name": "rows_",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "distributeVeFnx",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -987,6 +1087,19 @@
     "name": "updateAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "votingEscrow",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

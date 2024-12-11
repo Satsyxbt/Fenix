@@ -1,10 +1,5 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -381,6 +376,52 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "user_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offset_",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAvailableBribesRewards",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "tokens",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address",
+            "name": "bribe",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct RewardAPIUpgradeable.BribeAvailableRewards[]",
+        "name": "array",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -429,6 +470,47 @@
         "internalType": "struct RewardAPIUpgradeable.Claimable[]",
         "name": "toCLaim",
         "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user_",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IBribe",
+        "name": "bribe_",
+        "type": "address"
+      }
+    ],
+    "name": "getBribeRewards",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "tokens",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address",
+            "name": "bribe",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct RewardAPIUpgradeable.BribeAvailableRewards",
+        "name": "result",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
