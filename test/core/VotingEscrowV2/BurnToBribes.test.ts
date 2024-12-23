@@ -102,20 +102,52 @@ describe('VotingEscrow-BurnToBribes', function () {
           'AccessDenied',
         );
       });
+    });
 
-      it('call for own nft, with permanent lock state', async () => {
-        await fenix.connect(signers.fenixTeam).approve(votingEscrow, ethers.parseEther('200'));
-        await fenix.transfer(signers.fenixTeam, ethers.parseEther('10'));
-        await votingEscrow
-          .connect(signers.fenixTeam)
-          .createLockFor(ethers.parseEther('1'), 182 * 86400, signers.fenixTeam.address, false, true, 0);
-        let userTokenId_1 = await votingEscrow.lastMintedTokenId();
-        await votingEscrow.updateAddress('customBribeRewardRouter', signers.fenixTeam);
-        await expect(votingEscrow.connect(signers.fenixTeam).burnToBribes(userTokenId_1)).to.be.revertedWithCustomError(
-          votingEscrow,
-          'PermanentLocked',
-        );
-      });
+    it('Success burn own nft with permanent lock', async () => {
+      await fenix.connect(signers.otherUser1).approve(votingEscrow, ethers.parseEther('200'));
+      await fenix.connect(signers.otherUser2).approve(votingEscrow, ethers.parseEther('200'));
+
+      await fenix.transfer(signers.otherUser1, ethers.parseEther('1'));
+      await fenix.transfer(signers.otherUser2, ethers.parseEther('1'));
+
+      await votingEscrow
+        .connect(signers.otherUser1)
+        .createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, true, 0);
+      let userTokenId_1 = await votingEscrow.lastMintedTokenId();
+
+      expect((await votingEscrow.getNftState(userTokenId_1)).locked.isPermanentLocked).to.be.true;
+
+      await votingEscrow.connect(signers.otherUser1).transferFrom(signers.otherUser1, signers.fenixTeam, userTokenId_1);
+
+      await votingEscrow.updateAddress('customBribeRewardRouter', signers.fenixTeam);
+
+      expect(await votingEscrow.totalSupply()).to.be.eq(1);
+      expect(await votingEscrow.lastMintedTokenId()).to.be.eq(userTokenId_1);
+      expect(await votingEscrow.ownerOf(userTokenId_1)).to.be.eq(signers.fenixTeam);
+
+      expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('1'));
+      expect(await fenix.balanceOf(votingEscrow)).to.be.eq(ethers.parseEther('1'));
+      expect(await fenix.balanceOf(signers.fenixTeam)).to.be.eq(0);
+
+      let tx = await votingEscrow.connect(signers.fenixTeam).burnToBribes(userTokenId_1);
+
+      expect(await votingEscrow.totalSupply()).to.be.eq(0);
+      expect(await votingEscrow.lastMintedTokenId()).to.be.eq(userTokenId_1);
+      await expect(votingEscrow.ownerOf(userTokenId_1)).to.be.revertedWith('ERC721: invalid token ID');
+
+      expect(await votingEscrow.supply()).to.be.eq(0);
+      expect(await fenix.balanceOf(votingEscrow)).to.be.eq(0);
+      expect(await fenix.balanceOf(signers.fenixTeam)).to.be.eq(ethers.parseEther('1'));
+
+      await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('1'), 0);
+      await expect(tx).to.be.emit(votingEscrow, 'Transfer').withArgs(signers.fenixTeam, ethers.ZeroAddress, userTokenId_1);
+      await expect(tx).to.be.emit(votingEscrow, 'BurnToBribes').withArgs(signers.fenixTeam, userTokenId_1, ethers.parseEther('1'));
+      await expect(tx)
+        .to.be.emit(votingEscrow, 'Withdraw')
+        .withArgs(signers.fenixTeam, userTokenId_1, ethers.parseEther('1'), (t: any) => {
+          return true;
+        });
     });
 
     it('Success burn from customBribeRewardRouter', async () => {

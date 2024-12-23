@@ -466,7 +466,9 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @dev This function is non-reentrant and can only be called by the owner or an approved address for the token ID.
      * @param tokenId_ The token ID for which to reset votes.
      */
-    function reset(uint256 tokenId_) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
+    function reset(uint256 tokenId_) external nonReentrant whenNotVotingPaused {
+        _revertIfNotVotingEscrowOrApprovedOrOwner(tokenId_);
+
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         _reset(tokenId_);
@@ -566,13 +568,9 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @param managedTokenId_ The managed tokenId to attach to.
      * @custom:event AttachToManagedNFT Emitted when a tokenId is attached to a managed tokenId.
      */
-    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external nonReentrant whenNotVotingPaused {
-        address votingEscrowCache = votingEscrow;
-        if (_msgSender() != votingEscrowCache) {
-            if (!IVotingEscrow(votingEscrowCache).isApprovedOrOwner(_msgSender(), tokenId_)) {
-                revert AccessDenied();
-            }
-        }
+    function attachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external whenNotVotingPaused {
+        _revertIfNotVotingEscrowOrApprovedOrOwner(tokenId_);
+
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         IManagedNFTManager(managedNFTManager).onAttachToManagedNFT(tokenId_, managedTokenId_);
@@ -588,7 +586,9 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
      * @param tokenId_ The user's tokenId to be detached.
      * @custom:event DettachFromManagedNFT Emitted when a tokenId is detached from a managed tokenId.
      */
-    function dettachFromManagedNFT(uint256 tokenId_) external nonReentrant whenNotVotingPaused onlyNftApprovedOrOwner(tokenId_) {
+    function dettachFromManagedNFT(uint256 tokenId_) external whenNotVotingPaused {
+        _revertIfNotVotingEscrowOrApprovedOrOwner(tokenId_);
+
         _checkVoteDelay(tokenId_);
         _checkVoteWindow();
         IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
@@ -959,6 +959,21 @@ contract VoterUpgradeableV2 is IVoter, AccessControlUpgradeable, BlastGovernorCl
     function _checkVoteDelay(uint256 tokenId_) internal view {
         if (block.timestamp < lastVotedTimestamps[tokenId_] + voteDelay) {
             revert VoteDelay();
+        }
+    }
+
+    /**
+     * @notice Ensures the caller is either the VotingEscrow contract itself or is approved/owner of the specified veNFT.
+     * @dev If the caller is neither the `votingEscrow` contract nor an approved/owner of `tokenId_`, the transaction reverts.
+     * @param tokenId_ The ID of the veNFT to check.
+     * @custom:reverts AccessDenied if the caller is not allowed to operate on the token.
+     */
+    function _revertIfNotVotingEscrowOrApprovedOrOwner(uint256 tokenId_) internal view {
+        IVotingEscrow votingEscrowCache = IVotingEscrow(votingEscrow);
+        if (_msgSender() != address(votingEscrowCache)) {
+            if (!votingEscrowCache.isApprovedOrOwner(_msgSender(), tokenId_)) {
+                revert AccessDenied();
+            }
         }
     }
 }

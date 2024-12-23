@@ -13,22 +13,26 @@ Key features of the contract include:
 
 ## Key Features
 
-The table below outlines the main features of the `VotingEscrowUpgradeableV2` contract, along with availability for different veNFT state.
+The table below outlines the main features of the `VotingEscrowUpgradeableV2` contract, along with availability for different veNFT states.
 
-| **Feature**                           | **Description**                                                                                  | **Permanent Locked veNFT** | **Common/Temporarily Locked veNFT** | **Attached veNFT**            |
-|---------------------------------------|--------------------------------------------------------------------------------------------------|----------------------------|------------------------------|-------------------------------|
-| **Create Lock**                       | Lock tokens for a specified period in exchange for a veNFT.                                       | -                          | -                            | -                             |
-| **Deposit for Lock**                  | Add more tokens to an existing lock to increase voting power.                                     | ✅                          | ✅                            | ❌                             |
-| **Increase Lock Duration**            | Extend the duration of an existing temporary lock.                                                | ❌                          | ✅                            | ❌                             |
-| **Permanent Lock**                    | Convert a temporary lock to a permanent one, providing constant voting power.                     | ❌                          | ✅                            | ❌                             |
-| **Unlock Permanent Lock**             | Revert a permanent lock back to a temporary lock.                                                 | ✅                          | ❌                            | ❌                             |
-| **Merge Locks**                       | Merge two veNFTs into one, combining their locked tokens and voting power.                        | ❌                          | ✅                            | ❌                             |
-| **Withdraw Tokens**                   | Withdraw tokens after the lock expires.                                                           | ❌                          | ✅                            | ❌                             |
-| **Attach to Managed NFT**             | Attach a veNFT to a managed NFT, allowing delegation or staking of voting power.                  | ✅                          | ✅                            | ❌                             |
-| **Detach from Managed NFT**           | Detach a veNFT from a managed NFT, reclaiming the voting power.                                   | ❌                          | ❌                            | ✅                             |
-| **Voting Power Calculation**          | Calculates the current voting power based on lock duration and boost factors.                     | ✅                          | ✅                            | ✅                             |
-| **Token Metadata (URI)**              | Generates metadata for veNFTs, including locked tokens and voting power information.              | ✅                          | ✅                            | ✅                             |
----
+| **Feature**                           | **Description**                                                                                  | **Permanent Locked veNFT** | **Common/Temporarily Locked veNFT** | **Attached veNFT**            | **Voted** | **EXPIRED** | **BURNED** |
+|---------------------------------------|--------------------------------------------------------------------------------------------------|----------------------------|------------------------------------|-------------------------------|-----------|-------------|-------------|
+| **Deposit for Lock**                  | Add more tokens to an existing lock to increase voting power.                                     | ✅                          | ✅                                  | ✅                             | ✅         | ❌           | ❌           |
+| **Transfer Lock**                  | Transfer lock to new recipient.                                     | ✅                          | ✅                                  | ✅                             | ✅         | ✅           | ❌           |
+| **Merge Locks (FROM)**                | Merge two veNFTs into one, combining their locked tokens and voting power.                        | ✅                          | ✅                                  | ✅                             | ✅         | ❌           | ❌           |
+| **Merge Locks (TO)**                  | Merge two veNFTs into one, combining their locked tokens and voting power.                        | ✅                          | ✅                                  | ✅                             | ✅         | ❌           | ❌           |
+| **Attach to Managed NFT**             | Attach a veNFT to a managed NFT, allowing delegation or staking of voting power.                  | ✅                          | ✅                                  | ✅                             | ✅         | ❌           | ❌           |
+| **Burn to bribes**                    | Burning 'lock' to convert to bribe.                                                              | ✅                          | ✅                                  | ✅                             | ✅         | ❌           | ❌           |
+| **Token Metadata (URI)**              | Generates metadata for veNFTs, including locked tokens and voting power information.              | ✅                          | ✅                                  | ✅                             | ✅         | ✅           | ❌           |
+| **Voting Power Calculation**          | Calculates the current voting power based on lock duration and boost factors.                     | ✅                          | ✅                                  | 0                              | ✅         | 0           | ❌           |
+| **Permanent Lock**                    | Convert a temporary lock to a permanent one, providing constant voting power.                     | ❌                          | ✅                                  | ❌                             | ✅         | ❌           | ❌           |
+| **Increase Lock Duration**            | Extend the duration of an existing temporary lock.                                                | ❌                          | ✅                                  | ❌                             | ✅         | ❌           | ❌           |
+| **Unlock Permanent Lock**             | Revert a permanent lock back to a temporary lock.                                                 | ✅                          | ❌                                  | ❌                             | ✅         | ❌           | ❌           |
+| **Deposit for Attached Lock**         | Add more tokens to an existing attached lock.                                                    | ❌                          | ❌                                  | ✅                             | -          | ❌           | ❌           |
+| **Detach from Managed NFT**           | Detach a veNFT from a managed NFT, reclaiming the voting power.                                   | ❌                          | ❌                                  | ✅                             | -          | ❌           | ❌           |
+| **Withdraw Tokens**                   | Withdraw tokens after the lock expires.                                                           | ❌                          | ❌                                  | ❌                             | ✅         | ✅           | ❌           |
+| **Create Lock**                       | Lock tokens for a specified period in exchange for a veNFT.                                       | -                          | -                                  | -                             | -          | -           |  -           |
+
 
 ## Voting Power Calculation
 

@@ -77,8 +77,7 @@ This function allows a user to:
 - **Function Must Be Enabled:** Admin must ensure the function is enabled via `setupFuncEnable`.
 - **veFNX Transfer Approval:** Caller must approve the router contract to transfer the specified veFNX NFT.
 - **Valid Pool:** The specified `pool_` must map to a valid external bribe contract via the `voter` contract.
-- **Burnable NFT:** The veFNX NFT must not be permanently locked or otherwise restricted.
-
+- **Burnable NFT:** The veFNX NFT must not be expired or restricted
 #### Parameters
 - `pool_`: Address of the pool for which the rewards are distributed.
 - `tokenId_`: ID of the veFNX NFT to be burned.

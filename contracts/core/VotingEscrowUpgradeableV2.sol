@@ -11,7 +11,6 @@ import "./interfaces/IVotingEscrow.sol";
 import "./interfaces/IVeArtProxy.sol";
 import "./interfaces/IVeBoost.sol";
 import "./interfaces/IVoter.sol";
-import "./libraries/LibVotingEscrowValidation.sol";
 import "./libraries/LibVotingEscrowErrors.sol";
 import "./libraries/LibVotingEscrowConstants.sol";
 import "./libraries/LibVotingEscrowUtils.sol";
@@ -29,7 +28,6 @@ contract VotingEscrowUpgradeableV2 is
     ReentrancyGuardUpgradeable,
     BlastGovernorClaimableSetup
 {
-    using LibVotingEscrowValidation for TokenState;
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// @notice The token used for voting escrow.
@@ -80,9 +78,7 @@ contract VotingEscrowUpgradeableV2 is
      * @dev Reverts with `AccessDenied` if the caller is neither the owner nor approved.
      */
     modifier onlyNftApprovedOrOwner(uint256 tokenId_) {
-        if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
-            revert AccessDenied();
-        }
+        _revertIfNotApprovedOrOwner(tokenId_);
         _;
     }
 
@@ -135,7 +131,10 @@ contract VotingEscrowUpgradeableV2 is
         bool withPermanentLock_,
         uint256 managedTokenIdForAttach_
     ) external override nonReentrant returns (uint256) {
-        LibVotingEscrowValidation.checkNoValueZero(amount_);
+        if (amount_ == 0) {
+            revert ValueZero();
+        }
+
         uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
 
         if (withPermanentLock_) {
@@ -169,37 +168,20 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-depositFor}.
      */
     function depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) external override nonReentrant {
-        _depositFor(tokenId_, amount_, shouldBoosted_, withPermanentLock_);
+        if (nftStates[tokenId_].isAttached) {
+            _depositToAttachedNFT(tokenId_, amount_);
+        } else {
+            _depositFor(tokenId_, amount_, shouldBoosted_, withPermanentLock_);
+        }
     }
 
     /**
      * @dev See {IVotingEscrow-depositToAttachedNFT}.
      */
     function depositToAttachedNFT(uint256 tokenId_, uint256 amount_) external override nonReentrant {
-        (nftStates[tokenId_]).depositToAttachedNFTCheck();
-
-        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
-        uint256 managedTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId_);
-        if (!managedNFTManagerCache.isManagedNFT(managedTokenId)) {
-            revert NotManagedNft();
-        }
-
-        IERC20Upgradeable(token).safeTransferFrom(_msgSender(), address(this), amount_);
-
-        uint256 supplyBefore = supply;
-        supply += amount_;
-        permanentTotalSupply += amount_;
-
-        LockedBalance memory oldLocked = nftStates[managedTokenId].locked;
-        _updateNftLocked(
-            managedTokenId,
-            LockedBalance(oldLocked.amount + LibVotingEscrowUtils.toInt128(amount_), oldLocked.end, oldLocked.isPermanentLocked)
-        );
-        IManagedNFTManager(managedNFTManager).onDepositToAttachedNFT(tokenId_, amount_);
-        IVoter(voter).onDepositToManagedNFT(tokenId_, managedTokenId);
-
-        emit DepositToAttachedNFT(_msgSender(), tokenId_, managedTokenId, amount_);
-        emit Supply(supplyBefore, supplyBefore + amount_);
+        _checkExistAndNotExpired(tokenId_);
+        _revertIfNotAttached(tokenId_);
+        _depositToAttachedNFT(tokenId_, amount_);
     }
 
     /**
@@ -210,8 +192,12 @@ contract VotingEscrowUpgradeableV2 is
         uint256 amount_,
         uint256 lockDuration_
     ) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        _increaseUnlockTime(tokenId_, lockDuration_);
-        _depositFor(tokenId_, amount_, true, false);
+        if (nftStates[tokenId_].isAttached) {
+            _depositToAttachedNFT(tokenId_, amount_);
+        } else {
+            _increaseUnlockTime(tokenId_, lockDuration_);
+            _depositFor(tokenId_, amount_, true, false);
+        }
     }
 
     /**
@@ -228,10 +214,12 @@ contract VotingEscrowUpgradeableV2 is
         if (_msgSender() != customBribeRewardRouter || customBribeRewardRouter == address(0)) {
             revert AccessDenied();
         }
-        TokenState memory state = (nftStates[tokenId_]);
-        state.burnToBribeCheck();
-        _withdrawClearNftInfo(tokenId_, state);
-        uint256 amount = LibVotingEscrowUtils.toUint256(state.locked.amount);
+
+        _dettachIfAttached(tokenId_);
+        _resetVotesIfVoted(tokenId_);
+        _unlockPermanentIfLocked(tokenId_);
+
+        uint256 amount = _withdrawClearNftInfo(tokenId_);
         IERC20Upgradeable(token).safeTransfer(_msgSender(), amount);
         emit BurnToBribes(_msgSender(), tokenId_, amount);
     }
@@ -240,10 +228,25 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-withdraw}.
      */
     function withdraw(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        TokenState memory state = (nftStates[tokenId_]);
-        state.withdrawCheck();
-        _withdrawClearNftInfo(tokenId_, state);
-        IERC20Upgradeable(token).safeTransfer(_msgSender(), LibVotingEscrowUtils.toUint256(state.locked.amount));
+        TokenState memory state = nftStates[tokenId_];
+
+        if (state.locked.amount == 0 && !state.isAttached) {
+            revert TokenNotExist();
+        }
+
+        _revertIfPermanentLocked(tokenId_);
+
+        _revertIfAttached(tokenId_);
+
+        if (block.timestamp < state.locked.end) {
+            revert TokenNoExpired();
+        }
+
+        _resetVotesIfVoted(tokenId_);
+
+        uint256 amount = _withdrawClearNftInfo(tokenId_);
+
+        IERC20Upgradeable(token).safeTransfer(_msgSender(), amount);
     }
 
     /**
@@ -256,19 +259,40 @@ contract VotingEscrowUpgradeableV2 is
         if (tokenFromId_ == tokenToId_) {
             revert MergeTokenIdsTheSame();
         }
-        TokenState memory stateFrom = nftStates[tokenFromId_];
-        stateFrom.mergeCheckFrom();
-        TokenState memory stateTo = nftStates[tokenToId_];
-        stateTo.mergeCheckTo();
-        _withdrawClearNftInfo(tokenFromId_, stateFrom);
+        _checkExistAndNotExpired(tokenFromId_);
+        _checkExistAndNotExpired(tokenToId_);
+
+        emit MergeInit(tokenFromId_, tokenToId_);
+
+        _resetVotesIfVoted(tokenFromId_);
+
+        bool unlockedFromPermanent = _unlockPermanentIfLocked(tokenFromId_);
+
+        _dettachIfAttached(tokenFromId_);
+
+        uint256 mergeAmount = _withdrawClearNftInfo(tokenFromId_);
+
+        uint256 fromLockedEnd = nftStates[tokenFromId_].locked.end;
+
+        uint256 attachedManagedTokenId = _dettachIfAttached(tokenToId_);
+
+        LockedBalance memory stateTo = nftStates[tokenToId_].locked;
+
         _proccessLockChange(
             tokenToId_,
-            LibVotingEscrowUtils.toUint256(stateFrom.locked.amount),
-            stateFrom.locked.end >= stateTo.locked.end ? stateFrom.locked.end : stateTo.locked.end,
-            stateTo.locked,
+            mergeAmount,
+            fromLockedEnd >= stateTo.end ? fromLockedEnd : stateTo.end,
+            stateTo,
             DepositType.MERGE_TYPE,
             false
         );
+
+        if (attachedManagedTokenId > 0) {
+            IVoter(voter).attachToManagedNFT(tokenToId_, attachedManagedTokenId);
+        } else if (unlockedFromPermanent && !stateTo.isPermanentLocked) {
+            _lockPermanent(tokenToId_);
+        }
+
         emit Merge(_msgSender(), tokenFromId_, tokenToId_);
     }
 
@@ -276,6 +300,9 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-lockPermanent}.
      */
     function lockPermanent(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
+        _checkExistAndNotExpired(tokenId_);
+        _revertIfAttached(tokenId_);
+        _revertIfPermanentLocked(tokenId_);
         _lockPermanent(tokenId_);
     }
 
@@ -283,11 +310,10 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-unlockPermanent}.
      */
     function unlockPermanent(uint256 tokenId_) external override nonReentrant onlyNftApprovedOrOwner(tokenId_) {
-        TokenState memory state = (nftStates[tokenId_]);
-        state.unlockPermanentCheck();
-        permanentTotalSupply -= LibVotingEscrowUtils.toUint256(state.locked.amount);
-        _updateNftLocked(tokenId_, LockedBalance(state.locked.amount, LibVotingEscrowUtils.maxUnlockTimestamp(), false));
-        emit UnlockPermanent(_msgSender(), tokenId_);
+        _checkExistAndNotExpired(tokenId_);
+        _revertIfAttached(tokenId_);
+        _revertIfNotPermanentLocked(tokenId_);
+        _unlockPermanent(tokenId_);
     }
 
     /**
@@ -334,14 +360,21 @@ contract VotingEscrowUpgradeableV2 is
      * @dev See {IVotingEscrow-onAttachToManagedNFT}.
      */
     function onAttachToManagedNFT(uint256 tokenId_, uint256 managedTokenId_) external override onlyManagedNFTManager returns (uint256) {
+        _checkExistAndNotExpired(tokenId_);
+
+        _dettachIfAttached(tokenId_);
+
+        _resetVotesIfVoted(tokenId_);
+
         TokenState memory state = nftStates[tokenId_];
-        state.attachToManagedNftCheck();
         if (balanceOfNftIgnoreOwnershipChange(tokenId_) == 0) {
             revert ZeroVotingPower();
         }
+
         if (!IManagedNFTManager(managedNFTManager).isManagedNFT(managedTokenId_)) {
             revert NotManagedNft();
         }
+
         int128 amount = state.locked.amount;
         uint256 cAmount = LibVotingEscrowUtils.toUint256(amount);
         if (state.locked.isPermanentLocked) {
@@ -365,8 +398,8 @@ contract VotingEscrowUpgradeableV2 is
         uint256 managedTokenId_,
         uint256 newBalance_
     ) external override onlyManagedNFTManager {
-        TokenState memory state = nftStates[tokenId_];
-        state.dettachFromManagedNftCheck();
+        _revertIfNotAttached(tokenId_);
+
         if (!IManagedNFTManager(managedNFTManager).isManagedNFT(managedTokenId_)) {
             revert NotManagedNft();
         }
@@ -401,10 +434,7 @@ contract VotingEscrowUpgradeableV2 is
      */
     function isTransferable(uint256 tokenId_) public view override returns (bool) {
         _requireMinted(tokenId_);
-        return
-            !(nftStates[tokenId_].isVoted ||
-                nftStates[tokenId_].isAttached ||
-                IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_));
+        return true;
     }
 
     /**
@@ -525,10 +555,8 @@ contract VotingEscrowUpgradeableV2 is
      * @dev Reverts if the transfer does not meet the contract's conditions.
      */
     function _beforeTokenTransfer(address from_, address to_, uint256 firstTokenId_, uint256 batchSize_) internal virtual override {
-        if (IManagedNFTManager(managedNFTManager).isManagedNFT(firstTokenId_)) {
-            revert ManagedNftTransferDisabled();
-        }
-        (nftStates[firstTokenId_]).transferCheck();
+        _resetVotesIfVoted(firstTokenId_);
+
         nftStates[firstTokenId_].lastTranferBlock = block.number;
         super._beforeTokenTransfer(from_, to_, firstTokenId_, batchSize_);
     }
@@ -542,15 +570,17 @@ contract VotingEscrowUpgradeableV2 is
      * @param withPermanentLock_ Indicates whether the deposit should be permanently locked.
      */
     function _depositFor(uint256 tokenId_, uint256 amount_, bool shouldBoosted_, bool withPermanentLock_) internal {
-        LibVotingEscrowValidation.checkNoValueZero(amount_);
-        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
-            nftStates[tokenId_].depositCheck();
+        if (amount_ == 0) {
+            revert ValueZero();
         }
+
+        if (!IManagedNFTManager(managedNFTManager).isManagedNFT(tokenId_)) {
+            _checkExistAndNotExpired(tokenId_);
+        }
+
         if (withPermanentLock_) {
-            if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
-                revert AccessDenied();
-            }
-            _lockPermanent(tokenId_);
+            _revertIfNotApprovedOrOwner(tokenId_);
+            _lockPermanentIfNotLocked(tokenId_);
         }
         _proccessLockChange(tokenId_, amount_, 0, nftStates[tokenId_].locked, DepositType.DEPOSIT_FOR_TYPE, shouldBoosted_);
     }
@@ -562,13 +592,15 @@ contract VotingEscrowUpgradeableV2 is
      * @param lockDuration_ The duration (in seconds) to extend the lock period.
      */
     function _increaseUnlockTime(uint256 tokenId_, uint256 lockDuration_) internal {
-        TokenState memory state = nftStates[tokenId_];
-        state.increaseUnlockCheck();
+        _checkExistAndNotExpired(tokenId_);
+        _revertIfAttached(tokenId_);
+        _revertIfPermanentLocked(tokenId_);
+
         uint256 unlockTimestamp = LibVotingEscrowUtils.roundToWeek(block.timestamp + lockDuration_);
-        if (unlockTimestamp <= state.locked.end || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
+        if (unlockTimestamp <= nftStates[tokenId_].locked.end || unlockTimestamp > LibVotingEscrowUtils.maxUnlockTimestamp()) {
             revert InvalidLockDuration();
         }
-        _proccessLockChange(tokenId_, 0, unlockTimestamp, state.locked, DepositType.INCREASE_UNLOCK_TIME, false);
+        _proccessLockChange(tokenId_, 0, unlockTimestamp, nftStates[tokenId_].locked, DepositType.INCREASE_UNLOCK_TIME, false);
     }
 
     /**
@@ -578,21 +610,19 @@ contract VotingEscrowUpgradeableV2 is
      * Emits a {LockPermanent} event.
      */
     function _lockPermanent(uint256 tokenId_) internal {
-        TokenState memory state = (nftStates[tokenId_]);
-        state.lockPermanentCheck();
-        permanentTotalSupply += LibVotingEscrowUtils.toUint256(state.locked.amount);
-        _updateNftLocked(tokenId_, LockedBalance(state.locked.amount, 0, true));
+        int128 amount = (nftStates[tokenId_]).locked.amount;
+        permanentTotalSupply += LibVotingEscrowUtils.toUint256(amount);
+        _updateNftLocked(tokenId_, LockedBalance(amount, 0, true));
         emit LockPermanent(_msgSender(), tokenId_);
     }
 
     /**
      * @notice Internal function to clear the NFT's state after withdrawal.
      * @param tokenId_ The ID of the NFT.
-     * @param state_ The state of the NFT.
      * @dev Emits a {Supply} event reflecting the change in total supply.
      */
-    function _withdrawClearNftInfo(uint256 tokenId_, TokenState memory state_) internal {
-        uint256 amount = LibVotingEscrowUtils.toUint256(state_.locked.amount);
+    function _withdrawClearNftInfo(uint256 tokenId_) internal returns (uint256 amount) {
+        amount = LibVotingEscrowUtils.toUint256(nftStates[tokenId_].locked.amount);
         uint256 supplyBefore = supply;
         supply -= amount;
         _burn(tokenId_);
@@ -610,6 +640,196 @@ contract VotingEscrowUpgradeableV2 is
     function _updateNftLocked(uint256 tokenId_, LockedBalance memory newLocked_) internal {
         _checkpoint(tokenId_, nftStates[tokenId_].locked, newLocked_);
         nftStates[tokenId_].locked = newLocked_;
+    }
+
+    /**
+     * @notice Deposits tokens into a veNFT attached to a managed NFT.
+     * @dev Updates the locked state of the managed NFT and adjusts the total supply.
+     *      Calls external hooks on the managed NFT manager and voter contracts.
+     * @param tokenId_ The ID of the veNFT attached to the managed NFT.
+     * @param amount_ The amount of tokens to deposit.
+     * @custom:require The veNFT must be attached to a valid managed NFT.
+     * @custom:emits {DepositToAttachedNFT} when tokens are successfully deposited.
+     * @custom:emits {Supply} to reflect the updated total supply.
+     */
+    function _depositToAttachedNFT(uint256 tokenId_, uint256 amount_) internal {
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        uint256 managedTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId_);
+        if (!managedNFTManagerCache.isManagedNFT(managedTokenId)) {
+            revert NotManagedNft();
+        }
+
+        IERC20Upgradeable(token).safeTransferFrom(_msgSender(), address(this), amount_);
+
+        uint256 supplyBefore = supply;
+        supply += amount_;
+        permanentTotalSupply += amount_;
+
+        LockedBalance memory oldLocked = nftStates[managedTokenId].locked;
+        _updateNftLocked(
+            managedTokenId,
+            LockedBalance(oldLocked.amount + LibVotingEscrowUtils.toInt128(amount_), oldLocked.end, oldLocked.isPermanentLocked)
+        );
+        IManagedNFTManager(managedNFTManager).onDepositToAttachedNFT(tokenId_, amount_);
+        IVoter(voter).onDepositToManagedNFT(tokenId_, managedTokenId);
+
+        emit DepositToAttachedNFT(_msgSender(), tokenId_, managedTokenId, amount_);
+        emit Supply(supplyBefore, supplyBefore + amount_);
+    }
+
+    /**
+     * @notice Unlocks a permanently locked veNFT.
+     * @dev Removes the permanent lock and updates the locked state.
+     * @param tokenId_ The ID of the veNFT to unlock.
+     * @custom:emits {UnlockPermanent} when the lock is successfully removed.
+     */
+    function _unlockPermanent(uint256 tokenId_) internal {
+        int128 amount = nftStates[tokenId_].locked.amount;
+        permanentTotalSupply -= LibVotingEscrowUtils.toUint256(amount);
+        _updateNftLocked(tokenId_, LockedBalance(amount, LibVotingEscrowUtils.maxUnlockTimestamp(), false));
+        emit UnlockPermanent(_msgSender(), tokenId_);
+    }
+
+    /**
+     * @notice Detaches a veNFT from a managed NFT, if attached.
+     * @param tokenId_ The ID of the veNFT to detach.
+     * @return attachedManagedTokenId The ID of the managed NFT that was attached, if any.
+     * @custom:require If attached, the managed NFT must be valid.
+     */
+    function _dettachIfAttached(uint256 tokenId_) internal returns (uint256 attachedManagedTokenId) {
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        attachedManagedTokenId = managedNFTManagerCache.getAttachedManagedTokenId(tokenId_);
+        if (attachedManagedTokenId > 0) {
+            IVoter(voter).dettachFromManagedNFT(tokenId_);
+        }
+    }
+
+    /**
+     * @notice Permanently locks a veNFT if it is not already locked.
+     * @dev Sets the permanent lock state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to lock.
+     * @return unlocked Returns true if the veNFT was successfully locked.
+     */
+    function _lockPermanentIfNotLocked(uint256 tokenId_) internal returns (bool unlocked) {
+        if (!nftStates[tokenId_].locked.isPermanentLocked) {
+            _lockPermanent(tokenId_);
+            return true;
+        }
+    }
+
+    /**
+     * @notice Unlocks a veNFT if it is permanently locked.
+     * @dev Removes the permanent lock state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to unlock.
+     * @return unlocked Returns true if the veNFT was successfully unlocked.
+     */
+    function _unlockPermanentIfLocked(uint256 tokenId_) internal returns (bool unlocked) {
+        if (nftStates[tokenId_].locked.isPermanentLocked) {
+            _unlockPermanent(tokenId_);
+            return true;
+        }
+    }
+
+    /**
+     * @notice Resets the voting state of a veNFT if it has been used to vote.
+     * @dev Calls the reset function on the voter contract for the veNFT.
+     * @param tokenId_ The ID of the veNFT to reset.
+     */
+    function _resetVotesIfVoted(uint256 tokenId_) internal {
+        if (nftStates[tokenId_].isVoted) {
+            IVoter(voter).reset(tokenId_);
+        }
+    }
+
+    /**
+     * @notice Validates that a veNFT exists and has not expired.
+     * @dev Checks the locked state and expiration status of the veNFT.
+     * @param tokenId_ The ID of the veNFT to validate.
+     * @custom:require The veNFT must exist and either be permanently locked or not expired.
+     * @custom:reverts {TokenNotExist} if the veNFT does not exist.
+     * @custom:reverts {TokenExpired} if the veNFT has expired and is not permanently locked.
+     */
+    function _checkExistAndNotExpired(uint256 tokenId_) internal view {
+        TokenState memory state = nftStates[tokenId_];
+
+        if (state.isAttached) {
+            return;
+        }
+
+        if (state.locked.amount == 0) {
+            revert TokenNotExist();
+        }
+
+        if (state.locked.isPermanentLocked) {
+            return;
+        }
+
+        if (state.locked.end < block.timestamp) {
+            revert TokenExpired();
+        }
+    }
+
+    /**
+     * @notice Ensures that a veNFT is attached to a managed NFT.
+     * @dev Validates the attachment state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to validate.
+     * @custom:require The veNFT must be attached.
+     * @custom:reverts {TokenNotAttached} if the veNFT is not attached.
+     */
+    function _revertIfNotAttached(uint256 tokenId_) internal view {
+        if (!nftStates[tokenId_].isAttached) {
+            revert TokenNotAttached();
+        }
+    }
+
+    /**
+     * @notice Ensures that a veNFT is not attached to a managed NFT.
+     * @dev Validates the attachment state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to validate.
+     * @custom:require The veNFT must not be attached.
+     * @custom:reverts {TokenAttached} if the veNFT is attached.
+     */
+    function _revertIfAttached(uint256 tokenId_) internal view {
+        if (nftStates[tokenId_].isAttached) {
+            revert TokenAttached();
+        }
+    }
+
+    /**
+     * @notice Ensures that a veNFT is not permanently locked.
+     * @dev Validates the permanent lock state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to validate.
+     * @custom:require The veNFT must not be permanently locked.
+     * @custom:reverts {PermanentLocked} if the veNFT is permanently locked.
+     */
+    function _revertIfPermanentLocked(uint256 tokenId_) internal view {
+        if (nftStates[tokenId_].locked.isPermanentLocked) {
+            revert PermanentLocked();
+        }
+    }
+
+    /**
+     * @notice Ensures that a veNFT is permanently locked.
+     * @dev Validates the permanent lock state of the veNFT.
+     * @param tokenId_ The ID of the veNFT to validate.
+     * @custom:require The veNFT must be permanently locked.
+     * @custom:reverts {NotPermanentLocked} if the veNFT is not permanently locked.
+     */
+    function _revertIfNotPermanentLocked(uint256 tokenId_) internal view {
+        if (!nftStates[tokenId_].locked.isPermanentLocked) {
+            revert NotPermanentLocked();
+        }
+    }
+
+    /**
+     * @notice Ensures that the caller is either the owner or approved for the specified NFT.
+     * @param tokenId_ The ID of the NFT to check.
+     * @dev Reverts with `AccessDenied` if the caller is neither the owner nor approved.
+     */
+    function _revertIfNotApprovedOrOwner(uint256 tokenId_) internal view {
+        if (!_isApprovedOrOwner(_msgSender(), tokenId_)) {
+            revert AccessDenied();
+        }
     }
 
     /**

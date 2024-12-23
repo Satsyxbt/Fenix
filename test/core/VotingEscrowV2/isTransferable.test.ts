@@ -159,19 +159,16 @@ describe('VotingEscrow-depositToAttachedNFT', function () {
       await expect(votingEscrow.isTransferable(3)).to.be.revertedWith('ERC721: invalid token ID');
     });
 
-    it('return false for managed nft', async () => {
-      expect(await votingEscrow.isTransferable(mVeNftId)).to.be.false;
-    });
+    describe('always return true', async () => {
+      it('for managed nft', async () => {
+        expect(await votingEscrow.isTransferable(mVeNftId)).to.be.true;
+      });
 
-    it('return true if user nft not voted and not attached ', async () => {
-      expect(await votingEscrow.isTransferable(userNftId)).to.be.true;
-      await expect(votingEscrow.transferFrom(signers.deployer.address, signers.otherUser1.address, userNftId)).to.be.not.reverted;
-    });
-
-    it('return false if user nft attached ', async () => {
-      await voter.attachToManagedNFT(userNftId, mVeNftId);
-      expect(await votingEscrow.isTransferable(userNftId)).to.be.false;
-      await expect(votingEscrow.transferFrom(signers.deployer.address, signers.otherUser1.address, userNftId)).to.be.reverted;
+      it('return true if user nft attached ', async () => {
+        await voter.attachToManagedNFT(userNftId, mVeNftId);
+        expect(await votingEscrow.isTransferable(userNftId)).to.be.true;
+        await expect(votingEscrow.transferFrom(signers.deployer.address, signers.otherUser1.address, userNftId)).to.be.not.reverted;
+      });
     });
   });
 });

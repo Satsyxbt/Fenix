@@ -263,7 +263,7 @@ describe('VoterV2 Contract', function () {
         .withArgs(userTokenId, managedTokenId);
     });
 
-    it('fail if user already voted', async () => {
+    it('reser votes, if user already voted before ', async () => {
       await deployed.v2PairFactory.createPair(USDT.target, WETH.target, false);
       let pair = await deployed.v2PairFactory.getPair(USDT.target, WETH.target, false);
       await voter.createV2Gauge(pair);
@@ -282,10 +282,7 @@ describe('VoterV2 Contract', function () {
       await voter.connect(signers.otherUser1).vote(userTokenId, [pair], [1000]);
       expect((await votingEscrow.nftStates(userTokenId)).isVoted).to.be.true;
 
-      await expect(voter.connect(signers.otherUser1).attachToManagedNFT(userTokenId, managedTokenId)).to.be.revertedWithCustomError(
-        votingEscrow,
-        'TokenVoted',
-      );
+      await expect(voter.connect(signers.otherUser1).attachToManagedNFT(userTokenId, managedTokenId)).to.be.emit(voter, 'VoteReset');
     });
 
     it('should add voting power to managed  nft already voted pools', async () => {

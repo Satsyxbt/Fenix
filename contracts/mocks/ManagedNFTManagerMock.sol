@@ -10,6 +10,10 @@ contract ManagedNFTManagerMock {
         isManagedNFT[tokenId] = true;
     }
 
+    function getAttachedManagedTokenId(uint256) external view returns (uint256) {
+        return 0;
+    }
+
     function onAttachToManagedNFT(address votingEscrow, uint256 tokenId_, uint256 managedTokenId_) external {
         IVotingEscrow(votingEscrow).onAttachToManagedNFT(tokenId_, managedTokenId_);
     }

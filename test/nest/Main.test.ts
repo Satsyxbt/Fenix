@@ -174,13 +174,6 @@ describe('Nest Main Contract', function () {
     expect(await voter.votes(nftToken1, WETH_FENIX_PAIR)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('0.1'));
   });
 
-  it('fail if user try attach to managed nft', async () => {
-    await expect(voter.connect(signers.otherUser1).attachToManagedNFT(nftToken1, managedNftId)).to.be.revertedWithCustomError(
-      votingEscrow,
-      'TokenVoted',
-    );
-  });
-
   it('state before attach', async () => {
     expect(await managedNFTManager.tokensInfo(nftToken2)).to.be.deep.eq([false, 0, 0]);
   });

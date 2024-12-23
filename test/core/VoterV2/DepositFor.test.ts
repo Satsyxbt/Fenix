@@ -204,16 +204,33 @@ describe('VotingEscrow-depositFor', function () {
         votingEscrow.connect(signers.otherUser2).depositFor(userTokenId_1, ONE_ETHER, false, true),
       ).to.be.revertedWithCustomError(votingEscrow, 'AccessDenied');
     });
-    it('call with permanent lock for alredy locked token', async () => {
-      let userTokenId_1 = 1n;
-      await votingEscrow
-        .connect(signers.otherUser1)
-        .createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, true, 0);
+  });
+  describe('not fail if call with permanent lock for already permanent locked token, just ignore', async () => {
+    let userTokenId_1 = 1n;
+    await votingEscrow
+      .connect(signers.otherUser1)
+      .createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, true, 0);
 
-      await expect(
-        votingEscrow.connect(signers.otherUser1).depositFor(userTokenId_1, ONE_ETHER, false, true),
-      ).to.be.revertedWithCustomError(votingEscrow, 'PermanentLocked');
-    });
+    let tx = await votingEscrow.connect(signers.otherUser1).depositFor(userTokenId_1, ONE_ETHER, false, true);
+    await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ONE_ETHER, ethers.parseEther('2'));
+    await expect(tx).to.be.emit(votingEscrow, 'LockPermanent').withArgs(signers.otherUser1.address, userTokenId_1);
+
+    expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('2'));
+    expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('2'));
+    expect(await votingEscrow.totalSupply()).to.be.eq(1);
+    expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+    expect(await votingEscrow.lastMintedTokenId()).to.be.eq(userTokenId_1);
+    expect(await votingEscrow.ownerOf(userTokenId_1)).to.be.eq(signers.otherUser1.address);
+
+    expect(await fenix.balanceOf(signers.otherUser1.address)).to.be.eq(ethers.parseEther('998'));
+    expect(await fenix.balanceOf(votingEscrow.target)).to.be.eq(ethers.parseEther('2'));
+
+    expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('2'));
+
+    expect(await votingEscrow.balanceOfNftIgnoreOwnershipChange(userTokenId_1)).to.be.eq(ethers.parseEther('2'));
+    expect(await votingEscrow.balanceOfNFT(userTokenId_1)).to.be.eq(ethers.parseEther('2'));
+
+    await checkNftState(userTokenId_1, { amount: ethers.parseEther('2'), isPermanentLocked: true, isAttached: false });
   });
   describe('success deposit for', async () => {
     let userTokenId_1 = 1n;

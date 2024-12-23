@@ -43,6 +43,45 @@ describe('VotingEscrowV2 Contract', function () {
     return Math.floor((await currentEpoch()) + _WEEK);
   }
 
+  async function checkNftState(
+    tokenId: bigint,
+    expectState: {
+      amount?: bigint;
+      end?: number;
+      isPermanentLocked?: boolean;
+      isAttached?: boolean;
+      isVoted?: boolean;
+      lastTranferBlock?: number;
+      pointEpoch?: number;
+    },
+  ) {
+    let nftState = await votingEscrow.nftStates(tokenId);
+    if (expectState.amount) {
+      expect(nftState.locked.amount).to.be.eq(expectState.amount);
+    }
+    if (expectState.end) {
+      expect(nftState.locked.end).to.be.eq(expectState.end);
+    }
+    if (expectState.isAttached) {
+      expect(nftState.isAttached).to.be.eq(expectState.isAttached);
+    }
+    if (expectState.isPermanentLocked) {
+      expect(nftState.locked.isPermanentLocked).to.be.eq(expectState.isPermanentLocked);
+    }
+    if (expectState.isVoted) {
+      expect(nftState.isVoted).to.be.eq(expectState.isVoted);
+    }
+    if (expectState.isAttached) {
+      expect(nftState.isAttached).to.be.eq(expectState.isAttached);
+    }
+    if (expectState.lastTranferBlock) {
+      expect(nftState.lastTranferBlock).to.be.eq(expectState.lastTranferBlock);
+    }
+    if (expectState.pointEpoch) {
+      expect(nftState.pointEpoch).to.be.eq(expectState.pointEpoch);
+    }
+  }
+
   beforeEach(async function () {
     signers = await getSigners();
     deployed = await loadFixture(completeFixture);
@@ -260,21 +299,135 @@ describe('VotingEscrowV2 Contract', function () {
       });
     });
     describe('deposit with/without boost', async () => {
-      it('should fail if nft is attached to managed nft', async () => {
+      it('should use depositToAttached flow if nft is attached to managed nft', async () => {
         await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+        let usetNftId = await votingEscrow.lastMintedTokenId();
         let strategy = await newStrategy();
         let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
         await managedNFTManager.createManagedNFT(strategy.target);
         await voter.connect(signers.otherUser1).attachToManagedNFT(ONE, managedNFTId);
 
-        await expect(votingEscrow.depositFor(ONE, ethers.parseEther('1'), true, false)).to.be.revertedWithCustomError(
-          votingEscrow,
-          'TokenAttached',
-        );
-        await expect(votingEscrow.depositFor(ONE, ethers.parseEther('1'), false, false)).to.be.revertedWithCustomError(
-          votingEscrow,
-          'TokenAttached',
-        );
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(ONE_ETHER);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(ONE_ETHER);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.supply()).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: ONE_ETHER, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        let tx = await votingEscrow.depositFor(usetNftId, ONE_ETHER, false, false);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.deployer, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.deployer, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('1'), ethers.parseEther('2'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+
+        let newBalance = ONE_ETHER + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.depositFor(usetNftId, ONE_ETHER, true, false);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.deployer, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.deployer, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('2'), ethers.parseEther('3'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+
+        newBalance = newBalance + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.depositFor(usetNftId, ONE_ETHER, false, true);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.deployer, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.deployer, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('3'), ethers.parseEther('4'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+
+        newBalance = newBalance + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.depositFor(usetNftId, ONE_ETHER + ONE_ETHER, true, true);
+        newBalance = newBalance + ONE_ETHER + ONE_ETHER;
+        await expect(tx)
+          .to.be.emit(votingEscrow, 'DepositToAttachedNFT')
+          .withArgs(signers.deployer, usetNftId, managedNFTId, ONE_ETHER + ONE_ETHER);
+        await expect(tx)
+          .to.be.emit(deployed.fenix, 'Transfer')
+          .withArgs(signers.deployer, votingEscrow.target, ONE_ETHER + ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('4'), ethers.parseEther('6'));
+        await expect(tx)
+          .to.be.emit(strategy, 'OnAttach')
+          .withArgs(usetNftId, ONE_ETHER + ONE_ETHER);
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
       });
 
       it('should correct increase balance for permanent lock nft', async () => {
@@ -297,6 +450,141 @@ describe('VotingEscrowV2 Contract', function () {
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
       });
     });
+    describe('depositWintIncrease', async () => {
+      it('should use depositToAttached flow if nft is attached to managed nft', async () => {
+        await deployed.fenix.connect(signers.otherUser1).approve(votingEscrow.target, ethers.MaxUint256);
+
+        await deployed.fenix.transfer(signers.otherUser1, ethers.parseEther('1000'));
+
+        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+        let usetNftId = await votingEscrow.lastMintedTokenId();
+        let strategy = await newStrategy();
+        let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
+        await managedNFTManager.createManagedNFT(strategy.target);
+        await voter.connect(signers.otherUser1).attachToManagedNFT(ONE, managedNFTId);
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(ONE_ETHER);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(ONE_ETHER);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.supply()).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ONE_ETHER);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: ONE_ETHER, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        let tx = await votingEscrow.connect(signers.otherUser1).depositWithIncreaseUnlockTime(usetNftId, ONE_ETHER, 91 * 86400);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.otherUser1, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.otherUser1, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('1'), ethers.parseEther('2'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+
+        let newBalance = ONE_ETHER + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.connect(signers.otherUser1).depositWithIncreaseUnlockTime(usetNftId, ONE_ETHER, 300 * 86400);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.otherUser1, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.otherUser1, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('2'), ethers.parseEther('3'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+        newBalance = newBalance + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.connect(signers.otherUser1).depositWithIncreaseUnlockTime(usetNftId, ONE_ETHER, 1);
+        await expect(tx).to.be.emit(votingEscrow, 'DepositToAttachedNFT').withArgs(signers.otherUser1, usetNftId, managedNFTId, ONE_ETHER);
+        await expect(tx).to.be.emit(deployed.fenix, 'Transfer').withArgs(signers.otherUser1, votingEscrow.target, ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('3'), ethers.parseEther('4'));
+        await expect(tx).to.be.emit(strategy, 'OnAttach').withArgs(usetNftId, ONE_ETHER);
+
+        newBalance = newBalance + ONE_ETHER;
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+
+        tx = await votingEscrow.connect(signers.otherUser1).depositWithIncreaseUnlockTime(usetNftId, ONE_ETHER + ONE_ETHER, 0);
+        newBalance = newBalance + ONE_ETHER + ONE_ETHER;
+        await expect(tx)
+          .to.be.emit(votingEscrow, 'DepositToAttachedNFT')
+          .withArgs(signers.otherUser1, usetNftId, managedNFTId, ONE_ETHER + ONE_ETHER);
+        await expect(tx)
+          .to.be.emit(deployed.fenix, 'Transfer')
+          .withArgs(signers.otherUser1, votingEscrow.target, ONE_ETHER + ONE_ETHER);
+        await expect(tx).to.be.emit(votingEscrow, 'Supply').withArgs(ethers.parseEther('4'), ethers.parseEther('6'));
+        await expect(tx)
+          .to.be.emit(strategy, 'OnAttach')
+          .withArgs(usetNftId, ONE_ETHER + ONE_ETHER);
+
+        expect(await managedNFTManager.getAttachedManagedTokenId(usetNftId)).to.be.eq(managedNFTId);
+        expect((await managedNFTManager.tokensInfo(usetNftId)).amount).to.be.eq(newBalance);
+        expect(await strategy.balanceOf(usetNftId)).to.be.eq(newBalance);
+
+        expect(await deployed.fenix.balanceOf(votingEscrow.target)).to.be.eq(newBalance);
+        expect(await votingEscrow.supply()).to.be.eq(newBalance);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(newBalance);
+        expect(await votingEscrow.totalSupply()).to.be.eq(2);
+        expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(1);
+        expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(0);
+        expect(await votingEscrow.ownerOf(usetNftId)).to.be.eq(signers.otherUser1.address);
+
+        expect(await votingEscrow.lastMintedTokenId()).to.be.eq(2n);
+
+        await checkNftState(managedNFTId, { amount: newBalance, isPermanentLocked: true, isAttached: false, end: 0 });
+        await checkNftState(usetNftId, { amount: 0n, isPermanentLocked: false, isAttached: true, end: 0 });
+      });
+    });
     describe('#create_lock', async () => {
       it('should not effect on permanent balance', async () => {
         expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ZERO);
@@ -310,36 +598,389 @@ describe('VotingEscrowV2 Contract', function () {
       it('should fail if permanent lock', async () => {
         await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(ONE);
-        await expect(votingEscrow.connect(signers.otherUser1).withdraw(ONE)).to.be.revertedWithCustomError(votingEscrow, 'TokenNoExpired');
+        await expect(votingEscrow.connect(signers.otherUser1).withdraw(ONE)).to.be.revertedWithCustomError(votingEscrow, 'PermanentLocked');
       });
     });
 
     describe('#merge', async () => {
-      it('fail if from or to nft is attached', async () => {
-        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
-        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
+      it('correct merge and changes balances {attached -> default}', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
+
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
         let strategy = await newStrategy();
         let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
         await managedNFTManager.createManagedNFT(strategy.target);
-        await voter.connect(signers.otherUser1).attachToManagedNFT(ONE, managedNFTId);
+        await voter.connect(signers.otherUser1).attachToManagedNFT(nft1, managedNFTId);
 
-        await expect(votingEscrow.connect(signers.otherUser1).merge(ONE, 2)).to.be.revertedWithCustomError(votingEscrow, 'TokenAttached');
-        await expect(votingEscrow.connect(signers.otherUser1).merge(2, ONE)).to.be.revertedWithCustomError(votingEscrow, 'TokenAttached');
+        await mine();
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(0);
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('1'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: true,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('2'),
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(managedNFTId, {
+          amount: ethers.parseEther('1'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+
+        let tx = await votingEscrow.connect(signers.otherUser1).merge(nft1, nft2);
+
+        await expect(tx).to.be.emit(votingEscrow, 'MergeInit').withArgs(nft1, nft2);
+        await expect(tx).to.be.emit(voter, 'DettachFromManagedNFT').withArgs(nft1);
+        await expect(tx).to.be.emit(votingEscrow, 'Merge').withArgs(signers.otherUser1, nft1, nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(0);
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
       });
-      it('fail if from is permanent lock', async () => {
-        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
-        await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
 
-        await votingEscrow.connect(signers.otherUser1).lockPermanent(1);
+      it('correct merge and changes balances {attached -> attached}', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
 
-        await expect(votingEscrow.connect(signers.otherUser1).merge(1, 2)).to.be.revertedWithCustomError(votingEscrow, 'PermanentLocked');
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
+        let strategy = await newStrategy();
+        let managedNFTId = await managedNFTManager.createManagedNFT.staticCall(strategy.target);
+        await managedNFTManager.createManagedNFT(strategy.target);
+        await voter.connect(signers.otherUser1).attachToManagedNFT(nft1, managedNFTId);
+        await voter.connect(signers.otherUser1).attachToManagedNFT(nft2, managedNFTId);
+
+        await mine();
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(0);
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(0);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: true,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: 0n,
+          end: 0,
+          isAttached: true,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(managedNFTId, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+        expect(await strategy.balanceOf(nft1)).to.be.eq(ethers.parseEther('1'));
+        expect(await strategy.balanceOf(nft2)).to.be.eq(ethers.parseEther('2'));
+        expect(await strategy.totalSupply()).to.be.eq(ethers.parseEther('3'));
+
+        let tx = await votingEscrow.connect(signers.otherUser1).merge(nft1, nft2);
+
+        await expect(tx).to.be.emit(votingEscrow, 'MergeInit').withArgs(nft1, nft2);
+        await expect(tx).to.be.emit(voter, 'DettachFromManagedNFT').withArgs(nft1);
+        await expect(tx).to.be.emit(voter, 'DettachFromManagedNFT').withArgs(nft2);
+        await expect(tx).to.be.emit(voter, 'AttachToManagedNFT').withArgs(nft2, managedNFTId);
+        await expect(tx).to.be.emit(votingEscrow, 'Merge').withArgs(signers.otherUser1, nft1, nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(0);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: 0n,
+          end: 0,
+          isAttached: true,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(managedNFTId, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+        expect(await strategy.balanceOf(nft1)).to.be.eq(0);
+        expect(await strategy.balanceOf(nft2)).to.be.eq(ethers.parseEther('3'));
+        expect(await strategy.totalSupply()).to.be.eq(ethers.parseEther('3'));
+      });
+      it('correct merge and changes balances {default -> default, same unlock timestamp}', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
+
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
+        await mine();
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(0);
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+
+        await expect(votingEscrow.connect(signers.otherUser1).merge(nft1, nft2)).to.be.not.reverted;
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(0);
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+      });
+
+      it('correct merge and changes balances {permanent -> default}, -> permanent final', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
+
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
+        await mine();
+        await votingEscrow.connect(signers.otherUser1).lockPermanent(nft1);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('1'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+
+        let tx = await votingEscrow.connect(signers.otherUser1).merge(nft1, nft2);
+
+        await expect(tx).to.be.emit(votingEscrow, 'UnlockPermanent').withArgs(signers.otherUser1, nft1);
+        await expect(tx).to.be.emit(votingEscrow, 'MergeInit').withArgs(nft1, nft2);
+        await expect(tx).to.be.emit(votingEscrow, 'LockPermanent').withArgs(signers.otherUser1, nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+      });
+      it('correct merge and changes balances {default -> permanent}, -> permanent final', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
+
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
+        await mine();
+        await votingEscrow.connect(signers.otherUser1).lockPermanent(nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.closeTo(ethers.parseEther('1'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.closeTo(ethers.parseEther('2'), ethers.parseEther('2') / 26n);
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('2'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.closeTo(ethers.parseEther('3'), ethers.parseEther('3') / 26n);
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+        await checkNftState(nft1, {
+          amount: ethers.parseEther('1'),
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('2'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+
+        let tx = await votingEscrow.connect(signers.otherUser1).merge(nft1, nft2);
+
+        await expect(tx).to.be.emit(votingEscrow, 'MergeInit').withArgs(nft1, nft2);
+        await expect(tx).to.be.emit(votingEscrow, 'Merge').withArgs(signers.otherUser1, nft1, nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+      });
+      it('correct merge and changes balances {permanent -> permanent}, -> permanent final', async () => {
+        await votingEscrow.createLockFor(ethers.parseEther('1'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft1 = await votingEscrow.lastMintedTokenId();
+
+        await votingEscrow.createLockFor(ethers.parseEther('2'), 182 * 86400, signers.otherUser1.address, false, false, 0);
+        let nft2 = await votingEscrow.lastMintedTokenId();
+
+        await mine();
+        await votingEscrow.connect(signers.otherUser1).lockPermanent(nft2);
+        await votingEscrow.connect(signers.otherUser1).lockPermanent(nft1);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ethers.parseEther('1'));
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(ethers.parseEther('2'));
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(2);
+
+        await checkNftState(nft1, {
+          amount: ethers.parseEther('1'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('2'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
+
+        let tx = await votingEscrow.connect(signers.otherUser1).merge(nft1, nft2);
+
+        await expect(tx).to.be.emit(votingEscrow, 'MergeInit').withArgs(nft1, nft2);
+        await expect(tx).to.be.emit(votingEscrow, 'UnlockPermanent').withArgs(signers.otherUser1, nft1);
+        await expect(tx).to.be.emit(votingEscrow, 'Merge').withArgs(signers.otherUser1, nft1, nft2);
+
+        expect(await votingEscrow.balanceOfNFT(nft1)).to.be.eq(ZERO);
+        await expect(votingEscrow.ownerOf(1)).to.be.reverted;
+        expect(await votingEscrow.balanceOf(signers.otherUser1)).to.be.eq(1);
+
+        expect(await votingEscrow.balanceOfNFT(nft2)).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.permanentTotalSupply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.supply()).to.be.eq(ethers.parseEther('3'));
+        expect(await votingEscrow.votingPowerTotalSupply()).to.be.eq(ethers.parseEther('3'));
+
+        await checkNftState(nft1, {
+          amount: 0n,
+          end: 0,
+          isAttached: false,
+          isPermanentLocked: false,
+          isVoted: false,
+        });
+
+        await checkNftState(nft2, {
+          amount: ethers.parseEther('3'),
+          isAttached: false,
+          isPermanentLocked: true,
+          isVoted: false,
+        });
       });
       it('correct merge and changes balances when to is permit lock', async () => {
         await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.createLockFor(ONE_ETHER, 182 * 86400, signers.otherUser1.address, true, false, 0);
         await votingEscrow.connect(signers.otherUser1).lockPermanent(2);
-
-        let currentBlock = await time.latestBlock();
 
         expect(await votingEscrow.balanceOfNFT(1)).to.be.closeTo(ONE_ETHER, ethers.parseEther('0.1'));
         expect(await votingEscrow.balanceOfNFT(2)).to.be.eq(ONE_ETHER);
@@ -654,15 +1295,6 @@ describe('VotingEscrowV2 Contract', function () {
 
       it('fail if call from not nft owner', async () => {
         await expect(votingEscrow.connect(signers.otherUser2).unlockPermanent(mintedNFT)).to.be.reverted;
-      });
-
-      it('fail if user voted', async () => {
-        await votingEscrow.updateAddress('voter', signers.deployer.address);
-        await votingEscrow.votingHook(mintedNFT, true);
-        await expect(votingEscrow.connect(signers.otherUser1).unlockPermanent(mintedNFT)).to.be.revertedWithCustomError(
-          votingEscrow,
-          'TokenVoted',
-        );
       });
 
       it('fail if try unlock for not permanent lock minted nft', async () => {
