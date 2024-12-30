@@ -1,0 +1,29 @@
+Starting deployment of VeFnxDistributorUpgradeable...
+	Constructor arguments: ["0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228"]
+VeFnxDistributorUpgradeable deployed at 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Implementation:0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A
+Verifying TransparentUpgradeableProxy at 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/core/VeFnxDistributorUpgradeable.sol:VeFnxDistributorUpgradeable at 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract VeFnxDistributorUpgradeable on the block explorer.
+https://sepolia.blastscan.io/address/0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A#code
+
+Starting deployment of TransparentUpgradeableProxy...
+	Logic address: 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A
+	Admin address: 0x9502993595815b1Fa674C5133F42C3919a696bEc
+	Data: 0x
+TransparentUpgradeableProxy deployed at 0x33eDb7839B3C0f363B08927f07FdcF1Af522795e
+Save to deploys.json deployed address of VeFnxDistributorUpgradeable_Proxy:0x33eDb7839B3C0f363B08927f07FdcF1Af522795e
+Verifying TransparentUpgradeableProxy at 0x33eDb7839B3C0f363B08927f07FdcF1Af522795e...
+Timeout for 10s before verify proccess...
+The contract 0x33eDb7839B3C0f363B08927f07FdcF1Af522795e has already been verified on Etherscan.
+https://sepolia.blastscan.io/address/0x33eDb7839B3C0f363B08927f07FdcF1Af522795e#code
+	Called Contract(0x33eDb7839B3C0f363B08927f07FdcF1Af522795e).initialize(blastGovernor_: "0x5D72e06D2A2d9b897Ea84Cd88606Ad9E40ba4228", fenix_: "0xA12E4649fdDDEFD0FB390e4D4fb34fFbd2834fA6", votingEscrow_: "0xd19D6CfB8Dd04Ea6B74C7d771D6EC912C50c0e34")
+	Transaction hash: 0x545a01871521cb973300d20381f231e63b6d7d1a0656e2df3d5c8df3cc31c4e1
+	Called Contract(0x33eDb7839B3C0f363B08927f07FdcF1Af522795e).grantRole(role: "0xfbd454f36a7e1a388bd6fc3ab10d434aa4578f811acbbcf33afb1c697486313c", account: "0x9140D359f2855E6540609dd4A93773ED1f45f509")
+	Transaction hash: 0x36fd2c6cf96b415b2fd599d670d41564f6f8e58699fdb008c165732ffd00e4d7
+	Called Contract(0x33eDb7839B3C0f363B08927f07FdcF1Af522795e).grantRole(role: "0x10dac8c06a04bec0b551627dad28bc00d6516b0caacd1c7b345fcdb5211334e4", account: "0x9140D359f2855E6540609dd4A93773ED1f45f509")
+	Transaction hash: 0x14dd8914a72927602869bace24287a91c41d16703f8952800a98656f61aea57f

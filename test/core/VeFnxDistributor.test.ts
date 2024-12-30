@@ -12,7 +12,7 @@ import {
   VeFnxDistributorUpgradeable__factory,
   VotingEscrowUpgradeableV2,
 } from '../../typechain-types';
-import { ERRORS, ONE, ONE_ETHER, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
+import { ERRORS, getAccessControlError, ONE, ONE_ETHER, WETH_PREDEPLOYED_ADDRESS, ZERO, ZERO_ADDRESS } from '../utils/constants';
 import completeFixture, { CoreFixtureDeployed, SignersList, deployTransaperntUpgradeableProxy } from '../utils/coreFixture';
 
 describe('VeFnxDistributorUpgradeable', function () {
@@ -27,6 +27,8 @@ describe('VeFnxDistributorUpgradeable', function () {
   let routerV2: RouterV2;
   let routerV2PathProvider: RouterV2PathProviderUpgradeable;
   let managedNFTManager: ManagedNFTManagerUpgradeable;
+  let DEFAULT_DISTRIBUTON_REASON = 'Rise';
+  let MAX_LOCK_DURATION = 86400 * 182;
 
   async function newStrategy() {
     let strategy = await ethers.getContractAt(
@@ -81,6 +83,7 @@ describe('VeFnxDistributorUpgradeable', function () {
       routerV2PathProvider.target,
     );
   }
+
   beforeEach(async function () {
     deployed = await loadFixture(completeFixture);
     signers = deployed.signers;
@@ -93,6 +96,10 @@ describe('VeFnxDistributorUpgradeable', function () {
     managedNFTManager = deployed.managedNFTManager;
 
     await deployStrategyFactory();
+
+    await veFnxDistributor.grantRole(ethers.id('WITHDRAWER_ROLE'), signers.deployer);
+    await veFnxDistributor.grantRole(ethers.id('DISTRIBUTOR_ROLE'), signers.deployer);
+    await veFnxDistributor.setWhitelistReasons([DEFAULT_DISTRIBUTON_REASON], [true]);
   });
 
   describe('Deployment', async () => {
@@ -127,15 +134,70 @@ describe('VeFnxDistributorUpgradeable', function () {
       );
     });
 
-    it('Should correct setup parameters', async function () {
+    it('Should correct setup parameters and grant admin role for deployer', async function () {
       expect(await veFnxDistributor.fenix()).to.be.eq(fenix.target);
       expect(await veFnxDistributor.votingEscrow()).to.be.eq(votingEscrow.target);
-      expect(await veFnxDistributor.owner()).to.be.eq(signers.deployer.address);
+      expect(await veFnxDistributor.hasRole(await veFnxDistributor.DEFAULT_ADMIN_ROLE(), signers.deployer)).to.be.true;
     });
   });
+
+  describe('whitelist reasons', async () => {
+    it('isWhitelistedReason should return false if reason not whitelist', async () => {
+      expect(await veFnxDistributor.isWhitelistedReason('1')).to.be.false;
+      expect(await veFnxDistributor.isWhitelistedReason('123456')).to.be.false;
+    });
+    it('isWhitelistReason should return true, if success whitelist', async () => {
+      expect(await veFnxDistributor.isWhitelistedReason('Rise')).to.be.true;
+    });
+    it('Char case is important, should return false, if some char in diff case ', async () => {
+      expect(await veFnxDistributor.isWhitelistedReason('rise')).to.be.false;
+      expect(await veFnxDistributor.isWhitelistedReason('rIse')).to.be.false;
+    });
+
+    describe('setWhitelistReasons', async () => {
+      it('should fail if try call from not default admin role', async () => {
+        await expect(veFnxDistributor.connect(signers.otherUser1).setWhitelistReasons([], [])).to.be.revertedWith(
+          getAccessControlError(await veFnxDistributor.DEFAULT_ADMIN_ROLE(), signers.otherUser1.address),
+        );
+      });
+      it('should fail if provide arraies with diff length', async () => {
+        await expect(veFnxDistributor.setWhitelistReasons(['Rise'], [])).to.be.revertedWithCustomError(
+          veFnxDistributor,
+          'ArrayLengthMismatch',
+        );
+        await expect(veFnxDistributor.setWhitelistReasons(['Rise', 'Rise2'], [true])).to.be.revertedWithCustomError(
+          veFnxDistributor,
+          'ArrayLengthMismatch',
+        );
+        await expect(veFnxDistributor.setWhitelistReasons(['Rise'], [true, false])).to.be.revertedWithCustomError(
+          veFnxDistributor,
+          'ArrayLengthMismatch',
+        );
+      });
+
+      it('success whitelist distribution reason', async () => {
+        expect(await veFnxDistributor.isWhitelistedReason('1')).to.be.false;
+        expect(await veFnxDistributor.isWhitelistedReason('2')).to.be.false;
+        expect(await veFnxDistributor.isWhitelistedReason('3')).to.be.false;
+        expect(await veFnxDistributor.isWhitelistedReason('Rise')).to.be.true;
+
+        let tx = await veFnxDistributor.setWhitelistReasons(['1', '2', '3', 'Rise'], [true, false, true, false]);
+
+        await expect(tx).to.be.emit(veFnxDistributor, 'SetWhitelistReasons').withArgs(['1', '2', '3', 'Rise'], [true, false, true, false]);
+
+        expect(await veFnxDistributor.isWhitelistedReason('1')).to.be.true;
+        expect(await veFnxDistributor.isWhitelistedReason('2')).to.be.false;
+        expect(await veFnxDistributor.isWhitelistedReason('3')).to.be.true;
+        expect(await veFnxDistributor.isWhitelistedReason('Rise')).to.be.false;
+      });
+    });
+  });
+
   describe('#recoverTokens', async () => {
-    it('should fail if try call from not owner', async () => {
-      await expect(veFnxDistributor.connect(signers.otherUser1).recoverTokens(fenix.target, 1)).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+    it('should fail if try call from not WITHDRAWER_ROLE', async () => {
+      await expect(veFnxDistributor.connect(signers.otherUser1).recoverTokens(fenix.target, 1)).to.be.revertedWith(
+        getAccessControlError(ethers.id('WITHDRAWER_ROLE'), signers.otherUser1.address),
+      );
     });
     it('should fail if try recover more tokens than balance', async () => {
       await expect(veFnxDistributor.recoverTokens(fenix.target, ONE)).to.be.revertedWith('ERC20: transfer amount exceeds balance');
@@ -152,29 +214,48 @@ describe('VeFnxDistributorUpgradeable', function () {
       expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ZERO);
     });
   });
+
   describe('#distributeVeFnx', async () => {
-    it('Should fail if try call from not owner', async function () {
+    it('Should fail if try call from not DISTRIBUTOR_ROLE', async function () {
       await expect(
-        veFnxDistributor
-          .connect(signers.otherUser1)
-          .distributeVeFnx([{ recipient: signers.otherUser1.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 }]),
-      ).to.be.revertedWith(ERRORS.Ownable.NotOwner);
+        veFnxDistributor.connect(signers.otherUser1).distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            amount: ONE,
+            withPermanentLock: false,
+            lockDuration: MAX_LOCK_DURATION,
+            managedTokenIdForAttach: 0,
+          },
+        ]),
+      ).to.be.revertedWith(getAccessControlError(ethers.id('DISTRIBUTOR_ROLE'), signers.otherUser1.address));
     });
 
     it('Should fail if not enought balance on contract for distribute', async function () {
       expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ZERO);
 
       await expect(
-        veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
+        veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            amount: ONE,
+            lockDuration: MAX_LOCK_DURATION,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]),
       ).to.be.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
 
       await fenix.transfer(veFnxDistributor.target, 1);
 
       await expect(
-        veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
+        veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]),
       ).to.be.not.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
 
@@ -183,10 +264,28 @@ describe('VeFnxDistributorUpgradeable', function () {
       await fenix.transfer(veFnxDistributor.target, ONE_ETHER);
 
       await expect(
-        veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE_ETHER - ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser3.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
+        veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER - ONE,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser3.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]),
       ).to.be.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
 
@@ -195,6 +294,14 @@ describe('VeFnxDistributorUpgradeable', function () {
         { recipient: signers.otherUser2.address, amount: ONE, withPermanentLock: false, managedTokenIdForAttach: 0 },
       ]).to.be.not.revertedWithCustomError(veFnxDistributor, 'InsufficientBalance');
     });
+
+    it('Should revert if reason not whitelisted', async () => {
+      await expect(veFnxDistributor.distributeVeFnx('Whitelisted', [])).to.be.revertedWithCustomError(
+        veFnxDistributor,
+        'NotWhitelistedReason',
+      );
+    });
+
     describe('Correct distribute veFnx to recipients with permanent lock and attach to managed token id', async () => {
       let startTokenId: bigint;
       let managedTokenId: bigint;
@@ -213,13 +320,32 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOf(signers.otherUser3.address)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOf(signers.otherUser4.address)).to.be.eq(ZERO);
-
-        let tx = await veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ethers.parseEther('1'), withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ethers.parseEther('2'), withPermanentLock: true, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser3.address, amount: ethers.parseEther('3'), withPermanentLock: false, managedTokenIdForAttach: 0 },
+        DEFAULT_DISTRIBUTON_REASON;
+        let tx = await veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ethers.parseEther('1'),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ethers.parseEther('2'),
+            withPermanentLock: true,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser3.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ethers.parseEther('3'),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
           {
             recipient: signers.otherUser4.address,
+            lockDuration: MAX_LOCK_DURATION,
             amount: ethers.parseEther('4'),
             withPermanentLock: true,
             managedTokenIdForAttach: managedTokenId,
@@ -305,25 +431,53 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ethers.parseEther('1000'));
         startTokenId = await votingEscrow.lastMintedTokenId();
       });
+
       it('should corect emit events', async () => {
-        let tx = await veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ONE_ETHER / BigInt(2), withPermanentLock: false, managedTokenIdForAttach: 0 },
+        let tx = await veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER / BigInt(2),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]);
         await expect(tx)
           .to.be.emit(veFnxDistributor, 'AirdropVeFnx')
-          .withArgs(signers.otherUser1.address, 1, 182 * 86400, ONE_ETHER);
+          .withArgs(signers.otherUser1.address, DEFAULT_DISTRIBUTON_REASON, 1, ONE_ETHER);
         await expect(tx)
           .to.be.emit(veFnxDistributor, 'AirdropVeFnx')
-          .withArgs(signers.otherUser2.address, 2, 182 * 86400, ONE_ETHER / BigInt(2));
+          .withArgs(signers.otherUser2.address, DEFAULT_DISTRIBUTON_REASON, 2, ONE_ETHER / BigInt(2));
+        await expect(tx)
+          .to.be.emit(veFnxDistributor, 'AidropVeFnxTotal')
+          .withArgs(signers.deployer, DEFAULT_DISTRIBUTON_REASON, ONE_ETHER + ONE_ETHER / BigInt(2));
       });
 
       it('should corect change balacnes', async () => {
         let startVotingEscrowBalance = await fenix.balanceOf(votingEscrow.target);
 
-        await veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ONE_ETHER / BigInt(2), withPermanentLock: false, managedTokenIdForAttach: 0 },
+        await veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER / BigInt(2),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]);
 
         expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ethers.parseEther('998.5'));
@@ -331,9 +485,21 @@ describe('VeFnxDistributorUpgradeable', function () {
       });
       it('should clear approve after distribution', async () => {
         expect(await fenix.allowance(veFnxDistributor.target, votingEscrow.target)).to.be.eq(ZERO);
-        await veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ONE_ETHER / BigInt(2), withPermanentLock: false, managedTokenIdForAttach: 0 },
+        await veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER / BigInt(2),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]);
         expect(await fenix.allowance(veFnxDistributor.target, votingEscrow.target)).to.be.eq(ZERO);
       });
@@ -343,9 +509,21 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(await votingEscrow.balanceOf(signers.otherUser1.address)).to.be.eq(ZERO);
         expect(await votingEscrow.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
 
-        let tx = await veFnxDistributor.distributeVeFnx([
-          { recipient: signers.otherUser1.address, amount: ONE_ETHER, withPermanentLock: false, managedTokenIdForAttach: 0 },
-          { recipient: signers.otherUser2.address, amount: ONE_ETHER / BigInt(2), withPermanentLock: false, managedTokenIdForAttach: 0 },
+        let tx = await veFnxDistributor.distributeVeFnx(DEFAULT_DISTRIBUTON_REASON, [
+          {
+            recipient: signers.otherUser1.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER,
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
+          {
+            recipient: signers.otherUser2.address,
+            lockDuration: MAX_LOCK_DURATION,
+            amount: ONE_ETHER / BigInt(2),
+            withPermanentLock: false,
+            managedTokenIdForAttach: 0,
+          },
         ]);
 
         let calcEpoch = BigInt(await time.latest()) + BigInt(182 * 86400);
@@ -373,6 +551,61 @@ describe('VeFnxDistributorUpgradeable', function () {
         expect(locked2.end).to.be.eq(calcEpoch);
         expect(locked2.amount).to.be.eq(ethers.parseEther('0.5'));
       });
+    });
+
+    it('Correct distribute and emits event with diff distribute reason', async () => {
+      await fenix.transfer(veFnxDistributor.target, ethers.parseEther('1000'));
+      expect(await fenix.balanceOf(veFnxDistributor.target)).to.be.eq(ethers.parseEther('1000'));
+
+      await veFnxDistributor.setWhitelistReasons(['Rise: Bribes', 'Rise: Incentives'], [true, true]);
+
+      let tx = await veFnxDistributor.distributeVeFnx('Rise: Bribes', [
+        {
+          recipient: signers.otherUser1.address,
+          lockDuration: MAX_LOCK_DURATION,
+          amount: ONE_ETHER,
+          withPermanentLock: false,
+          managedTokenIdForAttach: 0,
+        },
+        {
+          recipient: signers.otherUser2.address,
+          lockDuration: MAX_LOCK_DURATION,
+          amount: ONE_ETHER / BigInt(2),
+          withPermanentLock: false,
+          managedTokenIdForAttach: 0,
+        },
+      ]);
+      await expect(tx).to.be.emit(veFnxDistributor, 'AirdropVeFnx').withArgs(signers.otherUser1.address, 'Rise: Bribes', 1, ONE_ETHER);
+      await expect(tx)
+        .to.be.emit(veFnxDistributor, 'AirdropVeFnx')
+        .withArgs(signers.otherUser2.address, 'Rise: Bribes', 2, ONE_ETHER / BigInt(2));
+      await expect(tx)
+        .to.be.emit(veFnxDistributor, 'AidropVeFnxTotal')
+        .withArgs(signers.deployer, 'Rise: Bribes', ONE_ETHER + ONE_ETHER / BigInt(2));
+
+      tx = await veFnxDistributor.distributeVeFnx('Rise: Incentives', [
+        {
+          recipient: signers.otherUser1.address,
+          lockDuration: MAX_LOCK_DURATION,
+          amount: ONE_ETHER,
+          withPermanentLock: false,
+          managedTokenIdForAttach: 0,
+        },
+        {
+          recipient: signers.otherUser2.address,
+          lockDuration: MAX_LOCK_DURATION,
+          amount: ONE_ETHER / BigInt(2),
+          withPermanentLock: false,
+          managedTokenIdForAttach: 0,
+        },
+      ]);
+      await expect(tx).to.be.emit(veFnxDistributor, 'AirdropVeFnx').withArgs(signers.otherUser1.address, 'Rise: Incentives', 3, ONE_ETHER);
+      await expect(tx)
+        .to.be.emit(veFnxDistributor, 'AirdropVeFnx')
+        .withArgs(signers.otherUser2.address, 'Rise: Incentives', 4, ONE_ETHER / BigInt(2));
+      await expect(tx)
+        .to.be.emit(veFnxDistributor, 'AidropVeFnxTotal')
+        .withArgs(signers.deployer, 'Rise: Incentives', ONE_ETHER + ONE_ETHER / BigInt(2));
     });
   });
 });

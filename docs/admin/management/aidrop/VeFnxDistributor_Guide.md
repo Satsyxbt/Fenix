@@ -1,98 +1,256 @@
+
 # VeFnxDistributor Guide
 
-## Overview
-This document provides a detailed guide for interacting with the `VeFnxDistributorUpgradeable` contract. The `VeFnxDistributorUpgradeable` contract is responsible for distributing `veFnx` tokens to specified recipients by locking FNX tokens in the Voting Escrow contract. The distribution helps recipients gain voting power and incentives through `veFnx`. The contract is managed by the owner, who can initialize, distribute tokens, and recover mistakenly sent funds.
 
 ## Key Functionalities
 
-### 1. Initialization
-The contract must be initialized before it can be used. The initialization process sets the required addresses and ensures that all components are properly configured.
+### 1. Roles and Permissions
+The contract uses **OpenZeppelin’s** Access Control to manage roles:
+- `_DISTRIBUTOR_ROLE`: Authorized accounts that can trigger `distributeVeFnx`.
+- `_WITHDRAWER_ROLE`: Authorized accounts that can recover tokens from the contract.
+- `DEFAULT_ADMIN_ROLE`: Holds the highest authority (typically the contract deployer); can grant/revoke other roles.
 
-#### Function: `initialize`
-- **Signature**: `function initialize(address blastGovernor_, address fenix_, address votingEscrow_) external initializer`
+---
+
+### 2. Initialization
+Before using the contract, it must be initialized. The initialization process sets the **FNX** and **Voting Escrow** addresses, along with the **Blast Governor** address for governance integration.
+
+**Function**: `initialize`
+- **Signature**: 
+  ```solidity
+  function initialize(address blastGovernor_, address fenix_, address votingEscrow_) external initializer
+  ```
 - **Parameters**:
   - `blastGovernor_ (address)`: The address of the Blast Governor contract.
-  - `fenix_ (address)`: The address of the FNX token contract.
-  - `votingEscrow_ (address)`: The address of the Voting Escrow contract.
-- **Usage**: This function must be called once to set up the required contracts before the distributor can perform token distributions.
-- **Important Considerations**: The addresses provided should not be zero addresses, as they will cause the initialization to revert.
+  - `fenix_ (address)`: The address of the **FNX** token contract (must not be zero).
+  - `votingEscrow_ (address)`: The address of the **Voting Escrow** contract (must not be zero).
+- **Access Control**: Can only be called once (initializer).
+- **Usage**: Sets up required addresses and grants `DEFAULT_ADMIN_ROLE` to the caller.
 
-### 2. Distributing veFnx Tokens
-The core functionality of the contract is to distribute `veFnx` tokens by locking FNX tokens in the Voting Escrow contract on behalf of specified recipients.
+---
+
+### 3. Managing Whitelisted Reasons
+The contract allows whitelisting specific “reasons” for airdrops. Any airdrop must supply a whitelisted `reason`.
+
+#### Function: `setWhitelistReasons`
+- **Signature**:
+  ```solidity
+  function setWhitelistReasons(string[] calldata reasons_, bool[] calldata isWhitelisted_) external
+  ```
+- **Parameters**:
+  - `reasons_`: Array of reasons (strings) to whitelist or un-whitelist.
+  - `isWhitelisted_`: Corresponding boolean array (same length) indicating `true` for whitelisting and `false` for removing from the whitelist.
+- **Access Control**: Only callable by `DEFAULT_ADMIN_ROLE`.
+- **Important Considerations**:
+  - If the array lengths do not match, the function reverts with `ArrayLengthMismatch`.
+  - Emits the `SetWhitelistReasons` event.
+
+#### Function: `isWhitelistedReason`
+- **Signature**:
+  ```solidity
+  function isWhitelistedReason(string memory reason_) external view returns (bool)
+  ```
+- **Usage**: Returns `true` if the supplied reason is currently whitelisted, `false` otherwise.
+
+---
+
+### 4. Distributing veFnx Tokens
+The contract’s primary function is to **lock FNX tokens** in the Voting Escrow contract, creating **veFnx** for specified recipients. A distribution requires both:
+1. A whitelisted `reason`.
+2. A batch of recipients with the amounts/durations to lock.
 
 #### Function: `distributeVeFnx`
-- **Signature**: `function distributeVeFnx(AidropRow[] calldata rows_) external override onlyOwner`
+- **Signature**:
+  ```solidity
+  function distributeVeFnx(string memory reason_, AidropRow[] calldata rows_) external
+  ```
 - **Parameters**:
-  - `rows_ (AidropRow[])`: An array of structs, each representing a recipient and the amount of FNX tokens to be distributed. The struct `AidropRow` contains:
-    - `recipient (address)`: The recipient's address.
-    - `amount (uint256)`: The amount of FNX tokens to lock.
-    - `withPermanentLock (bool)`: Indicates if the lock should be permanent.
-    - `managedTokenIdForAttach (uint256)`: Token ID of the managed veNFT to attach to (if applicable).
-- **How to Call**:
-  1. Ensure the contract has enough FNX tokens in its balance to perform the distribution.
-  2. Prepare an array of `AidropRow` structs containing the recipients and respective amounts to be distributed.
-  3. Call the `distributeVeFnx` function to lock the FNX tokens in the Voting Escrow contract and distribute `veFnx` to the recipients.
-  4. For each successful distribution, an `AirdropVeFnx` event will be emitted.
-- **Important Considerations**:
-  - Ensure there is enough FNX balance in the contract before initiating a distribution.
-  - If the recipient address is zero, the function will revert with `ZeroRecipientAddress`.
-  - If the contract's FNX balance is insufficient, it will revert with `InsufficientBalance`.
+  - `reason_ (string)`: A whitelisted string describing the purpose of this airdrop.
+  - `rows_ (AidropRow[])`: An array of `AidropRow` structs containing:
+    - `recipient (address)`: The address receiving veFnx.
+    - `withPermanentLock (bool)`: Whether the veFnx position is permanently locked.
+    - `lockDuration (uint256)`: Duration (in seconds) for which FNX is locked.
+    - `amount (uint256)`: Amount of FNX tokens to lock.
+    - `managedTokenIdForAttach (uint256)`: ID of a managed token to attach veFnx to (if applicable).
+- **Access Control**: Only callable by accounts with `_DISTRIBUTOR_ROLE`.
+- **Logic Flow**:
+  1. Checks if `reason_` is whitelisted. If not, reverts with `NotWhitelistedReason`.
+  2. Sums up all `amount` values to ensure the contract holds enough FNX. If not, reverts with `InsufficientBalance`.
+  3. Approves the total sum of FNX to the Voting Escrow contract.
+  4. Locks the tokens for each recipient, creating corresponding veFnx token IDs.
+  5. Emits:
+     - `AirdropVeFnx` event for each recipient.
+     - `AidropVeFnxTotal` event summarizing the total distribution.
 
-### 3. Recovering Tokens
-The contract owner can recover tokens that were mistakenly sent to the contract.
+- **Important Considerations**:
+  - If any `recipient` is the zero address, the transaction reverts with `ZeroRecipientAddress`.
+  - The caller must ensure the contract has sufficient FNX before distribution.
+
+---
+
+### 5. Recovering Tokens
+The contract can store FNX for distribution, but it may also receive other tokens by mistake. Authorized accounts can recover these tokens.
 
 #### Function: `recoverTokens`
-- **Signature**: `function recoverTokens(address token_, uint256 recoverAmount_) external onlyOwner`
+- **Signature**:
+  ```solidity
+  function recoverTokens(address token_, uint256 recoverAmount_) external
+  ```
 - **Parameters**:
   - `token_ (address)`: The address of the token to recover.
-  - `recoverAmount_ (uint256)`: The amount of the token to recover.
-- **How to Call**:
-  1. Ensure that you are the contract owner.
-  2. Call the `recoverTokens` function with the token address and the amount to recover.
-  3. A `RecoverToken` event will be emitted upon successful recovery.
-- **Important Considerations**: Only the owner can call this function to prevent unauthorized access to the contract's assets.
+  - `recoverAmount_ (uint256)`: The amount of tokens to recover.
+- **Access Control**: Only accounts with `_WITHDRAWER_ROLE`.
+- **Behavior**:
+  - Transfers `recoverAmount_` of `token_` back to the caller.
+  - Emits the `RecoverToken` event.
+
+---
 
 ## Events
-- **AirdropVeFnx**:
-  - **Emitted When**: The `distributeVeFnx` function successfully locks FNX tokens for a recipient.
-  - **Parameters**:
-    - `recipient (address)`: The address of the recipient receiving `veFnx`.
-    - `tokenId (uint256)`: The token ID created for the recipient in the Voting Escrow contract.
-    - `lockDuration (uint256)`: The lock duration for `veFnx` (fixed at `182 days`).
-    - `amount (uint256)`: The amount of FNX locked.
+1. **SetWhitelistReasons**:
+   - **Emitted When**: `setWhitelistReasons` is called.
+   - **Parameters**:
+     - `string[] reasons`: Reasons to add/remove.
+     - `bool[] isWhitelisted`: Corresponding whitelisting statuses.
 
-- **RecoverToken**:
-  - **Emitted When**: The `recoverTokens` function is called successfully.
-  - **Parameters**:
-    - `token (address)`: The address of the token being recovered.
-    - `recoverAmount (uint256)`: The amount of the token being recovered.
+2. **AirdropVeFnx**:
+   - **Emitted When**: `distributeVeFnx` successfully locks FNX for an individual recipient.
+   - **Parameters**:
+     - `recipient (address)`: The recipient receiving veFnx.
+     - `reason (string)`: Whitelisted reason for this airdrop.
+     - `tokenId (uint256)`: ID of the new veFnx in Voting Escrow.
+     - `amount (uint256)`: Amount of FNX locked.
 
-## Important Considerations
-- **Lock Duration**: All FNX tokens are locked for a fixed duration of `182 days` when distributed through the `distributeVeFnx` function.
-- **Permanent Lock Option**: The `AidropRow` struct contains a boolean `withPermanentLock` to indicate if the `veFnx` tokens should be locked permanently.
-- **Owner-Only Functions**: The `distributeVeFnx` and `recoverTokens` functions are restricted to the owner to prevent misuse.
+3. **AidropVeFnxTotal**:
+   - **Emitted When**: `distributeVeFnx` finishes distributing to all recipients in a batch.
+   - **Parameters**:
+     - `caller (address)`: The account that initiated the distribution.
+     - `reason (string)`: Whitelisted reason for this airdrop batch.
+     - `totalDistributionSum (uint256)`: Total FNX locked in this distribution.
+
+4. **RecoverToken**:
+   - **Emitted When**: `recoverTokens` is called to recover tokens.
+   - **Parameters**:
+     - `token (address)`: Token address recovered.
+     - `recoverAmount (uint256)`: Amount of token recovered.
+
+---
+
+## Quick Reference
+
+1. **Roles**:
+   - `_DISTRIBUTOR_ROLE`: Distribute veFnx.
+   - `_WITHDRAWER_ROLE`: Recover tokens.
+   - `DEFAULT_ADMIN_ROLE`: Can grant/revoke other roles.
+
+2. **Key Errors**:
+   - `InsufficientBalance()`: Not enough FNX in the contract for distribution.
+   - `ZeroRecipientAddress()`: Attempting distribution to a zero address.
+   - `NotWhitelistedReason()`: Trying to distribute veFnx with a non-whitelisted `reason`.
+   - `ArrayLengthMismatch()`: `reasons_` and `isWhitelisted_` arrays have different lengths in `setWhitelistReasons`.
+
+3. **General Workflow**:
+   1. Call `setWhitelistReasons` to whitelist a distribution reason.
+   2. Fund the `VeFnxDistributorUpgradeable` contract with enough FNX.
+   3. Call `distributeVeFnx(reason_, rows_)` using a whitelisted `reason_`.
+   4. (Optional) If needed, call `recoverTokens(token_, amount)` to withdraw any stray tokens.
+
+---
 
 ## Example Usage
-**Distribute veFnx Tokens**:
-   Prepare an array of recipients and amounts to distribute:
-   ```solidity
-   AidropRow[] memory rows = new AidropRow[](2);
-   rows[0] = AidropRow(0xRecipient1, 1000e18, false, 0);
-   rows[1] = AidropRow(0xRecipient2, 500e18, true, 1234);
-   
-   veFnxDistributor.distributeVeFnx(rows);
-   ```
-**Js example**:
-```js
- await veFnxDistributor.distributeVeFnx([
-    { recipient: 0xRecipient1, amount: ethers.parseEther('500'), withPermanentLock:false, managedTokenIdForAttach: 0 },
-    { recipient: 0xRecipient2, amount: ethers.parseEther('100'), withPermanentLock:false, managedTokenIdForAttach: 1 }
-]);
 
+**1. Initialize the Contract**
+```solidity
+// Only called once, typically right after contract deployment.
+veFnxDistributor.initialize(
+    blastGovernorAddress,
+    fenixTokenAddress,
+    votingEscrowAddress
+);
 ```
 
- **Recover Tokens**:
-   To recover mistakenly sent tokens:
-   ```solidity
-   veFnxDistributor.recoverTokens(0xOtherTokenAddress, 100e18);
-   ```
+**2. Whitelist a New Reason**
+```solidity
+string[] memory reasons = new string[](1);
+reasons[0] = "Rise: Bribes";
+
+bool[] memory statuses = new bool[](1);
+statuses[0] = true;
+
+veFnxDistributor.setWhitelistReasons(reasons, statuses);
+// "Rise: Bribes" is now whitelisted
+```
+
+**3. Distribute veFnx**
+```solidity
+IVeFnxDistributor.AirdropRow[] memory rows = new IVeFnxDistributor.AirdropRow[](2);
+
+rows[0] = IVeFnxDistributor.AirdropRow({
+    recipient: 0xRecipient1,
+    withPermanentLock: false,
+    lockDuration: 182 days,
+    amount: 1000e18,
+    managedTokenIdForAttach: 0
+});
+
+rows[1] = IVeFnxDistributor.AirdropRow({
+    recipient: 0xRecipient2,
+    withPermanentLock: true,
+    lockDuration: 90 days,
+    amount: 2000e18,
+    managedTokenIdForAttach: 1
+});
+
+// reason_ must be one of the whitelisted reasons
+veFnxDistributor.distributeVeFnx("Rise: Bribes", rows);
+```
+
+**4. Recover Tokens (If Needed)**
+```solidity
+// Only callable by an account with _WITHDRAWER_ROLE
+veFnxDistributor.recoverTokens(someOtherToken, 500e18);
+```
+
+**JavaScript Example**:
+```js
+await veFnxDistributor.setWhitelistReasons(
+  ["Rise: Bribes"],
+  [true]
+);
+
+await veFnxDistributor.distributeVeFnx(
+  "Rise: Bribes",
+  [
+    {
+      recipient: "0xRecipient1",
+      withPermanentLock: false,
+      lockDuration: 60 * 60 * 24 * 30, // 30 days
+      amount: ethers.utils.parseEther("1000"),
+      managedTokenIdForAttach: 0
+    },
+    {
+      recipient: "0xRecipient2",
+      withPermanentLock: true,
+      lockDuration: 60 * 60 * 24 * 60, // 60 days
+      amount: ethers.utils.parseEther("2000"),
+      managedTokenIdForAttach: 1
+    }
+  ]
+);
+```
+
+---
+
+# Changelog
+- **Added Whitelisting for Reasons**:
+  - Introduced `setWhitelistReasons` and `isWhitelistedReason`.
+  - A new parameter `reason_` in `distributeVeFnx` requiring whitelisting.
+  - New error `NotWhitelistedReason`.
+- **Role-Based Access**:
+  - Replaced `onlyOwner` with `_DISTRIBUTOR_ROLE` for distributions and `_WITHDRAWER_ROLE` for recoveries.
+  - Expanded events and error messages for clarity.
+  - Introduced the `ArrayLengthMismatch` error for handling `setWhitelistReasons` inputs.
+- **Minor Updates**:
+  - Updated NatSpec to reflect new parameter names (`AirdropRow` structure).
+  - Enhanced error-handling and event logging (`AidropVeFnxTotal` event → `AirdropVeFnxTotal`).
+  - General code refactoring and documentation improvements.

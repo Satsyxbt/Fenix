@@ -41,6 +41,7 @@ External:
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Proxy | 0xd0fDb76bb8B5AF997442a54f4F9C90dfef481938  |
 | MDCBlastMock                                     | 0x384da1d3e1a80a2bD49A3d3E36C74c7b4032dD01   |
 | **VeFnxDistributorUpgradeable_Proxy** | 0xC69d09854EED4692603BA40e47Ed180f043a1414 |
+| **VeFnxDistributorUpgradeable_V2_Proxy** | 0x33eDb7839B3C0f363B08927f07FdcF1Af522795e |
 | VeArtProxy | 0x3e98cae0fCA85A85F7AA6b591B87973D3cA168e9| 
 | VeArtProxyStatic | 0xbDf98125C4012D0E8871B4686b5cFC8d1e70EE4e |
 | CustomBribeRewardRouter_Proxy| 0x6309bc679485A60C60f2e415C893dEE315F87548 |
@@ -80,6 +81,7 @@ External:
 | CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0x47a95acbFC949802916151050Dea668aB9AC427a   |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation | 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8  |
 | VeFnxDistributorUpgradeable_Implementation | 0xDE303e84118ed3fFbe5424123a0189DA166A3858 |
+| VeFnxDistributorUpgradeable_V2_Implementation | 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A |
 |BribeVeFNXRewardToken_Implementation | 0x380D7770fdeb801623E7dc4D51a6F16b79432F08 |
 | CustomBribeRewardRouter_Implementation | 0x3529a5B6D21cA1dA312F8bCBBB2aE2a9802e7a46|
 

@@ -35,6 +35,7 @@
 | **MinimalLinearVestingUpgradeable_Proxy** | `0xF886dB527edA423a160B89eDe5505E644C581E9e`|
 | **VeFnxSplitMerklAidropUpgradeable_Proxy** | `0x311F7981d7159De374c378Be0815DC4257b50468` |
 | **VeFnxDistributorUpgradeable_Proxy** | `0xd78f7Cded70dCE8f65D53F951fC4f5F75D2713D9` |
+| **VeFnxDistributorUpgradeable_V2_Proxy** | `0x320764d8c5Ed36A7aBb4347e2e21a3ECA4af914D` |
 | **VeArtStatic** | `0xd4B31701DDBdC69bb4e8aB7118d73151CaC5c90F` |
 | **OpenOceanVeNftDirectBuyer** | `0x76197ce78fbA38F996FcBCd6BA47041a8E36E7A4`|
 
@@ -108,6 +109,7 @@
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
 | **FenixRaiseUpgradeable_Implementation** | `0xbE9395E1F7D07e3Ce241b1ba0D95c83a883b9e6c` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
+| **VeFnxDistributorUpgradeable_Implementation** | `0x73Af1Db58AAFEBeE801b21EC23A5759401b8E84C` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
 | **VoterUpgradeable_Implementation** | `0xb9C4C2b2c978c39DA4d870cbA1D71b457FAAafAB` (Future: 0xD5331d90Abc4166838a421e9C79Ed2b8b939b588 )|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
