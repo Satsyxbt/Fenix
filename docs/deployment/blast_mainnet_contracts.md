@@ -91,16 +91,15 @@
 
 
 ### Implementations for Proxy
-
 | Contract Name | Address |
 | ------------- | ------- |
 | **BlastGovernorUpgradeable_Implementation** | `0x2A22fC295cf3771015e18c08F37A5D65E313349d` |
-| **BlastRebasingTokensGovernorUpgradeable_Implementation** | `0x45882278Dc8D8DD2199aED9905A825C5acED2902` (Future: 0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d)|
+| **BlastRebasingTokensGovernorUpgradeable_Implementation** | `0x63d96F5A075d6D78D53dFeBD9bb6E6Ac5cFF708d`|
 | **FeesVaultFactoryUpgradeable_Implementation** | `0x17409D1648422596B447BC3FcEE92a5f291e4604` |
 | **BribeFactoryUpgradeable_Implementation** | `0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961`  |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
 | **MinterUpgradeable_Implementation** | `0x081d528D4dc4a2f3424C6Bdde43F950007cEe944`  |
-| **VotingEscrowUpgradeable_Implementation** | `0xC900C984a3581EfA4Fb56cAF6eF19721aAFbB4f9`|
+| **VotingEscrowUpgradeable_Implementation** | `0xb72a3a9cc6c996f594249701d1f6062ec9939e32` (Future: 0x185a3FeB14f7260424ad65d2c809FDc33a0B3d47|
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
 | **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` |
@@ -111,7 +110,7 @@
 | **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x73Af1Db58AAFEBeE801b21EC23A5759401b8E84C` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
-| **VoterUpgradeable_Implementation** | `0xb9C4C2b2c978c39DA4d870cbA1D71b457FAAafAB` (Future: 0xD5331d90Abc4166838a421e9C79Ed2b8b939b588 )|
+| **VoterUpgradeable_Implementation** | `0xD5331d90Abc4166838a421e9C79Ed2b8b939b588`(Future: 0x53500A5923fB177a6f6e38991F518D49C113e9AC))|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
