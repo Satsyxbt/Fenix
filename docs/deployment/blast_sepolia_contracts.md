@@ -73,12 +73,12 @@ External:
 | GaugeUpgradeable_V2Pools_Implementation                         | 0xD9709Ef4b0D0A60655830E16CFBF6ADaE756caA5   |
 | GaugeUpgradeable_V3Pools_Implementation                         | 0x25a92F38002802388f4f489AA57C502DFD3c7338   |
 | GaugeFactoryUpgradeable_Implementation                  | 0x72b17eC1765969445e931615D13042BA83be5714   |
-| ManagedNFTManagerUpgradeable_Implementation             | 0x8D7939508bAC0ff8C3E18B0C01d76D9A39BB2640   |
+| ManagedNFTManagerUpgradeable_Implementation             | 0xc7b64bf73D5d8A2E3EcaC134Aee0D66c1C87D43D   |
 | PairAPIUpgradeable_Implementation                       | 0xA31f3c621b68435811baC8634A2a84746d5c2a67   |
 | VeNFTAPIUpgradeable_Implementation                      | 0x11c3173830d4968C5F0ac00BC29489e41123554f   |
 | RewardAPIUpgradeable_Implementation                     | 0x725D1540c0Fd73dBe34287490dd1C37414cf7E09   |
 | VeBoostUpgradeable_Implementation                       | 0x5D384d12fFBB876DbFd18EC2F8C08d34FB057590   |
-| CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0x47a95acbFC949802916151050Dea668aB9AC427a   |
+| CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation| 0xB88Cee7C9EdFe696a2a2581b5179cfCd208d3c77   |
 | CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation | 0xe2262A0f2FEcB10C33C5344aef485a09CE5CbdB8  |
 | VeFnxDistributorUpgradeable_Implementation | 0xDE303e84118ed3fFbe5424123a0189DA166A3858 |
 | VeFnxDistributorUpgradeable_V2_Implementation | 0x398c3bCeFe2cE120AEd0AA4BAdE01C3660853f2A |
