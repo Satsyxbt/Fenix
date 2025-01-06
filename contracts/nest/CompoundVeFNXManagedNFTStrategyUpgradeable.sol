@@ -10,6 +10,7 @@ import {IVotingEscrow} from "../core/interfaces/IVotingEscrow.sol";
 import {ISingelTokenVirtualRewarder} from "./interfaces/ISingelTokenVirtualRewarder.sol";
 import {ICompoundVeFNXManagedNFTStrategy} from "./interfaces/ICompoundVeFNXManagedNFTStrategy.sol";
 import {IRouterV2PathProvider, SingelTokenBuybackUpgradeable} from "./SingelTokenBuybackUpgradeable.sol";
+import {LibStrategyFlags} from "./libraries/LibStrategyFlags.sol";
 
 /**
  * @title Compound VeFNX Managed NFT Strategy Upgradeable
@@ -200,9 +201,17 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
      * - `Erc20Recover` event with details of the token recovery, including the caller, recipient, token address, and recovered amount.
      */
     function _erc20Recover(address token_, address recipient_) internal {
-        if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
-            revert IncorrectRecoverToken();
+        if (
+            !LibStrategyFlags.hasFlag(
+                IManagedNFTManager(managedNFTManager).getStrategyFlags(address(this)),
+                LibStrategyFlags.IGNORE_RESTRICTIONS_ON_RECOVER_TOKENS
+            )
+        ) {
+            if (token_ == address(fenix) || IRouterV2PathProvider(routerV2PathProvider).isAllowedTokenInInputRoutes(token_)) {
+                revert IncorrectRecoverToken();
+            }
         }
+
         uint256 amount = IERC20Upgradeable(token_).balanceOf(address(this));
         if (amount > 0) {
             IERC20Upgradeable(token_).safeTransfer(recipient_, amount);
@@ -211,13 +220,11 @@ contract CompoundVeFNXManagedNFTStrategyUpgradeable is
     }
 
     /**
-     * @dev Internal function to enforce permissions or rules before allowing a buyback swap to proceed.
+     * @dev Internal function to enforce permissions or rules
      */
     function _checkBuybackSwapPermissions() internal view virtual override {
-        if (
-            IManagedNFTManager(managedNFTManager).isAdmin(msg.sender) ||
-            IManagedNFTManager(managedNFTManager).isAuthorized(managedTokenId, msg.sender)
-        ) {
+        IManagedNFTManager managedNFTManagerCache = IManagedNFTManager(managedNFTManager);
+        if (managedNFTManagerCache.isAdmin(msg.sender) || managedNFTManagerCache.isAuthorized(managedTokenId, msg.sender)) {
             return;
         }
         revert AccessDenied();

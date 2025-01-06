@@ -37,6 +37,13 @@ interface IManagedNFTManager {
     event SetAuthorizedUser(uint256 indexed managedTokenId, address authorizedUser);
 
     /**
+     * @dev Emitted when the strategy flags for a specific strategy are updated.
+     * @param strategy The address of the strategy whose flags are being updated.
+     * @param flags The new set of flags assigned to the strategy.
+     */
+    event SetStrategyFlags(address indexed strategy, uint8 flags);
+
+    /**
      * @notice Checks if a managed NFT is currently disabled.
      * @param managedTokenId_ The ID of the managed NFT.
      * @return True if the managed NFT is disabled, false otherwise.
@@ -95,6 +102,13 @@ interface IManagedNFTManager {
      * @return True if the address is authorized, false otherwise.
      */
     function isAuthorized(uint256 managedTokenId_, address account_) external view returns (bool);
+
+    /**
+     * @notice Retrieves the strategy flags for a given strategy.
+     * @param strategy_ The address of the strategy to retrieve flags for.
+     * @return The flags assigned to the specified strategy.
+     */
+    function getStrategyFlags(address strategy_) external view returns (uint8);
 
     /**
      * @notice Assigns an authorized user for a managed NFT.

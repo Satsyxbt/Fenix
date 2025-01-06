@@ -562,4 +562,53 @@ describe('ManagedNFTManager Contract', function () {
       });
     });
   });
+
+  describe('Strategy flags', async () => {
+    it('should fail if call from not MANAGED_NFT_ADMIN', async () => {
+      let strategy = await ethers.getContractAt(
+        'CompoundVeFNXManagedNFTStrategyUpgradeable',
+        await strategyFactory.createStrategy.staticCall('VeMax'),
+      );
+      await strategyFactory.createStrategy('VeMax');
+      await expect(managedNFTManager.connect(signers.otherUser1).setStrategyFlags(strategy, 1)).to.be.revertedWith(
+        getAccessControlError(await managedNFTManager.MANAGED_NFT_ADMIN(), signers.otherUser1.address),
+      );
+    });
+
+    it('success setup flags for certaing strategies', async () => {
+      let strategy = await ethers.getContractAt(
+        'CompoundVeFNXManagedNFTStrategyUpgradeable',
+        await strategyFactory.createStrategy.staticCall('VeMax'),
+      );
+      await strategyFactory.createStrategy('VeMax');
+
+      let strategy2 = await ethers.getContractAt(
+        'CompoundVeFNXManagedNFTStrategyUpgradeable',
+        await strategyFactory.createStrategy.staticCall('VeMax'),
+      );
+      await strategyFactory.createStrategy('VeMax 2');
+
+      expect(await managedNFTManager.getStrategyFlags(strategy)).to.be.eq(0);
+      expect(await managedNFTManager.getStrategyFlags(strategy2)).to.be.eq(0);
+
+      let tx = await managedNFTManager.setStrategyFlags(strategy2, 123);
+
+      await expect(tx).to.be.emit(managedNFTManager, 'SetStrategyFlags').withArgs(strategy2, 123);
+
+      expect(await managedNFTManager.getStrategyFlags(strategy)).to.be.eq(0);
+      expect(await managedNFTManager.getStrategyFlags(strategy2)).to.be.eq(123);
+
+      tx = await managedNFTManager.setStrategyFlags(strategy, 254);
+      await expect(tx).to.be.emit(managedNFTManager, 'SetStrategyFlags').withArgs(strategy, 254);
+
+      expect(await managedNFTManager.getStrategyFlags(strategy)).to.be.eq(254);
+      expect(await managedNFTManager.getStrategyFlags(strategy2)).to.be.eq(123);
+
+      tx = await managedNFTManager.setStrategyFlags(strategy, 0);
+      await expect(tx).to.be.emit(managedNFTManager, 'SetStrategyFlags').withArgs(strategy, 0);
+
+      expect(await managedNFTManager.getStrategyFlags(strategy)).to.be.eq(0);
+      expect(await managedNFTManager.getStrategyFlags(strategy2)).to.be.eq(123);
+    });
+  });
 });

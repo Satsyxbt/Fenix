@@ -275,12 +275,12 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
         firstStrategy.connect(signers.otherUser1).claimBribesWithERC20Recover([], [], signers.otherUser1.address, []),
       ).to.be.revertedWithCustomError(firstStrategy, 'AccessDenied');
     });
-    it('fails if try recover fenix', async () => {
+    it('fails if try recover fenix (strategy without flag for ignor this requirement)', async () => {
       await expect(
         firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser1.address, [deployed.fenix.target]),
       ).to.be.revertedWithCustomError(firstStrategy, 'IncorrectRecoverToken');
     });
-    it('fails if try recover router allowed tokens', async () => {
+    it('fails if try recover router allowed tokens (strategy without flag for ignor this requirement)', async () => {
       let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
       await routerV2PathProvider.setAllowedTokenInInputRouters(token.target, true);
       await expect(
@@ -300,6 +300,40 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
 
       expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(1e6);
       expect(await token.balanceOf(firstStrategy)).to.be.eq(ZERO);
+    });
+    describe('Strategy has IGNORE_RESTRICTIONS_ON_RECOVER_TOKENS flag, success recover', async () => {
+      it('FNX  token', async () => {
+        await managedNFTManager.setStrategyFlags(firstStrategy, 1);
+        expect(await managedNFTManager.getStrategyFlags(firstStrategy)).to.be.eq(1);
+        await deployed.fenix.transfer(firstStrategy.target, ethers.parseEther('1'));
+        expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
+        expect(await deployed.fenix.balanceOf(firstStrategy.target)).to.be.eq(ethers.parseEther('1'));
+
+        await expect(firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser2.address, [deployed.fenix.target]))
+          .to.be.emit(firstStrategy, 'Erc20Recover')
+          .withArgs(signers.deployer.address, signers.otherUser2.address, deployed.fenix.target, ethers.parseEther('1'));
+
+        expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await deployed.fenix.balanceOf(firstStrategy)).to.be.eq(0);
+      });
+      it('router allowed tokens', async () => {
+        await managedNFTManager.setStrategyFlags(firstStrategy, 1);
+        expect(await managedNFTManager.getStrategyFlags(firstStrategy)).to.be.eq(1);
+
+        let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
+        await routerV2PathProvider.setAllowedTokenInInputRouters(token.target, true);
+
+        await token.mint(firstStrategy.target, ethers.parseEther('1'));
+        expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
+        expect(await token.balanceOf(firstStrategy.target)).to.be.eq(ethers.parseEther('1'));
+
+        await expect(firstStrategy.claimBribesWithERC20Recover([], [], signers.otherUser2.address, [token.target]))
+          .to.be.emit(firstStrategy, 'Erc20Recover')
+          .withArgs(signers.deployer.address, signers.otherUser2.address, token.target, ethers.parseEther('1'));
+
+        expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await token.balanceOf(firstStrategy)).to.be.eq(0);
+      });
     });
   });
   describe('#erc20Recover', async () => {
@@ -329,6 +363,43 @@ describe('CompoundVeFNXManagedStrategy Contract', function () {
         'IncorrectRecoverToken',
       );
     });
+
+    describe('Strategy has IGNORE_RESTRICTIONS_ON_RECOVER_TOKENS flag, success recover', async () => {
+      it('FNX  token', async () => {
+        await managedNFTManager.setStrategyFlags(firstStrategy, 1);
+        expect(await managedNFTManager.getStrategyFlags(firstStrategy)).to.be.eq(1);
+        await deployed.fenix.transfer(firstStrategy.target, ethers.parseEther('1'));
+        expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
+        expect(await deployed.fenix.balanceOf(firstStrategy.target)).to.be.eq(ethers.parseEther('1'));
+
+        await expect(firstStrategy.erc20Recover(deployed.fenix.target, signers.otherUser2.address))
+          .to.be.emit(firstStrategy, 'Erc20Recover')
+          .withArgs(signers.deployer.address, signers.otherUser2.address, deployed.fenix.target, ethers.parseEther('1'));
+
+        expect(await deployed.fenix.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await deployed.fenix.balanceOf(firstStrategy)).to.be.eq(0);
+      });
+
+      it('router allowed tokens', async () => {
+        await managedNFTManager.setStrategyFlags(firstStrategy, 1);
+        expect(await managedNFTManager.getStrategyFlags(firstStrategy)).to.be.eq(1);
+
+        let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
+        await routerV2PathProvider.setAllowedTokenInInputRouters(token.target, true);
+
+        await token.mint(firstStrategy.target, ethers.parseEther('1'));
+        expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(ZERO);
+        expect(await token.balanceOf(firstStrategy.target)).to.be.eq(ethers.parseEther('1'));
+
+        await expect(firstStrategy.erc20Recover(token, signers.otherUser2.address))
+          .to.be.emit(firstStrategy, 'Erc20Recover')
+          .withArgs(signers.deployer.address, signers.otherUser2.address, token.target, ethers.parseEther('1'));
+
+        expect(await token.balanceOf(signers.otherUser2.address)).to.be.eq(ethers.parseEther('1'));
+        expect(await token.balanceOf(firstStrategy)).to.be.eq(0);
+      });
+    });
+
     it('success recover erc20 token', async () => {
       let token = await deployERC20MockToken(signers.deployer, 't', 't', 6);
       await token.mint(firstStrategy.target, 1e6);

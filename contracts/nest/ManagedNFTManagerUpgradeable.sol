@@ -93,6 +93,11 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
     mapping(uint256 => bool) public override isWhitelistedNFT;
 
     /**
+     * @notice Retrieves the strategy flags for a given strategy.
+     */
+    mapping(address => uint8) public override getStrategyFlags;
+
+    /**
      * @dev Ensures that the function can only be called by the designated voter address.
      */
     modifier onlyVoter() {
@@ -149,6 +154,22 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
         managedTokensInfo[managedTokenId] = ManagedTokenInfo(true, false, address(0));
         IManagedNFTStrategy(strategy_).attachManagedNFT(managedTokenId);
         emit CreateManagedNFT(msg.sender, strategy_, managedTokenId);
+    }
+
+    /**
+     * @notice Updates the strategy flags for a specific strategy.
+     * @dev Sets the flags for the given strategy and emits the `SetStrategyFlags` event.
+     *      This function can only be called by an account with the `MANAGED_NFT_ADMIN` role.
+     * @param strategy_ The address of the strategy to update.
+     * @param flags_ The new flags to assign to the strategy.
+     * @custom:emits SetStrategyFlags
+     * - When the strategy flags are updated, this event is emitted with the new flags and the strategy address.
+     * @custom:requirements
+     * - The caller must have the `MANAGED_NFT_ADMIN` role.
+     */
+    function setStrategyFlags(address strategy_, uint8 flags_) external onlyRole(MANAGED_NFT_ADMIN) {
+        getStrategyFlags[strategy_] = flags_;
+        emit SetStrategyFlags(strategy_, flags_);
     }
 
     /**
@@ -336,5 +357,5 @@ contract ManagedNFTManagerUpgradeable is IManagedNFTManager, AccessControlUpgrad
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }
