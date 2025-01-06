@@ -99,10 +99,10 @@
 | **BribeFactoryUpgradeable_Implementation** | `0xb0Aea7dFfA05C17e3A52A2f6219535e78d631961`  |
 | **GaugeFactoryUpgradeable_Implementation** | `0x1b9E41D2Fb5668E6333849E56A6A3B8e95a1f8F1` |
 | **MinterUpgradeable_Implementation** | `0x081d528D4dc4a2f3424C6Bdde43F950007cEe944`  |
-| **VotingEscrowUpgradeable_Implementation** | `0xb72a3a9cc6c996f594249701d1f6062ec9939e32` (Future: 0x185a3FeB14f7260424ad65d2c809FDc33a0B3d47|
+| **VotingEscrowUpgradeable_Implementation** | `0x185a3FeB14f7260424ad65d2c809FDc33a0B3d47`|
 | **VeBoostUpgradeable_Implementation** | `0xAA9378E03b4852EA02466Ad1a4BF685715a3F6d7` |
 | **PerpetualsGaugeUpgradeable_Implementation** | `0xEbbA76Fc6045E0F5903BF2DE1e2AFE9c0df94622` |
-| **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xdC2a9AA0c13576CE714DCF4e81145D486444F103` |
+| **CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation** | `0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5` (Future: 0x57c44E554C9862107941b122afca35beb0B77b0f) |
 | **BribeUpgradeable_Implementation** | `0x6564aBfCadB199Edf0E3A4F2f63b4Bc03B9266eC` |
 | **GaugeUpgradeable_V2Pools_Implementation** | `0x67d391Aa49ddD09E57b0b9226e2891e408621e9b` |
 | **GaugeUpgradeable_V3Pools_Implementation** | `0x58D12813E77B87c67ccC9312598c8E1d35B96E23` |
@@ -110,14 +110,14 @@
 | **VeFnxDistributorUpgradeable_Implementation** | `0x9d15070F302F3392674C33403C4396312EA566E9` |
 | **VeFnxDistributorUpgradeable_Implementation** | `0x73Af1Db58AAFEBeE801b21EC23A5759401b8E84C` |
 | **VeFnxSplitMerklAidropUpgradeable_Implementation** | `0x1D099397B2049Ce63eE051801E5A774A4E60F6cd`|
-| **VoterUpgradeable_Implementation** | `0xD5331d90Abc4166838a421e9C79Ed2b8b939b588`(Future: 0x53500A5923fB177a6f6e38991F518D49C113e9AC))|
+| **VoterUpgradeable_Implementation** | `0x53500A5923fB177a6f6e38991F518D49C113e9AC`|
 | **PerpetualsTradersRewarderUpgradeable_Implementation** | `0x2bA2D6E0810b3263AbBc2eA797E94D3bC8bdb564` |
 | **AlgebraFNXPriceProviderUpgradeable_Implementation** | `0x2c166ab0429e8f10d806FF86eddb59Eb2548B311` |
 | **MinimalLinearVestingUpgradeable_Implementation** | `0xA4C830D9C19b6b881408cf74e00Cff1ad3800270` |
 | **SingelTokenVirtualRewarderUpgradeable_Implementation** | `0xA2b8815b1761Ea8cc351Ca6619d1AC2998561196` |
 | **CompoundVeFNXManagedNFTStrategyFactoryUpgradeable_Implementation** | `0xefE86ABbF1C18Df85a77e80cC60dFb4d46365CF1` |
 | **RouterV2PathProviderUpgradeable_Implementation** | `0xbD7852f7e21bc23944A2809315385733C734369c` |
-| **ManagedNFTManagerUpgradeable_Implementation** | `0x5db6c3B0F80D28ca0c4b96167C5957c44561171d`|
+| **ManagedNFTManagerUpgradeable_Implementation** | `0x5db6c3B0F80D28ca0c4b96167C5957c44561171d`(Future: 0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA) |
 | **PairAPIUpgradeable_Implementation** | `0x2f0044922D9a58F8EcC78D4f898eA64FCa364E71` |
 | **RewardAPIUpgradeable_Implementation** | `0x2fA82cca7D2e73e4cF5f19cEB1aB866Dca40b2fb`|
 | **VeNFTAPIUpgradeable_Implementation** | `0xD5926da7196096101E7cd4742bA0f853C2b8db0E`|

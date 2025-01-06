@@ -1,0 +1,31 @@
+Starting deployment of ManagedNFTManagerUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+ManagedNFTManagerUpgradeable deployed at 0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA
+Save to deploys.json deployed address of ManagedNFTManagerUpgradeable_Implementation:0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA
+Warning: Address for ManagedNFTManagerUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0x5db6c3B0F80D28ca0c4b96167C5957c44561171d
+        New address: 0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA
+Verifying TransparentUpgradeableProxy at 0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/ManagedNFTManagerUpgradeable.sol:ManagedNFTManagerUpgradeable at 0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ManagedNFTManagerUpgradeable on the block explorer.
+https://blastscan.io/address/0xA22bd1a538eED9C6914874DeEdc7033aCF8FFbBA#code
+
+Starting deployment of CompoundVeFNXManagedNFTStrategyUpgradeable...
+        Constructor arguments: ["0x72e47b1eaAAaC6c07Ea4071f1d0d355f603E1cc1"]
+CompoundVeFNXManagedNFTStrategyUpgradeable deployed at 0x57c44E554C9862107941b122afca35beb0B77b0f
+Save to deploys.json deployed address of CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation:0x57c44E554C9862107941b122afca35beb0B77b0f
+Warning: Address for CompoundVeFNXManagedNFTStrategyUpgradeable_Implementation is already in the list. It will be replaced.
+        Existing address: 0xcE14a4F6D8D54A96FbD31db53da45096508c6cb5
+        New address: 0x57c44E554C9862107941b122afca35beb0B77b0f
+Verifying TransparentUpgradeableProxy at 0x57c44E554C9862107941b122afca35beb0B77b0f...
+Timeout for 10s before verify proccess...
+Successfully submitted source code for contract
+contracts/nest/CompoundVeFNXManagedNFTStrategyUpgradeable.sol:CompoundVeFNXManagedNFTStrategyUpgradeable at 0x57c44E554C9862107941b122afca35beb0B77b0f
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract CompoundVeFNXManagedNFTStrategyUpgradeable on the block explorer.
+https://blastscan.io/address/0x57c44E554C9862107941b122afca35beb0B77b0f#code
