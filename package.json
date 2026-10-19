@@ -29,7 +29,7 @@
     "Centralized liquidity"
   ],
   "author": "Fenix",
-  "license": "MIT",
+  "license": "BUSL-1.1",
   "devDependencies": {
     "@openzeppelin/contracts": "4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5"

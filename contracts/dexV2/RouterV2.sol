@@ -4,7 +4,7 @@ import {IPairFactory} from "./interfaces/IPairFactory.sol";
  *Submitted for verification at FtmScan.com on 2022-02-20
  */
 
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: BUSL-1.1
 // ftm.guru's extension of Solidly's periphery (Router)
 // https://github.com/andrecronje/solidly/blob/master/contracts/BaseV1-periphery.sol
 // BaseV1Router02.sol : Supporting Fee-on-transfer Tokens
