@@ -111,3 +111,9 @@ npx hardhat test
 
 
 
+
+## License
+
+The Fenix Protocol contracts are licensed under the [Business Source License 1.1](./LICENSE) (`BUSL-1.1`), with Rise Labs as Licensor. On the Change Date (2030-10-19) the license converts to GPL-2.0-or-later.
+
+Exceptions: `contracts/core/MinterUpgradeable.sol` remains `GPL-3.0-or-later`, and dependencies under `lib/` and `node_modules/` keep their own licenses.
